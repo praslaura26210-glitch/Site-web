@@ -44,6 +44,7 @@ export type Projet = {
   recit?: string;
   poeme?: string;
   experimentation?: string;
+  palette?: Record<string, string>;
   images: Image[];
   plans: Plan[];
 };
@@ -75,7 +76,7 @@ export function getProjet(slug: string, lang: Lang): Projet {
   }));
   const plans: Plan[] = (d.plans_vectoriels || []).map((p: any) => ({
     nom: p.nom,
-    legende: p.legende,
+    legende: (tr.legendes && tr.legendes[p.nom]) || p.legende,
     src: `/media/${slug}/plans/${p.nom}.svg`,
     w: p.format_pt[0],
     h: p.format_pt[1],
@@ -97,6 +98,7 @@ export function getProjet(slug: string, lang: Lang): Projet {
     recit: t.recit,
     poeme: lang === 'fr' ? d.poeme : undefined,
     experimentation: t.experimentation,
+    palette: d.palette,
     images,
     plans,
   };

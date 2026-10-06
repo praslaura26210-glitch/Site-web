@@ -16,7 +16,6 @@
   "references": "Riferimenti",
   "apropos": "Chi sono",
   "contact": "Contatti",
-  "pdf": "Portfolio PDF",
   "pdfLong": "Scarica il portfolio (PDF, 14 MB)",
   "menu": "Menu",
   "close": "Chiudi",
@@ -29,10 +28,10 @@
  "home": {
   "approach": "Un'architettura radicata nel territorio, attenta alla materia, alla luce e a ciò che già esiste.",
   "role": "Studentessa del master Architettura, Ambiente e Culture Costruttive, ENSA Grenoble. Ex disegnatrice edile.",
-  "search": "Cerco un tirocinio in uno studio di architettura.",
-  "cta": "Vedi i progetti",
+  "cta": "Progetti",
   "list": "Sei progetti",
-  "terrainLabel": "Terreno a curve di livello che segue la luce del mouse"
+  "lieu": "Grenoble",
+  "scroll": "Scendi verso i progetti"
  },
  "projet": {
   "lieu": "Luogo",
@@ -43,42 +42,30 @@
   "enjeux": "Temi",
   "next": "Progetto successivo",
   "back": "Tutti i progetti",
-  "plans": "Disegni",
   "zoomHint": "Rotella o pizzico per ingrandire, trascina per spostarti",
   "zoomIn": "Ingrandisci",
   "zoomOut": "Riduci",
   "zoomReset": "Ripristina",
   "existant": "Stato di fatto",
   "projet": "Progetto",
-  "beforeAfter": "Trascina per confrontare lo stato di fatto e il progetto",
-  "demolition": "Demolizione",
-  "extrusionTitle": "Dalla pianta al volume",
-  "extrusionText": "I muri della pianta si alzano: in nero ciò che si conserva, in terracotta ciò che si demolisce.",
-  "coupeTitle": "Sezione dinamica",
-  "coupeText": "Sposta il piano di sezione lungo l'edificio. La pianta accanto indica dove si taglia.",
-  "coupePosition": "Posizione della sezione",
-  "calques": "Livelli",
-  "calqueStructure": "Struttura",
-  "calqueDemolition": "Demolizioni",
-  "calqueUsages": "Usi",
-  "calqueLumiere": "Luce",
-  "exposition": "Esposizione",
-  "restauration": "Ristorazione",
-  "cour": "Corte aperta",
-  "matiereTitle": "Materia",
-  "matiereText": "La luce radente segue il mouse sul plastico.",
   "facades": "Prospetti",
   "fiche": "Scheda del progetto",
-  "maquetteNote": "Modello 3D di intenzione, ricostruito dai disegni del progetto.",
-  "liteNote": "Versione leggera: il modello 3D è sostituito dai disegni."
+  "agrandir": "Ingrandisci",
+  "fermer": "Chiudi",
+  "commencer": "Leggi il progetto",
+  "role": "Il mio ruolo"
  },
  "footer": {
   "rights": "Tutti i diritti riservati",
   "mentions": "Note legali",
-  "top": "Torna su"
- },
- "soon": {
-  "title": "Pagina in preparazione",
-  "text": "Questa pagina arriva nella prossima fase di costruzione del sito."
+  "top": "Torna su",
+  "pdfEyebrow": "Portfolio",
+  "pdfTitle": "Il book completo, da portare con sé.",
+  "pdfText": "63 pagine: i sei progetti, i disegni, i testi e il percorso.",
+  "pdfBtn": "Scarica il portfolio",
+  "pdfSize": "PDF, 14 MB",
+  "cvBtn": "CV",
+  "cvSize": "PDF, 1 pagina",
+  "ecrire": "Scrivere"
  }
 }

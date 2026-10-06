@@ -15,7 +15,11 @@ function copyDir(from, to, filter = () => true) {
     const b = path.join(to, e.name);
     if (e.isDirectory()) n += copyDir(a, b, filter);
     else if (filter(e.name)) {
-      if (!fs.existsSync(b) || fs.statSync(b).mtimeMs < fs.statSync(a).mtimeMs) fs.copyFileSync(a, b);
+      if (!fs.existsSync(b) || fs.statSync(b).mtimeMs < fs.statSync(a).mtimeMs) {
+        // plans : couleurs de repli accordées au site (quand le SVG est affiché en <img>, sans les variables CSS)
+        if (a.endsWith('.svg')) fs.writeFileSync(b, fs.readFileSync(a, 'utf8').replaceAll('var(--encre,#000)', 'var(--encre,#2B211C)').replaceAll('var(--papier,#fff)', 'var(--papier,#FBFAF7)'));
+        else fs.copyFileSync(a, b);
+      }
       n++;
     }
   }
@@ -37,6 +41,6 @@ for (const slug of fs.readdirSync(path.join(src, 'projets'))) {
 }
 n += copyDir(path.join(src, 'site', 'images'), path.join(dst, 'site'));
 n += copyDir(path.join(src, 'intro'), path.join(dst, 'intro'));
-n += copyDir(path.join(src, 'logo', 'b-horizon'), path.join(dst, 'logo'));
-fs.copyFileSync(path.join(src, 'logo', 'b-horizon', 'favicon.svg'), path.join(root, 'public', 'favicon.svg'));
+n += copyDir(path.join(src, 'logo', 'ligne'), path.join(dst, 'logo'));
+fs.copyFileSync(path.join(src, 'logo', 'ligne', 'favicon.svg'), path.join(root, 'public', 'favicon.svg'));
 console.log(`médias synchronisés : ${n} fichiers`);

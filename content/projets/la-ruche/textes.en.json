@@ -1,5 +1,19 @@
 {
  "programme": "Nursery school",
  "cadre": "Design studio: D. Vielfaure",
- "texte": "Set on a sloping site, the school seeks to blend into the landscape as naturally as possible. Classrooms and shared spaces are spread over two levels, each opening onto its own playground. Built only in solid timber and stone, the school uses a diagonal roof structure to span larger distances without glued laminated timber. A system of pivoting shutters protects the façade most exposed to the sun while modulating daylight and the atmosphere inside."
+ "texte": "Set on a sloping site, the school seeks to blend into the landscape as naturally as possible. Classrooms and shared spaces are spread over two levels, each opening onto its own playground. Built only in solid timber and stone, the school uses a diagonal roof structure to span larger distances without glued laminated timber. A system of pivoting shutters protects the façade most exposed to the sun while modulating daylight and the atmosphere inside.",
+ "legendes": {
+  "plan-masse": "Site plan",
+  "plan-rdc": "Ground floor plan",
+  "plan-r-1": "Level -1 plan",
+  "plan-structure": "Structural plan",
+  "facade-ouest": "West elevation",
+  "coupe-aa": "Section AA",
+  "axonometrie-eclatee": "Exploded axonometric view",
+  "maquette-1": "Model",
+  "maquette-2": "Model",
+  "maquette-3": "Model, interior",
+  "maquette-4": "Model",
+  "maquette-5": "Model"
+ }
 }

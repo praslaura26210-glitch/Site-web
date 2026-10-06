@@ -1,5 +1,13 @@
 {
  "programme": "Self-supporting cantilevered steel staircase",
  "cadre": "Design, personal project",
- "texte": "The project is the design of a self-supporting cantilevered steel staircase, anchored in the concrete slabs, with no support from the walls. I drew the technical drawings and followed the main stages of fabrication, from folding the treads to assembling the staircase."
+ "texte": "The project is the design of a self-supporting cantilevered steel staircase, anchored in the concrete slabs, with no support from the walls. I drew the technical drawings and followed the main stages of fabrication, from folding the treads to assembling the staircase.",
+ "legendes": {
+  "rendu": "Cantilevered staircase",
+  "axonometrie": "Axonometric view of the staircase",
+  "vue-de-face": "Front view",
+  "vue-en-plan": "Plan view",
+  "planche-limon-marches": "Stringer and treads, details",
+  "planche-garde-corps": "Railing, tube profiles"
+ }
 }

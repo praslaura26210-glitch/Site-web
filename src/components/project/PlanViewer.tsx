@@ -9,7 +9,7 @@ type P = { id: string; label: string; svg?: string; preview?: string; full?: str
  * Le SVG reste net à toutes les échelles. Les plans très lourds s'affichent d'abord en image
  * et le SVG n'est chargé qu'au-delà d'un zoom x1,8.
  */
-export default function PlanViewer({ plans, labels }: { plans: P[]; labels: { hint: string; zoomIn: string; zoomOut: string; reset: string } }) {
+export default function PlanViewer({ plans, labels, className }: { plans: P[]; labels: { hint: string; zoomIn: string; zoomOut: string; reset: string }; className?: string }) {
   const [cur, setCur] = useState(plans[0].id);
   const plan = plans.find((p) => p.id === cur)!;
   const [svg, setSvg] = useState('');
@@ -110,20 +110,21 @@ export default function PlanViewer({ plans, labels }: { plans: P[]; labels: { hi
   };
 
   return (
-    <div>
-      <div className={styles.tabs} role="tablist">
-        {plans.map((p) => (
-          <button key={p.id} role="tab" aria-selected={p.id === cur} className={styles.tab} onClick={() => setCur(p.id)}>{p.label}</button>
-        ))}
-      </div>
+    <div className={styles.viewerWrap}>
+      {plans.length > 1 && (
+        <div className={styles.tabs} role="tablist">
+          {plans.map((p) => (
+            <button key={p.id} role="tab" aria-selected={p.id === cur} className={styles.tab} onClick={() => setCur(p.id)}>{p.label}</button>
+          ))}
+        </div>
+      )}
       <div
         ref={view}
-        className={styles.viewer}
+        className={`${styles.viewer} ${className || ''}`}
         tabIndex={0}
         role="img"
         aria-label={`${plan.label}. ${labels.hint}`}
         data-cursor="drag"
-        data-lenis-prevent
         onPointerDown={down}
         onPointerMove={move}
         onPointerUp={up}

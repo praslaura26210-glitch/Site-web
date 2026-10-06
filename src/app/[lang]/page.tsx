@@ -1,10 +1,8 @@
-import Link from 'next/link';
 import { dict, type Lang } from '@/i18n';
 import { getProjets } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import Intro from '@/components/home/Intro';
-import HomeStage from '@/components/home/HomeStage';
-import LiteClass from '@/components/home/LiteClass';
+import ProjetsGrille from '@/components/home/ProjetsGrille';
+import Croquis from '@/components/project/Croquis';
 import styles from '@/components/home/home.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -19,36 +17,41 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const projets = getProjets(lang);
   return (
     <>
-      <Intro skipLabel={t.intro.skip} />
-      <HomeStage className={styles.hero}>
-        <LiteClass liteClass={styles.heroLite} />
-        <p className="sr-only">{t.home.terrainLabel}</p>
-        <div className={`wrap ${styles.heroIn}`}>
-          <div>
-            <h1 className={styles.name}>Laura Pras</h1>
-            <p className={`lead ${styles.approach}`}>{t.home.approach}</p>
+      <section className={styles.hero} aria-labelledby="nom">
+        <div className={`wrap ${styles.heroGrid}`}>
+          <div className={styles.heroTxt}>
+            <p className={styles.coords}>
+              <span>45°11′ N</span><span aria-hidden="true">·</span><span>5°43′ E</span><span className={styles.coordsLieu}>{t.home.lieu}</span>
+            </p>
+            <h1 id="nom" className={styles.nom}>Laura Pras</h1>
+            <p className={styles.approche}>{t.home.approach}</p>
             <p className={styles.role}>{t.home.role}</p>
-            <p className={styles.search}>{t.home.search}</p>
-            <Link className={styles.cta} href={`/${lang}/projets/`}>
-              {t.home.cta} <span aria-hidden="true">→</span>
-            </Link>
+            <a className={styles.down} href="#projets">
+              <span>{t.home.cta}</span>
+              <svg viewBox="0 0 12 28" width="12" height="28" aria-hidden="true"><path d="M6 1v25M1.5 21.5 6 26l4.5-4.5" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </a>
           </div>
-          <nav aria-label={t.home.list}>
-            <p className={`eyebrow ${styles.listHead}`}>{t.home.list}</p>
-            <ol className={styles.list}>
-              {projets.map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/${lang}/projets/${p.slug}/`}>
-                    <span className={styles.n}>{p.ordre}</span>
-                    <span className={styles.t}>{p.titre}<small>{p.programme}</small></span>
-                    <span className={styles.y}>{p.annee}</span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          <Croquis
+            className={styles.heroDessin}
+            json="/media/intro/intro.json"
+            src="/media/site/dessin-couverture-2000.webp"
+            srcSmall="/media/site/dessin-couverture-1000.webp"
+            w={1398}
+            h={1328}
+            alt=""
+            duree={4200}
+            eager
+          />
         </div>
-      </HomeStage>
+      </section>
+
+      <section id="projets" className={`wrap ${styles.projets}`} aria-labelledby="titre-projets">
+        <div className={styles.projetsHead}>
+          <h2 id="titre-projets" className="eyebrow">{t.home.list}</h2>
+          <span className={styles.projetsLine} aria-hidden="true" />
+        </div>
+        <ProjetsGrille projets={projets} lang={lang} />
+      </section>
     </>
   );
 }

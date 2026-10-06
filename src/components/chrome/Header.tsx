@@ -4,9 +4,8 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Dict, Lang } from '@/i18n';
 import { LANGS } from '@/i18n';
+import Logo from './Logo';
 import styles from './chrome.module.css';
-
-export const PDF_HREF = '/portfolio-laura-pras.pdf';
 
 export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
   const path = usePathname() || `/${lang}/`;
@@ -37,9 +36,9 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`} data-open={open || undefined}>
-      <Link href={`/${lang}/`} className={styles.logo} aria-label={`Laura Pras, ${t.nav.home}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/media/logo/logo-horizontal.svg" alt="" width={182} height={52} />
+      <Link href={`/${lang}/`} className={styles.brand} aria-label={`Laura Pras, ${t.nav.home}`}>
+        <Logo className={styles.brandLogo} label="" />
+        <span className={styles.brandName}>Laura Pras</span>
       </Link>
       <button className={styles.burger} aria-expanded={open} aria-controls="menu-principal" onClick={() => setOpen((o) => !o)}>
         {open ? t.nav.close : t.nav.menu}
@@ -63,10 +62,6 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
             </li>
           ))}
         </ul>
-        <a className={styles.pdf} href={PDF_HREF} download aria-label={t.nav.pdfLong}>
-          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 2v9M4 7l4 4 4-4M3 14h10" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          {t.nav.pdf}
-        </a>
       </nav>
     </header>
   );

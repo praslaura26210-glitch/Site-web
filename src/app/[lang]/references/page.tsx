@@ -20,11 +20,13 @@ export default async function References({ params }: { params: Promise<{ lang: s
   const r = refs();
   return (
     <article className={`wrap ${styles.page}`}>
-      <h1 className={styles.h1}>{t.meta.referencesTitle}</h1>
-      <p className="lead" style={{ maxWidth: '36ch' }}>{lang === 'fr' ? r.intro_proposee : r[`intro_${lang}`]}</p>
+      <header className={styles.head}>
+        <h1 className={styles.h1}>{t.meta.referencesTitle}</h1>
+        <p className={styles.headLead}>{lang === 'fr' ? r.intro_proposee : r[`intro_${lang}`]}</p>
+      </header>
       <ol className={styles.refs}>
         {r.references.map((x: any, i: number) => (
-          <li key={x.architecte}>
+          <li key={x.architecte} className="rv">
             <span className={styles.n}>{String(i + 1).padStart(2, '0')}</span>
             <div>
               <h2 className={styles.refName}>{x.architecte}</h2>

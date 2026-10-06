@@ -1,36 +1,61 @@
-.intro { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; pointer-events: none; transition: opacity .7s var(--ease); }
-.intro[data-mode='lite'] { background: var(--chaux); }
-.introOut { opacity: 0; }
-.introDrawing { width: min(70vw, 520px); height: auto; mix-blend-mode: multiply; animation: draw 1.6s var(--ease) both; }
-@keyframes draw { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
-.introName { position: absolute; left: 50%; bottom: 14vh; transform: translate(-50%, 12px); font-family: var(--serif); font-size: clamp(2.8rem, 7vw, 6rem); letter-spacing: -.01em; opacity: 0; transition: opacity 1s var(--ease), transform 1.2s var(--ease); white-space: nowrap; }
-.introName.on { opacity: 1; transform: translate(-50%, 0); }
-.skip { pointer-events: auto; position: absolute; right: var(--gut); bottom: 28px; background: none; border: 1px solid var(--ombre); border-radius: 99px; padding: 8px 18px; font-size: .8rem; letter-spacing: .06em; }
-.skip:hover { background: var(--ombre); color: var(--chaux); }
+/* ---------- ouverture : le logo se dessine ---------- */
+.ouverture { display: none; }
+:global(html[data-intro]) .ouverture { display: grid; }
+.ouverture { position: fixed; inset: 0; z-index: 80; place-items: center; background: var(--fond); cursor: pointer; animation: ouvSecours 0s 6s forwards; }
+.ouverture[data-out] { display: grid; opacity: 0; visibility: hidden; transition: opacity .9s var(--ease), visibility 0s .9s; }
+@keyframes ouvSecours { to { opacity: 0; visibility: hidden; } }
+.ouvIn { display: grid; justify-items: center; gap: 22px; }
+.ouvLogo { width: min(76vw, 560px); height: auto; color: var(--encre); }
+.ouvLogo path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trace 2.3s cubic-bezier(.55, .1, .3, 1) .25s forwards; }
+@keyframes trace { to { stroke-dashoffset: 0; } }
+.ouvNom { font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: .02em; opacity: 0; transform: translateY(8px); animation: nom .9s var(--ease) 2.1s forwards; }
+@keyframes nom { to { opacity: 1; transform: none; } }
+.ouvSkip { position: absolute; right: var(--gut); bottom: 28px; background: none; border: 0; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
 
+/* ---------- présentation ---------- */
+.hero { padding-top: calc(var(--header-h) + clamp(12px, 4vh, 48px)); }
+.heroGrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 96px); align-items: center; min-height: calc(82svh - var(--header-h)); }
+.heroTxt { max-width: 560px; }
+.coords { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .7rem; letter-spacing: .18em; color: var(--gris); font-variant-numeric: tabular-nums; }
+.coordsLieu { margin-left: 10px; padding-left: 22px; position: relative; text-transform: uppercase; }
+.coordsLieu::before { content: ''; position: absolute; left: 0; top: 50%; width: 12px; height: 1px; background: currentColor; }
+.nom { font-size: clamp(3.6rem, 9vw, 8.4rem); line-height: .9; margin-top: 22px; letter-spacing: -0.02em; }
+.approche { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.1vw, 1.75rem); line-height: 1.38; margin-top: 30px; max-width: 30ch; }
+.role { margin-top: 22px; font-size: .86rem; color: var(--gris); max-width: 44ch; }
+.down { display: inline-flex; align-items: center; gap: 14px; margin-top: 40px; text-decoration: none; font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; }
+.down svg { transition: transform .5s var(--ease); }
+.down:hover svg { transform: translateY(5px); }
+.heroDessin { justify-self: end; width: min(100%, 64svh * 1.05); }
+.heroDessin img { mix-blend-mode: multiply; }
 
-.hero { position: relative; min-height: 100svh; display: grid; align-items: end; padding-top: var(--header-h); }
-.heroLite { background: radial-gradient(ellipse at 70% 40%, var(--enduit), var(--chaux) 70%); }
-.heroLite::before { content: ''; position: absolute; right: var(--gut); top: calc(var(--header-h) + 3vh); width: min(46vw, 560px); aspect-ratio: 1398/1328; background: url('/media/site/dessin-couverture-1000.webp') center/contain no-repeat; mix-blend-mode: multiply; opacity: .9; }
-.heroIn { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px clamp(24px, 6vw, 96px); align-items: end; padding-bottom: clamp(32px, 6vh, 72px); }
-.name { font-size: clamp(3.4rem, 10vw, 9.5rem); line-height: .9; letter-spacing: -.02em; }
-.approach { margin-top: 22px; max-width: 30ch; }
-.role { margin-top: 18px; max-width: 52ch; font-size: .92rem; color: var(--terre); }
-.search { margin-top: 6px; font-size: .92rem; font-weight: 500; }
-.cta { margin-top: 26px; display: inline-flex; gap: 12px; align-items: center; text-decoration: none; font-size: .9rem; letter-spacing: .04em; border-bottom: 1px solid currentColor; padding-bottom: 4px; }
-.cta span { transition: transform .4s var(--ease); }
-.cta:hover span { transform: translateX(6px); }
-.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ombre); background: color-mix(in srgb, var(--chaux) 72%, transparent); backdrop-filter: blur(2px); }
-.listHead { margin-bottom: 10px; }
-.list li a { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 11px 4px; border-bottom: 1px solid var(--filet); text-decoration: none; transition: background-color .35s, padding .35s var(--ease); }
-.list li a:hover { background: var(--enduit); padding-left: 10px; }
-.list .n { font-family: var(--serif); color: var(--cuite); }
-.list .t { font-family: var(--serif); font-size: 1.22rem; line-height: 1.2; }
-.list .t small { display: block; font-family: var(--sans); font-size: .74rem; color: var(--terre); }
-.list .y { font-size: .78rem; color: var(--terre); font-variant-numeric: tabular-nums; }
-.terrainNote { position: absolute; left: var(--gut); top: calc(var(--header-h) + 18px); }
+/* ---------- projets ---------- */
+.projets { padding-top: clamp(24px, 5vh, 56px); scroll-margin-top: var(--header-h); }
+.projetsHead { display: flex; align-items: center; gap: 20px; margin-bottom: clamp(24px, 4vh, 44px); }
+.projetsLine { flex: 1; height: 1px; background: var(--filet); }
+
+.grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(36px, 5vh, 64px) clamp(18px, 2.6vw, 40px); }
+.carte:nth-child(3n + 2) { transform: translateY(clamp(32px, 7vh, 88px)); }
+.carte:nth-child(3n + 2)[data-rv='wait'] { transform: translateY(calc(clamp(32px, 7vh, 88px) + 28px)); }
+.carte a { display: block; text-decoration: none; }
+.carteImg { overflow: hidden; aspect-ratio: 4 / 5; background: var(--fond-2); }
+.carteImg img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease), filter .8s var(--ease); }
+.carte a:hover .carteImg img { transform: scale(1.035); }
+.carteTxt { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; margin-top: 16px; align-items: baseline; }
+.carteN { font-family: var(--serif); font-size: .95rem; color: var(--accent); grid-row: span 2; }
+.carteT { font-size: clamp(1.45rem, 2vw, 1.9rem); line-height: 1.1; }
+.carteT { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .6s var(--ease); justify-self: start; }
+.carte a:hover .carteT { background-size: 100% 1px; }
+.carteP { margin-top: 6px; font-size: .78rem; color: var(--gris); }
 
 @media (max-width: 900px) {
-  .heroIn { grid-template-columns: 1fr; }
-  .heroLite::before { width: 62vw; right: 8px; top: calc(var(--header-h) + 8px); opacity: .22; }
+  .heroGrid { grid-template-columns: 1fr; min-height: 0; gap: 36px; padding-bottom: 24px; }
+  .heroDessin { justify-self: center; width: min(100%, 520px); }
+  .grille { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .carte:nth-child(3n + 2), .carte:nth-child(3n + 2)[data-rv='wait'] { transform: none; }
+  .carte:nth-child(2n) { transform: translateY(40px); }
+}
+@media (max-width: 560px) {
+  .grille { grid-template-columns: 1fr; }
+  .carte:nth-child(2n) { transform: none; }
+  .carteImg { aspect-ratio: 4 / 3; }
 }

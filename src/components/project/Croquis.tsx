@@ -9,7 +9,7 @@ type Data = { w: number; h: number; lines: number[][]; strokes: number[][] };
  * puis le dessin original prend le relais. Dessin 2D (canvas), sans WebGL.
  * Sans animation (ou sans JS) : le dessin original s'affiche directement.
  */
-export default function Croquis({ json, src, srcSmall, w, h, alt, caption }: { json: string; src: string; srcSmall: string; w: number; h: number; alt: string; caption?: string }) {
+export default function Croquis({ json, src, srcSmall, w, h, alt, caption, duree = 2600, eager = false, className }: { json: string; src: string; srcSmall: string; w: number; h: number; alt: string; caption?: string; duree?: number; eager?: boolean; className?: string }) {
   const box = useRef<HTMLElement>(null);
   const cv = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<'static' | 'wait' | 'draw' | 'done'>('static');
@@ -24,7 +24,9 @@ export default function Croquis({ json, src, srcSmall, w, h, alt, caption }: { j
       started = true;
       io.disconnect();
       const wait = () => (data ? run(data) : requestAnimationFrame(wait));
-      wait();
+      // à l'accueil, on attend la fin de l'ouverture (logo) pour commencer à dessiner
+      if (document.documentElement.dataset.intro) window.addEventListener('lp:intro-fin', () => setTimeout(wait, 250), { once: true });
+      else wait();
     }, { threshold: 0.25 });
     io.observe(box.current!);
     function run(d: Data) {
@@ -35,7 +37,7 @@ export default function Croquis({ json, src, srcSmall, w, h, alt, caption }: { j
       c.width = rect.width * dpr; c.height = rect.height * dpr;
       const k = (rect.width * dpr) / d.w;
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      const t0 = performance.now(), DUR = 2600;
+      const t0 = performance.now(), DUR = duree;
       const total = d.strokes.length;
       const frame = (now: number) => {
         const t = (now - t0) / DUR;
@@ -65,13 +67,13 @@ export default function Croquis({ json, src, srcSmall, w, h, alt, caption }: { j
       raf = requestAnimationFrame(frame);
     }
     return () => { io.disconnect(); cancelAnimationFrame(raf); };
-  }, [json]);
+  }, [json, duree]);
 
   return (
-    <figure ref={box} className={styles.croquis} data-phase={phase} style={{ margin: 0 }}>
+    <figure ref={box} className={`${styles.croquis} ${className || ''}`} data-phase={phase} style={{ margin: 0 }}>
       <div className={styles.croquisBox} style={{ aspectRatio: `${w} / ${h}` }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} srcSet={`${srcSmall} 1000w, ${src} 2000w`} sizes="(max-width: 900px) 100vw, 50vw" alt={alt} width={w} height={h} loading="lazy" />
+        <img src={src} srcSet={`${srcSmall} 1000w, ${src} 2000w`} sizes="(max-width: 900px) 100vw, 50vw" alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} />
         <canvas ref={cv} aria-hidden="true" />
       </div>
       {caption && <figcaption className={styles.cap}>{caption}</figcaption>}

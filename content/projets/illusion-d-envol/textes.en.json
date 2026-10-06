@@ -1,5 +1,17 @@
 {
  "programme": "Timber pavilion",
  "cadre": "Design studio: P. Rollet",
- "texte": "The project explores the idea of the frame through the design of a timber pavilion. The joints become both a constructive principle and an element of atmosphere: they carry the structure, filter the light and shape the perception of space. An inverted roof makes the structure seem to lift off the ground, reinforcing its lightness."
+ "texte": "The project explores the idea of the frame through the design of a timber pavilion. The joints become both a constructive principle and an element of atmosphere: they carry the structure, filter the light and shape the perception of space. An inverted roof makes the structure seem to lift off the ground, reinforcing its lightness.",
+ "legendes": {
+  "maquette": "Model of the timber pavilion",
+  "coupe-aa": "Section AA",
+  "plan-rdc": "Ground floor plan",
+  "facade-sud": "South elevation",
+  "axonometrie-eclatee": "Exploded axonometric view of the structure",
+  "detail-assemblage-1": "Joint detail",
+  "detail-assemblage-2": "Joint detail",
+  "detail-assemblage-3": "Joint detail",
+  "detail-assemblage-4": "Joint detail",
+  "croquis-perspective": "Hand-drawn perspective"
+ }
 }

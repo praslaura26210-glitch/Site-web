@@ -1,5 +1,19 @@
 {
  "programme": "Scuola dell'infanzia",
  "cadre": "Laboratorio di progettazione: D. Vielfaure",
- "texte": "Inserita in un terreno in pendenza, la scuola cerca di integrarsi nel sito nel modo più naturale possibile. Le aule e gli spazi comuni sono distribuiti su due livelli, ciascuno aperto sul proprio cortile. Costruita esclusivamente in legno massiccio e pietra, la scuola sviluppa un'orditura di copertura in diagonale per coprire luci più ampie senza ricorrere al legno lamellare. Un sistema di frangisole girevoli protegge la facciata più esposta al sole, modulando la luce naturale e le atmosfere interne."
+ "texte": "Inserita in un terreno in pendenza, la scuola cerca di integrarsi nel sito nel modo più naturale possibile. Le aule e gli spazi comuni sono distribuiti su due livelli, ciascuno aperto sul proprio cortile. Costruita esclusivamente in legno massiccio e pietra, la scuola sviluppa un'orditura di copertura in diagonale per coprire luci più ampie senza ricorrere al legno lamellare. Un sistema di frangisole girevoli protegge la facciata più esposta al sole, modulando la luce naturale e le atmosfere interne.",
+ "legendes": {
+  "plan-masse": "Planimetria generale",
+  "plan-rdc": "Pianta piano terra",
+  "plan-r-1": "Pianta livello -1",
+  "plan-structure": "Pianta strutturale",
+  "facade-ouest": "Prospetto ovest",
+  "coupe-aa": "Sezione AA",
+  "axonometrie-eclatee": "Assonometria esplosa",
+  "maquette-1": "Plastico",
+  "maquette-2": "Plastico",
+  "maquette-3": "Plastico, interno",
+  "maquette-4": "Plastico",
+  "maquette-5": "Plastico"
+ }
 }
