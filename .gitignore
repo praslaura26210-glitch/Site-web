@@ -1,0 +1,6 @@
+# PDF sources du book (trop lourds pour le dépôt, à garder sur ton ordinateur)
+sources/
+__pycache__/
+node_modules/
+.next/
+out/

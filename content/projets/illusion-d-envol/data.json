@@ -1,0 +1,332 @@
+{
+  "slug": "illusion-d-envol",
+  "numero": "01",
+  "titre": "Illusion d'envol",
+  "programme": "Pavillon en bois",
+  "cadre": "Studio de projet : P. Rollet",
+  "annee": 2023,
+  "lieu": "[À COMPLÉTER]",
+  "surface": "[À COMPLÉTER]",
+  "equipe": "[À COMPLÉTER]",
+  "pages_book": [
+    6,
+    12
+  ],
+  "texte": "Le projet explore la notion d'ossature à travers la conception d'un pavillon en bois. Les assemblages deviennent à la fois un principe constructif et un élément d'ambiance : ils portent la structure, filtrent la lumière et participent à la perception de l'espace. Une toiture inversée donne à la structure l'impression de se détacher du sol, renforçant sa légèreté.",
+  "poeme": "Sur le fil de l'horizon, là où le ciel rencontre la terre,\nUn édifice se dresse, léger, presque éphémère\nToiture inversée, ballet de légèreté\nPrête à s'envoler vers la liberté.\n\nDeux toitures, un seul élan,\nL'une dessus, l'autre en dedans,\nUn jeu de lumière, une danse de l'espace\nUne double peau où le temps s'efface.\n\nDans l'ombre des poteaux exposés,\nLe bâtiment se tient ancré,\nContour extérieur, simple et pur,\nFace aux vents, il tient fière allure.\n\nÀ l'intérieur, sous ses ailes,\nUne complexité de solives et de poutres rebelles\nPlus denses, un jeu de lumière éblouissant\nNous transporte dans un monde captivant.\n\nAspect de légèreté, illusion suspendue\nLa toiture inversée, histoire perçue,\nÉvoque la grâce, inspire l'envol,\nS'élève et devient symbole.",
+  "enjeux": "[À COMPLÉTER]",
+  "images": [
+    {
+      "nom": "maquette",
+      "type": "photo",
+      "legende": "Maquette du pavillon en bois",
+      "pages": [
+        6
+      ],
+      "source_px": [
+        2845,
+        4023
+      ],
+      "ppi_source": 345,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/maquette-2000.webp",
+          "px": [
+            1414,
+            2000
+          ],
+          "ko": 127
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/maquette-1000.webp",
+          "px": [
+            707,
+            1000
+          ],
+          "ko": 41
+        }
+      }
+    },
+    {
+      "nom": "coupe-aa",
+      "type": "plan-scan",
+      "legende": "Coupe AA",
+      "pages": [
+        9
+      ],
+      "source_px": [
+        1964,
+        770
+      ],
+      "ppi_source": 384,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/coupe-aa-2000.webp",
+          "px": [
+            1964,
+            770
+          ],
+          "ko": 53
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/coupe-aa-1000.webp",
+          "px": [
+            1000,
+            392
+          ],
+          "ko": 24
+        }
+      }
+    },
+    {
+      "nom": "plan-rdc",
+      "type": "plan-scan",
+      "legende": "Plan RDC",
+      "pages": [
+        9
+      ],
+      "source_px": [
+        2479,
+        1928
+      ],
+      "ppi_source": 384,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/plan-rdc-2000.webp",
+          "px": [
+            2000,
+            1555
+          ],
+          "ko": 110
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/plan-rdc-1000.webp",
+          "px": [
+            1000,
+            778
+          ],
+          "ko": 51
+        }
+      }
+    },
+    {
+      "nom": "facade-sud",
+      "type": "plan-scan",
+      "legende": "Façade sud",
+      "pages": [
+        9
+      ],
+      "source_px": [
+        2479,
+        751
+      ],
+      "ppi_source": 384,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/facade-sud-2000.webp",
+          "px": [
+            2000,
+            606
+          ],
+          "ko": 62
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/facade-sud-1000.webp",
+          "px": [
+            1000,
+            303
+          ],
+          "ko": 29
+        }
+      }
+    },
+    {
+      "nom": "axonometrie-eclatee",
+      "type": "plan-scan",
+      "legende": "Axonométrie éclatée de la structure",
+      "pages": [
+        10
+      ],
+      "source_px": [
+        2474,
+        2302
+      ],
+      "ppi_source": 309,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/axonometrie-eclatee-2000.webp",
+          "px": [
+            2000,
+            1861
+          ],
+          "ko": 211
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/axonometrie-eclatee-1000.webp",
+          "px": [
+            1000,
+            930
+          ],
+          "ko": 80
+        }
+      }
+    },
+    {
+      "nom": "detail-assemblage-1",
+      "type": "plan-scan",
+      "legende": "Détail d'assemblage",
+      "pages": [
+        11
+      ],
+      "source_px": [
+        980,
+        1003
+      ],
+      "ppi_source": 353,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-1-2000.webp",
+          "px": [
+            980,
+            1003
+          ],
+          "ko": 83
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-1-1000.webp",
+          "px": [
+            977,
+            1000
+          ],
+          "ko": 81
+        }
+      }
+    },
+    {
+      "nom": "detail-assemblage-2",
+      "type": "plan-scan",
+      "legende": "Détail d'assemblage",
+      "pages": [
+        11
+      ],
+      "source_px": [
+        980,
+        1003
+      ],
+      "ppi_source": 353,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-2-2000.webp",
+          "px": [
+            980,
+            1003
+          ],
+          "ko": 56
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-2-1000.webp",
+          "px": [
+            977,
+            1000
+          ],
+          "ko": 55
+        }
+      }
+    },
+    {
+      "nom": "detail-assemblage-3",
+      "type": "plan-scan",
+      "legende": "Détail d'assemblage",
+      "pages": [
+        11
+      ],
+      "source_px": [
+        989,
+        1023
+      ],
+      "ppi_source": 353,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-3-2000.webp",
+          "px": [
+            989,
+            1023
+          ],
+          "ko": 45
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-3-1000.webp",
+          "px": [
+            967,
+            1000
+          ],
+          "ko": 45
+        }
+      }
+    },
+    {
+      "nom": "detail-assemblage-4",
+      "type": "plan-scan",
+      "legende": "Détail d'assemblage",
+      "pages": [
+        11
+      ],
+      "source_px": [
+        989,
+        1023
+      ],
+      "ppi_source": 353,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-4-2000.webp",
+          "px": [
+            989,
+            1023
+          ],
+          "ko": 40
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/detail-assemblage-4-1000.webp",
+          "px": [
+            967,
+            1000
+          ],
+          "ko": 40
+        }
+      }
+    },
+    {
+      "nom": "croquis-perspective",
+      "type": "croquis",
+      "legende": "Perspective dessinée à la main",
+      "pages": [
+        12
+      ],
+      "source_px": [
+        2324,
+        3281
+      ],
+      "ppi_source": 282,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/illusion-d-envol/images/croquis-perspective-2000.webp",
+          "px": [
+            1417,
+            2000
+          ],
+          "ko": 404
+        },
+        "1000": {
+          "fichier": "projets/illusion-d-envol/images/croquis-perspective-1000.webp",
+          "px": [
+            708,
+            1000
+          ],
+          "ko": 118
+        }
+      }
+    }
+  ],
+  "plans_vectoriels": [],
+  "modele_3d": "[À COMPLÉTER]"
+}

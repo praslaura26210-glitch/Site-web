@@ -1,0 +1,85 @@
+{
+  "nom": "Laura Pras",
+  "nom_site": "Laura Pra",
+  "telephone": "07 68 57 43 08",
+  "email": "laurapras26210@gmail.com",
+  "ville": "Grenoble / Épinouze",
+  "linkedin": "[À COMPLÉTER]",
+  "instagram": "[À COMPLÉTER]",
+  "formations": [
+    {
+      "intitule": "Bac STMG",
+      "lieu": "Lycée du Sacré-Cœur, Tournon-sur-Rhône",
+      "annee": "2022"
+    },
+    {
+      "intitule": "Titre RNCP (Bac+2) dessinatrice en bâtiment et architecture",
+      "lieu": "EDAIC, Villeurbanne",
+      "annee": "2023"
+    },
+    {
+      "intitule": "Licence 3",
+      "lieu": "École nationale supérieure d'architecture de Grenoble",
+      "annee": "2026"
+    },
+    {
+      "intitule": "Master AECC (Architecture, Environnement et Culture Constructive)",
+      "lieu": "ENSA Grenoble",
+      "annee": "[À COMPLÉTER]"
+    }
+  ],
+  "stages": [
+    {
+      "intitule": "Stage en cabinet d'architecture d'intérieur",
+      "structure": "MTG Intérieur",
+      "lieu": "Caluire-et-Cuire",
+      "date": "Juillet 2025"
+    },
+    {
+      "intitule": "Stage ouvrier",
+      "structure": "Chenavier Caraz",
+      "lieu": "Beaurepaire",
+      "date": "Janvier 2024"
+    },
+    {
+      "intitule": "Stage d'architecture",
+      "structure": "ATCD Architecture",
+      "lieu": "Beaurepaire",
+      "date": "Juin – août 2023"
+    },
+    {
+      "intitule": "Stage en cabinet d'architecture",
+      "structure": "EAD",
+      "lieu": "Salaise-sur-Sanne",
+      "date": "Février 2022"
+    },
+    {
+      "intitule": "Stage en cabinet d'architecture",
+      "structure": "Cheeze",
+      "lieu": "Valence",
+      "date": "Décembre 2021"
+    }
+  ],
+  "logiciels_sur_5": {
+    "Archicad": 5,
+    "Sketchup": 4,
+    "Twinmotion": 4,
+    "Indesign": 4,
+    "Autocad": 3,
+    "Revit": 3,
+    "Photoshop": 3,
+    "Pack Office": 3,
+    "Illustrator": 2
+  },
+  "savoir_faire": [
+    "Dessin à la main",
+    "Dossiers de permis de construire",
+    "Plans d'escalier",
+    "Dessin de mobilier"
+  ],
+  "recherche": {
+    "titre": "[À COMPLÉTER]",
+    "sujet": "Rapport d'études sur l'expérience sensible",
+    "resume": "[À COMPLÉTER]"
+  }
+}

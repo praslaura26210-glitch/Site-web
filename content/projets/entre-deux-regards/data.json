@@ -1,0 +1,344 @@
+{
+  "slug": "entre-deux-regards",
+  "numero": "04",
+  "titre": "Entre deux regards",
+  "programme": "Réhabilitation patrimoniale",
+  "cadre": "Studio de projet : B. Martino",
+  "annee": 2026,
+  "lieu": "Livet (38)",
+  "surface": "[À COMPLÉTER]",
+  "equipe": "[À COMPLÉTER]",
+  "pages_book": [
+    36,
+    45
+  ],
+  "texte": "Le projet réhabilite l'ancien bâtiment administratif Keller en un lieu d'exposition et de restauration, ouvert aux habitants et aux visiteurs. L'intervention s'appuie sur le contraste entre une façade tournée vers la route, qui conserve les mosaïques existantes, et une façade ouverte sur le paysage. Une cour intérieure, créée par une ouverture dans la toiture, apporte de la lumière à l'escalier intérieur d'origine et crée un lien entre le bâtiment et son environnement.",
+  "recit_titre": "Ce que l'ombre retenait",
+  "recit": "Le jour faisait remonter des couleurs que l'ombre avait longtemps tenues en silence. Ce qui avait toujours été là ne semblait plus usé, mais simplement rendu à lui-même. Ici, chaque chose semblait n'être plus que matière et lumière, retenue entre les murs et le ciel ouvert. Par endroits, le monde extérieur se réduisait à quelques éclats de profondeur, tenus dans l'épaisseur des murs. Plus loin, les vestiges ne parlaient pas seulement du travail passé, mais d'un monde qui s'était peu à peu retiré de lui-même. On se tenait là comme au bord d'un monde arrêté, suspendu au-dessus de l'eau, les montagnes pour seul horizon.",
+  "programme_detail": [
+    "Exposition",
+    "Restauration"
+  ],
+  "enjeux": "[À COMPLÉTER]",
+  "images": [
+    {
+      "nom": "maquette",
+      "type": "photo",
+      "legende": "Maquette",
+      "pages": [
+        36
+      ],
+      "source_px": [
+        2845,
+        4023
+      ],
+      "ppi_source": 345,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/entre-deux-regards/images/maquette-2000.webp",
+          "px": [
+            1414,
+            2000
+          ],
+          "ko": 104
+        },
+        "1000": {
+          "fichier": "projets/entre-deux-regards/images/maquette-1000.webp",
+          "px": [
+            707,
+            1000
+          ],
+          "ko": 36
+        }
+      }
+    },
+    {
+      "nom": "perspective-exterieure",
+      "type": "rendu",
+      "legende": "Perspective extérieure",
+      "pages": [
+        44
+      ],
+      "source_px": [
+        1585,
+        1151
+      ],
+      "ppi_source": 296,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/entre-deux-regards/images/perspective-exterieure-2000.webp",
+          "px": [
+            1585,
+            1151
+          ],
+          "ko": 514
+        },
+        "1000": {
+          "fichier": "projets/entre-deux-regards/images/perspective-exterieure-1000.webp",
+          "px": [
+            1000,
+            726
+          ],
+          "ko": 198
+        }
+      }
+    },
+    {
+      "nom": "perspective-cour",
+      "type": "rendu",
+      "legende": "Perspective de la cour intérieure",
+      "pages": [
+        45
+      ],
+      "source_px": [
+        2045,
+        1560
+      ],
+      "ppi_source": 384,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/entre-deux-regards/images/perspective-cour-2000.webp",
+          "px": [
+            2000,
+            1526
+          ],
+          "ko": 815
+        },
+        "1000": {
+          "fichier": "projets/entre-deux-regards/images/perspective-cour-1000.webp",
+          "px": [
+            1000,
+            763
+          ],
+          "ko": 268
+        }
+      }
+    },
+    {
+      "nom": "perspective-escalier",
+      "type": "rendu",
+      "legende": "Perspective de l'escalier d'origine",
+      "pages": [
+        45
+      ],
+      "source_px": [
+        2045,
+        1505
+      ],
+      "ppi_source": 384,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/entre-deux-regards/images/perspective-escalier-2000.webp",
+          "px": [
+            2000,
+            1472
+          ],
+          "ko": 525
+        },
+        "1000": {
+          "fichier": "projets/entre-deux-regards/images/perspective-escalier-1000.webp",
+          "px": [
+            1000,
+            736
+          ],
+          "ko": 159
+        }
+      }
+    }
+  ],
+  "plans_vectoriels": [
+    {
+      "nom": "plan-masse-existant",
+      "legende": "Plan masse existant 1/500",
+      "page": 38,
+      "fichier": "projets/entre-deux-regards/plans/plan-masse-existant.svg",
+      "traces": 164531,
+      "ko": 4405,
+      "format_pt": [
+        510,
+        356
+      ]
+    },
+    {
+      "nom": "plan-masse-projet",
+      "legende": "Plan masse projet 1/500",
+      "page": 39,
+      "fichier": "projets/entre-deux-regards/plans/plan-masse-projet.svg",
+      "traces": 166158,
+      "ko": 4442,
+      "format_pt": [
+        521,
+        355
+      ]
+    },
+    {
+      "nom": "plan-rdc-existant",
+      "legende": "Plan RDC existant, démolitions",
+      "page": 40,
+      "fichier": "projets/entre-deux-regards/plans/plan-rdc-existant.svg",
+      "traces": 2225,
+      "ko": 73,
+      "format_pt": [
+        402,
+        188
+      ]
+    },
+    {
+      "nom": "plan-etage-existant",
+      "legende": "Plan étage existant, démolitions",
+      "page": 40,
+      "fichier": "projets/entre-deux-regards/plans/plan-etage-existant.svg",
+      "traces": 1792,
+      "ko": 58,
+      "format_pt": [
+        404,
+        176
+      ]
+    },
+    {
+      "nom": "plan-rdc-projet",
+      "legende": "Plan RDC projet",
+      "page": 41,
+      "fichier": "projets/entre-deux-regards/plans/plan-rdc-projet.svg",
+      "traces": 4206,
+      "ko": 137,
+      "format_pt": [
+        402,
+        140
+      ]
+    },
+    {
+      "nom": "plan-etage-projet",
+      "legende": "Plan étage projet",
+      "page": 41,
+      "fichier": "projets/entre-deux-regards/plans/plan-etage-projet.svg",
+      "traces": 2929,
+      "ko": 88,
+      "format_pt": [
+        402,
+        132
+      ]
+    },
+    {
+      "nom": "facade-ouest-existant",
+      "legende": "Façade ouest existante",
+      "page": 42,
+      "fichier": "projets/entre-deux-regards/plans/facade-ouest-existant.svg",
+      "traces": 1167,
+      "ko": 108,
+      "format_pt": [
+        227,
+        112
+      ]
+    },
+    {
+      "nom": "facade-est-existant",
+      "legende": "Façade est existante",
+      "page": 42,
+      "fichier": "projets/entre-deux-regards/plans/facade-est-existant.svg",
+      "traces": 705,
+      "ko": 112,
+      "format_pt": [
+        218,
+        110
+      ]
+    },
+    {
+      "nom": "facade-sud-existant",
+      "legende": "Façade sud existante",
+      "page": 42,
+      "fichier": "projets/entre-deux-regards/plans/facade-sud-existant.svg",
+      "traces": 4491,
+      "ko": 272,
+      "format_pt": [
+        432,
+        111
+      ]
+    },
+    {
+      "nom": "facade-nord-existant",
+      "legende": "Façade nord existante",
+      "page": 42,
+      "fichier": "projets/entre-deux-regards/plans/facade-nord-existant.svg",
+      "traces": 1724,
+      "ko": 213,
+      "format_pt": [
+        432,
+        112
+      ]
+    },
+    {
+      "nom": "coupe-aa-existant",
+      "legende": "Coupe AA existante",
+      "page": 42,
+      "fichier": "projets/entre-deux-regards/plans/coupe-aa-existant.svg",
+      "traces": 3675,
+      "ko": 122,
+      "format_pt": [
+        431,
+        114
+      ]
+    },
+    {
+      "nom": "facade-ouest-projet",
+      "legende": "Façade ouest projet",
+      "page": 43,
+      "fichier": "projets/entre-deux-regards/plans/facade-ouest-projet.svg",
+      "traces": 1232,
+      "ko": 109,
+      "format_pt": [
+        234,
+        112
+      ]
+    },
+    {
+      "nom": "facade-est-projet",
+      "legende": "Façade est projet",
+      "page": 43,
+      "fichier": "projets/entre-deux-regards/plans/facade-est-projet.svg",
+      "traces": 16003,
+      "ko": 504,
+      "format_pt": [
+        230,
+        114
+      ]
+    },
+    {
+      "nom": "facade-sud-projet",
+      "legende": "Façade sud projet",
+      "page": 43,
+      "fichier": "projets/entre-deux-regards/plans/facade-sud-projet.svg",
+      "traces": 4195,
+      "ko": 260,
+      "format_pt": [
+        430,
+        112
+      ]
+    },
+    {
+      "nom": "facade-nord-projet",
+      "legende": "Façade nord projet",
+      "page": 43,
+      "fichier": "projets/entre-deux-regards/plans/facade-nord-projet.svg",
+      "traces": 2394,
+      "ko": 380,
+      "format_pt": [
+        432,
+        112
+      ]
+    },
+    {
+      "nom": "coupe-aa-projet",
+      "legende": "Coupe AA projet",
+      "page": 43,
+      "fichier": "projets/entre-deux-regards/plans/coupe-aa-projet.svg",
+      "traces": 5248,
+      "ko": 165,
+      "format_pt": [
+        431,
+        112
+      ]
+    }
+  ],
+  "modele_3d": "[À COMPLÉTER]"
+}

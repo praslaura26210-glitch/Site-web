@@ -1,0 +1,83 @@
+{
+  "slug": "au-dela-des-projets",
+  "numero": "07",
+  "titre": "Au-delà des projets",
+  "programme": "Dessins, photos, bricolage",
+  "cadre": "Pratiques personnelles",
+  "annee": null,
+  "lieu": null,
+  "surface": null,
+  "equipe": null,
+  "pages_book": [
+    60,
+    63
+  ],
+  "texte": "J'aime consacrer mon temps libre à explorer différentes pratiques créatives, comme le dessin, la peinture ou des activités manuelles telles que la mosaïque, le scrapbooking et le tricot. J'apprécie particulièrement travailler de mes mains, rénover et redonner vie à d'anciens meubles, ou encore créer de nouvelles pièces. Je ne suis pas une grande photographe, mais j'aime prendre le temps de photographier les lieux qui m'entourent. Cela me permet d'observer plus attentivement l'architecture, la lumière et les détails qui composent un lieu.",
+  "enjeux": "[À COMPLÉTER]",
+  "images": [
+    {
+      "nom": "photo",
+      "type": "photo",
+      "legende": "Photographie",
+      "pages": [
+        60
+      ],
+      "source_px": [
+        2795,
+        3947
+      ],
+      "ppi_source": 339,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/au-dela-des-projets/images/photo-2000.webp",
+          "px": [
+            1416,
+            2000
+          ],
+          "ko": 756
+        },
+        "1000": {
+          "fichier": "projets/au-dela-des-projets/images/photo-1000.webp",
+          "px": [
+            708,
+            1000
+          ],
+          "ko": 205
+        }
+      }
+    },
+    {
+      "nom": "planche-dessins-photos-bricolage",
+      "type": "planche",
+      "legende": "Dessins, photos, bricolage",
+      "pages": [
+        62,
+        63
+      ],
+      "source_px": [
+        4134,
+        2924
+      ],
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/au-dela-des-projets/images/planche-dessins-photos-bricolage-2000.webp",
+          "px": [
+            2000,
+            1415
+          ],
+          "ko": 413
+        },
+        "1000": {
+          "fichier": "projets/au-dela-des-projets/images/planche-dessins-photos-bricolage-1000.webp",
+          "px": [
+            1000,
+            707
+          ],
+          "ko": 133
+        }
+      }
+    }
+  ],
+  "plans_vectoriels": [],
+  "modele_3d": null
+}

@@ -1,0 +1,456 @@
+{
+  "slug": "le-passage-des-artistes",
+  "numero": "03",
+  "titre": "Le Passage des artistes",
+  "programme": "Logements d'artistes et café-peinture",
+  "cadre": "Studio de projet : D. Vielfaure (studio « Construire en pierre massive », D. Vielfaure + S. Gasnier, S5)",
+  "annee": 2025,
+  "lieu": "Quai Xavier Jouvin, Grenoble (38)",
+  "surface": "[À COMPLÉTER]",
+  "equipe": "Mathilde Meunier, Laura Pras (binôme, d'après les planches de rendu)",
+  "pages_book": [
+    22,
+    35
+  ],
+  "texte": "Le projet réunit habitants, visiteurs et artistes autour d'un lieu de création et de partage. La parcelle est organisée en deux bâtiments partageant les circulations, créant une cour centrale végétalisée et un passage traversant reliant les deux rues. Le projet, développé le long des quais, accueille un café-peinture et des logements partagés pour les peintres. Réalisé en pierre massive, il développe un travail sur l'épaisseur des murs et sur la façade, avec des arches en rez-de-chaussée et des appuis de fenêtres en arc inversé.",
+  "experimentation": "Dans le cadre du projet, une expérimentation en pierre massive à échelle réelle a permis d'étudier les principes constructifs de ce matériau à travers les assemblages, les franchissements et les possibilités de mise en œuvre. Le détail constructif du projet a ensuite été taillé dans la pierre à l'aide d'outils manuels tels que la scie, le marteau et le burin. Cette expérimentation a permis de développer l'appui de fenêtre en arc inversé en intégrant un rejingot et en repensant sa forme pour assurer la gestion des eaux de pluie, en confrontant le dessin à la réalité constructive.",
+  "enjeux": "[À COMPLÉTER]",
+  "images": [
+    {
+      "nom": "croquis-cour",
+      "type": "croquis",
+      "legende": "Croquis de la cour",
+      "pages": [
+        22
+      ],
+      "source_px": [
+        2473,
+        3497
+      ],
+      "ppi_source": 299,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/croquis-cour-2000.webp",
+          "px": [
+            1414,
+            2000
+          ],
+          "ko": 580
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/croquis-cour-1000.webp",
+          "px": [
+            707,
+            1000
+          ],
+          "ko": 194
+        }
+      }
+    },
+    {
+      "nom": "plan-masse",
+      "type": "plan-scan",
+      "legende": "Plan masse 1/250",
+      "pages": [
+        24
+      ],
+      "source_px": [
+        5222,
+        5208
+      ],
+      "ppi_source": 316,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/plan-masse-2000.webp",
+          "px": [
+            2000,
+            1995
+          ],
+          "ko": 431
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/plan-masse-1000.webp",
+          "px": [
+            1000,
+            997
+          ],
+          "ko": 112
+        }
+      }
+    },
+    {
+      "nom": "plan-rdc",
+      "type": "plan-scan",
+      "legende": "Plan RDC",
+      "pages": [
+        26
+      ],
+      "source_px": [
+        1382,
+        2727
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/plan-rdc-2000.webp",
+          "px": [
+            1014,
+            2000
+          ],
+          "ko": 171
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/plan-rdc-1000.webp",
+          "px": [
+            507,
+            1000
+          ],
+          "ko": 67
+        }
+      }
+    },
+    {
+      "nom": "plan-etages",
+      "type": "plan-scan",
+      "legende": "Plan des étages",
+      "pages": [
+        27
+      ],
+      "source_px": [
+        1606,
+        2185
+      ],
+      "ppi_source": 324,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/plan-etages-2000.webp",
+          "px": [
+            1470,
+            2000
+          ],
+          "ko": 265
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/plan-etages-1000.webp",
+          "px": [
+            735,
+            1000
+          ],
+          "ko": 90
+        }
+      }
+    },
+    {
+      "nom": "maquette-1",
+      "type": "photo",
+      "legende": "Maquette",
+      "pages": [
+        28
+      ],
+      "source_px": [
+        2245,
+        3295
+      ],
+      "ppi_source": 316,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/maquette-1-2000.webp",
+          "px": [
+            1363,
+            2000
+          ],
+          "ko": 84
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/maquette-1-1000.webp",
+          "px": [
+            681,
+            1000
+          ],
+          "ko": 32
+        }
+      }
+    },
+    {
+      "nom": "maquette-2",
+      "type": "photo",
+      "legende": "Maquette, détail des fenêtres",
+      "pages": [
+        29
+      ],
+      "source_px": [
+        2902,
+        3963
+      ],
+      "ppi_source": 352,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/maquette-2-2000.webp",
+          "px": [
+            1465,
+            2000
+          ],
+          "ko": 83
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/maquette-2-1000.webp",
+          "px": [
+            732,
+            1000
+          ],
+          "ko": 32
+        }
+      }
+    },
+    {
+      "nom": "facade-sud",
+      "type": "plan-scan",
+      "legende": "Façade sud",
+      "pages": [
+        30
+      ],
+      "source_px": [
+        2112,
+        897
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/facade-sud-2000.webp",
+          "px": [
+            2000,
+            849
+          ],
+          "ko": 187
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/facade-sud-1000.webp",
+          "px": [
+            1000,
+            425
+          ],
+          "ko": 62
+        }
+      }
+    },
+    {
+      "nom": "facade-nord",
+      "type": "plan-scan",
+      "legende": "Façade nord",
+      "pages": [
+        30
+      ],
+      "source_px": [
+        950,
+        1081
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/facade-nord-2000.webp",
+          "px": [
+            950,
+            1081
+          ],
+          "ko": 110
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/facade-nord-1000.webp",
+          "px": [
+            879,
+            1000
+          ],
+          "ko": 96
+        }
+      }
+    },
+    {
+      "nom": "coupe",
+      "type": "plan-scan",
+      "legende": "Coupe",
+      "pages": [
+        30
+      ],
+      "source_px": [
+        1942,
+        1004
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/coupe-2000.webp",
+          "px": [
+            1942,
+            1004
+          ],
+          "ko": 209
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/coupe-1000.webp",
+          "px": [
+            1000,
+            517
+          ],
+          "ko": 80
+        }
+      }
+    },
+    {
+      "nom": "detail-axonometrie",
+      "type": "plan-scan",
+      "legende": "Détail en axonométrie 1/20",
+      "pages": [
+        31
+      ],
+      "source_px": [
+        1397,
+        1851
+      ],
+      "ppi_source": 178,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/detail-axonometrie-2000.webp",
+          "px": [
+            1397,
+            1851
+          ],
+          "ko": 265
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/detail-axonometrie-1000.webp",
+          "px": [
+            755,
+            1000
+          ],
+          "ko": 111
+        }
+      }
+    },
+    {
+      "nom": "coupe-perspective",
+      "type": "plan-scan",
+      "legende": "Coupe perspective 1/50",
+      "pages": [
+        32
+      ],
+      "source_px": [
+        4667,
+        3048
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/coupe-perspective-2000.webp",
+          "px": [
+            2000,
+            1306
+          ],
+          "ko": 273
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/coupe-perspective-1000.webp",
+          "px": [
+            1000,
+            653
+          ],
+          "ko": 78
+        }
+      }
+    },
+    {
+      "nom": "experimentation-1",
+      "type": "photo",
+      "legende": "Expérimentation en pierre massive",
+      "pages": [
+        34
+      ],
+      "source_px": [
+        2074,
+        2169
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/experimentation-1-2000.webp",
+          "px": [
+            1912,
+            2000
+          ],
+          "ko": 109
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/experimentation-1-1000.webp",
+          "px": [
+            956,
+            1000
+          ],
+          "ko": 37
+        }
+      }
+    },
+    {
+      "nom": "experimentation-2",
+      "type": "photo",
+      "legende": "Taille de la pierre",
+      "pages": [
+        35
+      ],
+      "source_px": [
+        2075,
+        1384
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/experimentation-2-2000.webp",
+          "px": [
+            2000,
+            1334
+          ],
+          "ko": 106
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/experimentation-2-1000.webp",
+          "px": [
+            1000,
+            667
+          ],
+          "ko": 40
+        }
+      }
+    },
+    {
+      "nom": "experimentation-3",
+      "type": "photo",
+      "legende": "Taille de la pierre",
+      "pages": [
+        35
+      ],
+      "source_px": [
+        2075,
+        1383
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/le-passage-des-artistes/images/experimentation-3-2000.webp",
+          "px": [
+            2000,
+            1333
+          ],
+          "ko": 82
+        },
+        "1000": {
+          "fichier": "projets/le-passage-des-artistes/images/experimentation-3-1000.webp",
+          "px": [
+            1000,
+            667
+          ],
+          "ko": 32
+        }
+      }
+    }
+  ],
+  "plans_vectoriels": [],
+  "modele_3d": "[À COMPLÉTER]"
+}

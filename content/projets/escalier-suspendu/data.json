@@ -1,0 +1,119 @@
+{
+  "slug": "escalier-suspendu",
+  "numero": "06",
+  "titre": "Escalier suspendu",
+  "programme": "Escalier métallique autoportant en porte-à-faux",
+  "cadre": "Conception, projet personnel",
+  "annee": 2024,
+  "lieu": "Drôme (26)",
+  "surface": "sans objet",
+  "cotes_lues_sur_plans": {
+    "Hauteur à franchir": "2 930 mm",
+    "Longueur du limon": "4 704 mm",
+    "Pente": "38,5°",
+    "Hauteur du garde-corps": "968 mm (palier)"
+  },
+  "equipe": "Plans techniques et suivi de fabrication : Laura Pras",
+  "pages_book": [
+    54,
+    59
+  ],
+  "texte": "Le projet consiste à concevoir un escalier métallique autoportant en porte-à-faux, ancré dans les dalles en béton, sans appui sur les murs. J'ai réalisé les plans techniques et suivi les principales étapes de fabrication, du pliage des marches à l'assemblage de l'escalier.",
+  "enjeux": "[À COMPLÉTER]",
+  "images": [
+    {
+      "nom": "rendu",
+      "type": "rendu",
+      "legende": "Escalier suspendu",
+      "pages": [
+        54
+      ],
+      "source_px": [
+        3051,
+        4315
+      ],
+      "ppi_source": 369,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/escalier-suspendu/images/rendu-2000.webp",
+          "px": [
+            1414,
+            2000
+          ],
+          "ko": 59
+        },
+        "1000": {
+          "fichier": "projets/escalier-suspendu/images/rendu-1000.webp",
+          "px": [
+            707,
+            1000
+          ],
+          "ko": 24
+        }
+      }
+    }
+  ],
+  "plans_vectoriels": [
+    {
+      "nom": "axonometrie",
+      "legende": "Axonométrie de l'escalier",
+      "page": 56,
+      "fichier": "projets/escalier-suspendu/plans/axonometrie.svg",
+      "traces": 5834,
+      "ko": 379,
+      "format_pt": [
+        476,
+        622
+      ]
+    },
+    {
+      "nom": "vue-de-face",
+      "legende": "Vue de face",
+      "page": 57,
+      "fichier": "projets/escalier-suspendu/plans/vue-de-face.svg",
+      "traces": 667,
+      "ko": 20,
+      "format_pt": [
+        486,
+        396
+      ]
+    },
+    {
+      "nom": "vue-en-plan",
+      "legende": "Vue en plan",
+      "page": 57,
+      "fichier": "projets/escalier-suspendu/plans/vue-en-plan.svg",
+      "traces": 257,
+      "ko": 11,
+      "format_pt": [
+        486,
+        144
+      ]
+    },
+    {
+      "nom": "planche-limon-marches",
+      "legende": "Limon et marches, détails",
+      "page": 58,
+      "fichier": "projets/escalier-suspendu/plans/planche-limon-marches.svg",
+      "traces": 1446,
+      "ko": 98,
+      "format_pt": [
+        562,
+        666
+      ]
+    },
+    {
+      "nom": "planche-garde-corps",
+      "legende": "Garde-corps, profils des tubes",
+      "page": 59,
+      "fichier": "projets/escalier-suspendu/plans/planche-garde-corps.svg",
+      "traces": 1283,
+      "ko": 59,
+      "format_pt": [
+        468,
+        672
+      ]
+    }
+  ],
+  "modele_3d": "[À COMPLÉTER]"
+}

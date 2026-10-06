@@ -1,0 +1,285 @@
+{
+  "slug": "pilates-room",
+  "numero": "05",
+  "titre": "Pilates Room",
+  "programme": "Studio de Pilates (architecture intérieure)",
+  "cadre": "Stage d'architecture intérieure, agence MTG Intérieur (projet d'agence)",
+  "annee": 2025,
+  "lieu": "Caluire-et-Cuire (69)",
+  "surface": "[À COMPLÉTER]",
+  "surfaces_lues_sur_plan": {
+    "Espace cours": "60,00 m²",
+    "Réception": "20,00 m²",
+    "Vestiaire": "4,2 m²",
+    "Coiffeuse": "3 m²",
+    "Dégagement": "2,7 m²",
+    "WC": "1,5 m²",
+    "Douche": "1,4 m²",
+    "Hauteur sous plafond": "2,70 m"
+  },
+  "equipe": "Agence MTG Intérieur (rôle de Laura : organisation des espaces, mobilier, matériaux, dossiers techniques, permis, visuels 3D)",
+  "pages_book": [
+    46,
+    53
+  ],
+  "texte": "Le projet consiste en l'aménagement d'un studio de Pilates comprenant un accueil, une salle de pratique et des vestiaires. Mon travail a porté sur l'organisation des espaces, l'agencement du mobilier et le choix des matériaux. J'ai participé au développement du projet, de la conception aux dossiers techniques destinés aux artisans, en passant par le permis de construire et la réalisation des visuels 3D.",
+  "materiaux": [
+    "Peinture beige",
+    "Peinture rose",
+    "Bois clair",
+    "Béton ciré",
+    "Terrazzo rose",
+    "Menuiseries aluminium"
+  ],
+  "enjeux": "[À COMPLÉTER]",
+  "images": [
+    {
+      "nom": "rendu-accueil",
+      "type": "rendu",
+      "legende": "Accueil",
+      "pages": [
+        46
+      ],
+      "source_px": [
+        1762,
+        2491
+      ],
+      "ppi_source": 214,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/pilates-room/images/rendu-accueil-2000.webp",
+          "px": [
+            1415,
+            2000
+          ],
+          "ko": 176
+        },
+        "1000": {
+          "fichier": "projets/pilates-room/images/rendu-accueil-1000.webp",
+          "px": [
+            707,
+            1000
+          ],
+          "ko": 50
+        }
+      }
+    },
+    {
+      "nom": "rendu-vestiaire",
+      "type": "rendu",
+      "legende": "Vestiaire",
+      "pages": [
+        50
+      ],
+      "source_px": [
+        994,
+        1312
+      ],
+      "ppi_source": 150,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/pilates-room/images/rendu-vestiaire-2000.webp",
+          "px": [
+            994,
+            1312
+          ],
+          "ko": 41
+        },
+        "1000": {
+          "fichier": "projets/pilates-room/images/rendu-vestiaire-1000.webp",
+          "px": [
+            758,
+            1000
+          ],
+          "ko": 27
+        }
+      }
+    },
+    {
+      "nom": "rendu-coiffeuse",
+      "type": "rendu",
+      "legende": "Coiffeuse",
+      "pages": [
+        51
+      ],
+      "source_px": [
+        1523,
+        1236
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/pilates-room/images/rendu-coiffeuse-2000.webp",
+          "px": [
+            1523,
+            1236
+          ],
+          "ko": 48
+        },
+        "1000": {
+          "fichier": "projets/pilates-room/images/rendu-coiffeuse-1000.webp",
+          "px": [
+            1000,
+            812
+          ],
+          "ko": 25
+        }
+      }
+    },
+    {
+      "nom": "rendu-salle",
+      "type": "rendu",
+      "legende": "Salle de pratique",
+      "pages": [
+        51
+      ],
+      "source_px": [
+        1524,
+        1239
+      ],
+      "ppi_source": 300,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/pilates-room/images/rendu-salle-2000.webp",
+          "px": [
+            1524,
+            1239
+          ],
+          "ko": 72
+        },
+        "1000": {
+          "fichier": "projets/pilates-room/images/rendu-salle-1000.webp",
+          "px": [
+            1000,
+            813
+          ],
+          "ko": 35
+        }
+      }
+    },
+    {
+      "nom": "planche-materiaux",
+      "type": "photo",
+      "legende": "Planche de matériaux",
+      "pages": [
+        52
+      ],
+      "source_px": [
+        941,
+        1154
+      ],
+      "ppi_source": 150,
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/pilates-room/images/planche-materiaux-2000.webp",
+          "px": [
+            941,
+            1154
+          ],
+          "ko": 54
+        },
+        "1000": {
+          "fichier": "projets/pilates-room/images/planche-materiaux-1000.webp",
+          "px": [
+            815,
+            1000
+          ],
+          "ko": 44
+        }
+      }
+    },
+    {
+      "nom": "palette",
+      "type": "planche",
+      "legende": "Palette de matériaux",
+      "pages": [
+        53
+      ],
+      "source_px": [
+        2067,
+        2924
+      ],
+      "fichiers": {
+        "2000": {
+          "fichier": "projets/pilates-room/images/palette-2000.webp",
+          "px": [
+            1414,
+            2000
+          ],
+          "ko": 31
+        },
+        "1000": {
+          "fichier": "projets/pilates-room/images/palette-1000.webp",
+          "px": [
+            707,
+            1000
+          ],
+          "ko": 12
+        }
+      }
+    }
+  ],
+  "plans_vectoriels": [
+    {
+      "nom": "plan-amenagement",
+      "legende": "Plan d'aménagement",
+      "page": 48,
+      "fichier": "projets/pilates-room/plans/plan-amenagement.svg",
+      "traces": 3892,
+      "ko": 154,
+      "format_pt": [
+        428,
+        299
+      ]
+    },
+    {
+      "nom": "plan-electricite",
+      "legende": "Plan électricité et éclairage",
+      "page": 48,
+      "fichier": "projets/pilates-room/plans/plan-electricite.svg",
+      "traces": 5272,
+      "ko": 207,
+      "format_pt": [
+        436,
+        262
+      ]
+    },
+    {
+      "nom": "coupe-aa",
+      "legende": "Coupe AA",
+      "page": 49,
+      "fichier": "projets/pilates-room/plans/coupe-aa.svg",
+      "traces": 718,
+      "ko": 23,
+      "format_pt": [
+        185,
+        183
+      ]
+    },
+    {
+      "nom": "coupe-bb",
+      "legende": "Coupe BB",
+      "page": 49,
+      "fichier": "projets/pilates-room/plans/coupe-bb.svg",
+      "traces": 1058,
+      "ko": 35,
+      "format_pt": [
+        297,
+        192
+      ]
+    },
+    {
+      "nom": "coupe-cc",
+      "legende": "Coupe CC",
+      "page": 49,
+      "fichier": "projets/pilates-room/plans/coupe-cc.svg",
+      "traces": 1831,
+      "ko": 56,
+      "format_pt": [
+        306,
+        168
+      ]
+    }
+  ],
+  "modele_3d": "[À COMPLÉTER]"
+}
