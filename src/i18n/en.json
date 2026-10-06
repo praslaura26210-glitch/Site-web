@@ -37,7 +37,9 @@
   "portfolio": "Portfolio 2026",
   "statut": "Architecture student · ENSA Grenoble",
   "projetsTitre": "Projects",
-  "voir": "See the project"
+  "voir": "See the project",
+  "dessinLegende": "Corridor, hand drawing · © Laura Pras",
+  "ouvrir": "View larger"
  },
  "projet": {
   "lieu": "Location",
@@ -79,7 +81,7 @@
  },
  "contact": {
   "titre": "For an internship, a collaboration or simply a conversation about a project.",
-  "nom": "Name",
+  "nom": "Last name",
   "email": "Email",
   "message": "Message",
   "envoyer": "Send",
@@ -90,6 +92,10 @@
   "merciT": "Message sent.",
   "merciX": "Thank you, I will get back to you as soon as I can.",
   "retour": "Back to the home page",
-  "reseaux": "Follow me"
+  "reseaux": "Follow me",
+  "prenom": "First name",
+  "telephone": "Phone",
+  "facultatif": "optional",
+  "coordonnees": "Details"
  }
 }

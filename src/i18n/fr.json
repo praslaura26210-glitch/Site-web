@@ -37,7 +37,9 @@
   "portfolio": "Portfolio 2026",
   "statut": "Étudiante en architecture · ENSA Grenoble",
   "projetsTitre": "Projets",
-  "voir": "Voir le projet"
+  "voir": "Voir le projet",
+  "dessinLegende": "Couloir, dessin à la main · © Laura Pras",
+  "ouvrir": "Voir en grand"
  },
  "projet": {
   "lieu": "Lieu",
@@ -90,6 +92,10 @@
   "merciT": "Message envoyé.",
   "merciX": "Merci, je vous réponds dès que possible.",
   "retour": "Retour à l'accueil",
-  "reseaux": "Me suivre"
+  "reseaux": "Me suivre",
+  "prenom": "Prénom",
+  "telephone": "Téléphone",
+  "facultatif": "facultatif",
+  "coordonnees": "Coordonnées"
  }
 }

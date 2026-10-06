@@ -37,7 +37,9 @@
   "portfolio": "Portfolio 2026",
   "statut": "Studentessa di architettura · ENSA Grenoble",
   "projetsTitre": "Progetti",
-  "voir": "Vedi il progetto"
+  "voir": "Vedi il progetto",
+  "dessinLegende": "Corridoio, disegno a mano · © Laura Pras",
+  "ouvrir": "Vedi in grande"
  },
  "projet": {
   "lieu": "Luogo",
@@ -79,7 +81,7 @@
  },
  "contact": {
   "titre": "Per un tirocinio, una collaborazione o un semplice scambio su un progetto.",
-  "nom": "Nome",
+  "nom": "Cognome",
   "email": "E-mail",
   "message": "Messaggio",
   "envoyer": "Invia",
@@ -90,6 +92,10 @@
   "merciT": "Messaggio inviato.",
   "merciX": "Grazie, vi risponderò il prima possibile.",
   "retour": "Torna alla home",
-  "reseaux": "Seguimi"
+  "reseaux": "Seguimi",
+  "prenom": "Nome",
+  "telephone": "Telefono",
+  "facultatif": "facoltativo",
+  "coordonnees": "Recapiti"
  }
 }

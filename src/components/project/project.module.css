@@ -1,4 +1,4 @@
-/* Page projet : ouverture, puis chapitres (images à gauche, texte fixe à droite). */
+/* Page projet : ouverture, fiche « catalogue », chapitres (images en magazine à gauche, texte fixe à droite). */
 
 /* ---------- ouverture ---------- */
 .ouv { position: relative; }
@@ -12,89 +12,73 @@
 @keyframes ouvIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
 .ouvT { font-size: clamp(3rem, 7.6vw, 8rem); line-height: .94; letter-spacing: -0.035em; margin-top: 20px; max-width: 12ch; }
 .ouvMeta { margin-top: 28px; }
+.ouvN, .chapN { color: var(--accent); }
+
+/* ---------- fiche « catalogue » ---------- */
+.catalogue { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px clamp(24px, 4vw, 72px); padding-top: clamp(72px, 12vh, 140px); }
+.chapeau { grid-column: 1 / span 6; font-size: clamp(1.5rem, 2.4vw, 2.3rem); font-weight: 300; line-height: 1.3; letter-spacing: -0.015em; }
+.corps { grid-column: 8 / span 5; font-size: 1rem; line-height: 1.85; padding-top: 8px; }
+.corps p + p { margin-top: 1em; }
+.catFiche { grid-column: 1 / -1; }
+.fiche { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); border-top: 1px solid var(--encre); }
+.fiche div { display: grid; gap: 6px; align-content: start; padding: 16px 20px 18px 0; border-bottom: 1px solid var(--filet); }
+.fiche dt { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); }
+.fiche dd { margin: 0; font-size: .92rem; line-height: 1.45; }
 
 /* ---------- chapitres ---------- */
-.chap { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(28px, 5vw, 96px); align-items: start; padding-top: clamp(72px, 12vh, 150px); }
-.visuels { display: grid; gap: clamp(28px, 5vh, 56px); }
+.chap { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: clamp(28px, 5vw, 88px); align-items: start; padding-top: clamp(96px, 15vh, 180px); }
 .colonne { position: sticky; top: calc(var(--header-h) + 32px); }
 .colIn { display: grid; gap: 22px; }
 .chapT { display: grid; gap: 12px; font-size: clamp(1.9rem, 3vw, 2.8rem); padding-top: 18px; border-top: 1px solid var(--encre); }
-.chapN, .ouvN { font-size: .68rem; letter-spacing: .2em; color: var(--accent); }
-.chapeau { font-size: clamp(1.2rem, 1.6vw, 1.45rem); font-weight: 300; line-height: 1.45; padding-top: 18px; border-top: 1px solid var(--encre); }
-.corps { font-size: .95rem; color: var(--encre); }
-.corps p + p { margin-top: 1em; }
-.note { font-size: .86rem; color: var(--gris); }
-.fiche { margin: 8px 0 0; border-top: 1px solid var(--filet); }
-.fiche div { padding: 10px 0; border-bottom: 1px solid var(--filet); display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 12px; align-items: baseline; }
-.fiche dt { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
-.fiche dd { margin: 0; font-size: .86rem; line-height: 1.4; }
-
+.chapN { font-size: .68rem; letter-spacing: .2em; }
+.note { font-size: .9rem; line-height: 1.7; color: var(--gris); }
+.recitT { font-weight: 300; font-size: clamp(1.3rem, 1.8vw, 1.6rem); }
+.recit p { margin-top: 14px; font-size: .92rem; line-height: 1.85; padding-left: 18px; border-left: 1px solid var(--accent); }
+.recit p::before { content: '« '; } .recit p::after { content: ' »'; }
+.poeme { font-size: .9rem; line-height: 1.95; white-space: pre-line; padding-left: 18px; border-left: 1px solid var(--accent); }
+.exp { font-size: .95rem; line-height: 1.8; }
 .chiffres { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .chiffres div { border-top: 1px solid var(--filet); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
 .chiffres dd { margin: 0; font-size: clamp(1.3rem, 1.8vw, 1.7rem); font-weight: 300; letter-spacing: -0.01em; }
 .chiffres dt { font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); line-height: 1.4; }
-
-.recitT { font-weight: 300; font-size: clamp(1.6rem, 2.4vw, 2.2rem); padding-top: 18px; border-top: 1px solid var(--encre); }
-.recit p { margin-top: 16px; font-size: .95rem; line-height: 1.8; padding-left: 18px; border-left: 1px solid var(--accent); }
-.recit p::before { content: '« '; } .recit p::after { content: ' »'; }
-.poeme { font-size: .92rem; line-height: 1.9; white-space: pre-line; padding: 18px 0 0 18px; border-top: 1px solid var(--encre); box-shadow: inset 1px 0 0 var(--accent); }
-.exp { font-size: .98rem; line-height: 1.75; }
-
 .palette { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 14px; }
 .palette li { display: grid; gap: 8px; font-size: .72rem; line-height: 1.3; }
 .palette i { display: block; aspect-ratio: 1; border-radius: 50%; max-width: 72px; box-shadow: inset 0 0 0 1px rgba(43, 33, 28, .08); }
 
+/* ---------- flux d'images, façon magazine ---------- */
+.flux { display: grid; gap: clamp(40px, 7vh, 88px); }
+.rLarge { width: 100%; }
+.rSeul { width: 72%; }
+.rSeul[data-cote='d'] { justify-self: end; }
+.rDeux { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(18px, 2.4vw, 36px); align-items: start; }
+.pile { display: grid; gap: clamp(40px, 7vh, 88px); }
+.pileD { padding-top: clamp(64px, 14vh, 180px); }
+
 /* ---------- figures ---------- */
 .fig { margin: 0; }
 .figBtn { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
-.figBtn img { width: 100%; height: auto; max-height: 88svh; object-fit: contain; }
+.figBtn img { width: 100%; height: auto; max-height: 90svh; object-fit: contain; }
 .dessin .figBtn img { mix-blend-mode: multiply; }
-.cap { margin-top: 10px; font-size: .68rem; letter-spacing: .06em; color: var(--gris); }
-.duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(16px, 2vw, 28px); align-items: end; }
-.grille { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); }
+.cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin-top: 10px; font-size: .68rem; letter-spacing: .06em; color: var(--gris); }
+.credit { font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-f); }
+.lbBar .credit { margin-left: 14px; }
 
-/* ---------- chapitre « dessins » : visionneuse ---------- */
-.chapDessins { padding-top: clamp(80px, 13vh, 160px); }
-.chapDessinsHead { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 12px clamp(28px, 5vw, 96px); align-items: end; margin-bottom: 26px; }
-.chapDessinsHead .note { padding-bottom: 6px; }
-.pl { --h: min(70svh, 56vw); }
-.plStage { position: relative; height: var(--h); background: var(--fond-2); display: grid; place-items: center; overflow: hidden; touch-action: pan-y; }
-.plVue { width: 100%; height: 100%; display: grid; place-items: center; padding: clamp(16px, 3vw, 44px) clamp(56px, 7vw, 110px); animation: plIn .6s var(--ease); --h: calc(min(70svh, 56vw) - 2 * clamp(16px, 3vw, 44px)); }
-@keyframes plIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
-.plVue > img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; user-select: none; }
-.plDessin { mix-blend-mode: multiply; }
-.plNav { position: absolute; top: 50%; width: 52px; height: 52px; margin-top: -26px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--filet); background: var(--fond); cursor: pointer; transition: background-color .3s, color .3s, border-color .3s; z-index: 2; }
-.plNav:hover { background: var(--encre); color: var(--fond); border-color: var(--encre); }
-.plPrev { left: 14px; } .plNext { right: 14px; }
-.plZoom { position: absolute; top: 14px; right: 14px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; background: var(--fond); border: 1px solid var(--filet); padding: 8px 12px; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; cursor: pointer; transition: border-color .3s; }
-.plZoom:hover { border-color: var(--encre); }
-.plBar { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: baseline; padding-top: 16px; border-bottom: 1px solid var(--filet); padding-bottom: 14px; }
-.plCompte { font-size: .9rem; letter-spacing: .1em; color: var(--accent-f); font-variant-numeric: tabular-nums; }
-.plCompte span { color: var(--gris); }
-.plListe { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 22px; }
-.plListe button { background: none; border: 0; padding: 3px 0; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); cursor: pointer; border-bottom: 1px solid transparent; transition: color .3s, border-color .3s; }
-.plListe button:hover { color: var(--encre); }
-.plListe button[aria-current] { color: var(--encre); border-color: var(--accent); }
-
-/* comparateur existant / projet (dans la visionneuse) */
-.cmpStage { position: relative; overflow: hidden; touch-action: pan-y; cursor: ew-resize; user-select: none; background: var(--fond); }
+/* ---------- existant / projet ---------- */
+.cmpStage { position: relative; width: 100%; overflow: hidden; touch-action: pan-y; cursor: ew-resize; user-select: none; background: var(--fond); }
 .cmpStage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--fond); pointer-events: none; }
 .cmpTop { clip-path: inset(0 calc(100% - var(--x)) 0 0); }
 .cmpLine { position: absolute; top: 0; bottom: 0; left: var(--x); width: 1px; background: var(--accent-f); pointer-events: none; }
 .cmpLine i { position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: var(--fond); border: 1px solid var(--accent-f); display: grid; place-items: center; font-style: normal; font-size: .8rem; color: var(--accent-f); }
-.cmpLab { position: absolute; top: 8px; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); background: color-mix(in srgb, var(--fond) 85%, transparent); padding: 3px 6px; pointer-events: none; }
+.cmpLab { position: absolute; top: 6px; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); background: color-mix(in srgb, var(--fond) 85%, transparent); padding: 3px 6px; pointer-events: none; }
 .cmpLabG { left: 0; } .cmpLabD { right: 0; }
 .cmpRange { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .cmpStage:has(.cmpRange:focus-visible) { outline: 1.5px solid var(--accent-f); outline-offset: 4px; }
 
-/* ---------- projet suivant ---------- */
-.suite { padding-top: clamp(96px, 16vh, 180px); }
-.suivant { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 32px; text-decoration: none; padding: 28px 0 22px; border-top: 1px solid var(--encre); border-bottom: 1px solid var(--filet); margin-bottom: 28px; }
-.suivant strong { font-weight: 300; font-size: clamp(2.4rem, 6vw, 5.6rem); letter-spacing: -0.03em; line-height: 1; margin-top: 14px; transition: color .4s; }
-.suivantP { margin-top: 12px; }
-.suivant img { grid-column: 2; grid-row: 1 / span 3; width: clamp(110px, 14vw, 200px); aspect-ratio: 4 / 5; height: auto; object-fit: cover; align-self: end; transition: transform 1s var(--ease); }
-.suivant:hover strong { color: var(--accent-f); }
-.suivant:hover img { transform: translateY(-6px); }
+/* ---------- projet suivant : une simple barre ---------- */
+.suite { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px 40px; margin-top: clamp(96px, 16vh, 180px); padding-top: 26px; border-top: 1px solid var(--encre); }
+.suivant { display: grid; justify-items: end; gap: 6px; text-decoration: none; }
+.suivantT { font-size: clamp(1.4rem, 2.4vw, 2.1rem); font-weight: 300; letter-spacing: -0.02em; transition: color .4s; }
+.suivant:hover .suivantT { color: var(--accent-f); }
 
 /* ---------- agrandissement ---------- */
 .lightbox { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--fond); color: var(--encre); }
@@ -116,17 +100,16 @@
 .scale { position: absolute; right: 16px; bottom: 12px; font-size: .7rem; color: var(--gris); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 900px) {
+  .catalogue { grid-template-columns: 1fr; }
+  .chapeau, .corps, .catFiche { grid-column: 1 / -1; }
+  .rSeul { width: 100%; }
+  .rDeux { grid-template-columns: 1fr; }
+  .pileD { padding-top: 0; }
   .ouv[data-format='portrait'] { grid-template-columns: 1fr; min-height: 0; }
   .ouv[data-format='portrait'] .ouvTxt { padding-bottom: 28px; }
   .ouv[data-format='portrait'] .ouvImg img { height: auto; max-height: 80svh; }
   .chap { grid-template-columns: 1fr; padding-top: 64px; }
   .colonne { position: static; order: -1; }
   .chiffres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .duo { grid-template-columns: 1fr; }
-  .suivant img { width: 90px; }
-  .chapDessinsHead { grid-template-columns: 1fr; }
-  .pl { --h: 62svh; }
-  .plVue { padding: 12px; --h: calc(62svh - 24px); }
-  .plNav { top: auto; bottom: 10px; margin-top: 0; width: 42px; height: 42px; }
-  .plBar { grid-template-columns: 1fr; gap: 10px; }
+  .suivant { justify-items: start; }
 }

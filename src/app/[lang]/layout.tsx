@@ -36,7 +36,7 @@ export default async function RootLayout({ children, params }: { children: React
         <Header lang={lang} t={t} />
         <div className="page">
           <main id="contenu">{children}</main>
-          <Footer lang={lang} t={t} email={cv.email} />
+          <Footer lang={lang} t={t} cv={cv} />
         </div>
         <Apparitions />
       </body>

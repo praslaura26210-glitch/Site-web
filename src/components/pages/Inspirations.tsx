@@ -2,36 +2,22 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './pages.module.css';
 
-export type Inspiration = { id: string; theme: string; titre: string; auteur: string; lieu: string; annee: string; credit: string; texte: string; w: number; h: number };
+export type Inspiration = { id: string; titre: string; auteur: string; lieu: string; annee: string; credit: string; info?: string; w: number; h: number };
 
-/** Mosaïque de références : des photos ; un clic ouvre la fiche (texte tiré du rapport d'études). */
-export default function Inspirations({ items, themes, labels }: { items: Inspiration[]; themes: { id: string; label: string }[]; labels: { tout: string; fermer: string; ouvrir: string } }) {
-  const [filtre, setFiltre] = useState('tout');
+/** Références : des photos ; un clic ouvre une fiche simple (le projet, qui l'a fait, où, quand). */
+export default function Inspirations({ items, labels }: { items: Inspiration[]; labels: { fermer: string; ouvrir: string; auteur: string; lieu: string; annee: string } }) {
   const [cur, setCur] = useState<Inspiration | null>(null);
   const dlg = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    if (!cur) return;
-    dlg.current?.showModal();
-  }, [cur]);
-  const vus = filtre === 'tout' ? items : items.filter((x) => x.theme === filtre);
-  const nomTheme = (id: string) => themes.find((t) => t.id === id)?.label || '';
+  useEffect(() => { if (cur) dlg.current?.showModal(); }, [cur]);
   return (
     <>
-      <div className={styles.filtres} role="group" aria-label={labels.tout}>
-        {[{ id: 'tout', label: labels.tout }, ...themes].map((t) => (
-          <button key={t.id} type="button" aria-pressed={filtre === t.id} onClick={() => setFiltre(t.id)}>{t.label}</button>
-        ))}
-      </div>
-      <ul className={styles.mosaique}>
-        {vus.map((x) => (
-          <li key={x.id}>
+      <ul className={styles.refGrille}>
+        {items.map((x, i) => (
+          <li key={x.id} className="rv" data-n={i}>
             <button type="button" className={styles.tuile} onClick={() => setCur(x)} aria-label={`${labels.ouvrir} : ${x.titre}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/media/site/inspirations/${x.id}.webp`} alt="" width={x.w} height={x.h} loading="lazy" />
-              <span className={styles.tuileTxt}>
-                <span className={styles.tuileT}>{x.titre}</span>
-                <span className={styles.tuileA}>{[x.auteur, x.annee].filter(Boolean).join(' · ')}</span>
-              </span>
+              <span className={styles.tuileT}>{x.titre}</span>
             </button>
           </li>
         ))}
@@ -42,10 +28,13 @@ export default function Inspirations({ items, themes, labels }: { items: Inspira
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/media/site/inspirations/${cur.id}.webp`} alt={cur.titre} width={cur.w} height={cur.h} />
             <div className={styles.ficheTxt}>
-              <p className={styles.ficheTheme}>{nomTheme(cur.theme)}</p>
               <h2 className={styles.ficheT}>{cur.titre}</h2>
-              <p className={styles.ficheMeta}>{[cur.auteur, cur.lieu, cur.annee].filter(Boolean).join(' · ')}</p>
-              <p className={styles.ficheX}>{cur.texte}</p>
+              <dl className={styles.ficheDl}>
+                {cur.auteur && <div><dt>{labels.auteur}</dt><dd>{cur.auteur}</dd></div>}
+                {cur.lieu && <div><dt>{labels.lieu}</dt><dd>{cur.lieu}</dd></div>}
+                {cur.annee && <div><dt>{labels.annee}</dt><dd>{cur.annee}</dd></div>}
+                {cur.info && <div><dt>&nbsp;</dt><dd>{cur.info}</dd></div>}
+              </dl>
               <p className={styles.ficheCredit}>{cur.credit}</p>
               <button type="button" className="lien" onClick={() => dlg.current?.close()} autoFocus>{labels.fermer}</button>
             </div>

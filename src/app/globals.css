@@ -58,16 +58,16 @@ strong, b { font-weight: 500; }
 @keyframes trait { to { stroke-dashoffset: 0; } }
 
 /* pendant l'ouverture, le contenu attend */
-html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 6.5s forwards; }
+html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 6s forwards; }
 @keyframes secours { to { opacity: 1; } }
-.page, body > header { transition: opacity 1s var(--ease) .1s; }
+.page, body > header { transition: opacity .35s var(--ease); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .rv[data-rv='wait'] { opacity: 1; transform: none; }
 }
 
-/* couleur animable (couloir de l'accueil qui passe de la terre cuite au graphite) */
-@property --trait { syntax: '<color>'; inherits: true; initial-value: #2B211C; }
+/* rayon animable de la « porte » de l'ouverture */
+@property --trou { syntax: '<length>'; inherits: false; initial-value: 0px; }
 .lienPdf { display: inline-flex; align-items: center; gap: 10px; }
 .lienPdfInfo { color: var(--gris); }

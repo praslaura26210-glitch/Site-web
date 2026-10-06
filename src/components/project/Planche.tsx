@@ -7,7 +7,7 @@ import styles from './project.module.css';
 export type Labels = { agrandir: string; fermer: string; hint: string; zoomIn: string; zoomOut: string; reset: string };
 
 /** Une image ou un plan de la page projet. Un clic l'ouvre en grand, avec zoom (le plan reste vectoriel). */
-export default function Planche({ m, sizes, labels, className, caption = true, eager = false }: { m: Media; sizes: string; labels: Labels; className?: string; caption?: boolean; eager?: boolean }) {
+export default function Planche({ m, sizes, labels, className, caption = true, eager = false, credit }: { m: Media; sizes: string; labels: Labels; className?: string; caption?: boolean; eager?: boolean; credit?: string }) {
   const [open, setOpen] = useState(false);
   const dlg = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -33,11 +33,11 @@ export default function Planche({ m, sizes, labels, className, caption = true, e
           decoding="async"
         />
       </button>
-      {caption && <figcaption className={styles.cap}>{m.legende}</figcaption>}
+      {caption && <figcaption className={styles.cap}>{m.legende}{credit && <span className={styles.credit}>{credit}</span>}</figcaption>}
       {open && (
         <dialog ref={dlg} className={styles.lightbox} onClose={() => setOpen(false)} aria-label={m.legende}>
           <div className={styles.lbBar}>
-            <p>{m.legende}</p>
+            <p>{m.legende}{credit && <span className={styles.credit}>{credit}</span>}</p>
             <button type="button" onClick={() => dlg.current?.close()} autoFocus>{labels.fermer} ✕</button>
           </div>
           <PlanViewer

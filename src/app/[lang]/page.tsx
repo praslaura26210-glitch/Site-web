@@ -35,7 +35,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           </p>
         </div>
         <div className={styles.heroDessin}>
-          <Couloir alt="" />
+          <Couloir legende={t.home.dessinLegende} ouvrir={t.home.ouvrir} fermer={t.projet.fermer} />
         </div>
       </section>
 
@@ -45,9 +45,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <span className="eyebrow">{String(projets.length).padStart(2, '0')}</span>
         </div>
         <ProjetsIndex lignes={lignes} lang={lang} voir={t.home.voir} />
-        <div className={styles.apresListe}>
-          <Portfolio t={t} long />
-        </div>
       </section>
     </>
   );

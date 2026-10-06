@@ -1,5 +1,5 @@
 {
- "note": "Extraits du rapport d'études de Laura (2025-2026). Images extraites du PDF compressé du RDE : basse définition. Crédits repris de sa table des illustrations.",
+ "note": "Extraits du rapport d'études de Laura (2025-2026). Images extraites du PDF compressé du RDE : basse définition. Crédits repris de sa table des illustrations. Seules les références de « visibles » sont affichées (choix de Laura) ; elle en ajoutera d'autres.",
  "items": [
   {
    "id": "light-of-life",
@@ -253,5 +253,12 @@
    "w": 323,
    "h": 237
   }
+ ],
+ "visibles": [
+  "aduana-san-blas",
+  "paraloup",
+  "arvieux",
+  "spazio-espositivo",
+  "tilleuls"
  ]
 }
