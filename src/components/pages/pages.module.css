@@ -1,7 +1,8 @@
 /* pages simples : projets, références, contact, mentions, à propos */
 .page { padding-top: calc(var(--header-h) + clamp(36px, 9vh, 112px)); min-height: 70svh; }
 .head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px clamp(24px, 5vw, 96px); align-items: end; padding-bottom: 18px; margin-bottom: clamp(36px, 7vh, 72px); border-bottom: 1px solid var(--encre); }
-.h1 { font-size: clamp(2.2rem, 4vw, 3.6rem); line-height: 1; letter-spacing: -0.03em; color: var(--accent-f); }
+.h1 { font-size: clamp(2.2rem, 4vw, 3.6rem); line-height: 1; letter-spacing: -0.03em; }
+.cHead { margin-bottom: clamp(32px, 5vh, 56px); }
 .headLead { font-size: clamp(.98rem, 1.2vw, 1.1rem); line-height: 1.7; max-width: 46ch; color: var(--gris); }
 .h2Grand { font-size: clamp(2rem, 3.6vw, 3.4rem); }
 .refHead { display: grid; gap: 18px; padding-bottom: 26px; margin-bottom: clamp(36px, 6vh, 64px); border-bottom: 1px solid var(--encre); }
@@ -82,10 +83,10 @@
 .pTitre { font-size: 1rem; font-weight: 400; line-height: 1.35; }
 .pLieu { font-size: .8rem; color: var(--gris); }
 
-.outils { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 28px clamp(28px, 5vw, 96px); align-items: start; }
-.logiciels { column-count: 2; column-gap: clamp(28px, 4vw, 64px); }
+.outils { display: grid; gap: 28px; }
+.logiciels { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 14px clamp(20px, 3vw, 48px); }
 .logiciels { list-style: none; margin: 0; padding: 0; }
-.logiciels li { break-inside: avoid; margin-bottom: 14px; }
+.logiciels li { display: grid !important; grid-template-columns: 1fr !important; gap: 10px !important; padding: 16px 0; border-top: 1px solid var(--encre); }
 .logiciels li { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 16px; align-items: center; font-size: .88rem; }
 .niveau { display: block; height: 2px; background: var(--filet); position: relative; }
 .niveau i { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
@@ -115,7 +116,7 @@
   .master, .deuxCol { grid-template-columns: 1fr; }
   .col li { grid-template-columns: 1fr; }
   .pDate { grid-row: auto; }
-  .logiciels { column-count: 1; }
+  .logiciels { grid-template-columns: 1fr 1fr; }
   .ficheIn > img { max-height: 46svh; }
   .cBas { grid-template-columns: 1fr; }
   .coordList { grid-template-columns: 1fr; justify-content: start; }

@@ -3,9 +3,9 @@ import type { Dict, Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
-import Bascule from './Bascule';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
+import Visionneuse from './Visionneuse';
 import styles from './project.module.css';
 
 const PALETTE: Record<string, { en: string; it: string }> = {
@@ -24,17 +24,17 @@ function chapeau(texte: string) {
   return { chap: texte.slice(0, i + 1), reste: texte.slice(i + 2) };
 }
 
-/**
- * Page projet : en tête le titre, le texte et la fiche ; une grande image ; puis les blocs propres au projet
- * (galerie libre, texte avec image, comparaison existant / projet, plan à plusieurs versions, vignettes).
- */
+/** Page projet : ouverture (titre et grande image), présentation, puis les blocs choisis pour ce projet. */
 export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; total: number }) {
   const L: Labels = { agrandir: t.projet.agrandir, fermer: t.projet.fermer, hint: t.projet.zoomHint, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, reset: t.projet.zoomReset };
+  const VL = { ...L, precedent: t.projet.precedent, suivant: t.projet.suivant };
   const cache = new Map<string, Media>();
   const M = (r: string) => { if (!cache.has(r)) cache.set(r, media(p, r)); return cache.get(r)!; };
   const cr = CREDITS[p.slug] || { defaut: '' };
   const credit = (r: string) => cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined);
   const { chap, reste } = chapeau(p.texte);
+  const cov = M(mise.ouverture);
+  const paysage = cov.w > cov.h;
   const fiche = [
     { label: t.projet.programme, value: p.programme },
     { label: t.projet.lieu, value: p.lieu },
@@ -78,35 +78,37 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
             {b.note && <p>{b.note[lang]}</p>}
           </header>
         );
-      case 'galerie':
+      case 'grand':
+        return <div key={k} className={`${styles.grand} rv`}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} /></div>;
+      case 'rang':
+        // chaque image prend une largeur proportionnelle à son format : toutes ont la même hauteur
         return (
-          <div key={k} className={styles.galerie}>
-            {b.rangs.map((rang, j) => (
-              <div key={j} className={styles.rang}>
-                {rang.map((pl) => (
-                  <div key={pl.r} className={`${styles.place} rv`} style={{ gridColumn: `${pl.col[0]} / span ${pl.col[1]}`, marginTop: pl.mt ? `${pl.mt}vh` : undefined, alignSelf: pl.bas ? 'end' : undefined }}>
-                    <Planche m={M(pl.r)} sizes={`(max-width: 900px) 100vw, ${Math.round((pl.col[1] / 12) * 92)}vw`} labels={L} credit={credit(pl.r)} />
-                  </div>
-                ))}
-              </div>
-            ))}
+          <div key={k} className={`${styles.rangee} rv`}>
+            {b.r.map((r) => {
+              const m = M(r);
+              return (
+                <div key={r} className={styles.rangItem} style={{ flexGrow: m.w / m.h }}>
+                  <Planche m={m} sizes={`(max-width: 900px) 100vw, ${Math.round(100 / b.r.length)}vw`} labels={L} credit={credit(r)} />
+                </div>
+              );
+            })}
           </div>
         );
       case 'texte': {
         const txt = texte(b.k);
-        if (!txt && !b.r) return null;
+        if (!txt) return null;
         return (
-          <section key={k} className={`${styles.texteImg} rv`} data-cote={b.cote || 'd'} data-seul={!txt || undefined}>
-            {txt && (
-              <div className={styles.texteCol}>
-                {b.titre && <h2 className={styles.texteT}>{b.titre[lang]}</h2>}
-                {txt}
-              </div>
-            )}
-            {b.r && <div className={styles.imageCol}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 50vw" labels={L} credit={credit(b.r)} /></div>}
+          <section key={k} className={`${styles.texteImg} rv`} data-cote={b.cote || 'd'} data-seul={!b.r || undefined}>
+            <div className={styles.texteCol}>
+              {b.titre && <h2 className={styles.texteT}>{b.titre[lang]}</h2>}
+              {txt}
+            </div>
+            {b.r && <div className={styles.imageCol}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 55vw" labels={L} credit={credit(b.r)} /></div>}
           </section>
         );
       }
+      case 'visionneuse':
+        return <Visionneuse key={k} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
       case 'comparer':
         return (
           <div key={k} className={styles.comparer} data-deux={b.deux || undefined}>
@@ -124,52 +126,30 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
             })}
           </div>
         );
-      case 'bascule':
-        return (
-          <section key={k} className={`${styles.basculeBloc} rv`}>
-            <Bascule options={b.options.map((o) => ({ label: o.label[lang], m: M(o.r) }))} labels={L} credit={cr.defaut || undefined} />
-            <div className={styles.texteCol}>
-              <h2 className={styles.texteT}>{b.titre[lang]}</h2>
-              {b.chiffres && texte('chiffres')}
-            </div>
-          </section>
-        );
-      case 'vignettes':
-        return (
-          <section key={k} className={`${styles.vignettes} rv`}>
-            <div className={styles.vignettesHead}>
-              <h2 className={styles.texteT}>{b.titre[lang]}</h2>
-              {b.note && <p>{b.note[lang]}</p>}
-            </div>
-            <div className={styles.vignettesGrille}>
-              {b.items.map((r) => <Planche key={r} m={M(r)} sizes="(max-width: 900px) 50vw, 25vw" labels={L} credit={credit(r)} className={styles.vignette} />)}
-            </div>
-          </section>
-        );
     }
   };
 
   return (
     <article className={styles.projet}>
-      <header className={`wrap ${styles.tete}`}>
-        <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
-        <h1 className={styles.titre}>{p.titre}</h1>
-        <div className={styles.teteGrille}>
-          <div className={styles.intro}>
-            {chap && <p className={styles.chapeau}>{chap}</p>}
-            {reste.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}
-          </div>
-          <dl className={styles.fiche}>
-            {fiche.map((f) => <div key={f.label}><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
-          </dl>
+      <header className={styles.ouv} data-format={paysage ? 'paysage' : 'portrait'}>
+        <div className={styles.ouvTxt}>
+          <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
+          <h1 className={styles.ouvT}>{p.titre}</h1>
+          <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.annee].filter(Boolean).join(' · ')}</p>
         </div>
+        <figure className={styles.ouvImg}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes={paysage ? '100vw' : '(max-width: 900px) 100vw, 50vw'} alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} />
+        </figure>
       </header>
 
-      {mise.hero && (
-        <div className={`wrap ${styles.hero}`}>
-          <Planche m={M(mise.hero.r)} sizes="100vw" labels={L} credit={credit(mise.hero.r)} caption={false} className={styles.heroFig} pos={mise.hero.pos} eager />
-        </div>
-      )}
+      <section className={`wrap ${styles.presentation}`}>
+        <p className={`${styles.chapeau} rv`}>{chap}</p>
+        <div className={`${styles.corps} rv`}>{reste.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
+        <dl className={`${styles.fiche} rv`}>
+          {fiche.map((f) => <div key={f.label}><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
+        </dl>
+      </section>
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
 

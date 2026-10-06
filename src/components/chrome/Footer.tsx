@@ -4,7 +4,7 @@ import Reseaux from '@/components/pages/Reseaux';
 import Logo from './Logo';
 import styles from './chrome.module.css';
 
-/** Pied de page, identique partout : logo à gauche ; Contact et Mentions légales au milieu ; icônes et © à droite. */
+/** Pied de page, identique partout : logo à gauche ; Contact et Mentions légales au milieu ; icônes à droite. */
 export default function Footer({ lang, t, cv }: { lang: Lang; t: Dict; cv: { email: string; linkedin?: string; instagram?: string } }) {
   return (
     <footer className={styles.footer}>
@@ -19,7 +19,6 @@ export default function Footer({ lang, t, cv }: { lang: Lang; t: Dict; cv: { ema
         </ul>
         <div className={styles.baseDroite}>
           <Reseaux cv={cv} className={styles.baseIcones} ecrire={t.contact.ecrire} />
-          <p className={styles.copy}>© {new Date().getFullYear()} Laura Pras</p>
         </div>
       </div>
     </footer>

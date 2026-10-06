@@ -23,9 +23,8 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
   const telHref = `+33${tel.replace(/\s/g, '').replace(/^0/, '')}`;
   return (
     <article className={`wrap ${styles.page} ${styles.contact}`}>
-      <header className={styles.refHead}>
+      <header className={styles.cHead}>
         <h1 className={styles.h1}>{t.meta.contactTitle}</h1>
-        <p className={styles.refIntro}>{C.titre}</p>
       </header>
 
       <div className={styles.cGrille}>

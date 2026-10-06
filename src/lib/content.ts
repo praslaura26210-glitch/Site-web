@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Lang } from '@/i18n';
+import { v } from './ver';
 
 const ROOT = path.join(process.cwd(), 'content');
 const A_COMPLETER = '[À COMPLÉTER]';
@@ -69,15 +70,15 @@ export function getProjet(slug: string, lang: Lang): Projet {
     nom: i.nom,
     type: i.type,
     legende: (tr.legendes && tr.legendes[i.nom]) || i.legende,
-    src: `/media/${slug}/images/${i.nom}-2000.webp`,
-    srcSmall: `/media/${slug}/images/${i.nom}-1000.webp`,
+    src: v(`/media/${slug}/images/${i.nom}-2000.webp`),
+    srcSmall: v(`/media/${slug}/images/${i.nom}-1000.webp`),
     w: i.fichiers['2000'].px[0],
     h: i.fichiers['2000'].px[1],
   }));
   const plans: Plan[] = (d.plans_vectoriels || []).map((p: any) => ({
     nom: p.nom,
     legende: (tr.legendes && tr.legendes[p.nom]) || p.legende,
-    src: `/media/${slug}/plans/${p.nom}.svg`,
+    src: v(`/media/${slug}/plans/${p.nom}.svg`),
     w: p.format_pt[0],
     h: p.format_pt[1],
     ko: p.ko,

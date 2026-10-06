@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Projet } from './content';
+import { v } from './ver';
 
 export type Media = {
   /** image : WebP ; plan : SVG vectoriel, affiché en image et agrandi en vectoriel */
@@ -44,12 +45,12 @@ export function media(p: Projet, ref: string): Media {
     if (!plan) throw new Error(`plan introuvable : ${p.slug}/${nom}`);
     const sub = pre === 'c' ? 'plans/comparaison' : 'plans';
     const [w, h] = viewBox(path.join(ROOT, p.slug, sub, `${nom}.svg`));
-    const svg = `/media/${p.slug}/${sub}/${nom}.svg`;
-    if (pre === 'x') return { kind: 'plan', src: `/media/${p.slug}/images/${nom}-apercu-2400.webp`, svg, w, h, legende: plan.legende, scan: true };
+    const svg = v(`/media/${p.slug}/${sub}/${nom}.svg`);
+    if (pre === 'x') return { kind: 'plan', src: v(`/media/${p.slug}/images/${nom}-apercu-2400.webp`), svg, w, h, legende: plan.legende, scan: true };
     return { kind: 'plan', src: svg, svg, w, h, legende: plan.legende };
   }
   const img = p.images.find((x) => x.nom === nom);
   if (!img) throw new Error(`image introuvable : ${p.slug}/${nom}`);
-  const full = fs.existsSync(path.join(ROOT, p.slug, 'images', `${nom}-full.webp`)) ? `/media/${p.slug}/images/${nom}-full.webp` : undefined;
+  const full = fs.existsSync(path.join(ROOT, p.slug, 'images', `${nom}-full.webp`)) ? v(`/media/${p.slug}/images/${nom}-full.webp`) : undefined;
   return { kind: 'image', src: img.src, srcSmall: img.srcSmall, full, w: img.w, h: img.h, legende: img.legende, scan: img.type === 'plan-scan' || img.type === 'croquis' || img.type === 'planche' };
 }

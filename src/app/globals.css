@@ -17,8 +17,8 @@
   --police-plan: 'Montserrat', Arial, sans-serif;
 
   --sans: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
-  --gut: clamp(18px, 4.5vw, 72px);
-  --max: 1440px;
+  --gut: clamp(18px, 3.6vw, 64px);
+  --max: none;
   --ease: cubic-bezier(.22, .61, .2, 1);
   --header-h: 76px;
   color-scheme: light;
