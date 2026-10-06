@@ -1,12 +1,10 @@
 import Link from 'next/link';
 import type { Dict, Lang } from '@/i18n';
 import Logo from './Logo';
+import { CV_HREF, PDF_HREF } from './liens';
 import styles from './chrome.module.css';
 
-export const PDF_HREF = '/portfolio-laura-pras.pdf';
-export const CV_HREF = '/cv-laura-pras.pdf';
-
-/** Fin de chaque page : le portfolio à télécharger, puis l'adresse et les mentions. */
+/** Fin de chaque page : le portfolio à télécharger, puis l'adresse, les mentions et le © */
 export default function Footer({ lang, t, email }: { lang: Lang; t: Dict; email: string }) {
   return (
     <footer className={styles.footer}>
@@ -20,7 +18,7 @@ export default function Footer({ lang, t, email }: { lang: Lang; t: Dict; email:
           <a className={styles.dlMain} href={PDF_HREF} download aria-label={t.nav.pdfLong}>
             <span>{t.footer.pdfBtn}</span>
             <small>{t.footer.pdfSize}</small>
-            <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M8 2v10M3.5 7.5 8 12l4.5-4.5M2 14.5h12" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 2v10M3.5 7.5 8 12l4.5-4.5M2 14.5h12" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </a>
           <a className={styles.dlSub} href={CV_HREF} download>
             <span>{t.footer.cvBtn}</span>
@@ -29,12 +27,14 @@ export default function Footer({ lang, t, email }: { lang: Lang; t: Dict; email:
         </div>
       </section>
       <div className={`wrap ${styles.base}`}>
-        <Logo className={styles.baseLogo} label="" />
+        <Link href={`/${lang}/`} className={styles.baseBrand} aria-label="Laura Pras">
+          <Logo className={styles.baseLogo} poids={1.7} label="" />
+        </Link>
         <ul className={styles.baseLinks}>
           <li><a href={`mailto:${email}`}>{email}</a></li>
           <li><Link href={`/${lang}/mentions-legales/`}>{t.footer.mentions}</Link></li>
-          <li>© {new Date().getFullYear()} Laura Pras</li>
         </ul>
+        <p className={styles.copy}>© {new Date().getFullYear()} Laura Pras</p>
       </div>
     </footer>
   );

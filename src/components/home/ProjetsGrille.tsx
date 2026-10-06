@@ -26,7 +26,7 @@ export default function ProjetsGrille({ projets, lang, headingLevel = 3 }: { pro
       {projets.map((p, i) => {
         const { img, pos } = couverture(p);
         return (
-          <li key={p.slug} className={`${styles.carte} rv`} style={{ ['--i' as string]: i }}>
+          <li key={p.slug} className={`${styles.carte} rv`}>
             <Link href={`/${lang}/projets/${p.slug}/`}>
               <div className={styles.carteImg}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}

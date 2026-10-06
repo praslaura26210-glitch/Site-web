@@ -3,7 +3,7 @@ import { dict, type Lang } from '@/i18n';
 import { getCV, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
-import { CV_HREF } from '@/components/chrome/Footer';
+import { CV_HREF } from '@/components/chrome/liens';
 import styles from '@/components/pages/pages.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -38,36 +38,36 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
   const planche = img('planche-dessins-photos-bricolage');
   const L = tr(lang, {
     fr: {
-      bonjour: 'Bonjour, je suis Laura.',
+      titre: 'Étudiante en architecture, ancienne dessinatrice en bâtiment.',
       avant: "Avant l'école d'architecture, j'ai été dessinatrice en bâtiment. Je dessine sur Archicad comme à la main, je monte des dossiers de permis de construire, je dessine des escaliers et du mobilier. J'ai travaillé en agence d'architecture, en architecture intérieure et sur un chantier.",
       interets: 'Ce qui me retient',
       mots: [['Le territoire', "une architecture liée au lieu qui l'accueille"], ['La matière', 'la pierre, le bois, la terre, ce qu’ils permettent'], ['Les sens', "le toucher, l'odeur, la lumière"], ["L'existant", "le dialogue avec ce qui est là, jusqu'aux ruines"]],
       master: 'Le master AECC', recherche: 'Mon rapport d’études',
-      parcours: 'Parcours', f: 'Formation', s: 'Stage',
+      parcours: 'Parcours', f: 'Formation', s: 'Expériences',
       outils: 'Outils', main: 'À la main', sur5: 'sur 5',
       savoirs: ['Dessin à la main', 'Dossiers de permis de construire', "Plans d'escalier", 'Dessin de mobilier'],
       audela: 'Au-delà des projets', cv: 'Mon CV en PDF', ecrire: 'M’écrire',
       texteAudela: audela.texte,
     },
     en: {
-      bonjour: "Hello, I'm Laura.",
+      titre: 'Architecture student, former building draughtswoman.',
       avant: 'Before architecture school, I worked as a building draughtswoman. I draw in Archicad as well as by hand, I put together building permit applications, and I design staircases and furniture. I have worked in an architecture practice, in interior architecture and on a building site.',
       interets: 'What holds my attention',
       mots: [['Territory', 'architecture tied to the place that receives it'], ['Material', 'stone, timber, earth, and what they make possible'], ['The senses', 'touch, smell, light'], ['What exists', 'a dialogue with what is already there, down to ruins']],
       master: 'The AECC master’s', recherche: 'My study report',
-      parcours: 'Background', f: 'Education', s: 'Internship',
+      parcours: 'Background', f: 'Education', s: 'Experience',
       outils: 'Tools', main: 'By hand', sur5: 'out of 5',
       savoirs: ['Hand drawing', 'Building permit applications', 'Staircase drawings', 'Furniture design'],
       audela: 'Beyond the projects', cv: 'My CV as a PDF', ecrire: 'Write to me',
       texteAudela: 'I like to spend my free time exploring different creative practices, such as drawing, painting and crafts like mosaic, scrapbooking and knitting. I particularly enjoy working with my hands, restoring old furniture or making new pieces. I am not a great photographer, but I like taking the time to photograph the places around me. It helps me look more closely at the architecture, the light and the details that make up a place.',
     },
     it: {
-      bonjour: 'Ciao, sono Laura.',
+      titre: 'Studentessa di architettura, ex disegnatrice edile.',
       avant: "Prima della scuola di architettura sono stata disegnatrice edile. Disegno con Archicad e a mano, preparo pratiche per il permesso di costruire, progetto scale e arredi. Ho lavorato in uno studio di architettura, nell'architettura d'interni e in cantiere.",
       interets: 'Ciò che mi trattiene',
       mots: [['Il territorio', "un'architettura legata al luogo che la accoglie"], ['La materia', 'la pietra, il legno, la terra, e ciò che permettono'], ['I sensi', "il tatto, l'odore, la luce"], ["L'esistente", 'il dialogo con ciò che c’è già, fino alle rovine']],
       master: 'Il master AECC', recherche: 'La mia tesina',
-      parcours: 'Percorso', f: 'Formazione', s: 'Tirocinio',
+      parcours: 'Percorso', f: 'Formazione', s: 'Esperienze',
       outils: 'Strumenti', main: 'A mano', sur5: 'su 5',
       savoirs: ['Disegno a mano', 'Pratiche per il permesso di costruire', 'Disegni di scale', 'Disegno di arredi'],
       audela: 'Oltre i progetti', cv: 'Il mio CV in PDF', ecrire: 'Scrivimi',
@@ -77,51 +77,49 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
 
   return (
     <article className={styles.apropos}>
-      <header className={`wrap ${styles.aHead}`}>
+      <header className={styles.aHead}>
         <div className={styles.aHeadTxt}>
           <h1 className="eyebrow">{t.meta.aproposTitle}</h1>
-          <p className={styles.bonjour}>{L.bonjour}</p>
+          <p className={styles.aTitre}>{L.titre}</p>
           <p className={styles.avant}>{L.avant}</p>
-          <p className={styles.aRole}>{t.home.role}</p>
+          <ul className={styles.motsCles} aria-label={L.interets}>
+            {L.mots.map(([mot, sens]) => <li key={mot} title={sens}>{mot}</li>)}
+          </ul>
+          <a href={CV_HREF} download className="lien">{L.cv}</a>
         </div>
         <figure className={styles.portrait}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/media/site/portrait-1000.webp" srcSet="/media/site/portrait-1000.webp 1000w, /media/site/portrait-2000.webp 1042w" sizes="(max-width: 900px) 100vw, 40vw" alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
+          <img src="/media/site/portrait-2000.webp" srcSet="/media/site/portrait-1000.webp 1000w, /media/site/portrait-2000.webp 1042w" sizes="(max-width: 900px) 100vw, 50vw" alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
         </figure>
       </header>
 
-      <section className={`wrap ${styles.mots}`} aria-labelledby="interets">
-        <h2 id="interets" className="eyebrow">{L.interets}</h2>
-        <ol>
-          {L.mots.map(([mot, sens]) => (
-            <li key={mot} className="rv"><span className={styles.mot}>{mot}</span><span className={styles.sens}>{sens}</span></li>
-          ))}
-        </ol>
-      </section>
-
       <section className={`wrap ${styles.deux}`}>
         <div className="rv">
-          <h2 className={styles.h2}>{L.master}</h2>
+          <h2 className="eyebrow">{L.master}</h2>
           <p>{cv.master_aecc_texte[lang]}</p>
         </div>
         <div className="rv">
-          <h2 className={styles.h2}>{L.recherche}</h2>
+          <h2 className="eyebrow">{L.recherche}</h2>
           <p>{cv.recherche_texte[lang]}</p>
         </div>
       </section>
 
       <section className={`wrap ${styles.parcours}`} aria-labelledby="parcours">
         <h2 id="parcours" className={styles.h2Grand}>{L.parcours}</h2>
-        <ol className={styles.etapes}>
-          {PARCOURS.map((e) => (
-            <li key={e.cle} className="rv" data-type={e.type}>
-              <span className={styles.etDate}>{e.date[lang]}</span>
-              <span className={styles.etTitre}>{e.titre[lang]}</span>
-              <span className={styles.etLieu}>{e.lieu}</span>
-              <span className={styles.etType}>{e.type === 'f' ? L.f : L.s}</span>
-            </li>
-          ))}
-        </ol>
+        {(['f', 's'] as const).map((type) => (
+          <div key={type} className={styles.colParcours}>
+            <p className="eyebrow">{type === 'f' ? L.f : L.s}</p>
+            <ol className={styles.etapes}>
+              {PARCOURS.filter((e) => e.type === type).map((e) => (
+                <li key={e.cle} className="rv">
+                  <span className={styles.etDate}>{e.date[lang]}</span>
+                  <span className={styles.etTitre}>{e.titre[lang]}</span>
+                  <span className={styles.etLieu}>{e.lieu}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
       </section>
 
       <section className={`wrap ${styles.outils}`} aria-labelledby="outils">
@@ -157,7 +155,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
 
       <p className={`wrap ${styles.aFin}`}>
         <Link href={`/${lang}/contact/`} className={styles.lienFort}>{L.ecrire} →</Link>
-        <a href={CV_HREF} download className={styles.lienDoux}>{L.cv} ↓</a>
       </p>
     </article>
   );

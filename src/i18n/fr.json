@@ -20,18 +20,24 @@
   "menu": "Menu",
   "close": "Fermer",
   "skip": "Aller au contenu",
-  "home": "Accueil"
+  "home": "Accueil",
+  "cv": "CV",
+  "langue": "Choisir la langue"
  },
  "intro": {
-  "skip": "Passer l'intro"
+  "skip": "Passer l'intro",
+  "portfolio": "Portfolio"
  },
  "home": {
   "approach": "Une architecture ancrée dans le territoire, attentive à la matière, à la lumière et à ce qui existe déjà.",
   "role": "Étudiante en master Architecture, Environnement et Cultures Constructives, ENSA Grenoble. Ancienne dessinatrice en bâtiment.",
   "cta": "Les projets",
   "list": "Six projets",
-  "lieu": "Grenoble",
-  "scroll": "Descendre vers les projets"
+  "scroll": "Descendre vers les projets",
+  "portfolio": "Portfolio 2026",
+  "statut": "Étudiante en architecture · ENSA Grenoble",
+  "projetsTitre": "Projets",
+  "voir": "Voir le projet"
  },
  "projet": {
   "lieu": "Lieu",
@@ -53,7 +59,8 @@
   "agrandir": "Agrandir",
   "fermer": "Fermer",
   "commencer": "Lire le projet",
-  "role": "Mon rôle"
+  "role": "Mon rôle",
+  "glisser": "Glisser pour comparer"
  },
  "footer": {
   "rights": "Tous droits réservés",
@@ -67,5 +74,20 @@
   "cvBtn": "CV",
   "cvSize": "PDF, 1 page",
   "ecrire": "Écrire"
+ },
+ "contact": {
+  "titre": "Pour un stage, une collaboration ou un simple échange sur un projet.",
+  "nom": "Nom",
+  "email": "E-mail",
+  "message": "Message",
+  "envoyer": "Envoyer",
+  "tel": "Téléphone",
+  "lieu": "Lieu",
+  "lieuV": "Grenoble · Épinouze (Drôme)",
+  "ecrire": "Écrire un e-mail",
+  "merciT": "Message envoyé.",
+  "merciX": "Merci, je vous réponds dès que possible.",
+  "retour": "Retour à l'accueil",
+  "reseaux": "Me suivre"
  }
 }

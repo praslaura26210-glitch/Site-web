@@ -1,39 +1,74 @@
 import { dict, type Lang } from '@/i18n';
 import { getCV } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import { tr } from '@/lib/tr';
-import CopyEmail from '@/components/pages/CopyEmail';
+import { IcoEmail, IcoInstagram, IcoLinkedin, IcoTel } from '@/components/pages/Icones';
 import styles from '@/components/pages/pages.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
-  return meta(lang, '/contact/', `${t.meta.contactTitle} · Laura Pras`, t.home.approach);
+  return meta(lang, '/contact/', `${t.meta.contactTitle} · Laura Pras`, t.contact.titre);
 }
 
+/**
+ * Contact : un formulaire (Netlify Forms : les messages arrivent dans le tableau de bord Netlify
+ * et sont transférés par e-mail une fois la notification activée), puis les coordonnées et les icônes.
+ */
 export default async function Contact({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
+  const t = dict(lang);
+  const C = t.contact;
   const cv = getCV();
-  const L = tr(lang, {
-    fr: { titre: 'Écrivez-moi', texte: "Pour une rencontre, une question sur un projet ou un échange autour de la matière et de l'existant : un e-mail suffit.", copy: "Copier l'adresse", copied: 'Adresse copiée', lieu: 'Grenoble · Épinouze (Drôme)', pdf: 'Avant de partir : le portfolio complet', pdfT: '63 pages, tous les projets, plans et textes.' },
-    en: { titre: 'Write to me', texte: 'For a meeting, a question about a project or a conversation about material and existing buildings, an email is all it takes.', copy: 'Copy the address', copied: 'Address copied', lieu: 'Grenoble · Épinouze (Drôme, France)', pdf: 'Before you go: the full portfolio', pdfT: '63 pages, every project, drawings and texts.' },
-    it: { titre: 'Scrivetemi', texte: "Per un incontro, una domanda su un progetto o uno scambio sulla materia e sull'esistente, basta una e-mail.", copy: "Copia l'indirizzo", copied: 'Indirizzo copiato', lieu: 'Grenoble · Épinouze (Drôme, Francia)', pdf: 'Prima di andare: il portfolio completo', pdfT: '63 pagine, tutti i progetti, disegni e testi.' },
-  });
-  const liens = [
-    { label: 'LinkedIn', url: cv.linkedin },
-    { label: 'Instagram', url: cv.instagram },
+  const tel = String(cv.telephone);
+  const reseaux = [
+    { label: 'LinkedIn', url: cv.linkedin, Ico: IcoLinkedin },
+    { label: 'Instagram', url: cv.instagram, Ico: IcoInstagram },
   ].filter((l) => l.url && !String(l.url).startsWith('['));
   return (
     <article className={`wrap ${styles.page} ${styles.contact}`}>
-      <h1 className={styles.h1}>{L.titre}</h1>
-      <p className={styles.headLead}>{L.texte}</p>
-      <CopyEmail email={cv.email} labels={{ copy: L.copy, copied: L.copied }} />
-      <p className={styles.lieu}>{L.lieu}</p>
-      {liens.length > 0 && (
-        <ul className={styles.social}>
-          {liens.map((l) => <li key={l.label}><a href={l.url} rel="me noopener" target="_blank">{l.label} ↗</a></li>)}
-        </ul>
-      )}
+      <header className={styles.cHead}>
+        <h1 className="eyebrow">{t.meta.contactTitle}</h1>
+        <p className={styles.cTitre}>{C.titre}</p>
+      </header>
+
+      <div className={styles.cCorps}>
+        <form className={styles.form} name="contact" method="POST" action={`/${lang}/contact/merci/`} data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="langue" value={lang} />
+          <p hidden><label>Ne pas remplir <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
+          <label className={styles.champ}>
+            <span>{C.nom}</span>
+            <input name="nom" type="text" autoComplete="name" required />
+          </label>
+          <label className={styles.champ}>
+            <span>{C.email}</span>
+            <input name="email" type="email" autoComplete="email" required />
+          </label>
+          <label className={`${styles.champ} ${styles.champLarge}`}>
+            <span>{C.message}</span>
+            <textarea name="message" rows={6} required />
+          </label>
+          <button type="submit" className={styles.envoyer}>
+            {C.envoyer}
+            <svg viewBox="0 0 24 12" width="24" height="12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.1" /></svg>
+          </button>
+        </form>
+
+        <aside className={styles.coord}>
+          <ul className={styles.icones}>
+            <li><a href={`mailto:${cv.email}`} aria-label={`${C.ecrire} : ${cv.email}`} title={C.ecrire}><IcoEmail /></a></li>
+            <li><a href={`tel:+33${tel.replace(/\s/g, '').replace(/^0/, '')}`} aria-label={`${C.tel} : ${tel}`} title={C.tel}><IcoTel /></a></li>
+            {reseaux.map(({ label, url, Ico }) => (
+              <li key={label}><a href={url} target="_blank" rel="me noopener" aria-label={label} title={label}><Ico /></a></li>
+            ))}
+          </ul>
+          <dl className={styles.coordList}>
+            <div><dt>{C.email}</dt><dd><a href={`mailto:${cv.email}`}>{cv.email}</a></dd></div>
+            <div><dt>{C.tel}</dt><dd><a href={`tel:+33${tel.replace(/\s/g, '').replace(/^0/, '')}`}>{tel}</a></dd></div>
+            <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
+          </dl>
+        </aside>
+      </div>
     </article>
   );
 }

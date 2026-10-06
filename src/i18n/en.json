@@ -20,18 +20,24 @@
   "menu": "Menu",
   "close": "Close",
   "skip": "Skip to content",
-  "home": "Home"
+  "home": "Home",
+  "cv": "CV",
+  "langue": "Choose language"
  },
  "intro": {
-  "skip": "Skip intro"
+  "skip": "Skip intro",
+  "portfolio": "Portfolio"
  },
  "home": {
   "approach": "Architecture rooted in its territory, attentive to material, to light and to what already exists.",
   "role": "Master's student in Architecture, Environment and Building Cultures, ENSA Grenoble. Former building draughtswoman.",
   "cta": "Projects",
   "list": "Six projects",
-  "lieu": "Grenoble",
-  "scroll": "Scroll down to the projects"
+  "scroll": "Scroll down to the projects",
+  "portfolio": "Portfolio 2026",
+  "statut": "Architecture student · ENSA Grenoble",
+  "projetsTitre": "Projects",
+  "voir": "See the project"
  },
  "projet": {
   "lieu": "Location",
@@ -53,7 +59,8 @@
   "agrandir": "Enlarge",
   "fermer": "Close",
   "commencer": "Read the project",
-  "role": "My role"
+  "role": "My role",
+  "glisser": "Drag to compare"
  },
  "footer": {
   "rights": "All rights reserved",
@@ -67,5 +74,20 @@
   "cvBtn": "CV",
   "cvSize": "PDF, 1 page",
   "ecrire": "Write"
+ },
+ "contact": {
+  "titre": "For an internship, a collaboration or simply a conversation about a project.",
+  "nom": "Name",
+  "email": "Email",
+  "message": "Message",
+  "envoyer": "Send",
+  "tel": "Phone",
+  "lieu": "Based in",
+  "lieuV": "Grenoble · Épinouze (Drôme, France)",
+  "ecrire": "Write an email",
+  "merciT": "Message sent.",
+  "merciX": "Thank you, I will get back to you as soon as I can.",
+  "retour": "Back to the home page",
+  "reseaux": "Follow me"
  }
 }

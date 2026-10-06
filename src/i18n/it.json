@@ -20,18 +20,24 @@
   "menu": "Menu",
   "close": "Chiudi",
   "skip": "Vai al contenuto",
-  "home": "Home"
+  "home": "Home",
+  "cv": "CV",
+  "langue": "Scegli la lingua"
  },
  "intro": {
-  "skip": "Salta l'intro"
+  "skip": "Salta l'intro",
+  "portfolio": "Portfolio"
  },
  "home": {
   "approach": "Un'architettura radicata nel territorio, attenta alla materia, alla luce e a ciò che già esiste.",
   "role": "Studentessa del master Architettura, Ambiente e Culture Costruttive, ENSA Grenoble. Ex disegnatrice edile.",
   "cta": "Progetti",
   "list": "Sei progetti",
-  "lieu": "Grenoble",
-  "scroll": "Scendi verso i progetti"
+  "scroll": "Scendi verso i progetti",
+  "portfolio": "Portfolio 2026",
+  "statut": "Studentessa di architettura · ENSA Grenoble",
+  "projetsTitre": "Progetti",
+  "voir": "Vedi il progetto"
  },
  "projet": {
   "lieu": "Luogo",
@@ -53,7 +59,8 @@
   "agrandir": "Ingrandisci",
   "fermer": "Chiudi",
   "commencer": "Leggi il progetto",
-  "role": "Il mio ruolo"
+  "role": "Il mio ruolo",
+  "glisser": "Trascina per confrontare"
  },
  "footer": {
   "rights": "Tutti i diritti riservati",
@@ -67,5 +74,20 @@
   "cvBtn": "CV",
   "cvSize": "PDF, 1 pagina",
   "ecrire": "Scrivere"
+ },
+ "contact": {
+  "titre": "Per un tirocinio, una collaborazione o un semplice scambio su un progetto.",
+  "nom": "Nome",
+  "email": "E-mail",
+  "message": "Messaggio",
+  "envoyer": "Invia",
+  "tel": "Telefono",
+  "lieu": "Dove",
+  "lieuV": "Grenoble · Épinouze (Drôme, Francia)",
+  "ecrire": "Scrivere una e-mail",
+  "merciT": "Messaggio inviato.",
+  "merciX": "Grazie, vi risponderò il prima possibile.",
+  "retour": "Torna alla home",
+  "reseaux": "Seguimi"
  }
 }

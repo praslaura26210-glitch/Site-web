@@ -4,7 +4,6 @@ import { LANGS, dict, type Lang } from '@/i18n';
 import { getCV } from '@/lib/content';
 import Header from '@/components/chrome/Header';
 import Footer from '@/components/chrome/Footer';
-import Cursor from '@/components/chrome/Cursor';
 import Apparitions from '@/components/chrome/Apparitions';
 import Ouverture from '@/components/home/Ouverture';
 
@@ -13,7 +12,7 @@ export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
 }
 
-export const viewport: Viewport = { themeColor: '#FBFAF7', width: 'device-width', initialScale: 1 };
+export const viewport: Viewport = { themeColor: '#FEFEFC', width: 'device-width', initialScale: 1 };
 
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -33,13 +32,12 @@ export default async function RootLayout({ children, params }: { children: React
       </head>
       <body>
         <a className="skip" href="#contenu">{t.nav.skip}</a>
-        <Ouverture skip={t.intro.skip} />
+        <Ouverture skip={t.intro.skip} portfolio={t.intro.portfolio} />
         <Header lang={lang} t={t} />
         <div className="page">
           <main id="contenu">{children}</main>
           <Footer lang={lang} t={t} email={cv.email} />
         </div>
-        <Cursor />
         <Apparitions />
       </body>
     </html>

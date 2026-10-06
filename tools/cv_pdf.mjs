@@ -10,13 +10,13 @@ const { chromium } = require('playwright');
 const cv = JSON.parse(fs.readFileSync(path.join(root, 'content/site/cv.json'), 'utf8'));
 const font = (f) => `data:font/woff2;base64,${fs.readFileSync(path.join(root, 'public/fonts', f)).toString('base64')}`;
 const img = (f) => `data:image/webp;base64,${fs.readFileSync(path.join(root, f)).toString('base64')}`;
-const logo = fs.readFileSync(path.join(root, 'content/logo/ligne/symbole.svg'), 'utf8');
+const logo = fs.readFileSync(path.join(root, 'content/logo/cabane/symbole.svg'), 'utf8');
 const dots = (n) => Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('');
 const html = `<!doctype html><html lang="fr"><meta charset="utf-8"><style>
 @font-face{font-family:G;src:url(${font('ebg-400.woff2')})}@font-face{font-family:M;font-weight:300;src:url(${font('mont-300.woff2')})}@font-face{font-family:M;font-weight:500;src:url(${font('mont-500.woff2')})}
-@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font:300 9pt/1.45 M,sans-serif;overflow:hidden;color:#2B211C;background:#FBFAF7;width:210mm;height:297mm;padding:16mm 16mm 14mm;display:grid;grid-template-columns:62mm 1fr;gap:10mm}
+@page{size:A4;margin:0}*{box-sizing:border-box}body{margin:0;font:300 9pt/1.45 M,sans-serif;overflow:hidden;color:#2B211C;background:#FEFEFC;width:210mm;height:297mm;padding:16mm 16mm 14mm;display:grid;grid-template-columns:62mm 1fr;gap:10mm}
 h1{font:400 34pt/1 G,serif;margin:0}h2{font:500 7.4pt M;letter-spacing:.16em;text-transform:uppercase;color:#6B5A4E;margin:0 0 3mm;border-top:.6pt solid #2B211C;padding-top:2mm}
-.side img{width:46mm;filter:grayscale(1) sepia(.15);margin:5mm 0}.logo svg{width:44mm;height:auto;display:block}section{margin-bottom:5mm}
+.side img{width:46mm;filter:grayscale(1) sepia(.15);margin:5mm 0}.logo svg{width:18mm;height:auto;display:block}section{margin-bottom:5mm}
 .item{display:grid;grid-template-columns:22mm 1fr;gap:3mm;margin-bottom:2.4mm}.y{color:#8E4A30;font-size:8pt}.item b{font-weight:500;display:block}.item small{color:#6B5A4E;font-size:8.4pt}
 .sk{display:flex;justify-content:space-between;border-bottom:.4pt solid #D8CCBB;padding:1.1mm 0}.d{display:inline-flex;gap:1.2mm;align-items:center}.d i{width:2.2mm;height:2.2mm;border-radius:50%;border:.6pt solid #A46B57}.d i.on{background:#A46B57}
 .lead{font:400 13pt/1.35 G,serif;margin:4mm 0 5mm}.c{font-size:8.6pt;line-height:1.7}ul{margin:0;padding-left:4mm}

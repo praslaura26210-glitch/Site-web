@@ -1,0 +1,8 @@
+.esquisse { margin: 0; }
+.box { position: relative; width: 100%; }
+.box img, .box canvas { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; }
+.box img { object-fit: contain; transition: opacity .6s var(--ease); }
+.box canvas { pointer-events: none; transition: opacity .6s var(--ease); }
+.esquisse[data-phase='wait'] img, .esquisse[data-phase='draw'] img { opacity: 0; }
+.esquisse[data-phase='done'] canvas, .esquisse[data-phase='static'] canvas { opacity: 0; }
+.cap { margin-top: 10px; font-size: .7rem; letter-spacing: .04em; color: var(--gris); }

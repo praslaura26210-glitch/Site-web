@@ -1,125 +1,114 @@
-// Mise en page « magazine » de chaque projet : une suite de blocs qu'on découvre en descendant.
+// Pages projet : une suite de chapitres. À droite, le texte reste en place ; à gauche, les images défilent.
 // Les références d'images et de plans sont décrites dans src/lib/media.ts.
 
-type L3 = { fr: string; en: string; it: string };
+export type L3 = { fr: string; en: string; it: string };
 
-export type Bloc =
-  /** chapeau, texte du projet et fiche */
-  | { t: 'texte' }
-  /** chiffres clés (cotes, surfaces) */
-  | { t: 'chiffres'; items: { label: L3; valeur: L3 }[] }
-  /** intertitre de chapitre */
-  | { t: 'chapitre'; titre: L3 }
-  /** image en pleine largeur d'écran (paysage) */
-  | { t: 'pleine'; r: string }
-  /** image dans la largeur de la page ; « etroit » pour les formats carrés ou verticaux */
-  | { t: 'large'; r: string; etroit?: boolean }
-  /** image décalée d'un côté ; de l'autre, un texte (récit, poème, expérimentation) ou la seule légende */
-  | { t: 'decale'; r: string; cote: 'g' | 'd'; texte?: 'recit' | 'poeme' | 'experimentation' }
-  /** deux images ; « egal » : même largeur, sinon 7/5 */
-  | { t: 'duo'; a: string; b: string; egal?: boolean }
-  /** dessins larges empilés (existant puis projet) */
-  | { t: 'pile'; r: string[]; etiquettes?: 'existant-projet' }
-  | { t: 'trio'; r: string[] }
-  | { t: 'grille'; r: string[] }
-  /** croquis qui se trace, avec une image ou un texte à côté */
-  | { t: 'croquis'; r: string; json: string; avec?: string; texte?: 'poeme' }
-  /** palette de matériaux et planche */
-  | { t: 'palette'; r: string };
+/** Ce qu'on voit dans la colonne d'images */
+export type Visuel =
+  | { r: string }
+  /** deux images côte à côte */
+  | { duo: [string, string] }
+  /** quatre petites images */
+  | { grille: string[] }
+  /** dessin original qui apparaît au crayon */
+  | { esquisse: string; fuite?: [number, number] }
+  /** existant / projet : on fait glisser pour passer de l'un à l'autre */
+  | { comparer: { titre: L3; existant: string; projet: string }[] };
+
+export type Chapitre = {
+  titre?: L3;
+  /** texte de la colonne de droite */
+  texte?: 'projet' | 'recit' | 'poeme' | 'experimentation' | L3;
+  /** chiffres clés et palette sous le texte */
+  chiffres?: { label: L3; valeur: L3 }[];
+  palette?: boolean;
+  visuels: Visuel[];
+};
 
 const CH = {
-  existant: { fr: 'Existant et projet', en: 'Existing and project', it: 'Esistente e progetto' },
+  regard: { fr: 'Existant et projet', en: 'Existing and project', it: 'Esistente e progetto' },
   dessins: { fr: 'Dessins', en: 'Drawings', it: 'Disegni' },
   pierre: { fr: 'La pierre, à la main', en: 'Stone, by hand', it: 'La pietra, a mano' },
   maquette: { fr: 'Maquette', en: 'Model', it: 'Plastico' },
   details: { fr: 'Assemblages', en: 'Joints', it: 'Giunzioni' },
   fabrication: { fr: 'Plans de fabrication', en: 'Fabrication drawings', it: 'Disegni costruttivi' },
   ambiances: { fr: 'Ambiances', en: 'Atmospheres', it: 'Atmosfere' },
+  matieres: { fr: 'Matières', en: 'Materials', it: 'Materiali' },
+  site: { fr: 'Le site', en: 'The site', it: 'Il sito' },
+  conception: { fr: 'Conception', en: 'Design', it: 'Progettazione' },
 };
+const GLISSER: L3 = {
+  fr: "Faites glisser le trait : à gauche l'existant et ses démolitions, à droite le projet.",
+  en: 'Drag the line: the existing building and its demolitions on the left, the project on the right.',
+  it: 'Trascinate la linea: a sinistra lo stato di fatto con le demolizioni, a destra il progetto.',
+};
+const D = (fr: string, en: string, it: string): L3 => ({ fr, en, it });
 
-export const SEQUENCES: Record<string, Bloc[]> = {
+export const SEQUENCES: Record<string, Chapitre[]> = {
   'entre-deux-regards': [
-    { t: 'texte' },
-    { t: 'decale', r: 'maquette', cote: 'd', texte: 'recit' },
-    { t: 'pleine', r: 'perspective-cour' },
-    { t: 'chapitre', titre: CH.existant },
-    { t: 'pile', r: ['c:plan-rdc-existant', 'c:plan-rdc-projet'], etiquettes: 'existant-projet' },
-    { t: 'pile', r: ['c:facade-sud-existant', 'c:facade-sud-projet'], etiquettes: 'existant-projet' },
-    { t: 'decale', r: 'perspective-escalier', cote: 'g' },
-    { t: 'pile', r: ['c:plan-etage-existant', 'c:plan-etage-projet'], etiquettes: 'existant-projet' },
-    { t: 'large', r: 'c:coupe-aa-projet' },
-    { t: 'large', r: 'x:plan-masse-projet' },
+    { texte: 'projet', visuels: [{ r: 'perspective-cour' }, { r: 'maquette' }] },
+    { texte: 'recit', visuels: [{ r: 'perspective-escalier' }] },
+    {
+      titre: CH.regard,
+      texte: GLISSER,
+      visuels: [{
+        comparer: [
+          { titre: D('Plan RDC', 'Ground floor', 'Piano terra'), existant: 'c:plan-rdc-existant', projet: 'c:plan-rdc-projet' },
+          { titre: D('Plan étage', 'Upper floor', 'Piano primo'), existant: 'c:plan-etage-existant', projet: 'c:plan-etage-projet' },
+          { titre: D('Façade sud', 'South elevation', 'Prospetto sud'), existant: 'c:facade-sud-existant', projet: 'c:facade-sud-projet' },
+          { titre: D('Façade nord', 'North elevation', 'Prospetto nord'), existant: 'c:facade-nord-existant', projet: 'c:facade-nord-projet' },
+          { titre: D('Façade est', 'East elevation', 'Prospetto est'), existant: 'c:facade-est-existant', projet: 'c:facade-est-projet' },
+          { titre: D('Façade ouest', 'West elevation', 'Prospetto ovest'), existant: 'c:facade-ouest-existant', projet: 'c:facade-ouest-projet' },
+          { titre: D('Coupe AA', 'Section AA', 'Sezione AA'), existant: 'c:coupe-aa-existant', projet: 'c:coupe-aa-projet' },
+        ],
+      }],
+    },
+    { titre: CH.site, visuels: [{ r: 'x:plan-masse-projet' }] },
   ],
   'le-passage-des-artistes': [
-    { t: 'texte' },
-    { t: 'croquis', r: 'croquis-cour', json: 'croquis-cour-traits.json', avec: 'maquette-2' },
-    { t: 'pleine', r: 'coupe-perspective' },
-    { t: 'chapitre', titre: CH.dessins },
-    { t: 'duo', a: 'plan-rdc', b: 'plan-etages', egal: true },
-    { t: 'large', r: 'facade-sud' },
-    { t: 'duo', a: 'coupe', b: 'facade-nord' },
-    { t: 'chapitre', titre: CH.pierre },
-    { t: 'decale', r: 'experimentation-2', cote: 'g', texte: 'experimentation' },
-    { t: 'duo', a: 'experimentation-1', b: 'experimentation-3' },
-    { t: 'decale', r: 'detail-axonometrie', cote: 'd' },
-    { t: 'large', r: 'plan-masse', etroit: true },
+    { texte: 'projet', visuels: [{ esquisse: 'croquis-cour', fuite: [0.2, 0.62] }, { r: 'maquette-2' }] },
+    { titre: CH.dessins, visuels: [{ r: 'coupe-perspective' }, { duo: ['plan-rdc', 'plan-etages'] }, { r: 'facade-sud' }, { duo: ['coupe', 'facade-nord'] }] },
+    { titre: CH.pierre, texte: 'experimentation', visuels: [{ r: 'experimentation-2' }, { duo: ['experimentation-1', 'experimentation-3'] }, { r: 'detail-axonometrie' }] },
+    { titre: CH.site, visuels: [{ r: 'plan-masse' }] },
   ],
   'pilates-room': [
-    { t: 'texte' },
     {
-      t: 'chiffres',
-      items: [
-        { label: { fr: 'Salle de cours', en: 'Studio', it: 'Sala corsi' }, valeur: { fr: '60 m²', en: '60 m²', it: '60 m²' } },
-        { label: { fr: 'Accueil', en: 'Reception', it: 'Accoglienza' }, valeur: { fr: '20 m²', en: '20 m²', it: '20 m²' } },
-        { label: { fr: 'Hauteur sous plafond', en: 'Ceiling height', it: 'Altezza interna' }, valeur: { fr: '2,70 m', en: '2.70 m', it: '2,70 m' } },
+      texte: 'projet',
+      chiffres: [
+        { label: D('Salle de cours', 'Studio', 'Sala corsi'), valeur: D('60 m²', '60 m²', '60 m²') },
+        { label: D('Accueil', 'Reception', 'Accoglienza'), valeur: D('20 m²', '20 m²', '20 m²') },
+        { label: D('Hauteur sous plafond', 'Ceiling height', 'Altezza interna'), valeur: D('2,70 m', '2.70 m', '2,70 m') },
       ],
+      visuels: [{ r: 'p:plan-amenagement' }],
     },
-    { t: 'large', r: 'p:plan-amenagement' },
-    { t: 'chapitre', titre: CH.ambiances },
-    { t: 'trio', r: ['rendu-salle', 'rendu-vestiaire', 'rendu-coiffeuse'] },
-    { t: 'palette', r: 'planche-materiaux' },
-    { t: 'chapitre', titre: CH.dessins },
-    { t: 'large', r: 'p:coupe-cc' },
-    { t: 'duo', a: 'p:coupe-aa', b: 'p:coupe-bb' },
-    { t: 'large', r: 'p:plan-electricite' },
+    { titre: CH.ambiances, visuels: [{ r: 'rendu-salle' }, { duo: ['rendu-vestiaire', 'rendu-coiffeuse'] }] },
+    { titre: CH.matieres, palette: true, visuels: [{ r: 'planche-materiaux' }] },
+    { titre: CH.dessins, visuels: [{ r: 'p:coupe-cc' }, { duo: ['p:coupe-aa', 'p:coupe-bb'] }, { r: 'p:plan-electricite' }] },
   ],
   'escalier-suspendu': [
-    { t: 'texte' },
     {
-      t: 'chiffres',
-      items: [
-        { label: { fr: 'Hauteur à franchir', en: 'Height to climb', it: 'Altezza da superare' }, valeur: { fr: '2 930 mm', en: '2,930 mm', it: '2.930 mm' } },
-        { label: { fr: 'Longueur du limon', en: 'Stringer length', it: 'Lunghezza del cosciale' }, valeur: { fr: '4 704 mm', en: '4,704 mm', it: '4.704 mm' } },
-        { label: { fr: 'Pente', en: 'Pitch', it: 'Pendenza' }, valeur: { fr: '38,5°', en: '38.5°', it: '38,5°' } },
+      texte: 'projet',
+      chiffres: [
+        { label: D('Hauteur à franchir', 'Height to climb', 'Altezza da superare'), valeur: D('2 930 mm', '2,930 mm', '2.930 mm') },
+        { label: D('Longueur du limon', 'Stringer length', 'Lunghezza del cosciale'), valeur: D('4 704 mm', '4,704 mm', '4.704 mm') },
+        { label: D('Pente', 'Pitch', 'Pendenza'), valeur: D('38,5°', '38.5°', '38,5°') },
       ],
+      visuels: [{ r: 'p:vue-de-face' }],
     },
-    { t: 'decale', r: 'p:vue-de-face', cote: 'g' },
-    { t: 'decale', r: 'p:axonometrie', cote: 'd' },
-    { t: 'large', r: 'p:vue-en-plan' },
-    { t: 'chapitre', titre: CH.fabrication },
-    { t: 'duo', a: 'p:planche-limon-marches', b: 'p:planche-garde-corps', egal: true },
+    { titre: CH.conception, visuels: [{ r: 'p:axonometrie' }, { r: 'p:vue-en-plan' }] },
+    { titre: CH.fabrication, visuels: [{ duo: ['p:planche-limon-marches', 'p:planche-garde-corps'] }] },
   ],
   'la-ruche': [
-    { t: 'texte' },
-    { t: 'decale', r: 'maquette-3', cote: 'g', texte: 'poeme' },
-    { t: 'pleine', r: 'maquette-2' },
-    { t: 'decale', r: 'axonometrie-eclatee', cote: 'd' },
-    { t: 'chapitre', titre: CH.dessins },
-    { t: 'duo', a: 'plan-rdc', b: 'plan-r-1', egal: true },
-    { t: 'large', r: 'coupe-aa' },
-    { t: 'pile', r: ['plan-structure', 'facade-ouest'] },
-    { t: 'chapitre', titre: CH.maquette },
-    { t: 'duo', a: 'maquette-5', b: 'maquette-4' },
-    { t: 'large', r: 'plan-masse', etroit: true },
+    { texte: 'projet', visuels: [{ r: 'maquette-2' }, { r: 'axonometrie-eclatee' }] },
+    { texte: 'poeme', visuels: [{ r: 'maquette-3' }] },
+    { titre: CH.dessins, visuels: [{ duo: ['plan-rdc', 'plan-r-1'] }, { r: 'coupe-aa' }, { r: 'plan-structure' }, { r: 'facade-ouest' }] },
+    { titre: CH.maquette, visuels: [{ r: 'maquette-5' }, { r: 'maquette-4' }] },
+    { titre: CH.site, visuels: [{ r: 'plan-masse' }] },
   ],
   'illusion-d-envol': [
-    { t: 'texte' },
-    { t: 'croquis', r: 'croquis-perspective', json: 'croquis-perspective-traits.json', texte: 'poeme' },
-    { t: 'large', r: 'axonometrie-eclatee', etroit: true },
-    { t: 'chapitre', titre: CH.dessins },
-    { t: 'large', r: 'coupe-aa' },
-    { t: 'duo', a: 'plan-rdc', b: 'facade-sud' },
-    { t: 'chapitre', titre: CH.details },
-    { t: 'grille', r: ['detail-assemblage-1', 'detail-assemblage-2', 'detail-assemblage-3', 'detail-assemblage-4'] },
+    { texte: 'projet', visuels: [{ esquisse: 'croquis-perspective', fuite: [0.5, 0.7] }] },
+    { texte: 'poeme', visuels: [{ r: 'axonometrie-eclatee' }] },
+    { titre: CH.dessins, visuels: [{ r: 'coupe-aa' }, { duo: ['plan-rdc', 'facade-sud'] }] },
+    { titre: CH.details, visuels: [{ grille: ['detail-assemblage-1', 'detail-assemblage-2', 'detail-assemblage-3', 'detail-assemblage-4'] }] },
   ],
 };

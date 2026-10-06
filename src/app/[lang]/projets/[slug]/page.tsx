@@ -4,7 +4,7 @@ import { ORDRE, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import { SEQUENCES } from '@/lib/sequences';
 import { couverture } from '@/components/home/ProjetsGrille';
-import Magazine from '@/components/project/Magazine';
+import ProjetPage from '@/components/project/ProjetPage';
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: Params) {
   return meta(lang, `/projets/${slug}/`, `${p.titre} · Laura Pras`, desc, couverture(p).img.src);
 }
 
-export default async function ProjetPage({ params }: Params) {
+export default async function Page({ params }: Params) {
   const { lang, slug } = (await params) as { lang: Lang; slug: string };
   if (!(ORDRE as readonly string[]).includes(slug)) notFound();
   const t = dict(lang);
   const p = getProjet(slug, lang);
   const next = getProjet(ORDRE[(ORDRE.indexOf(slug as (typeof ORDRE)[number]) + 1) % ORDRE.length], lang);
-  return <Magazine p={p} t={t} lang={lang} blocs={SEQUENCES[slug]} next={next} total={ORDRE.length} />;
+  return <ProjetPage p={p} t={t} lang={lang} chapitres={SEQUENCES[slug]} next={next} total={ORDRE.length} />;
 }
