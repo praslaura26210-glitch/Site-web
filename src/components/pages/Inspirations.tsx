@@ -12,12 +12,13 @@ export default function Inspirations({ items, labels }: { items: Inspiration[]; 
   return (
     <>
       <ul className={styles.refGrille}>
-        {items.map((x, i) => (
-          <li key={x.id} className="rv" data-n={i}>
+        {items.map((x) => (
+          <li key={x.id} className="rv">
             <button type="button" className={styles.tuile} onClick={() => setCur(x)} aria-label={`${labels.ouvrir} : ${x.titre}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/media/site/inspirations/${x.id}.webp`} alt="" width={x.w} height={x.h} loading="lazy" />
               <span className={styles.tuileT}>{x.titre}</span>
+              <span className={styles.tuileA}>{x.auteur || x.lieu}</span>
             </button>
           </li>
         ))}

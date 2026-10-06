@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { LANGS, dict, type Lang } from '@/i18n';
 import { ORDRE, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import { SEQUENCES } from '@/lib/sequences';
+import { MISES } from '@/lib/sequences';
 import { couverture } from '@/components/home/ProjetsGrille';
 import ProjetPage from '@/components/project/ProjetPage';
 
@@ -26,5 +26,5 @@ export default async function Page({ params }: Params) {
   const t = dict(lang);
   const p = getProjet(slug, lang);
   const next = getProjet(ORDRE[(ORDRE.indexOf(slug as (typeof ORDRE)[number]) + 1) % ORDRE.length], lang);
-  return <ProjetPage p={p} t={t} lang={lang} chapitres={SEQUENCES[slug]} next={next} total={ORDRE.length} />;
+  return <ProjetPage p={p} t={t} lang={lang} mise={MISES[slug]} next={next} total={ORDRE.length} />;
 }

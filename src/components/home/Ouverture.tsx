@@ -6,7 +6,7 @@ import styles from './home.module.css';
 /** Centre de la porte de la cabane, en fractions de la boîte du logo (voir Logo.tsx). */
 const PORTE = { x: (70 - 12) / 98, y: (94 - 16) / 112 };
 /** Moment où la porte s'ouvre (ms), puis fin de l'ouverture : à accorder avec home.module.css. */
-const OUVRE = 2700, FIN = 3450;
+const OUVRE = 2150, FIN = 2650;
 
 /**
  * Ouverture de l'accueil, sur fond terre cuite : la cabane se dessine en blanc, le nom apparaît,

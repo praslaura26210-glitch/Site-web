@@ -33,7 +33,7 @@ export default function Planche({ m, sizes, labels, className, caption = true, e
           decoding="async"
         />
       </button>
-      {caption && <figcaption className={styles.cap}>{m.legende}{credit && <span className={styles.credit}>{credit}</span>}</figcaption>}
+      {caption && <figcaption className={styles.cap}>{m.legende}</figcaption>}
       {open && (
         <dialog ref={dlg} className={styles.lightbox} onClose={() => setOpen(false)} aria-label={m.legende}>
           <div className={styles.lbBar}>

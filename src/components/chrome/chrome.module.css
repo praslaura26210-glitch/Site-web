@@ -41,19 +41,18 @@
 
 /* ---------- fin de page : logo · liens · icônes · © ---------- */
 .footer { position: relative; margin-top: clamp(96px, 16vh, 180px); }
-.base { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 18px 36px; padding-block: 26px 32px; border-top: 1px solid var(--encre); font-size: .7rem; letter-spacing: .08em; color: var(--gris); }
-.baseBrand { display: inline-flex; color: var(--encre); }
+.base { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px 36px; padding-block: 26px 32px; border-top: 1px solid var(--encre); font-size: .7rem; letter-spacing: .08em; color: var(--gris); }
+.baseBrand { display: inline-flex; align-items: center; gap: 14px; color: var(--encre); font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; justify-self: start; }
 .baseLogo { width: 28px; height: auto; }
-.baseLinks { display: flex; flex-wrap: wrap; gap: 8px 30px; list-style: none; margin: 0; padding: 0; }
+.baseLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 30px; list-style: none; margin: 0; padding: 0; }
 .base a { text-decoration: none; transition: color .3s; }
 .baseLinks a:hover { color: var(--accent-f); }
-.baseIcones { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.baseIcones { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; justify-self: end; }
 .baseIcones a { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--filet); border-radius: 50%; color: var(--encre); transition: background-color .3s, color .3s, border-color .3s; }
 .baseIcones a:hover { background: var(--accent); border-color: var(--accent); color: var(--fond); }
 .baseIcones svg { width: 16px; height: 16px; }
 .copy { letter-spacing: .16em; text-transform: uppercase; font-size: .62rem; white-space: nowrap; }
 @media (max-width: 900px) {
-  .base { grid-template-columns: auto 1fr; }
-  .baseLinks { grid-column: 1 / -1; order: 3; flex-direction: column; gap: 10px; }
-  .copy { grid-column: 1 / -1; order: 4; }
+  .base { grid-template-columns: 1fr auto; }
+  .baseLinks { grid-column: 1 / -1; order: 3; flex-direction: column; justify-content: flex-start; gap: 10px; }
 }

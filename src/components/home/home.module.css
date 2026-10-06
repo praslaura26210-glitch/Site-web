@@ -9,38 +9,30 @@
   /* la porte : un trou circulaire qui grandit depuis la porte de la cabane */
   -webkit-mask-image: radial-gradient(circle at var(--px) var(--py), transparent var(--trou), #000 calc(var(--trou) + 1px));
   mask-image: radial-gradient(circle at var(--px) var(--py), transparent var(--trou), #000 calc(var(--trou) + 1px));
-  animation: trou .75s cubic-bezier(.65, 0, .35, 1) 2.7s forwards, ouvSecours 0s 6s forwards;
+  animation: trou .5s cubic-bezier(.65, 0, .35, 1) 2.15s forwards, ouvSecours 0s 5s forwards;
 }
 @keyframes trou { to { --trou: 150vmax; } }
 @keyframes ouvSecours { to { visibility: hidden; } }
 .ouvIn { display: grid; justify-items: center; }
 .ouvLogoBox { width: min(34vw, 170px); }
 .ouvLogo { width: 100%; height: auto; color: var(--fond); }
-.ouvLogo path { animation-duration: .45s !important; animation-delay: calc(.2s + var(--i) * .22s) !important; }
-.ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .7s var(--ease) forwards; }
-.ouvNom { margin-top: 30px; font-size: .9rem; font-weight: 400; letter-spacing: .42em; text-transform: uppercase; animation-delay: 1.75s; margin-right: -.42em; }
-.ouvSous { margin-top: 10px; font-size: .62rem; letter-spacing: .5em; text-transform: uppercase; opacity: 0; animation-delay: 1.95s; margin-right: -.5em; }
+.ouvLogo path { animation-duration: .4s !important; animation-delay: calc(.15s + var(--i) * .18s) !important; }
+.ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .55s var(--ease) forwards; }
+.ouvNom { margin-top: 30px; font-size: .9rem; font-weight: 400; letter-spacing: .42em; text-transform: uppercase; animation-delay: 1.35s; margin-right: -.42em; }
+.ouvSous { margin-top: 10px; font-size: .62rem; letter-spacing: .5em; text-transform: uppercase; opacity: 0; animation-delay: 1.5s; margin-right: -.5em; }
 @keyframes nom { to { opacity: .92; transform: none; } }
 .ouvSkip { position: absolute; right: var(--gut); bottom: 28px; z-index: 1; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--fond); opacity: .75; }
 
 /* ---------- présentation (en deux parties, comme une planche) ---------- */
 .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: 100svh; padding-top: var(--header-h); }
 .heroTxt { align-self: end; padding: 0 var(--gut) clamp(40px, 9vh, 96px); max-width: 640px; }
-.nom { font-size: clamp(3.8rem, 8.6vw, 9rem); line-height: .95; letter-spacing: -0.035em; margin-top: 22px; }
+.nom { font-size: clamp(2.8rem, 5.6vw, 5.6rem); line-height: .98; letter-spacing: -0.03em; margin-top: 18px; }
 .statut { margin-top: 30px; color: var(--encre); }
 .approche { font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.6; margin: 18px 0 36px; max-width: 36ch; color: var(--gris); }
 .liens { display: flex; flex-wrap: wrap; gap: 14px 36px; }
 .heroDessin { height: calc(100svh - var(--header-h) - 24px); margin-right: var(--gut); display: grid; place-items: center; }
 .couloir { position: relative; display: block; width: min(100%, (100svh - var(--header-h) - 24px) * 1.053); padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; }
 .couloir img { width: 100%; height: auto; mix-blend-mode: multiply; }
-/* l'ombre qui marche dans le couloir */
-.perso { position: absolute; left: 49%; top: 74%; height: 0; aspect-ratio: 30 / 100; transform: translate(-50%, -100%); opacity: 0; pointer-events: none; mix-blend-mode: multiply; }
-.perso svg { width: 100%; height: 100%; overflow: visible; }
-.persoCorps { fill: rgba(43, 33, 28, .62); filter: blur(.35px); }
-.persoSol { fill: rgba(43, 33, 28, .16); }
-.jambeG, .jambeD, .brasG, .brasD { transform-box: fill-box; transform-origin: 50% 0; animation: pas .62s ease-in-out infinite alternate; }
-.jambeD, .brasG { animation-direction: alternate-reverse; }
-@keyframes pas { from { transform: scaleY(.9) rotate(4deg); } to { transform: scaleY(1) rotate(-4deg); } }
 /* le dessin en grand */
 .grand { width: min(1100px, calc(100vw - 32px)); max-height: calc(100svh - 32px); padding: 0; border: 0; background: var(--fond); box-shadow: 0 30px 80px rgba(43, 33, 28, .2); }
 .grand::backdrop { background: rgba(43, 33, 28, .4); backdrop-filter: blur(3px); }
@@ -51,7 +43,8 @@
 /* ---------- index des projets ---------- */
 .projets { padding-top: clamp(48px, 9vh, 112px); scroll-margin-top: var(--header-h); }
 .projetsHead { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid var(--encre); }
-.index { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 4vw, 72px); align-items: start; margin-top: 28px; }
+.index { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(28px, 4vw, 72px); align-items: start; margin-top: 28px; }
+.index .liste { order: 1; } .index .apercu { order: 2; }
 .apercu { position: sticky; top: calc(var(--header-h) + 20px); height: calc(100svh - var(--header-h) - 48px); min-height: 420px; overflow: hidden; background: var(--fond-2); }
 .apercu img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .8s var(--ease), transform 1.6s var(--ease); }
 .apercu img[data-on] { opacity: 1; transform: none; }

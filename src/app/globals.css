@@ -58,7 +58,7 @@ strong, b { font-weight: 500; }
 @keyframes trait { to { stroke-dashoffset: 0; } }
 
 /* pendant l'ouverture, le contenu attend */
-html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 6s forwards; }
+html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 5s forwards; }
 @keyframes secours { to { opacity: 1; } }
 .page, body > header { transition: opacity .35s var(--ease); }
 

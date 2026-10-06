@@ -2,10 +2,11 @@ import Link from 'next/link';
 import type { Dict, Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { media, type Media } from '@/lib/media';
-import { CREDITS, type Bloc, type Chapitre } from '@/lib/sequences';
+import { CHIFFRES, CREDITS, type Img, type Mise, type Texte } from '@/lib/sequences';
 import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Fiche from './Fiche';
+import Parallaxe from './Parallaxe';
 import Planche, { type Labels } from './Planche';
 import styles from './project.module.css';
 
@@ -17,7 +18,7 @@ const PALETTE: Record<string, { en: string; it: string }> = {
   'Terrazzo rose': { en: 'Pink terrazzo', it: 'Terrazzo rosa' },
   'Menuiseries aluminium': { en: 'Aluminium frames', it: 'Serramenti in alluminio' },
 };
-const CREDIT_LABEL = { fr: 'Images', en: 'Images', it: 'Immagini' };
+const PLANCHE = { fr: 'Planche', en: 'Sheet', it: 'Tavola' };
 
 /** Sépare la première phrase (chapeau) du reste du texte. */
 function chapeau(texte: string) {
@@ -26,80 +27,122 @@ function chapeau(texte: string) {
   return { chap: texte.slice(0, i + 1), reste: texte.slice(i + 2) };
 }
 
-type Rang = { type: 'large'; bloc: Bloc } | { type: 'deux'; gauche: Bloc[]; droite: Bloc[] } | { type: 'seul'; bloc: Bloc; cote: 'g' | 'd' };
-
 /**
- * Mise en page magazine d'une suite d'images : les formats très allongés et les comparaisons prennent
- * toute la largeur ; les autres se répartissent en deux colonnes décalées (la plus courte reçoit l'image suivante).
+ * Page projet : ouverture, fiche, puis le projet dans l'une des trois mises en page
+ * (blog, livrable, collage — voir src/lib/sequences.ts), et un lien vers le projet suivant.
  */
-function composer(blocs: Bloc[], ratio: (b: Bloc) => number): Rang[] {
-  const rangs: Rang[] = [];
-  let groupe: Bloc[] = [];
-  let seul = 0;
-  const vider = () => {
-    if (groupe.length === 1) rangs.push({ type: 'seul', bloc: groupe[0], cote: seul++ % 2 ? 'd' : 'g' });
-    else if (groupe.length > 1) {
-      const g: Bloc[] = [], d: Bloc[] = [];
-      let hg = 0, hd = 0.35; // la colonne de droite part plus bas
-      groupe.forEach((b) => { if (hg <= hd) { g.push(b); hg += 1 / ratio(b); } else { d.push(b); hd += 1 / ratio(b); } });
-      rangs.push({ type: 'deux', gauche: g, droite: d });
-    }
-    groupe = [];
-  };
-  blocs.forEach((b) => {
-    if (!('r' in b) || ratio(b) >= 1.75) { vider(); rangs.push({ type: 'large', bloc: b }); }
-    else groupe.push(b);
-  });
-  vider();
-  return rangs;
-}
-
-/**
- * Page projet : ouverture, fiche « catalogue », puis chapitres où les images défilent
- * et apparaissent au fur et à mesure, le texte du chapitre restant en place à droite.
- */
-export default function ProjetPage({ p, t, lang, chapitres, next, total }: { p: Projet; t: Dict; lang: Lang; chapitres: Chapitre[]; next: Projet; total: number }) {
+export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; total: number }) {
   const L: Labels = { agrandir: t.projet.agrandir, fermer: t.projet.fermer, hint: t.projet.zoomHint, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, reset: t.projet.zoomReset };
   const cache = new Map<string, Media>();
   const M = (r: string) => { if (!cache.has(r)) cache.set(r, media(p, r)); return cache.get(r)!; };
   const cr = CREDITS[p.slug] || { defaut: '' };
   const credit = (r: string) => cr.images?.[r.replace(/^\w:/, '')] ?? cr.defaut;
-  const ratio = (b: Bloc) => { const m = M('r' in b ? b.r : b.projet); return m.w / m.h; };
   const { img: cov } = couverture(p);
   const paysage = cov.w > cov.h;
   const { chap, reste } = chapeau(p.texte);
+  const strophes = (p.poeme || '').split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
 
-  const bloc = (b: Bloc, sizes: string) => {
-    if ('r' in b) return <Planche key={b.r} m={M(b.r)} sizes={sizes} labels={L} credit={credit(b.r) || undefined} />;
-    const a = M(b.existant), c = M(b.projet);
+  const image = (i: Img, sizes: string) => {
+    if (typeof i === 'string') return <Planche key={i} m={M(i)} sizes={sizes} labels={L} credit={credit(i) || undefined} />;
+    const a = M(i.existant), b = M(i.projet);
     return (
       <Comparateur
-        key={b.existant}
+        key={i.existant}
         existant={{ src: a.src, w: a.w, h: a.h, legende: a.legende }}
-        projet={{ src: c.src, w: c.w, h: c.h, legende: c.legende }}
-        titre={b.titre[lang]}
-        credit={cr.defaut || undefined}
+        projet={{ src: b.src, w: b.w, h: b.h, legende: b.legende }}
+        titre={i.titre[lang]}
         labels={{ existant: t.projet.existant, projet: t.projet.projet, glisser: t.projet.glisser }}
       />
     );
   };
+  const legende = (i: Img) => (typeof i === 'string' ? M(i).legende : i.titre[lang]);
 
-  const texte = (c: Chapitre) => {
-    const k = c.texte;
-    if (!k) return null;
-    if (k === 'recit') return p.recit ? (
+  /** Les textes, quel que soit l'endroit où ils sont posés. */
+  const texte = (k: Texte | undefined, repli?: string) => {
+    if (k === 'projet') return (
+      <div className={styles.tProjet}>
+        {chap && <p className={styles.chapeau}>{chap}</p>}
+        {reste.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}
+      </div>
+    );
+    if (k === 'chapeau') return <p className={styles.chapeau}>{chap}</p>;
+    if (k === 'reste') return <div className={styles.tProjet}>{reste.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>;
+    if (k === 'recit' && p.recit) return (
       <div className={styles.recit}>
         {p.recit_titre && <h3 className={styles.recitT}>{p.recit_titre}</h3>}
         <p>{p.recit.replace(/^«\s*|\s*»$/g, '')}</p>
       </div>
-    ) : null;
-    if (k === 'poeme') return p.poeme ? <p className={styles.poeme}>{p.poeme}</p> : null;
-    if (k === 'experimentation') return p.experimentation ? <p className={styles.exp}>{p.experimentation}</p> : null;
-    return <p className={styles.note}>{k[lang]}</p>;
+    );
+    if (k === 'experimentation' && p.experimentation) return <p className={styles.exp}>{p.experimentation}</p>;
+    if (k === 'chiffres' && CHIFFRES[p.slug]) return (
+      <dl className={styles.chiffres}>
+        {CHIFFRES[p.slug].map((x) => <div key={x.label.fr}><dd>{x.valeur[lang]}</dd><dt>{x.label[lang]}</dt></div>)}
+      </dl>
+    );
+    if (k === 'palette' && p.palette) return (
+      <ul className={styles.palette}>
+        {Object.entries(p.palette).map(([nom, col]) => (
+          <li key={nom}><i style={{ background: col }} /><span>{lang === 'fr' ? nom : PALETTE[nom]?.[lang] || nom}</span></li>
+        ))}
+      </ul>
+    );
+    if (k && typeof k === 'object' && 'poeme' in k && strophes.length) return <p className={styles.poeme}>{strophes.slice(k.poeme[0], k.poeme[1]).join('\n\n')}</p>;
+    if (k && typeof k === 'object' && 'fr' in k) return <p className={styles.note}>{k[lang]}</p>;
+    return repli ? <p className={styles.legendeGrande}>{repli}</p> : null;
+  };
+
+  const corps = () => {
+    if (mise.type === 'blog') return (
+      <div className={`wrap ${styles.blog}`}>
+        {mise.lignes.map((l, k) => (
+          <section key={k} className={`${styles.ligne} rv`} data-cote={k % 2 ? 'd' : 'g'} data-deux={l.images.length > 1 || undefined}>
+            <div className={styles.ligneImg}>{l.images.map((i) => image(i, l.images.length > 1 ? '(max-width: 900px) 100vw, 30vw' : '(max-width: 900px) 100vw, 60vw'))}</div>
+            <div className={styles.ligneTxt}>
+              <span className={styles.ligneN}>{String(k + 1).padStart(2, '0')}</span>
+              {texte(l.texte, l.images.map(legende).join(' · '))}
+            </div>
+          </section>
+        ))}
+      </div>
+    );
+    if (mise.type === 'livrable') return (
+      <div className={`wrap ${styles.livrable}`}>
+        {mise.planches.map((pl, k) => (
+          <section key={k} className={`${styles.planche} rv`} data-n={pl.images.length} data-texte={pl.texte ? '' : undefined}>
+            <div className={styles.plCorps}>
+              {pl.texte && <div className={styles.plTexte}>{texte(pl.texte)}</div>}
+              <div className={styles.plImages}>{pl.images.map((i) => image(i, '(max-width: 900px) 100vw, 40vw'))}</div>
+            </div>
+            <footer className={styles.cartouche}>
+              <span><b>{p.titre}</b> · {p.programme}</span>
+              <span className={styles.cartT}>{pl.titre[lang]}</span>
+              <span>{PLANCHE[lang]} {k + 1} / {mise.planches.length} · Laura Pras · {p.annee}</span>
+            </footer>
+          </section>
+        ))}
+      </div>
+    );
+    return (
+      <div className={`wrap ${styles.collage}`}>
+        <Parallaxe />
+        {mise.morceaux.map((m, k) => (
+          <div
+            key={k}
+            className={`${styles.morceau} ${m.texte ? styles.morceauTxt : ''} ${m.grand ? styles.morceauGrand : ''}`}
+            style={{ gridColumn: `${m.col[0]} / span ${m.col[1]}`, marginTop: m.mt ? `${m.mt}vh` : undefined }}
+            data-v={m.v || undefined}
+          >
+            <div className="rv" style={m.rot ? { ['--rot' as string]: `${m.rot}deg` } : undefined}>
+              {m.r ? image(m.r, `(max-width: 900px) 100vw, ${Math.round((m.col[1] / 12) * 90)}vw`) : texte(m.texte)}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
-    <article className={styles.projet}>
+    <article className={styles.projet} data-mise={mise.type}>
       <header className={styles.ouv} data-format={paysage ? 'paysage' : 'portrait'}>
         <div className={styles.ouvTxt}>
           <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
@@ -112,56 +155,11 @@ export default function ProjetPage({ p, t, lang, chapitres, next, total }: { p: 
         </figure>
       </header>
 
-      {/* la fiche, comme dans un catalogue */}
-      <section className={`wrap ${styles.catalogue}`}>
-        <p className={`${styles.chapeau} rv`}>{chap}</p>
-        <div className={`${styles.corps} rv`}>{reste.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
-        <div className={`${styles.catFiche} rv`}>
-          <Fiche p={p} t={t} extra={cr.defaut ? [{ label: CREDIT_LABEL[lang], value: cr.defaut.replace(/^©\s*/, '') }] : undefined} />
-        </div>
+      <section className={`wrap ${styles.catFiche} rv`}>
+        <Fiche p={p} t={t} />
       </section>
 
-      {chapitres.map((c, i) => {
-        const txt = texte(c);
-        const palette = c.palette && p.palette;
-        return (
-          <section key={i} className={`wrap ${styles.chap}`}>
-            <div className={styles.flux}>
-              {composer(c.blocs, ratio).map((rg, k) => {
-                if (rg.type === 'large') return <div key={k} className={styles.rLarge}>{bloc(rg.bloc, '(max-width: 900px) 100vw, 62vw')}</div>;
-                if (rg.type === 'seul') return <div key={k} className={styles.rSeul} data-cote={rg.cote}>{bloc(rg.bloc, '(max-width: 900px) 100vw, 44vw')}</div>;
-                return (
-                  <div key={k} className={styles.rDeux}>
-                    <div className={styles.pile}>{rg.gauche.map((b) => bloc(b, '(max-width: 900px) 100vw, 31vw'))}</div>
-                    <div className={`${styles.pile} ${styles.pileD}`}>{rg.droite.map((b) => bloc(b, '(max-width: 900px) 100vw, 31vw'))}</div>
-                  </div>
-                );
-              })}
-            </div>
-            <aside className={styles.colonne}>
-              <div className={`${styles.colIn} rv`}>
-                <h2 className={styles.chapT}>
-                  <span className={styles.chapN}>{String(i + 1).padStart(2, '0')}</span>
-                  {c.titre[lang]}
-                </h2>
-                {txt}
-                {c.chiffres && (
-                  <dl className={styles.chiffres}>
-                    {c.chiffres.map((x) => <div key={x.label.fr}><dd>{x.valeur[lang]}</dd><dt>{x.label[lang]}</dt></div>)}
-                  </dl>
-                )}
-                {palette && (
-                  <ul className={styles.palette}>
-                    {Object.entries(palette).map(([nom, col]) => (
-                      <li key={nom}><i style={{ background: col }} /><span>{lang === 'fr' ? nom : PALETTE[nom]?.[lang] || nom}</span></li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </aside>
-          </section>
-        );
-      })}
+      {corps()}
 
       <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next}>
         <Link href={`/${lang}/projets/`} className="lien">← {t.projet.back}</Link>
