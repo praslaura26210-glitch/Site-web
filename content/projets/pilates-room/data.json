@@ -281,5 +281,6 @@
       ]
     }
   ],
-  "modele_3d": "[À COMPLÉTER]"
+  "modele_3d": "[À COMPLÉTER]",
+  "diffusion_autorisee_par_agence": true
 }

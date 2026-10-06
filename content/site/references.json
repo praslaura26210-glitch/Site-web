@@ -1,0 +1,64 @@
+{
+  "titre": "Références",
+  "intro_proposee": "Des projets qui m'accompagnent : la matière, le territoire, le dialogue avec ce qui existe déjà.",
+  "note": "Liste proposée, à valider par Laura. Images à ajouter par Laura (droits des photos à vérifier, ou photos personnelles).",
+  "references": [
+    {
+      "architecte": "Dario Castellino",
+      "projets": [
+        "Borgata Paraloup, Rittana (Cuneo)",
+        "Box nel convento, Maddalena, Prazzo (Cuneo)",
+        "Buen Retiro, Roccasparvera (Cuneo), 2023"
+      ],
+      "pourquoi": "Régénération des hameaux alpins abandonnés ; pierre, bois et ruine.",
+      "source": "https://www.metalocus.es/en/news/camouflaged-forest-buen-retiro-rural-house-renovation-dario-castellino",
+      "image": "[À AJOUTER]",
+      "choisie_par": "Laura"
+    },
+    {
+      "architecte": "Peter Zumthor",
+      "projets": [
+        "Kolumba, musée diocésain, Cologne, 2007"
+      ],
+      "pourquoi": "Un musée construit sur les ruines d'une église gothique ; la lumière filtrée par la brique.",
+      "image": "[À AJOUTER]",
+      "choisie_par": "proposition"
+    },
+    {
+      "architecte": "Carlo Scarpa",
+      "projets": [
+        "Museo di Castelvecchio, Vérone"
+      ],
+      "pourquoi": "La réhabilitation comme dialogue précis entre l'ancien et le neuf, jusqu'au détail.",
+      "image": "[À AJOUTER]",
+      "choisie_par": "proposition"
+    },
+    {
+      "architecte": "Gion A. Caminada",
+      "projets": [
+        "Le village de Vrin, Grisons"
+      ],
+      "pourquoi": "Le bois, les savoir-faire locaux et l'économie d'un village de montagne.",
+      "image": "[À AJOUTER]",
+      "choisie_par": "proposition"
+    },
+    {
+      "architecte": "Wang Shu, Amateur Architecture Studio",
+      "projets": [
+        "Musée d'histoire de Ningbo, 2008"
+      ],
+      "pourquoi": "Des façades montées avec les briques et tuiles récupérées des villages détruits.",
+      "image": "[À AJOUTER]",
+      "choisie_par": "proposition"
+    },
+    {
+      "architecte": "Anna Heringer",
+      "projets": [
+        "École METI, Rudrapur (Bangladesh), 2005"
+      ],
+      "pourquoi": "Terre et bambou, construits avec les habitants ; en lien direct avec l'architecture de terre étudiée en AECC.",
+      "image": "[À AJOUTER]",
+      "choisie_par": "proposition"
+    }
+  ]
+}

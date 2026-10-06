@@ -1,6 +1,6 @@
 {
   "nom": "Laura Pras",
-  "nom_site": "Laura Pra",
+  "nom_site": "Laura Pras",
   "telephone": "07 68 57 43 08",
   "email": "laurapras26210@gmail.com",
   "ville": "Grenoble / Épinouze",
@@ -23,9 +23,9 @@
       "annee": "2026"
     },
     {
-      "intitule": "Master AECC (Architecture, Environnement et Culture Constructive)",
+      "intitule": "Master Architecture, Environnement et Cultures Constructives (AECC)",
       "lieu": "ENSA Grenoble",
-      "annee": "[À COMPLÉTER]"
+      "annee": "en cours"
     }
   ],
   "stages": [
@@ -81,5 +81,10 @@
     "titre": "[À COMPLÉTER]",
     "sujet": "Rapport d'études sur l'expérience sensible",
     "resume": "[À COMPLÉTER]"
-  }
+  },
+  "master_aecc_texte_propose": "Je suis en master Architecture, Environnement et Cultures Constructives à l'ENSA Grenoble. Ce parcours est adossé à l'unité de recherche AE&CC, qui réunit depuis 2010 le laboratoire CRAterre, spécialisé dans l'architecture de terre, et le laboratoire Cultures constructives. On y aborde le projet à partir des matériaux, des savoir-faire et des ressources du territoire.",
+  "master_aecc_sources": [
+    "https://www.hceres.fr/sites/default/files/media/downloads/a2021-ev-0380141x-def-da210021052-032818-rd.pdf",
+    "https://craterre.org/en/partenaires/laboratoire/"
+  ]
 }
