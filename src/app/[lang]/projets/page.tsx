@@ -3,6 +3,7 @@ import { dict, type Lang } from '@/i18n';
 import { getProjets } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import styles from '@/components/pages/pages.module.css';
+import ProjetsIndex from '@/components/pages/ProjetsIndex';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -10,14 +11,18 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/projets/', `${t.meta.projetsTitle} · Laura Pras`, t.meta.projetsDescription);
 }
 
-/** Vue liste (l'index sur le terrain 3D arrive à l'étape suivante). */
+/** Index : maquettes sur le terrain (vue par défaut si la 3D est possible) ou vue liste. */
 export default async function Projets({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
   const projets = getProjets(lang);
-  return (
-    <section className={`wrap ${styles.page}`}>
-      <h1 className={styles.h1}>{t.nav.projets}</h1>
+  const L = {
+    fr: { terrain: 'Terrain', liste: 'Liste', hint: 'Survole une maquette pour la voir, clique pour entrer dans le projet.' },
+    en: { terrain: 'Terrain', liste: 'List', hint: 'Hover over a model to light it up, click to enter the project.' },
+    it: { terrain: 'Terreno', liste: 'Elenco', hint: 'Passa sopra un plastico per illuminarlo, clicca per entrare nel progetto.' },
+  }[lang];
+  const liste = (
+    <section className={`wrap ${styles.listePage}`}>
       <ol className={styles.table}>
         {projets.map((p) => {
           const img = p.images[0];
@@ -37,5 +42,12 @@ export default async function Projets({ params }: { params: Promise<{ lang: stri
         })}
       </ol>
     </section>
+  );
+  return (
+    <ProjetsIndex
+      liste={liste}
+      labels={{ ...L, titre: t.nav.projets }}
+      items={projets.map((p) => ({ slug: p.slug, href: `/${lang}/projets/${p.slug}/`, ordre: p.ordre, titre: p.titre, programme: p.programme, annee: p.annee }))}
+    />
   );
 }

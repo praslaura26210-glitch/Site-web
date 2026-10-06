@@ -3,7 +3,7 @@
 // `state` déclenche un rendu React ; `live` est lu à chaque image par la 3D (pas de rendu React).
 import { useSyncExternalStore } from 'react';
 
-export type Scene = 'none' | 'intro' | 'terrain' | 'building';
+export type Scene = 'none' | 'intro' | 'terrain' | 'index' | 'building' | 'escalier' | 'envol' | 'ruche';
 
 export type Calques = { structure: boolean; demolition: boolean; usages: boolean; lumiere: boolean };
 
@@ -55,5 +55,8 @@ export const live = {
   cut: 0.5, // 0..1 position du plan de coupe le long du bâtiment
   orbit: 0, // 0..1 rotation de caméra pilotée par le scroll
   shot: 'axo' as 'axo' | 'plan' | 'coupe' | 'lumiere',
+  hover: '' as string, // projet survolé dans l'index
+  focus: '' as string, // projet vers lequel la caméra s'envole
+  labels: {} as Record<string, HTMLElement | null>, // étiquettes DOM positionnées par la 3D
   invalidate: () => {},
 };

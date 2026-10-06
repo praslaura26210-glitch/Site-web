@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './project.module.css';
 
-type P = { id: string; label: string; svg: string; preview?: string; ratio: number; ko: number };
+type P = { id: string; label: string; svg?: string; preview?: string; full?: string; ratio: number; ko?: number };
 
 /**
  * Lecture des plans : zoom à la molette / au pincement / aux boutons / au clavier, déplacement au glisser.
@@ -32,14 +32,18 @@ export default function PlanViewer({ plans, labels }: { plans: P[]; labels: { hi
     apply();
   }, [plan.ratio]);
 
+  const [hd, setHd] = useState(false);
   useEffect(() => {
     setSvg('');
-    if (!plan.preview) fetch(plan.svg).then((r) => r.text()).then(setSvg).catch(() => {});
+    setHd(false);
+    if (!plan.preview && plan.svg) fetch(plan.svg).then((r) => r.text()).then(setSvg).catch(() => {});
     requestAnimationFrame(fit);
   }, [plan, fit]);
   useEffect(() => {
-    if (plan.preview && scale > 1.8 && !svg) fetch(plan.svg).then((r) => r.text()).then(setSvg).catch(() => {});
-  }, [scale, plan, svg]);
+    if (scale <= 1.6) return;
+    if (plan.svg && plan.preview && !svg) fetch(plan.svg).then((r) => r.text()).then(setSvg).catch(() => {});
+    if (plan.full && !hd) setHd(true);
+  }, [scale, plan, svg, hd]);
   useEffect(() => {
     const on = () => fit();
     window.addEventListener('resize', on);
@@ -129,7 +133,7 @@ export default function PlanViewer({ plans, labels }: { plans: P[]; labels: { hi
         <div ref={canvas} className={styles.canvas}>
           {svg ? <div dangerouslySetInnerHTML={{ __html: svg }} /> : plan.preview ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={plan.preview} alt="" draggable={false} />
+            <img src={hd && plan.full ? plan.full : plan.preview} alt="" draggable={false} />
           ) : null}
         </div>
         <div className={styles.tools}>

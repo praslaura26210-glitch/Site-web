@@ -4,6 +4,20 @@ import { ORDRE, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import EntreDeuxRegards from '@/components/project/EntreDeuxRegards';
 import GenericProject from '@/components/project/GenericProject';
+import PassageArtistes from '@/components/project/PassageArtistes';
+import PilatesRoom from '@/components/project/PilatesRoom';
+import EscalierSuspendu from '@/components/project/EscalierSuspendu';
+import LaRuche from '@/components/project/LaRuche';
+import IllusionEnvol from '@/components/project/IllusionEnvol';
+
+const PAGES = {
+  'entre-deux-regards': EntreDeuxRegards,
+  'le-passage-des-artistes': PassageArtistes,
+  'pilates-room': PilatesRoom,
+  'escalier-suspendu': EscalierSuspendu,
+  'la-ruche': LaRuche,
+  'illusion-d-envol': IllusionEnvol,
+} as const;
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -25,6 +39,6 @@ export default async function ProjetPage({ params }: Params) {
   const t = dict(lang);
   const p = getProjet(slug, lang);
   const next = getProjet(ORDRE[(ORDRE.indexOf(slug as any) + 1) % ORDRE.length], lang);
-  if (slug === 'entre-deux-regards') return <EntreDeuxRegards p={p} t={t} lang={lang} next={next} />;
-  return <GenericProject p={p} t={t} lang={lang} next={next} />;
+  const Page = PAGES[slug as keyof typeof PAGES] || GenericProject;
+  return <Page p={p} t={t} lang={lang} next={next} />;
 }

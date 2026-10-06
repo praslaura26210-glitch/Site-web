@@ -86,5 +86,20 @@
   "master_aecc_sources": [
     "https://www.hceres.fr/sites/default/files/media/downloads/a2021-ev-0380141x-def-da210021052-032818-rd.pdf",
     "https://craterre.org/en/partenaires/laboratoire/"
-  ]
+  ],
+  "presentation": {
+    "fr": "Avant l'école d'architecture, j'ai été dessinatrice en bâtiment : je dessine sur Archicad comme à la main, je monte des dossiers de permis de construire, je dessine des escaliers et du mobilier. J'ai travaillé en agence d'architecture, en architecture intérieure et sur un chantier. Ce qui m'intéresse : une architecture liée à son territoire, la matière, les sens (le toucher, l'odeur, la lumière) et le dialogue avec l'existant, jusqu'aux ruines.",
+    "en": "Before architecture school, I worked as a building draughtswoman: I draw in Archicad as well as by hand, I put together building permit applications, and I design staircases and furniture. I have worked in an architecture practice, in interior architecture and on a building site. What interests me: architecture tied to its territory, material, the senses (touch, smell, light) and the dialogue with what exists, down to ruins.",
+    "it": "Prima della scuola di architettura sono stata disegnatrice edile: disegno con Archicad e a mano, preparo pratiche per il permesso di costruire, progetto scale e arredi. Ho lavorato in uno studio di architettura, nell'architettura d'interni e in cantiere. Mi interessano un'architettura legata al suo territorio, la materia, i sensi (il tatto, l'odore, la luce) e il dialogo con l'esistente, fino alle rovine."
+  },
+  "master_aecc_texte": {
+    "fr": "Je suis en master Architecture, Environnement et Cultures Constructives à l'ENSA Grenoble. Ce parcours est adossé à l'unité de recherche AE&CC, qui réunit depuis 2010 le laboratoire CRAterre, spécialisé dans l'architecture de terre, et le laboratoire Cultures constructives. On y aborde le projet à partir des matériaux, des savoir-faire et des ressources du territoire.",
+    "en": "I am a master's student in Architecture, Environment and Building Cultures at ENSA Grenoble. The programme is linked to the AE&CC research unit, which since 2010 has brought together the CRAterre laboratory, specialised in earthen architecture, and the Building Cultures laboratory. Design starts from materials, know-how and the resources of the territory.",
+    "it": "Frequento il master Architettura, Ambiente e Culture Costruttive all'ENSA di Grenoble. Il percorso è legato all'unità di ricerca AE&CC, che dal 2010 riunisce il laboratorio CRAterre, specializzato nell'architettura in terra, e il laboratorio Culture costruttive. Il progetto parte dai materiali, dai saperi e dalle risorse del territorio."
+  },
+  "recherche_texte": {
+    "fr": "Mon rapport d'études porte sur l'expérience sensible de l'architecture : ce que l'on touche, ce que l'on sent, la lumière que l'on traverse.",
+    "en": "My study report focuses on the sensory experience of architecture: what we touch, what we smell, the light we move through.",
+    "it": "La mia tesina di studio riguarda l'esperienza sensibile dell'architettura: ciò che si tocca, ciò che si sente, la luce che si attraversa."
+  }
 }

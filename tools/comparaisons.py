@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from book import page  # noqa: E402
 from clusters import clusters  # noqa: E402
 
-SLUG = "entre-deux-regards"
+SLUG = os.environ.get("SLUG", "entre-deux-regards")
 DIR = os.path.join(os.path.dirname(__file__), "..", "content", "projets", SLUG, "plans")
 PAIRES = [  # nom, (page, zone) existant, (page, zone) projet
     ("rdc", (40, 0, 6), (41, 0, 6)),
@@ -26,7 +26,11 @@ PAIRES = [  # nom, (page, zone) existant, (page, zone) projet
     ("facade-est", (42, 1, 2), (43, 1, 2)),
     ("coupe-aa", (42, 4, 2), (43, 4, 2)),
 ]
+if SLUG == "pilates-room":
+    # deux calques du même plan : aménagement et électricité / éclairage
+    PAIRES = [("calques", (48, 0, 6), (48, 1, 6))]
 FICHIERS = {
+    "calques": ("plan-amenagement", "plan-electricite"),
     "rdc": ("plan-rdc-existant", "plan-rdc-projet"), "etage": ("plan-etage-existant", "plan-etage-projet"),
     "facade-sud": ("facade-sud-existant", "facade-sud-projet"), "facade-nord": ("facade-nord-existant", "facade-nord-projet"),
     "facade-ouest": ("facade-ouest-existant", "facade-ouest-projet"), "facade-est": ("facade-est-existant", "facade-est-projet"),
@@ -55,7 +59,7 @@ def shift(a, b):
 def murs(n, r):
     bb = None
     for d in page(n).get_drawings():
-        if d["type"] in ("f", "fs") and d.get("fill") and max(d["fill"]) < 0.06 and r.contains(d["rect"]):
+        if d["type"] in ("f", "fs") and d.get("fill") and max(d["fill"]) < (0.45 if SLUG == "pilates-room" else 0.06) and r.contains(d["rect"]) and d["rect"].width * d["rect"].height > 2:
             bb = d["rect"] if bb is None else bb | d["rect"]
     return bb
 
@@ -74,7 +78,7 @@ def main():
     for nom, (pe, ze, ge), (pp, zp, gp) in PAIRES:
         re_ = clusters(page(pe), gap=ge)[ze]
         rp = clusters(page(pp), gap=gp)[zp]
-        if nom in ("rdc", "etage"):
+        if nom in ("rdc", "etage", "calques"):
             # plans : on cale les emprises des murs noirs (plus sûr que la corrélation)
             be_, bp_ = murs(pe, re_), murs(pp, rp)
             ox, oy = (be_.x0 - re_.x0) - (bp_.x0 - rp.x0), (be_.y0 - re_.y0) - (bp_.y0 - rp.y0)

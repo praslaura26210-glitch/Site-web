@@ -103,3 +103,22 @@
   .panel { top: auto; bottom: 16px; }
   .card { bottom: 16px; }
 }
+
+/* croquis qui se trace */
+.croquisBox { position: relative; width: 100%; }
+.croquisBox img, .croquisBox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.croquisBox img { object-fit: contain; transition: opacity 1.2s var(--ease); }
+.croquisBox canvas { pointer-events: none; transition: opacity 1.2s var(--ease); }
+.croquis[data-phase='wait'] img, .croquis[data-phase='draw'] img { opacity: 0; }
+.croquis[data-phase='done'] canvas, .croquis[data-phase='static'] canvas { opacity: 0; }
+
+/* palette de matériaux */
+.palette { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px; margin-top: 28px; }
+.palette div { display: grid; gap: 8px; font-size: .82rem; }
+.palette i { display: block; aspect-ratio: 1; border-radius: 50%; max-width: 120px; box-shadow: inset 0 0 0 1px rgba(43,33,28,.08); }
+.palette small { color: var(--terre); font-variant-numeric: tabular-nums; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+.poeme { font-family: var(--serif); font-style: italic; font-size: 1.12rem; line-height: 1.65; white-space: pre-line; color: var(--terre); }
+.photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; } }

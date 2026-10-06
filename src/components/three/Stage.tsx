@@ -7,6 +7,10 @@ import { useQuality } from '@/lib/quality';
 import IntroScene from './IntroScene';
 import TerrainScene from './TerrainScene';
 import BuildingScene from './BuildingScene';
+import EscalierScene from './EscalierScene';
+import EnvolScene from './EnvolScene';
+import RucheScene from './RucheScene';
+import IndexObjects from './IndexObjects';
 
 /**
  * L'unique canvas WebGL du site, fixe derrière le contenu.
@@ -25,7 +29,7 @@ export default function Stage() {
         dpr={[1, 1.75]}
         camera={{ fov: 35, near: 0.05, far: 200, position: [0, 0, 2.45] }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance', stencil: false }}
-        shadows={scene === 'building'}
+        shadows={scene !== 'intro' && scene !== 'terrain' && scene !== 'index'}
         onCreated={({ gl, invalidate }) => {
           gl.setClearColor(0xf2ece2, 0);
           gl.outputColorSpace = THREE.SRGBColorSpace;
@@ -36,7 +40,11 @@ export default function Stage() {
         }}
       >
         <Suspense fallback={null}>
-          {(scene === 'intro' || scene === 'terrain') && <TerrainScene intro={scene === 'intro'} />}
+          {(scene === 'intro' || scene === 'terrain' || scene === 'index') && <TerrainScene intro={scene === 'intro'} index={scene === 'index'} />}
+          {scene === 'index' && <IndexObjects />}
+          {scene === 'escalier' && <EscalierScene />}
+          {scene === 'envol' && <EnvolScene />}
+          {scene === 'ruche' && <RucheScene />}
           {scene === 'intro' && <IntroScene />}
           {scene === 'building' && <BuildingScene />}
         </Suspense>

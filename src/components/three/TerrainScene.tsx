@@ -34,7 +34,7 @@ float height(vec2 p){
  * (une ligne maîtresse toutes les cinq, comme sur une carte). Une lumière rasante chaude
  * suit la souris et éclaire une tache plus vive là où pointe le curseur.
  */
-export default function TerrainScene({ intro }: { intro: boolean }) {
+export default function TerrainScene({ intro, index = false }: { intro: boolean; index?: boolean }) {
   const { camera } = useThree();
   const mesh = useRef<THREE.Mesh>(null!);
   const mat = useMemo(
@@ -117,7 +117,7 @@ export default function TerrainScene({ intro }: { intro: boolean }) {
       const mm = u.uMouse.value as THREE.Vector2;
       mm.lerp(new THREE.Vector2(hit.x, -(hit.z + 0) ), 1 - Math.pow(0.02, dt));
     }
-    if (!intro) {
+    if (!intro && !index) {
       // caméra : légère dérive, suit un peu la souris
       const k = 1 - Math.pow(0.08, dt);
       const tx = rest.x + live.pointer.x * 0.35;

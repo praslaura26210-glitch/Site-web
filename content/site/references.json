@@ -13,7 +13,9 @@
       "pourquoi": "Régénération des hameaux alpins abandonnés ; pierre, bois et ruine.",
       "source": "https://www.metalocus.es/en/news/camouflaged-forest-buen-retiro-rural-house-renovation-dario-castellino",
       "image": "[À AJOUTER]",
-      "choisie_par": "Laura"
+      "choisie_par": "Laura",
+      "pourquoi_en": "Regenerating abandoned Alpine hamlets: stone, timber and ruins.",
+      "pourquoi_it": "La rigenerazione delle borgate alpine abbandonate: pietra, legno e rovine."
     },
     {
       "architecte": "Peter Zumthor",
@@ -22,7 +24,9 @@
       ],
       "pourquoi": "Un musée construit sur les ruines d'une église gothique ; la lumière filtrée par la brique.",
       "image": "[À AJOUTER]",
-      "choisie_par": "proposition"
+      "choisie_par": "proposition",
+      "pourquoi_en": "A museum built on the ruins of a Gothic church; light filtered through brick.",
+      "pourquoi_it": "Un museo costruito sulle rovine di una chiesa gotica; la luce filtrata dal mattone."
     },
     {
       "architecte": "Carlo Scarpa",
@@ -31,7 +35,9 @@
       ],
       "pourquoi": "La réhabilitation comme dialogue précis entre l'ancien et le neuf, jusqu'au détail.",
       "image": "[À AJOUTER]",
-      "choisie_par": "proposition"
+      "choisie_par": "proposition",
+      "pourquoi_en": "Rehabilitation as a precise dialogue between old and new, down to the detail.",
+      "pourquoi_it": "Il restauro come dialogo preciso tra antico e nuovo, fino al dettaglio."
     },
     {
       "architecte": "Gion A. Caminada",
@@ -40,7 +46,9 @@
       ],
       "pourquoi": "Le bois, les savoir-faire locaux et l'économie d'un village de montagne.",
       "image": "[À AJOUTER]",
-      "choisie_par": "proposition"
+      "choisie_par": "proposition",
+      "pourquoi_en": "Timber, local know-how and the economy of a mountain village.",
+      "pourquoi_it": "Il legno, i saperi locali e l'economia di un villaggio di montagna."
     },
     {
       "architecte": "Wang Shu, Amateur Architecture Studio",
@@ -49,7 +57,9 @@
       ],
       "pourquoi": "Des façades montées avec les briques et tuiles récupérées des villages détruits.",
       "image": "[À AJOUTER]",
-      "choisie_par": "proposition"
+      "choisie_par": "proposition",
+      "pourquoi_en": "Façades built with bricks and tiles salvaged from demolished villages.",
+      "pourquoi_it": "Facciate costruite con mattoni e tegole recuperati dai villaggi demoliti."
     },
     {
       "architecte": "Anna Heringer",
@@ -58,7 +68,11 @@
       ],
       "pourquoi": "Terre et bambou, construits avec les habitants ; en lien direct avec l'architecture de terre étudiée en AECC.",
       "image": "[À AJOUTER]",
-      "choisie_par": "proposition"
+      "choisie_par": "proposition",
+      "pourquoi_en": "Earth and bamboo, built with the inhabitants; closely linked to the earthen architecture studied in the AECC master's.",
+      "pourquoi_it": "Terra e bambù, costruiti con gli abitanti; legata all'architettura in terra studiata nel master AECC."
     }
-  ]
+  ],
+  "intro_en": "Projects that stay with me: material, territory, the dialogue with what already exists.",
+  "intro_it": "Progetti che mi accompagnano: la materia, il territorio, il dialogo con ciò che già esiste."
 }

@@ -282,5 +282,13 @@
     }
   ],
   "modele_3d": "[À COMPLÉTER]",
-  "diffusion_autorisee_par_agence": true
+  "diffusion_autorisee_par_agence": true,
+  "palette": {
+    "Peinture beige": "#F3E3D3",
+    "Peinture rose": "#E0B7A5",
+    "Bois clair": "#C7A787",
+    "Béton ciré": "#CBC1B7",
+    "Terrazzo rose": "#E6C6B7",
+    "Menuiseries aluminium": "#433F3C"
+  }
 }

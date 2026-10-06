@@ -27,8 +27,12 @@ for (const slug of fs.readdirSync(path.join(src, 'projets'))) {
   const p = path.join(src, 'projets', slug);
   n += copyDir(path.join(p, 'images'), path.join(dst, slug, 'images'));
   n += copyDir(path.join(p, 'plans'), path.join(dst, slug, 'plans'));
-  for (const f of ['maquette.json']) {
-    if (fs.existsSync(path.join(p, f))) { fs.mkdirSync(path.join(dst, slug), { recursive: true }); fs.copyFileSync(path.join(p, f), path.join(dst, slug, f)); n++; }
+  // données publiques du projet (maquette 3D, croquis vectorisés) ; pas les fiches ni les textes
+  for (const f of fs.readdirSync(p)) {
+    if (!f.endsWith('.json') || f === 'data.json' || f.startsWith('textes.')) continue;
+    fs.mkdirSync(path.join(dst, slug), { recursive: true });
+    fs.copyFileSync(path.join(p, f), path.join(dst, slug, f));
+    n++;
   }
 }
 n += copyDir(path.join(src, 'site', 'images'), path.join(dst, 'site'));
