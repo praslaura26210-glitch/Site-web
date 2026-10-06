@@ -5,3 +5,4 @@ node_modules/
 .next/
 out/
 public/media/
+tsconfig.tsbuildinfo
