@@ -6,7 +6,7 @@ import styles from './home.module.css';
 /** Image de couverture de chaque projet dans les grilles. */
 export const COUVERTURES: Record<string, { nom: string; pos?: string }> = {
   'entre-deux-regards': { nom: 'maquette', pos: '50% 62%' },
-  'le-passage-des-artistes': { nom: 'maquette-1' },
+  'le-passage-des-artistes': { nom: 'maquette-2' },
   'pilates-room': { nom: 'rendu-accueil' },
   'escalier-suspendu': { nom: 'rendu' },
   'la-ruche': { nom: 'maquette-1' },

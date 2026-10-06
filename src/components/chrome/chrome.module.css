@@ -47,12 +47,15 @@
 .baseLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 30px; list-style: none; margin: 0; padding: 0; }
 .base a { text-decoration: none; transition: color .3s; }
 .baseLinks a:hover { color: var(--accent-f); }
-.baseIcones { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; justify-self: end; }
-.baseIcones a { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--filet); border-radius: 50%; color: var(--encre); transition: background-color .3s, color .3s, border-color .3s; }
+.baseDroite { justify-self: end; display: flex; align-items: center; gap: 24px; }
+.baseIcones { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.baseIcones a, .baseIcones span { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--filet); border-radius: 50%; color: var(--encre); transition: background-color .3s, color .3s, border-color .3s; }
+.baseIcones span[data-attente] { opacity: .45; }
 .baseIcones a:hover { background: var(--accent); border-color: var(--accent); color: var(--fond); }
 .baseIcones svg { width: 16px; height: 16px; }
 .copy { letter-spacing: .16em; text-transform: uppercase; font-size: .62rem; white-space: nowrap; }
 @media (max-width: 900px) {
-  .base { grid-template-columns: 1fr auto; }
-  .baseLinks { grid-column: 1 / -1; order: 3; flex-direction: column; justify-content: flex-start; gap: 10px; }
+  .base { grid-template-columns: 1fr; justify-items: start; }
+  .baseLinks { justify-content: flex-start; }
+  .baseDroite { justify-self: stretch; justify-content: space-between; }
 }

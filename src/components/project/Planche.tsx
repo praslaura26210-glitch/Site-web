@@ -7,7 +7,7 @@ import styles from './project.module.css';
 export type Labels = { agrandir: string; fermer: string; hint: string; zoomIn: string; zoomOut: string; reset: string };
 
 /** Une image ou un plan de la page projet. Un clic l'ouvre en grand, avec zoom (le plan reste vectoriel). */
-export default function Planche({ m, sizes, labels, className, caption = true, eager = false, credit }: { m: Media; sizes: string; labels: Labels; className?: string; caption?: boolean; eager?: boolean; credit?: string }) {
+export default function Planche({ m, sizes, labels, className, caption = true, eager = false, credit, pos }: { m: Media; sizes: string; labels: Labels; className?: string; caption?: boolean; eager?: boolean; credit?: string; pos?: string }) {
   const [open, setOpen] = useState(false);
   const dlg = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -31,6 +31,7 @@ export default function Planche({ m, sizes, labels, className, caption = true, e
           height={Math.round(m.h)}
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
+          style={pos ? { objectPosition: pos } : undefined}
         />
       </button>
       {caption && <figcaption className={styles.cap}>{m.legende}</figcaption>}

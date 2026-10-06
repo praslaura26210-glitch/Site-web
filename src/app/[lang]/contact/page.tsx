@@ -66,7 +66,7 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
             <div><dt>{C.tel}</dt><dd><a href={`tel:${telHref}`}>{tel}</a></dd></div>
             <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
           </dl>
-          <Reseaux cv={cv} className={styles.icones} ecrire={C.ecrire} />
+          <Reseaux cv={cv} className={styles.icones} ecrire={C.ecrire} email={false} />
         </aside>
       </div>
     </article>

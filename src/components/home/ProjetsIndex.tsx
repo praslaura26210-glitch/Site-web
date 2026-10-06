@@ -32,10 +32,6 @@ export default function ProjetsIndex({ lignes, lang, voir }: { lignes: Ligne[]; 
           // eslint-disable-next-line @next/next/no-img-element
           <img key={l.slug} src={l.img.srcSmall} srcSet={`${l.img.srcSmall} 1000w, ${l.img.src} 2000w`} sizes="58vw" alt="" width={l.img.w} height={l.img.h} loading={i === 0 ? 'eager' : 'lazy'} data-on={i === cur || undefined} style={l.img.pos ? { objectPosition: l.img.pos } : undefined} />
         ))}
-        <p className={styles.apercuLeg}>
-          <span>{String(cur + 1).padStart(2, '0')}</span>
-          {lignes[cur].titre}
-        </p>
       </div>
     </div>
   );

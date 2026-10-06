@@ -45,11 +45,9 @@
 .projetsHead { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid var(--encre); }
 .index { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(28px, 4vw, 72px); align-items: start; margin-top: 28px; }
 .index .liste { order: 1; } .index .apercu { order: 2; }
-.apercu { position: sticky; top: calc(var(--header-h) + 20px); height: calc(100svh - var(--header-h) - 48px); min-height: 420px; overflow: hidden; background: var(--fond-2); }
-.apercu img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .8s var(--ease), transform 1.6s var(--ease); }
+.apercu { position: sticky; top: calc(var(--header-h) + 20px); height: calc(100svh - var(--header-h) - 48px); min-height: 420px; overflow: hidden; }
+.apercu img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 0; opacity: 0; transform: translateY(12px); transition: opacity .8s var(--ease), transform 1.4s var(--ease); }
 .apercu img[data-on] { opacity: 1; transform: none; }
-.apercuLeg { position: absolute; left: 0; bottom: 0; display: flex; gap: 14px; align-items: baseline; padding: 14px 18px; background: var(--fond); font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; }
-.apercuLeg span { color: var(--accent); }
 .liste { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--filet); }
 .liste li { border-bottom: 1px solid var(--filet); }
 .liste a { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; grid-template-areas: 'n t a' 'n p a'; column-gap: 14px; align-items: baseline; padding: 24px 0 22px; text-decoration: none; transition: padding .5s var(--ease); }

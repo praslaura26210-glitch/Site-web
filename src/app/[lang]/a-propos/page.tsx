@@ -3,7 +3,6 @@ import { dict, type Lang } from '@/i18n';
 import { getCV, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
-import { CV_HREF } from '@/components/chrome/liens';
 import styles from '@/components/pages/pages.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -81,7 +80,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         <div className={styles.aHeadTxt}>
           <h1 className="eyebrow">{t.meta.aproposTitle}</h1>
           <p className={styles.aNom}>Laura Pras</p>
-          <a href={CV_HREF} download className="lien lienPdf">{L.cv}<svg viewBox="0 0 12 14" width="10" height="12" aria-hidden="true"><path d="M6 1v9M2 6.5 6 10.5l4-4M1 13h10" fill="none" stroke="currentColor" strokeWidth="1.1" /></svg></a>
         </div>
         <figure className={styles.portrait}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -90,34 +88,29 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       </header>
 
       <section className={`wrap ${styles.master}`} aria-labelledby="master">
-        <div className={styles.masterIn}>
-          <div>
-            <p className={styles.masterSur}>{L.master}</p>
-            <h2 id="master" className={styles.masterT}>Architecture, Environnement et Cultures Constructives</h2>
-          </div>
-          <p className="rv">{cv.master_aecc_texte[lang]}</p>
-        </div>
+        <p className="eyebrow">{L.master}</p>
+        <h2 id="master" className={styles.masterT}>Architecture, Environnement et Cultures Constructives</h2>
+        <p className={`${styles.masterX} rv`}>{cv.master_aecc_texte[lang]}</p>
       </section>
 
       <section className={`wrap ${styles.parcours}`} aria-labelledby="parcours">
-        <div className={styles.parcoursHead}>
-          <h2 id="parcours" className={styles.h2Grand}>{L.parcours}</h2>
-          <p className={styles.legende}>
-            <span data-type="f">{L.f}</span>
-            <span data-type="s">{L.s}</span>
-          </p>
-        </div>
-        <ol className={styles.cartes}>
-          {PARCOURS.map((e) => (
-            <li key={e.cle} className={`${styles.carte} rv`} data-type={e.type}>
-              <span className={styles.cAn}>{(e.date.fr.match(/\d{4}/) || ['2026'])[0]}</span>
-              <span className={styles.cDate}>{e.date[lang]}</span>
-              <span className={styles.cTitre}>{e.titre[lang]}</span>
-              <span className={styles.cLieu}>{e.lieu}</span>
-              <span className={styles.cType}>{e.type === 'f' ? L.f1 : L.s1}</span>
-            </li>
+        <h2 id="parcours" className={styles.h2Grand}>{L.parcours}</h2>
+        <div className={styles.deuxCol}>
+          {(['f', 's'] as const).map((type) => (
+            <div key={type} className={styles.col} data-type={type}>
+              <h3 className={styles.colT}>{type === 'f' ? L.f : L.s}</h3>
+              <ol>
+                {PARCOURS.filter((e) => e.type === type).map((e) => (
+                  <li key={e.cle} className="rv">
+                    <span className={styles.pDate}>{e.date[lang]}</span>
+                    <span className={styles.pTitre}>{e.titre[lang]}</span>
+                    <span className={styles.pLieu}>{e.lieu}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
           ))}
-        </ol>
+        </div>
       </section>
 
       <section className={`wrap ${styles.outils}`} aria-labelledby="outils">

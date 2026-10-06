@@ -1,26 +1,32 @@
-// Pages projet : trois mises en page, pour comparer.
-// - « blog » : texte et image alternent de part et d'autre, tout apparaît en descendant ;
-// - « livrable » : des planches de rendu, avec cartouche, comme un dossier remis ;
-// - « collage » : images et textes dispersés, de tailles et d'inclinaisons variées, qui bougent au défilement.
+// Pages projet : un même gabarit (texte et fiche en tête, grande image, puis le projet),
+// avec, pour chaque projet, les modules qui lui conviennent.
 // Les références d'images et de plans sont décrites dans src/lib/media.ts.
 
 export type L3 = { fr: string; en: string; it: string };
-/** une image, ou un dessin existant / projet à comparer */
-export type Img = string | { existant: string; projet: string; titre: L3 };
-/** un texte : celui du projet, le récit, l'expérimentation, des strophes du poème, les chiffres, la palette, ou un texte écrit ici */
-export type Texte = 'projet' | 'chapeau' | 'reste' | 'recit' | 'experimentation' | 'chiffres' | 'palette' | { poeme: [number, number] } | L3;
-
-export type Ligne = { images: Img[]; texte?: Texte };
-export type Planche = { titre: L3; images: string[]; texte?: Texte };
-/** collage : position dans une grille de 12 colonnes, décalage vertical (vh), inclinaison (°), vitesse de parallaxe */
-export type Morceau = { r?: string; texte?: Texte; col: [number, number]; mt?: number; rot?: number; v?: number; grand?: boolean };
-
-export type Mise =
-  | { type: 'blog'; lignes: Ligne[] }
-  | { type: 'livrable'; planches: Planche[] }
-  | { type: 'collage'; morceaux: Morceau[] };
-
 const D = (fr: string, en: string, it: string): L3 => ({ fr, en, it });
+
+/** Une image placée sur une grille de 12 colonnes : [colonne de départ, largeur], décalage vertical (vh), alignement. */
+export type Place = { r: string; col: [number, number]; mt?: number; bas?: boolean };
+
+export type Bloc =
+  /** intertitre de partie */
+  | { t: 'inter'; titre: L3; note?: L3 }
+  /** images disposées librement, rang par rang */
+  | { t: 'galerie'; rangs: Place[][] }
+  /** un texte (poème, récit, expérimentation, chiffres, palette) avec une image à côté */
+  | { t: 'texte'; k: 'poeme' | 'recit' | 'experimentation' | 'chiffres' | 'palette'; titre?: L3; r?: string; cote?: 'g' | 'd' }
+  /** existant / projet à comparer en faisant glisser un trait ; deux par ligne si « deux » */
+  | { t: 'comparer'; deux?: boolean; items: { existant: string; projet: string; titre: L3 }[] }
+  /** un même plan en plusieurs versions, à choisir */
+  | { t: 'bascule'; titre: L3; options: { label: L3; r: string }[]; chiffres?: boolean }
+  /** des dessins en vignettes : on clique pour les voir en grand */
+  | { t: 'vignettes'; titre: L3; note?: L3; items: string[] };
+
+export type Mise = {
+  /** grande image sous l'en-tête (recadrée ; le clic l'ouvre en entier) */
+  hero?: { r: string; pos?: string };
+  blocs: Bloc[];
+};
 
 /** Chiffres clés lus sur les plans. */
 export const CHIFFRES: Record<string, { label: L3; valeur: L3 }[]> = {
@@ -33,6 +39,7 @@ export const CHIFFRES: Record<string, { label: L3; valeur: L3 }[]> = {
     { label: D('Hauteur à franchir', 'Height to climb', 'Altezza da superare'), valeur: D('2 930 mm', '2,930 mm', '2.930 mm') },
     { label: D('Longueur du limon', 'Stringer length', 'Lunghezza del cosciale'), valeur: D('4 704 mm', '4,704 mm', '4.704 mm') },
     { label: D('Pente', 'Pitch', 'Pendenza'), valeur: D('38,5°', '38.5°', '38,5°') },
+    { label: D('Garde-corps (palier)', 'Railing (landing)', 'Parapetto (pianerottolo)'), valeur: D('968 mm', '968 mm', '968 mm') },
   ],
 };
 
@@ -46,89 +53,91 @@ export const CREDITS: Record<string, { defaut: string; images?: Record<string, s
   'escalier-suspendu': { defaut: '© Laura Pras' },
 };
 
-const GLISSER = D(
-  "Faites glisser le trait : à gauche l'existant et ses démolitions, à droite le projet.",
-  'Drag the line: the existing building and its demolitions on the left, the project on the right.',
-  'Trascinate la linea: a sinistra lo stato di fatto con le demolizioni, a destra il progetto.',
-);
+const T = {
+  dessins: D('Dessins', 'Drawings', 'Disegni'),
+  assemblages: D('Assemblages', 'Joints', 'Giunzioni'),
+  maquette: D('Maquette', 'Model', 'Plastico'),
+  site: D('Sur la pente', 'On the slope', 'Sul pendio'),
+  experimentation: D('Expérimentation constructive', 'Building experiment', 'Sperimentazione costruttiva'),
+  regard: D('Existant et projet', 'Existing and project', 'Esistente e progetto'),
+  glisser: D("Faites glisser le trait : à gauche l'existant et ses démolitions, à droite le projet.", 'Drag the line: the existing building and its demolitions on the left, the project on the right.', 'Trascinate la linea: a sinistra lo stato di fatto con le demolizioni, a destra il progetto.'),
+  ambiances: D('Ambiances', 'Atmospheres', 'Atmosfere'),
+  plans: D('Plans', 'Plans', 'Piante'),
+  matieres: D('Matières', 'Materials', 'Materiali'),
+  coupes: D('Coupes', 'Sections', 'Sezioni'),
+  cliquer: D('Cliquez sur un dessin pour le voir en détail.', 'Click a drawing to see it in detail.', 'Cliccate su un disegno per vederlo nel dettaglio.'),
+  techniques: D('Dessins techniques', 'Technical drawings', 'Disegni tecnici'),
+  conception: D('Conception', 'Design', 'Progettazione'),
+};
 
 export const MISES: Record<string, Mise> = {
   'illusion-d-envol': {
-    type: 'blog',
-    lignes: [
-      { images: ['croquis-perspective'], texte: 'projet' },
-      { images: ['axonometrie-eclatee'], texte: { poeme: [0, 2] } },
-      { images: ['coupe-aa'], texte: { poeme: [2, 4] } },
-      { images: ['plan-rdc'], texte: { poeme: [4, 5] } },
-      { images: ['facade-sud'] },
-      { images: ['detail-assemblage-1', 'detail-assemblage-2'] },
-      { images: ['detail-assemblage-3', 'detail-assemblage-4'] },
+    hero: { r: 'croquis-perspective', pos: '50% 72%' },
+    blocs: [
+      { t: 'texte', k: 'poeme', r: 'axonometrie-eclatee', cote: 'd' },
+      { t: 'inter', titre: T.dessins },
+      { t: 'galerie', rangs: [[{ r: 'coupe-aa', col: [1, 8] }], [{ r: 'plan-rdc', col: [2, 5] }, { r: 'facade-sud', col: [7, 6], bas: true }]] },
+      { t: 'inter', titre: T.assemblages },
+      { t: 'galerie', rangs: [[{ r: 'detail-assemblage-1', col: [1, 3] }, { r: 'detail-assemblage-2', col: [4, 3], mt: 8 }, { r: 'detail-assemblage-3', col: [7, 3], mt: 2 }, { r: 'detail-assemblage-4', col: [10, 3], mt: 10 }]] },
     ],
   },
   'la-ruche': {
-    type: 'livrable',
-    planches: [
-      { titre: D('Le projet', 'The project', 'Il progetto'), images: ['maquette-2', 'maquette-3'], texte: 'projet' },
-      { titre: D('Plans', 'Plans', 'Piante'), images: ['plan-masse', 'plan-rdc', 'plan-r-1'] },
-      { titre: D('Coupe, structure et façade', 'Section, structure and elevation', 'Sezione, struttura e prospetto'), images: ['coupe-aa', 'plan-structure', 'facade-ouest'] },
-      { titre: D('Axonométrie', 'Axonometric view', 'Assonometria'), images: ['axonometrie-eclatee'], texte: { poeme: [0, 3] } },
-      { titre: D('Maquette', 'Model', 'Plastico'), images: ['maquette-5', 'maquette-4'] },
+    hero: { r: 'maquette-2', pos: '50% 60%' },
+    blocs: [
+      { t: 'texte', k: 'poeme', r: 'maquette-3', cote: 'g' },
+      { t: 'inter', titre: T.site },
+      { t: 'galerie', rangs: [[{ r: 'coupe-aa', col: [1, 12] }], [{ r: 'plan-masse', col: [1, 6] }, { r: 'axonometrie-eclatee', col: [8, 4], mt: 6 }]] },
+      { t: 'inter', titre: T.dessins },
+      { t: 'galerie', rangs: [[{ r: 'plan-rdc', col: [1, 6] }, { r: 'plan-r-1', col: [7, 6], mt: 10 }], [{ r: 'plan-structure', col: [1, 7] }, { r: 'facade-ouest', col: [8, 5], bas: true }]] },
+      { t: 'inter', titre: T.maquette },
+      { t: 'galerie', rangs: [[{ r: 'maquette-5', col: [1, 7] }, { r: 'maquette-4', col: [9, 4], mt: 12 }]] },
     ],
   },
   'le-passage-des-artistes': {
-    type: 'collage',
-    morceaux: [
-      { texte: 'chapeau', col: [1, 6], grand: true },
-      { r: 'croquis-cour', col: [8, 4], rot: -1.5, v: 0.08 },
-      { r: 'maquette-2', col: [2, 4], mt: 2, rot: 1.2, v: -0.06 },
-      { texte: 'reste', col: [7, 5], mt: 10 },
-      { r: 'coupe-perspective', col: [1, 8], mt: 4, v: 0.04 },
-      { r: 'plan-rdc', col: [9, 3], mt: 10, rot: 1.5, v: 0.14 },
-      { r: 'plan-etages', col: [2, 3], mt: 4, rot: -1, v: -0.06 },
-      { r: 'facade-sud', col: [5, 8], mt: 12, v: 0.05 },
-      { r: 'facade-nord', col: [1, 4], mt: 2, rot: -2, v: 0.1 },
-      { r: 'coupe', col: [5, 7], mt: 8, rot: 0.6, v: -0.04 },
-      { r: 'detail-axonometrie', col: [3, 3], mt: 4, rot: 1.4, v: 0.12 },
-      { r: 'plan-masse', col: [7, 4], mt: 10, rot: -0.8, v: -0.06 },
-      { texte: 'experimentation', col: [1, 6], mt: 8, grand: true },
-      { r: 'experimentation-2', col: [7, 6], mt: 2, rot: -1, v: 0.08 },
-      { r: 'experimentation-1', col: [2, 4], mt: 6, rot: 2, v: -0.1 },
-      { r: 'experimentation-3', col: [7, 5], mt: 12, rot: -1.5, v: 0.06 },
+    hero: { r: 'coupe-perspective', pos: '50% 55%' },
+    blocs: [
+      { t: 'galerie', rangs: [[{ r: 'croquis-cour', col: [1, 5] }, { r: 'maquette-2', col: [7, 5], mt: 10 }]] },
+      { t: 'inter', titre: T.dessins },
+      { t: 'galerie', rangs: [[{ r: 'plan-masse', col: [1, 4] }, { r: 'plan-rdc', col: [5, 4], mt: 8 }, { r: 'plan-etages', col: [9, 4], mt: 3 }], [{ r: 'facade-sud', col: [1, 12] }], [{ r: 'coupe', col: [1, 7] }, { r: 'facade-nord', col: [9, 4], bas: true }], [{ r: 'detail-axonometrie', col: [4, 5] }]] },
+      { t: 'texte', k: 'experimentation', titre: T.experimentation, r: 'experimentation-2', cote: 'd' },
+      { t: 'galerie', rangs: [[{ r: 'experimentation-1', col: [1, 5] }, { r: 'experimentation-3', col: [7, 6], mt: 10 }]] },
     ],
   },
   'entre-deux-regards': {
-    type: 'blog',
-    lignes: [
-      { images: ['perspective-exterieure'], texte: 'projet' },
-      { images: ['perspective-cour'], texte: 'recit' },
-      { images: ['perspective-escalier'] },
-      { images: [{ existant: 'c:plan-rdc-existant', projet: 'c:plan-rdc-projet', titre: D('Plan RDC', 'Ground floor', 'Piano terra') }], texte: GLISSER },
-      { images: [{ existant: 'c:plan-etage-existant', projet: 'c:plan-etage-projet', titre: D('Plan étage', 'Upper floor', 'Piano primo') }] },
-      { images: [{ existant: 'c:facade-sud-existant', projet: 'c:facade-sud-projet', titre: D('Façade sud', 'South elevation', 'Prospetto sud') }] },
-      { images: [{ existant: 'c:coupe-aa-existant', projet: 'c:coupe-aa-projet', titre: D('Coupe AA', 'Section AA', 'Sezione AA') }] },
-      { images: ['x:plan-masse-projet'] },
+    hero: { r: 'perspective-exterieure', pos: '50% 55%' },
+    blocs: [
+      { t: 'galerie', rangs: [[{ r: 'x:plan-masse-projet', col: [1, 12] }]] },
+      { t: 'galerie', rangs: [[{ r: 'maquette', col: [1, 4] }, { r: 'perspective-cour', col: [5, 8], bas: true }]] },
+      { t: 'texte', k: 'recit', r: 'perspective-escalier', cote: 'd' },
+      { t: 'inter', titre: T.regard, note: T.glisser },
+      {
+        t: 'comparer', deux: true, items: [
+          { existant: 'c:plan-rdc-existant', projet: 'c:plan-rdc-projet', titre: D('Plan RDC', 'Ground floor', 'Piano terra') },
+          { existant: 'c:plan-etage-existant', projet: 'c:plan-etage-projet', titre: D('Plan étage', 'Upper floor', 'Piano primo') },
+        ],
+      },
+      {
+        t: 'comparer', items: [
+          { existant: 'c:facade-sud-existant', projet: 'c:facade-sud-projet', titre: D('Façade sud', 'South elevation', 'Prospetto sud') },
+          { existant: 'c:coupe-aa-existant', projet: 'c:coupe-aa-projet', titre: D('Coupe AA', 'Section AA', 'Sezione AA') },
+        ],
+      },
     ],
   },
   'pilates-room': {
-    type: 'blog',
-    lignes: [
-      { images: ['rendu-salle'], texte: 'projet' },
-      { images: ['rendu-vestiaire', 'rendu-coiffeuse'], texte: 'chiffres' },
-      { images: ['planche-materiaux'], texte: 'palette' },
-      { images: ['p:plan-amenagement'] },
-      { images: ['p:coupe-cc'] },
-      { images: ['p:coupe-aa', 'p:coupe-bb'] },
-      { images: ['p:plan-electricite'] },
+    hero: { r: 'rendu-salle', pos: '50% 60%' },
+    blocs: [
+      { t: 'galerie', rangs: [[{ r: 'rendu-accueil', col: [1, 5] }, { r: 'rendu-vestiaire', col: [6, 3], mt: 10 }, { r: 'rendu-coiffeuse', col: [9, 4], bas: true }]] },
+      { t: 'bascule', titre: T.plans, chiffres: true, options: [{ label: D('Aménagement', 'Layout', 'Arredo'), r: 'p:plan-amenagement' }, { label: D('Électricité et éclairage', 'Electrical and lighting', 'Impianto elettrico e illuminazione'), r: 'p:plan-electricite' }] },
+      { t: 'texte', k: 'palette', titre: T.matieres, r: 'planche-materiaux', cote: 'g' },
+      { t: 'vignettes', titre: T.coupes, note: T.cliquer, items: ['p:coupe-aa', 'p:coupe-bb', 'p:coupe-cc'] },
     ],
   },
   'escalier-suspendu': {
-    type: 'blog',
-    lignes: [
-      { images: ['p:axonometrie'], texte: 'projet' },
-      { images: ['p:vue-de-face'], texte: 'chiffres' },
-      { images: ['p:vue-en-plan'] },
-      { images: ['p:planche-limon-marches'] },
-      { images: ['p:planche-garde-corps'] },
+    blocs: [
+      { t: 'texte', k: 'chiffres', titre: T.conception, r: 'rendu', cote: 'g' },
+      { t: 'galerie', rangs: [[{ r: 'p:axonometrie', col: [4, 6] }]] },
+      { t: 'vignettes', titre: T.techniques, note: T.cliquer, items: ['p:vue-de-face', 'p:vue-en-plan', 'p:planche-limon-marches', 'p:planche-garde-corps'] },
     ],
   },
 };
