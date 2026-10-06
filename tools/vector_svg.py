@@ -96,7 +96,7 @@ def _style(d):
     return ";".join(st)
 
 
-def export(p, rect, path, margin=4, text=True, title=None, masque_doux=None):
+def export(p, rect, path, margin=4, text=True, title=None, masque_doux=None, restyle=None):
     """Écrit le SVG de la zone `rect` de la page `p`. Renvoie (nb tracés, taille octets).
 
     masque_doux : couleur donnée aux grands aplats noirs qui, dans le PDF, sont adoucis par un
@@ -145,6 +145,8 @@ def export(p, rect, path, margin=4, text=True, title=None, masque_doux=None):
         s = _style(d)
         if masque_doux and d["type"] == "f" and max(d.get("fill") or (1,)) < 0.05 and r.width * r.height > 1500:
             s = s.replace("var(--encre,#000)", masque_doux)
+        if restyle:
+            s = restyle(d) or s
         cls = styles.setdefault(s, f"{px}s{len(styles)}")
         dd = _d(d["items"], o, d.get("closePath"))
         if not dd:

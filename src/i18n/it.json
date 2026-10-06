@@ -1,0 +1,84 @@
+{
+ "lang": "it",
+ "langName": "Italiano",
+ "meta": {
+  "siteTitle": "Laura Pras",
+  "siteDescription": "Portfolio di Laura Pras, studentessa del master Architettura, Ambiente e Culture Costruttive all'ENSA di Grenoble: recupero, materia, territorio.",
+  "projetsTitle": "Progetti",
+  "projetsDescription": "I progetti di Laura Pras: recupero, pietra massiccia, legno, architettura d'interni, progettazione di una scala.",
+  "aproposTitle": "Chi sono",
+  "referencesTitle": "Riferimenti",
+  "contactTitle": "Contatti",
+  "mentionsTitle": "Note legali"
+ },
+ "nav": {
+  "projets": "Progetti",
+  "references": "Riferimenti",
+  "apropos": "Chi sono",
+  "contact": "Contatti",
+  "pdf": "Portfolio PDF",
+  "pdfLong": "Scarica il portfolio (PDF, 14 MB)",
+  "menu": "Menu",
+  "close": "Chiudi",
+  "skip": "Vai al contenuto",
+  "home": "Home"
+ },
+ "intro": {
+  "skip": "Salta l'intro"
+ },
+ "home": {
+  "approach": "Un'architettura radicata nel territorio, attenta alla materia, alla luce e a ciò che già esiste.",
+  "role": "Studentessa del master Architettura, Ambiente e Culture Costruttive, ENSA Grenoble. Ex disegnatrice edile.",
+  "search": "Cerco un tirocinio in uno studio di architettura.",
+  "cta": "Vedi i progetti",
+  "list": "Sei progetti",
+  "terrainLabel": "Terreno a curve di livello che segue la luce del mouse"
+ },
+ "projet": {
+  "lieu": "Luogo",
+  "annee": "Anno",
+  "cadre": "Contesto",
+  "programme": "Programma",
+  "surface": "Superficie",
+  "enjeux": "Temi",
+  "next": "Progetto successivo",
+  "back": "Tutti i progetti",
+  "plans": "Disegni",
+  "zoomHint": "Rotella o pizzico per ingrandire, trascina per spostarti",
+  "zoomIn": "Ingrandisci",
+  "zoomOut": "Riduci",
+  "zoomReset": "Ripristina",
+  "existant": "Stato di fatto",
+  "projet": "Progetto",
+  "beforeAfter": "Trascina per confrontare lo stato di fatto e il progetto",
+  "demolition": "Demolizione",
+  "extrusionTitle": "Dalla pianta al volume",
+  "extrusionText": "I muri della pianta si alzano: in nero ciò che si conserva, in terracotta ciò che si demolisce.",
+  "coupeTitle": "Sezione dinamica",
+  "coupeText": "Sposta il piano di sezione lungo l'edificio. La pianta accanto indica dove si taglia.",
+  "coupePosition": "Posizione della sezione",
+  "calques": "Livelli",
+  "calqueStructure": "Struttura",
+  "calqueDemolition": "Demolizioni",
+  "calqueUsages": "Usi",
+  "calqueLumiere": "Luce",
+  "exposition": "Esposizione",
+  "restauration": "Ristorazione",
+  "cour": "Corte aperta",
+  "matiereTitle": "Materia",
+  "matiereText": "La luce radente segue il mouse sul plastico.",
+  "facades": "Prospetti",
+  "fiche": "Scheda del progetto",
+  "maquetteNote": "Modello 3D di intenzione, ricostruito dai disegni del progetto.",
+  "liteNote": "Versione leggera: il modello 3D è sostituito dai disegni."
+ },
+ "footer": {
+  "rights": "Tutti i diritti riservati",
+  "mentions": "Note legali",
+  "top": "Torna su"
+ },
+ "soon": {
+  "title": "Pagina in preparazione",
+  "text": "Questa pagina arriva nella prossima fase di costruzione del sito."
+ }
+}

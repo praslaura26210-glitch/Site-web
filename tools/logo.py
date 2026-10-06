@@ -91,7 +91,7 @@ PISTES = {
 
 
 def main(fonts, out):
-    serif = os.path.join(fonts, "newsreader-72-400.ttf")
+    serif = os.path.join(fonts, "ebgaramond-400.ttf")  # typographie B validée
     name_d, name_w = text_path(serif, "Laura Pras", 44, tracking=0.01)
     for key, (label, fn) in PISTES.items():
         d = os.path.join(out, key)
@@ -105,6 +105,11 @@ def main(fonts, out):
             body = (f'<g transform="translate({(W - 100 * 1.4) / 2:.1f} 0) scale(1.4)">{fn()}</g>'
                     f'<g transform="translate({(W - name_w) / 2:.1f} 156)">{name}</g>')
             open(os.path.join(d, "logo.svg"), "w").write(svg(W, 168, body, "Laura Pras"))
+            # version horizontale pour l'en-tête du site
+            Wh = 76 + 12 + name_w + 4
+            bodyh = (f'<g transform="scale(0.76)">{fn()}</g>'
+                     f'<g transform="translate(88 60)">{name}</g>')
+            open(os.path.join(d, "logo-horizontal.svg"), "w").write(svg(Wh, 76, bodyh, "Laura Pras"))
         else:
             W = 76 + 14 + name_w + 4
             body = (f'<g transform="translate(0 0) scale(0.76)">{fn()}</g>'

@@ -1,0 +1,84 @@
+{
+ "lang": "fr",
+ "langName": "Français",
+ "meta": {
+  "siteTitle": "Laura Pras",
+  "siteDescription": "Portfolio de Laura Pras, étudiante en master Architecture, Environnement et Cultures Constructives à l'ENSA Grenoble : réhabilitation, matière, territoire.",
+  "projetsTitle": "Projets",
+  "projetsDescription": "Les projets de Laura Pras : réhabilitation, pierre massive, bois, architecture intérieure, conception d'un escalier.",
+  "aproposTitle": "À propos",
+  "referencesTitle": "Références",
+  "contactTitle": "Contact",
+  "mentionsTitle": "Mentions légales"
+ },
+ "nav": {
+  "projets": "Projets",
+  "references": "Références",
+  "apropos": "À propos",
+  "contact": "Contact",
+  "pdf": "Portfolio PDF",
+  "pdfLong": "Télécharger le portfolio (PDF, 14 Mo)",
+  "menu": "Menu",
+  "close": "Fermer",
+  "skip": "Aller au contenu",
+  "home": "Accueil"
+ },
+ "intro": {
+  "skip": "Passer l'intro"
+ },
+ "home": {
+  "approach": "Une architecture ancrée dans le territoire, attentive à la matière, à la lumière et à ce qui existe déjà.",
+  "role": "Étudiante en master Architecture, Environnement et Cultures Constructives, ENSA Grenoble. Ancienne dessinatrice en bâtiment.",
+  "search": "Je cherche un stage en agence.",
+  "cta": "Voir les projets",
+  "list": "Six projets",
+  "terrainLabel": "Relief en lignes de niveau, qui suit la lumière de la souris"
+ },
+ "projet": {
+  "lieu": "Lieu",
+  "annee": "Année",
+  "cadre": "Cadre",
+  "programme": "Programme",
+  "surface": "Surface",
+  "enjeux": "Enjeux",
+  "next": "Projet suivant",
+  "back": "Tous les projets",
+  "plans": "Plans",
+  "zoomHint": "Molette ou pincement pour zoomer, glisser pour se déplacer",
+  "zoomIn": "Zoomer",
+  "zoomOut": "Dézoomer",
+  "zoomReset": "Recadrer",
+  "existant": "Existant",
+  "projet": "Projet",
+  "beforeAfter": "Glisser pour comparer l'existant et le projet",
+  "demolition": "Démolition",
+  "extrusionTitle": "Du plan au volume",
+  "extrusionText": "Les murs du plan se lèvent : en noir ce qui est conservé, en terre cuite ce qui est démoli.",
+  "coupeTitle": "Coupe vivante",
+  "coupeText": "Déplace le plan de coupe le long du bâtiment. Le plan, à côté, indique où l'on coupe.",
+  "coupePosition": "Position de la coupe",
+  "calques": "Calques",
+  "calqueStructure": "Structure",
+  "calqueDemolition": "Démolitions",
+  "calqueUsages": "Usages",
+  "calqueLumiere": "Lumière",
+  "exposition": "Exposition",
+  "restauration": "Restauration",
+  "cour": "Cour ouverte",
+  "matiereTitle": "Matière",
+  "matiereText": "La lumière rasante suit la souris sur la maquette.",
+  "facades": "Façades",
+  "fiche": "Fiche du projet",
+  "maquetteNote": "Maquette 3D d'intention, reconstruite à partir des plans du projet.",
+  "liteNote": "Version allégée : la maquette 3D est remplacée par les dessins."
+ },
+ "footer": {
+  "rights": "Tous droits réservés",
+  "mentions": "Mentions légales",
+  "top": "Haut de page"
+ },
+ "soon": {
+  "title": "Page en préparation",
+  "text": "Cette page arrive à la prochaine étape de construction du site."
+ }
+}

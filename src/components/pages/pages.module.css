@@ -1,0 +1,17 @@
+.page { padding-top: calc(var(--header-h) + clamp(32px, 8vh, 96px)); padding-bottom: clamp(64px, 12vh, 140px); min-height: 80svh; }
+.h1 { font-size: clamp(3rem, 8vw, 7rem); margin-bottom: 40px; }
+.table { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ombre); }
+.table a { position: relative; display: grid; grid-template-columns: 3rem minmax(0, 1.4fr) minmax(0, 1.4fr) minmax(0, 1fr) 4rem; gap: 16px; align-items: baseline; padding: 18px 4px; border-bottom: 1px solid var(--filet); text-decoration: none; transition: background-color .35s, padding .35s var(--ease); }
+.table a:hover { background: var(--enduit); padding-left: 12px; }
+.n { font-family: var(--serif); color: var(--cuite); font-size: 1.2rem; }
+.t { font-family: var(--serif); font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.1; }
+.m { font-size: .85rem; color: var(--terre); }
+.y { font-size: .85rem; text-align: right; font-variant-numeric: tabular-nums; }
+.thumb { position: absolute; right: 6rem; top: 50%; width: 180px; height: 120px; object-fit: cover; transform: translateY(-50%) scale(.96); opacity: 0; pointer-events: none; transition: opacity .35s, transform .5s var(--ease); z-index: 2; }
+.table a:hover .thumb { opacity: 1; transform: translateY(-50%) scale(1); }
+.soon { max-width: 56ch; font-size: 1.05rem; color: var(--terre); }
+@media (max-width: 900px) {
+  .table a { grid-template-columns: 2.4rem minmax(0, 1fr) auto; }
+  .table .m { grid-column: 2; }
+  .thumb { display: none; }
+}

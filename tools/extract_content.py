@@ -121,6 +121,17 @@ VECTORS = [
 ]
 
 
+def zones_usage(d):
+    """Plans projet d'Entre deux regards : les aplats mauves sont transparents dans le PDF
+    (exposition foncé, restauration clair). On les rend en multiplication, aux couleurs du site."""
+    f = d.get("fill")
+    if d["type"] == "f" and f and abs(f[0] - 0.52) < 0.03 and abs(f[1] - 0.28) < 0.03:
+        r = d["rect"]
+        resto = r.y0 < 400 and r.x0 > 300
+        return f"fill:var({'--resto,#E2CDD0' if resto else '--expo,#B98F98'});mix-blend-mode:multiply"
+    return None
+
+
 def save_webp(img, slug, name, kind):
     d = os.path.join(ROOT, "projets" if slug != "_site" else "", slug if slug != "_site" else "site", "images")
     os.makedirs(d, exist_ok=True)
@@ -222,7 +233,7 @@ def main():
         os.makedirs(d, exist_ok=True)
         f = os.path.join(d, f"{name}.svg")
         doux = "#d6d0c6" if slug == "escalier-suspendu" else None
-        count, size = export(p, r, f, title=legende, masque_doux=doux)
+        count, size = export(p, r, f, title=legende, masque_doux=doux, restyle=zones_usage if n == 41 else None)
         report["plans"].append({"projet": slug, "nom": name, "legende": legende, "page": n,
                                 "fichier": os.path.relpath(f, ROOT), "traces": count, "ko": round(size / 1024),
                                 "format_pt": [round(r.width), round(r.height)]})

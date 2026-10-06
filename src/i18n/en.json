@@ -1,0 +1,84 @@
+{
+ "lang": "en",
+ "langName": "English",
+ "meta": {
+  "siteTitle": "Laura Pras",
+  "siteDescription": "Portfolio of Laura Pras, master's student in Architecture, Environment and Building Cultures at ENSA Grenoble: rehabilitation, material, territory.",
+  "projetsTitle": "Projects",
+  "projetsDescription": "Projects by Laura Pras: rehabilitation, solid stone, timber, interior architecture, staircase design.",
+  "aproposTitle": "About",
+  "referencesTitle": "References",
+  "contactTitle": "Contact",
+  "mentionsTitle": "Legal notice"
+ },
+ "nav": {
+  "projets": "Projects",
+  "references": "References",
+  "apropos": "About",
+  "contact": "Contact",
+  "pdf": "Portfolio PDF",
+  "pdfLong": "Download the portfolio (PDF, 14 MB)",
+  "menu": "Menu",
+  "close": "Close",
+  "skip": "Skip to content",
+  "home": "Home"
+ },
+ "intro": {
+  "skip": "Skip intro"
+ },
+ "home": {
+  "approach": "Architecture rooted in its territory, attentive to material, to light and to what already exists.",
+  "role": "Master's student in Architecture, Environment and Building Cultures, ENSA Grenoble. Former building draughtswoman.",
+  "search": "I am looking for an internship in an architecture practice.",
+  "cta": "See the projects",
+  "list": "Six projects",
+  "terrainLabel": "Contour-line terrain that follows the light of the mouse"
+ },
+ "projet": {
+  "lieu": "Location",
+  "annee": "Year",
+  "cadre": "Context",
+  "programme": "Programme",
+  "surface": "Area",
+  "enjeux": "Key issues",
+  "next": "Next project",
+  "back": "All projects",
+  "plans": "Drawings",
+  "zoomHint": "Scroll or pinch to zoom, drag to move",
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "zoomReset": "Reset view",
+  "existant": "Existing",
+  "projet": "Project",
+  "beforeAfter": "Drag to compare the existing building and the project",
+  "demolition": "Demolition",
+  "extrusionTitle": "From plan to volume",
+  "extrusionText": "The walls of the plan rise: in black what is kept, in terracotta what is demolished.",
+  "coupeTitle": "Live section",
+  "coupeText": "Move the section plane along the building. The plan beside it shows where the cut is.",
+  "coupePosition": "Section position",
+  "calques": "Layers",
+  "calqueStructure": "Structure",
+  "calqueDemolition": "Demolitions",
+  "calqueUsages": "Uses",
+  "calqueLumiere": "Light",
+  "exposition": "Exhibition",
+  "restauration": "Dining",
+  "cour": "Open courtyard",
+  "matiereTitle": "Material",
+  "matiereText": "Raking light follows the mouse across the model.",
+  "facades": "Elevations",
+  "fiche": "Project sheet",
+  "maquetteNote": "Conceptual 3D model, rebuilt from the project drawings.",
+  "liteNote": "Light version: the 3D model is replaced by the drawings."
+ },
+ "footer": {
+  "rights": "All rights reserved",
+  "mentions": "Legal notice",
+  "top": "Back to top"
+ },
+ "soon": {
+  "title": "Page in progress",
+  "text": "This page comes in the next stage of the site's construction."
+ }
+}

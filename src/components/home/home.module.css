@@ -1,0 +1,36 @@
+.intro { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; pointer-events: none; transition: opacity .7s var(--ease); }
+.intro[data-mode='lite'] { background: var(--chaux); }
+.introOut { opacity: 0; }
+.introDrawing { width: min(70vw, 520px); height: auto; mix-blend-mode: multiply; animation: draw 1.6s var(--ease) both; }
+@keyframes draw { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+.introName { position: absolute; left: 50%; bottom: 14vh; transform: translate(-50%, 12px); font-family: var(--serif); font-size: clamp(2.8rem, 7vw, 6rem); letter-spacing: -.01em; opacity: 0; transition: opacity 1s var(--ease), transform 1.2s var(--ease); white-space: nowrap; }
+.introName.on { opacity: 1; transform: translate(-50%, 0); }
+.skip { pointer-events: auto; position: absolute; right: var(--gut); bottom: 28px; background: none; border: 1px solid var(--ombre); border-radius: 99px; padding: 8px 18px; font-size: .8rem; letter-spacing: .06em; }
+.skip:hover { background: var(--ombre); color: var(--chaux); }
+
+
+.hero { position: relative; min-height: 100svh; display: grid; align-items: end; padding-top: var(--header-h); }
+.heroLite { background: radial-gradient(ellipse at 70% 40%, var(--enduit), var(--chaux) 70%); }
+.heroLite::before { content: ''; position: absolute; right: var(--gut); top: calc(var(--header-h) + 3vh); width: min(46vw, 560px); aspect-ratio: 1398/1328; background: url('/media/site/dessin-couverture-1000.webp') center/contain no-repeat; mix-blend-mode: multiply; opacity: .9; }
+.heroIn { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px clamp(24px, 6vw, 96px); align-items: end; padding-bottom: clamp(32px, 6vh, 72px); }
+.name { font-size: clamp(3.4rem, 10vw, 9.5rem); line-height: .9; letter-spacing: -.02em; }
+.approach { margin-top: 22px; max-width: 30ch; }
+.role { margin-top: 18px; max-width: 52ch; font-size: .92rem; color: var(--terre); }
+.search { margin-top: 6px; font-size: .92rem; font-weight: 500; }
+.cta { margin-top: 26px; display: inline-flex; gap: 12px; align-items: center; text-decoration: none; font-size: .9rem; letter-spacing: .04em; border-bottom: 1px solid currentColor; padding-bottom: 4px; }
+.cta span { transition: transform .4s var(--ease); }
+.cta:hover span { transform: translateX(6px); }
+.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ombre); background: color-mix(in srgb, var(--chaux) 72%, transparent); backdrop-filter: blur(2px); }
+.listHead { margin-bottom: 10px; }
+.list li a { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 11px 4px; border-bottom: 1px solid var(--filet); text-decoration: none; transition: background-color .35s, padding .35s var(--ease); }
+.list li a:hover { background: var(--enduit); padding-left: 10px; }
+.list .n { font-family: var(--serif); color: var(--cuite); }
+.list .t { font-family: var(--serif); font-size: 1.22rem; line-height: 1.2; }
+.list .t small { display: block; font-family: var(--sans); font-size: .74rem; color: var(--terre); }
+.list .y { font-size: .78rem; color: var(--terre); font-variant-numeric: tabular-nums; }
+.terrainNote { position: absolute; left: var(--gut); top: calc(var(--header-h) + 18px); }
+
+@media (max-width: 900px) {
+  .heroIn { grid-template-columns: 1fr; }
+  .heroLite::before { width: 62vw; right: 8px; top: calc(var(--header-h) + 8px); opacity: .22; }
+}
