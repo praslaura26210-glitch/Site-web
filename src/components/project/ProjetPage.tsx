@@ -6,6 +6,7 @@ import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Visionneuse from './Visionneuse';
+import Parallaxe from './Parallaxe';
 import styles from './project.module.css';
 
 const PALETTE: Record<string, { en: string; it: string }> = {
@@ -44,7 +45,11 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
   let inter = 0;
 
   const texte = (k: string) => {
-    if (k === 'poeme' && p.poeme) return <p className={styles.poeme}>{p.poeme}</p>;
+    if (k === 'poeme' && p.poeme) return (
+      <div className={styles.poeme}>
+        {p.poeme.split(/\n\s*\n/).map((strophe, j) => <p key={j}>{strophe.trim()}</p>)}
+      </div>
+    );
     if (k === 'recit' && p.recit) return (
       <div className={styles.recit}>
         {p.recit_titre && <h3 className={styles.recitT}>{p.recit_titre}</h3>}
@@ -98,7 +103,8 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
         const txt = texte(b.k);
         if (!txt) return null;
         return (
-          <section key={k} className={`${styles.texteImg} rv`} data-cote={b.cote || 'd'} data-seul={!b.r || undefined}>
+          <section key={k} className={`${styles.texteImg} rv`} data-cote={b.cote || 'd'} data-seul={!b.r || undefined} data-colonnes={b.colonnes || undefined}>
+            {b.colonnes && <p className={styles.poemeTitre}>{p.titre}</p>}
             <div className={styles.texteCol}>
               {b.titre && <h2 className={styles.texteT}>{b.titre[lang]}</h2>}
               {txt}
@@ -109,6 +115,32 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
       }
       case 'visionneuse':
         return <Visionneuse key={k} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
+      case 'composition': {
+        // cases carrées : une image de largeur l et de format w/h occupe environ l / (w/h) lignes
+        const fin = Math.max(...b.items.map((it) => { const m = M(it.r); return it.ligne + Math.ceil(it.col[1] / (m.w / m.h)); }));
+        return (
+          <div key={k} className={styles.compo}>
+            <div className={styles.compoGrille} style={{ gridTemplateRows: `repeat(${fin - 1}, var(--u))` }}>
+              {b.items.map((it, j) => {
+                const m = M(it.r);
+                const lignes = Math.ceil(it.col[1] / (m.w / m.h));
+                return (
+                  <div
+                    key={it.r}
+                    className={`${styles.compoItem} ${it.dessus ? styles.dessus : ''} rv`}
+                    style={{ gridColumn: `${it.col[0]} / span ${it.col[1]}`, gridRow: `${it.ligne} / span ${lignes}`, ['--d' as string]: `${j * 0.12}s` }}
+                    data-v={it.dessus ? '0.07' : undefined}
+                  >
+                    <Planche m={m} sizes={`(max-width: 900px) 100vw, ${Math.round((it.col[1] / 12) * 100)}vw`} labels={L} credit={credit(it.r)} caption={false} />
+                  </div>
+                );
+              })}
+            </div>
+            {b.legende !== false && <p className={styles.compoLeg}>{b.items.map((it) => M(it.r).legende).join(' · ')}</p>}
+            {b.legende === false && <p className={styles.compoLeg}>{M(b.items[0].r).legende}</p>}
+          </div>
+        );
+      }
       case 'comparer':
         return (
           <div key={k} className={styles.comparer} data-deux={b.deux || undefined}>
@@ -152,6 +184,7 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
       </section>
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
+      {mise.blocs.some((b) => b.t === 'composition') && <Parallaxe />}
 
       <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next}>
         <Link href={`/${lang}/projets/${next.slug}/`} className={styles.suivant}>

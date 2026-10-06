@@ -50,7 +50,8 @@
 .texteT { font-size: clamp(1.6rem, 2.4vw, 2.3rem); }
 .imageCol { min-width: 0; }
 .imageCol .figBtn img { max-height: 90svh; }
-.poeme { font-size: clamp(.95rem, 1.1vw, 1.08rem); line-height: 2; white-space: pre-line; padding-left: 22px; border-left: 1px solid var(--accent); }
+.poeme { display: grid; gap: 1.4em; font-size: clamp(.95rem, 1.1vw, 1.08rem); line-height: 2; padding-left: 22px; border-left: 1px solid var(--accent); }
+.poeme p { white-space: pre-line; break-inside: avoid; }
 .recitT { font-weight: 300; font-size: clamp(1.4rem, 2vw, 1.9rem); }
 .recit p { margin-top: 16px; font-size: 1rem; line-height: 1.95; padding-left: 22px; border-left: 1px solid var(--accent); }
 .recit p::before { content: '« '; } .recit p::after { content: ' »'; }
@@ -82,6 +83,23 @@
 .visListe button:hover { color: var(--encre); }
 .visListe button[aria-current] { color: var(--encre); border-color: var(--encre); }
 .visAside { grid-column: 2; grid-row: 1; align-self: center; }
+
+/* composition de magazine : grille de 12 colonnes à cases carrées, images qui se chevauchent */
+.compo { container-type: inline-size; }
+.compoGrille { --u: calc(100cqw / 12); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.compoItem { position: relative; z-index: 1; align-self: start; padding: 0 clamp(6px, .8vw, 14px); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease); transition-delay: var(--d, 0s); }
+.compoItem[data-rv='wait'] { transform: translateY(50px); }
+.dessus { z-index: 2; }
+/* l'image du dessus couvre proprement celle d'en dessous : fond de page, pas de mélange des traits */
+.dessus :global(.fig), .dessus .fig { background: var(--fond); padding: clamp(10px, 1.2vw, 20px); }
+.dessus .figBtn img { mix-blend-mode: normal !important; }
+.compoLeg { margin-top: 14px; font-size: .68rem; letter-spacing: .06em; color: var(--gris); }
+/* poème en deux colonnes */
+.texteImg[data-colonnes] { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); justify-items: stretch; align-items: start; }
+.poemeTitre { font-size: clamp(2rem, 4vw, 3.8rem); font-weight: 300; line-height: 1; letter-spacing: -0.03em; color: var(--gris); }
+.texteImg[data-colonnes] .texteCol { max-width: none; }
+.texteImg[data-colonnes] .poeme { display: block; columns: 2; column-gap: clamp(32px, 5vw, 96px); }
+.texteImg[data-colonnes] .poeme p { margin-bottom: 1.4em; }
 
 /* existant / projet */
 .comparer { display: grid; gap: clamp(48px, 8vh, 96px); }
@@ -141,6 +159,10 @@
   .texteImg, .texteImg[data-cote='g'], .comparer[data-deux], .vis[data-aside] { grid-template-columns: 1fr; }
   .texteImg[data-cote='g'] .imageCol { order: 0; }
   .rangee { flex-direction: column; }
+  .compoGrille { grid-template-columns: 1fr; grid-template-rows: none !important; gap: 32px; }
+  .compoItem { grid-column: 1 / -1 !important; grid-row: auto !important; padding: 0; translate: none !important; }
+  .texteImg[data-colonnes] { grid-template-columns: 1fr; }
+  .texteImg[data-colonnes] .poeme { columns: 1; }
   .rangItem { flex: none !important; width: 100%; }
   .visScene { height: 56svh; padding: 0; }
   .visNav { top: auto; bottom: -10px; width: 42px; height: 42px; }

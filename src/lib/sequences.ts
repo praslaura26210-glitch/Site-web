@@ -12,9 +12,15 @@ export type Bloc =
   /** une rangée d'images ramenées à la même hauteur, sur toute la largeur */
   | { t: 'rang'; r: string[] }
   /** un texte (poème, récit, expérimentation, chiffres, palette) avec, ou non, une image à côté */
-  | { t: 'texte'; k: 'poeme' | 'recit' | 'experimentation' | 'chiffres' | 'palette'; titre?: L3; r?: string; cote?: 'g' | 'd' }
+  | { t: 'texte'; k: 'poeme' | 'recit' | 'experimentation' | 'chiffres' | 'palette'; titre?: L3; r?: string; cote?: 'g' | 'd'; colonnes?: boolean }
   /** une visionneuse : un grand dessin à la fois, flèches pour passer au suivant */
   | { t: 'visionneuse'; titre: L3; r: string[]; k?: 'chiffres' }
+  /**
+   * composition de magazine : images placées librement sur une grille de 12 colonnes à cases carrées,
+   * qui peuvent se chevaucher. col = [colonne de départ, largeur], ligne = première ligne ;
+   * « dessus » : l'image passe par-dessus sa voisine et glisse un peu plus vite au défilement.
+   */
+  | { t: 'composition'; items: { r: string; col: [number, number]; ligne: number; dessus?: boolean }[]; legende?: boolean }
   /** existant / projet à comparer en faisant glisser un trait ; deux par ligne si « deux » */
   | { t: 'comparer'; deux?: boolean; items: { existant: string; projet: string; titre: L3 }[] };
 
@@ -67,11 +73,27 @@ export const MISES: Record<string, Mise> = {
   'illusion-d-envol': {
     ouverture: 'maquette',
     blocs: [
-      { t: 'texte', k: 'poeme', r: 'croquis-perspective', cote: 'g' },
+      // double page 1 : la perspective à la main, l'axonométrie posée par-dessus, un détail en contrepoint
+      { t: 'composition', items: [
+        { r: 'croquis-perspective', col: [1, 5], ligne: 1 },
+        { r: 'axonometrie-eclatee', col: [4, 6], ligne: 4, dessus: true },
+        { r: 'detail-assemblage-3', col: [10, 3], ligne: 2 },
+      ] },
+      { t: 'texte', k: 'poeme', colonnes: true },
       { t: 'inter', titre: T.dessins },
-      { t: 'visionneuse', titre: T.dessins, r: ['coupe-aa', 'plan-rdc', 'facade-sud', 'axonometrie-eclatee'] },
+      // double page 2 : coupe et plan qui se chevauchent, la façade décalée dessous
+      { t: 'composition', items: [
+        { r: 'coupe-aa', col: [1, 8], ligne: 1 },
+        { r: 'plan-rdc', col: [6, 6], ligne: 3, dessus: true },
+        { r: 'facade-sud', col: [1, 7], ligne: 7 },
+      ] },
       { t: 'inter', titre: T.assemblages },
-      { t: 'rang', r: ['detail-assemblage-1', 'detail-assemblage-2', 'detail-assemblage-3', 'detail-assemblage-4'] },
+      // double page 3 : les détails, en escalier, qui se recouvrent deux à deux
+      { t: 'composition', legende: false, items: [
+        { r: 'detail-assemblage-1', col: [1, 4], ligne: 1 },
+        { r: 'detail-assemblage-2', col: [3, 4], ligne: 4, dessus: true },
+        { r: 'detail-assemblage-4', col: [8, 4], ligne: 2, dessus: true },
+      ] },
     ],
   },
   'la-ruche': {
