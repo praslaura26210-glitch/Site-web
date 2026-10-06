@@ -3,41 +3,41 @@
 .projet { --rythme: clamp(96px, 14vh, 160px); }
 
 /* ---------- ouverture : titre et grande image ---------- */
-.ouv { position: relative; }
-.ouv[data-format='portrait'] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100svh; }
-.ouv[data-format='portrait'] .ouvTxt { align-self: end; padding: calc(var(--header-h) + 32px) var(--gut) clamp(36px, 8vh, 88px); }
-.ouv[data-format='portrait'] .ouvImg img { width: 100%; height: 100svh; object-fit: cover; }
-.ouv[data-format='paysage'] .ouvTxt { padding: calc(var(--header-h) + clamp(32px, 9vh, 104px)) var(--gut) clamp(28px, 5vh, 56px); }
-.ouv[data-format='paysage'] .ouvImg img { width: 100%; height: min(86svh, 60vw); object-fit: cover; }
+.ouv { position: relative; max-width: var(--max); margin: 0 auto; padding: var(--header-h) var(--gut) 0; }
+.ouv[data-format='portrait'] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: end; }
+.ouv[data-format='portrait'] .ouvTxt { align-self: end; padding: 0 0 8px; }
+.ouv[data-format='portrait'] .ouvImg img { width: 100%; height: min(78svh, 760px); object-fit: cover; }
+.ouv[data-format='paysage'] .ouvTxt { padding: clamp(32px, 7vh, 80px) 0 clamp(24px, 4vh, 44px); }
+.ouv[data-format='paysage'] .ouvImg img { width: 100%; height: min(70svh, 640px); object-fit: cover; }
 .ouvImg { margin: 0; overflow: hidden; }
 .ouvImg img { animation: ouvIn 1.6s var(--ease) both; }
 @keyframes ouvIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
 .ouvN { color: var(--accent); }
-.ouvT { font-size: clamp(3rem, 7vw, 8rem); line-height: .94; letter-spacing: -0.035em; margin-top: 20px; max-width: 12ch; }
+.ouvT { font-size: clamp(2.6rem, 5vw, 5.4rem); line-height: .94; letter-spacing: -0.035em; margin-top: 20px; max-width: 12ch; }
 .ouvMeta { margin-top: 28px; }
 
 /* ---------- présentation, comme dans le portfolio ---------- */
 .presentation { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px clamp(24px, 4vw, 80px); padding-top: clamp(72px, 12vh, 140px); align-items: start; }
-.folio { grid-column: 1 / span 5; font-size: clamp(6rem, 16vw, 15rem); font-weight: 300; line-height: .8; letter-spacing: -0.05em; color: var(--filet); }
-.livret { grid-column: 7 / span 6; display: grid; gap: 22px; }
+.folio { grid-column: 1 / span 5; font-size: clamp(5rem, 11vw, 11rem); font-weight: 300; line-height: .8; letter-spacing: -0.05em; color: var(--filet); }
+.livret { grid-column: 1 / span 5; display: grid; gap: 18px; align-content: start; padding-top: 18px; border-top: 1px solid var(--encre); }
 .livretT { display: flex; gap: 22px; align-items: baseline; font-size: clamp(1.2rem, 1.6vw, 1.5rem); font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
 .livretT span { color: var(--accent); }
 .livretInfos { list-style: none; margin: 0; padding: 0 0 0 calc(1.2em + 22px); display: grid; gap: 4px; font-size: .92rem; color: var(--gris); }
 .livretInfos li:first-child { color: var(--encre); }
-.livretTexte { display: grid; gap: 1em; padding-left: calc(1.2em + 22px); font-size: 1rem; line-height: 1.85; max-width: 62ch; }
+.livretTexte { grid-column: 7 / span 6; display: grid; gap: 1em; font-size: 1rem; line-height: 1.85; max-width: 62ch; padding-top: 18px; }
 
 /* ---------- blocs ---------- */
-.corpsProjet { display: grid; gap: var(--rythme); padding-top: var(--rythme); }
+.corpsProjet { display: grid; gap: clamp(64px, 10vh, 120px); padding-top: clamp(72px, 11vh, 130px); }
 .inter { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 18px; align-items: baseline; padding-top: 18px; border-top: 1px solid var(--encre); margin-bottom: calc(var(--rythme) * -0.6); }
 .inter h2 { font-size: clamp(1.6rem, 2.4vw, 2.3rem); }
 .inter p { grid-column: 2; margin-top: 10px; font-size: .9rem; color: var(--gris); max-width: 60ch; }
 .interN { font-size: .66rem; letter-spacing: .2em; color: var(--accent); }
 
 /* une image en pleine largeur */
-.grand .figBtn img { width: 100%; height: auto; max-height: none; }
+.grand .figBtn img { width: 100%; height: auto; max-height: 80svh; object-fit: contain; }
 
 /* rangée : toutes les images à la même hauteur */
-.rangee { display: flex; gap: clamp(12px, 1.6vw, 24px); align-items: flex-start; }
+.rangee { display: flex; gap: clamp(16px, 2vw, 32px); align-items: flex-start; }
 .rangItem { flex-basis: 0; min-width: 0; }
 .rangItem .figBtn img { width: 100%; height: auto; max-height: none; }
 
@@ -92,7 +92,8 @@
 .compoItem .figBtn img { max-height: none; }
 
 /* poème en deux colonnes */
-.texteImg[data-colonnes] { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); justify-items: stretch; align-items: start; }
+.texteImg[data-colonnes] { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.texteImg[data-colonnes] .texteCol { width: min(100%, 860px); }
 .poemeTitre { font-size: clamp(2rem, 4vw, 3.8rem); font-weight: 300; line-height: 1; letter-spacing: -0.03em; color: var(--gris); }
 .texteImg[data-colonnes] .texteCol { max-width: none; }
 .texteImg[data-colonnes] .poeme { display: block; columns: 2; column-gap: clamp(32px, 5vw, 96px); }
@@ -152,11 +153,12 @@
 
 @media (max-width: 900px) {
   .ouv[data-format='portrait'] { grid-template-columns: 1fr; min-height: 0; }
+  .ouv { padding-top: calc(var(--header-h) + 16px); }
   .ouv[data-format='portrait'] .ouvTxt { padding-bottom: 28px; }
   .ouv[data-format='portrait'] .ouvImg img { height: auto; max-height: 80svh; }
   .presentation { grid-template-columns: 1fr; }
   .folio { display: none; }
-  .livret { grid-column: 1 / -1; }
+  .livret, .livretTexte { grid-column: 1 / -1; }
   .texteImg, .texteImg[data-cote='g'], .comparer[data-deux], .vis[data-aside] { grid-template-columns: 1fr; }
   .texteImg[data-cote='g'] .imageCol { order: 0; }
   .rangee { flex-direction: column; }

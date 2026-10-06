@@ -72,19 +72,12 @@ export const MISES: Record<string, Mise> = {
   'illusion-d-envol': {
     ouverture: 'maquette',
     blocs: [
-      { t: 'composition', rangs: [
-        [{ r: 'croquis-perspective', col: [1, 5] }, { r: 'axonometrie-eclatee', col: [7, 6], mt: 14 }],
-      ] },
+      { t: 'rang', r: ['croquis-perspective', 'axonometrie-eclatee'] },
       { t: 'texte', k: 'poeme', colonnes: true },
       { t: 'inter', titre: T.dessins },
-      { t: 'composition', rangs: [
-        [{ r: 'coupe-aa', col: [1, 7] }, { r: 'plan-rdc', col: [9, 4], mt: 10 }],
-        [{ r: 'facade-sud', col: [3, 8] }],
-      ] },
+      { t: 'visionneuse', titre: T.dessins, r: ['coupe-aa', 'plan-rdc', 'facade-sud'] },
       { t: 'inter', titre: T.assemblages },
-      { t: 'composition', rangs: [
-        [{ r: 'detail-assemblage-1', col: [1, 3] }, { r: 'detail-assemblage-2', col: [4, 3], mt: 8 }, { r: 'detail-assemblage-3', col: [7, 3] }, { r: 'detail-assemblage-4', col: [10, 3], mt: 8 }],
-      ] },
+      { t: 'rang', r: ['detail-assemblage-1', 'detail-assemblage-2', 'detail-assemblage-3', 'detail-assemblage-4'] },
     ],
   },
   'la-ruche': {

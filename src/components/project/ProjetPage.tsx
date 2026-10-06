@@ -89,7 +89,6 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
         if (!txt) return null;
         return (
           <section key={k} className={`${styles.texteImg} rv`} data-cote={b.cote || 'd'} data-seul={!b.r || undefined} data-colonnes={b.colonnes || undefined}>
-            {b.colonnes && <p className={styles.poemeTitre}>{p.titre}</p>}
             <div className={styles.texteCol}>
               {b.titre && <h2 className={styles.texteT}>{b.titre[lang]}</h2>}
               {txt}
@@ -150,7 +149,6 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
 
       {/* présentation, comme dans le portfolio : numéro, titre, programme, cadre, année, lieu, puis le texte */}
       <section className={`wrap ${styles.presentation}`}>
-        <p className={styles.folio} aria-hidden="true">{String(p.ordre).padStart(2, '0')}</p>
         <div className={`${styles.livret} rv`}>
           <h2 className={styles.livretT}><span>{String(p.ordre).padStart(2, '0')}</span>{p.titre}</h2>
           <ul className={styles.livretInfos}>
@@ -159,8 +157,8 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
             {p.annee && <li>{t.projet.annee} : {p.annee}</li>}
             {p.lieu && <li>{t.projet.lieu} : {p.lieu}</li>}
           </ul>
-          <div className={styles.livretTexte}>{p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
         </div>
+        <div className={`${styles.livretTexte} rv`}>{p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
       </section>
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
