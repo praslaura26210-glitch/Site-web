@@ -6,6 +6,8 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+  # site entièrement statique (dossier out/) : le module Next.js de Netlify ne doit pas s'en mêler
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [[headers]]
   for = "/media/*"
