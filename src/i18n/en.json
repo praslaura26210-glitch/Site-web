@@ -60,7 +60,9 @@
   "fermer": "Close",
   "commencer": "Read the project",
   "role": "My role",
-  "glisser": "Drag to compare"
+  "glisser": "Drag to compare",
+  "precedent": "Previous drawing",
+  "suivant": "Next drawing"
  },
  "footer": {
   "rights": "All rights reserved",

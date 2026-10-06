@@ -20,18 +20,17 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
   const C = t.contact;
   const cv = getCV();
   const tel = String(cv.telephone);
+  const telHref = `+33${tel.replace(/\s/g, '').replace(/^0/, '')}`;
   const reseaux = [
     { label: 'LinkedIn', url: cv.linkedin, Ico: IcoLinkedin },
     { label: 'Instagram', url: cv.instagram, Ico: IcoInstagram },
   ].filter((l) => l.url && !String(l.url).startsWith('['));
   return (
     <article className={`wrap ${styles.page} ${styles.contact}`}>
-      <header className={styles.cHead}>
+      <div className={styles.cWrap}>
         <h1 className="eyebrow">{t.meta.contactTitle}</h1>
         <p className={styles.cTitre}>{C.titre}</p>
-      </header>
 
-      <div className={styles.cCorps}>
         <form className={styles.form} name="contact" method="POST" action={`/${lang}/contact/merci/`} data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="contact" />
           <input type="hidden" name="langue" value={lang} />
@@ -46,7 +45,7 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
           </label>
           <label className={`${styles.champ} ${styles.champLarge}`}>
             <span>{C.message}</span>
-            <textarea name="message" rows={6} required />
+            <textarea name="message" rows={5} required />
           </label>
           <button type="submit" className={styles.envoyer}>
             {C.envoyer}
@@ -54,20 +53,20 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
           </button>
         </form>
 
-        <aside className={styles.coord}>
+        <div className={styles.cBas}>
           <ul className={styles.icones}>
             <li><a href={`mailto:${cv.email}`} aria-label={`${C.ecrire} : ${cv.email}`} title={C.ecrire}><IcoEmail /></a></li>
-            <li><a href={`tel:+33${tel.replace(/\s/g, '').replace(/^0/, '')}`} aria-label={`${C.tel} : ${tel}`} title={C.tel}><IcoTel /></a></li>
+            <li><a href={`tel:${telHref}`} aria-label={`${C.tel} : ${tel}`} title={C.tel}><IcoTel /></a></li>
             {reseaux.map(({ label, url, Ico }) => (
               <li key={label}><a href={url} target="_blank" rel="me noopener" aria-label={label} title={label}><Ico /></a></li>
             ))}
           </ul>
           <dl className={styles.coordList}>
             <div><dt>{C.email}</dt><dd><a href={`mailto:${cv.email}`}>{cv.email}</a></dd></div>
-            <div><dt>{C.tel}</dt><dd><a href={`tel:+33${tel.replace(/\s/g, '').replace(/^0/, '')}`}>{tel}</a></dd></div>
+            <div><dt>{C.tel}</dt><dd><a href={`tel:${telHref}`}>{tel}</a></dd></div>
             <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
           </dl>
-        </aside>
+        </div>
       </div>
     </article>
   );

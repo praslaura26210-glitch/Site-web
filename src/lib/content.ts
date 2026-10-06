@@ -6,14 +6,14 @@ import type { Lang } from '@/i18n';
 const ROOT = path.join(process.cwd(), 'content');
 const A_COMPLETER = '[À COMPLÉTER]';
 
-/** Ordre validé par Laura : ce n'est pas l'ordre chronologique du book. */
+/** Même ordre que le portfolio PDF (demande de Laura). */
 export const ORDRE = [
-  'entre-deux-regards',
+  'illusion-d-envol',
+  'la-ruche',
   'le-passage-des-artistes',
+  'entre-deux-regards',
   'pilates-room',
   'escalier-suspendu',
-  'la-ruche',
-  'illusion-d-envol',
 ] as const;
 
 export type Image = {

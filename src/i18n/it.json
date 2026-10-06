@@ -60,7 +60,9 @@
   "fermer": "Chiudi",
   "commencer": "Leggi il progetto",
   "role": "Il mio ruolo",
-  "glisser": "Trascina per confrontare"
+  "glisser": "Trascina per confrontare",
+  "precedent": "Disegno precedente",
+  "suivant": "Disegno successivo"
  },
  "footer": {
   "rights": "Tutti i diritti riservati",

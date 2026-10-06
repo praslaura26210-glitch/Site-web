@@ -1,7 +1,4 @@
-/* Laura Pras, version 3. Fond presque blanc, encre brune, titres en Montserrat fin, filets fins, aucune 3D. */
-@font-face { font-family: 'EB Garamond'; src: url('/fonts/ebg-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'EB Garamond'; src: url('/fonts/ebg-400i.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
-@font-face { font-family: 'EB Garamond'; src: url('/fonts/ebg-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+/* Laura Pras, version 4. Fond presque blanc, encre brune, une seule famille (Montserrat), accent terre cuite. */
 @font-face { font-family: 'Montserrat'; src: url('/fonts/mont-300.woff2') format('woff2'); font-weight: 300; font-display: swap; }
 @font-face { font-family: 'Montserrat'; src: url('/fonts/mont-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Montserrat'; src: url('/fonts/mont-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
@@ -19,7 +16,6 @@
   --papier: var(--fond);
   --police-plan: 'Montserrat', Arial, sans-serif;
 
-  --serif: 'EB Garamond', Garamond, 'Times New Roman', serif;
   --sans: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
   --gut: clamp(18px, 4.5vw, 72px);
   --max: 1440px;
@@ -46,10 +42,9 @@ strong, b { font-weight: 500; }
 .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding-inline: var(--gut); }
 /* petites capitales espacées, comme sur un cartouche */
 .eyebrow { font-family: var(--sans); font-size: .68rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--gris); }
-.serif { font-family: var(--serif); }
-.lead { font-family: var(--serif); font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.4; }
+.lead { font-size: clamp(1.15rem, 1.6vw, 1.4rem); line-height: 1.5; font-weight: 300; }
 .lien { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; text-decoration: none; padding-bottom: 5px; background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; transition: background-size .5s var(--ease); }
-.lien:hover { background-size: 40% 1px; }
+.lien:hover { background-size: 40% 1px; color: var(--accent-f); }
 .prose { max-width: 60ch; }
 .prose p + p { margin-top: 1em; }
 .page { position: relative; }
@@ -71,3 +66,8 @@ html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: 
   *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   .rv[data-rv='wait'] { opacity: 1; transform: none; }
 }
+
+/* couleur animable (couloir de l'accueil qui passe de la terre cuite au graphite) */
+@property --trait { syntax: '<color>'; inherits: true; initial-value: #2B211C; }
+.lienPdf { display: inline-flex; align-items: center; gap: 10px; }
+.lienPdfInfo { color: var(--gris); }

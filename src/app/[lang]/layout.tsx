@@ -21,13 +21,13 @@ export default async function RootLayout({ children, params }: { children: React
   return (
     <html lang={lang}>
       <head>
-        {/* l'ouverture (logo qui se dessine) n'a lieu qu'à l'accueil, une fois par visite */}
+        {/* l'ouverture (logo qui se dessine) a lieu à chaque arrivée sur l'accueil */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(/^\\/(fr|en|it)\\/?$/.test(location.pathname)&&sessionStorage.getItem('lp-intro-vue')!=='1'&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/nointro/.test(location.search))document.documentElement.dataset.intro='on'}catch(e){}`,
+            __html: `try{if(/^\\/(fr|en|it)\\/?$/.test(location.pathname)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/nointro/.test(location.search))document.documentElement.dataset.intro='on'}catch(e){}`,
           }}
         />
-        <link rel="preload" href="/fonts/ebg-400.woff2" as="font" type="font/woff2" crossOrigin="" />
+        <link rel="preload" href="/fonts/mont-400.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/mont-300.woff2" as="font" type="font/woff2" crossOrigin="" />
       </head>
       <body>

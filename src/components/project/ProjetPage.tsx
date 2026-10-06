@@ -2,10 +2,9 @@ import Link from 'next/link';
 import type { Dict, Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { media } from '@/lib/media';
-import type { Chapitre, Visuel } from '@/lib/sequences';
+import type { Chapitre, Dessin, Visuel } from '@/lib/sequences';
 import { couverture } from '@/components/home/ProjetsGrille';
-import Comparateur from './Comparateur';
-import Esquisse from './Esquisse';
+import Planches, { type Img } from './Planches';
 import Fiche from './Fiche';
 import Planche, { type Labels } from './Planche';
 import styles from './project.module.css';
@@ -39,23 +38,18 @@ export default function ProjetPage({ p, t, lang, chapitres, next, total }: { p: 
 
   const visuel = (v: Visuel, i: number) => {
     if ('r' in v) return <Planche key={i} m={M(v.r)} sizes="(max-width: 900px) 100vw, 58vw" labels={L} />;
-    if ('duo' in v) return <div key={i} className={styles.duo}>{v.duo.map((r) => <Planche key={r} m={M(r)} sizes="(max-width: 900px) 100vw, 29vw" labels={L} />)}</div>;
-    if ('grille' in v) return <div key={i} className={styles.grille}>{v.grille.map((r) => <Planche key={r} m={M(r)} sizes="(max-width: 900px) 50vw, 29vw" labels={L} />)}</div>;
-    if ('esquisse' in v) {
-      const m = M(v.esquisse);
-      return <Esquisse key={i} src={m.src} srcSmall={m.srcSmall!} w={m.w} h={m.h} alt={m.legende} caption={m.legende} fuite={v.fuite} duree={3200} sizes="(max-width: 900px) 100vw, 58vw" />;
-    }
-    return (
-      <Comparateur
-        key={i}
-        paires={v.comparer.map((c) => {
-          const a = M(c.existant), b = M(c.projet);
-          return { titre: c.titre[lang], existant: { src: a.src, w: a.w, h: a.h, legende: a.legende }, projet: { src: b.src, w: b.w, h: b.h, legende: b.legende } };
-        })}
-        labels={{ existant: t.projet.existant, projet: t.projet.projet, glisser: t.projet.glisser }}
-      />
-    );
+    return <div key={i} className={styles.duo}>{v.duo.map((r) => <Planche key={r} m={M(r)} sizes="(max-width: 900px) 100vw, 29vw" labels={L} />)}</div>;
   };
+  const img = (r: string): Img => {
+    const m = M(r);
+    return { src: m.src, srcSmall: m.srcSmall, svg: m.svg, full: m.full, w: m.w, h: m.h, legende: m.legende, scan: m.scan, plan: m.kind === 'plan' };
+  };
+  const dessins = (ds: Dessin[]) => (
+    <Planches
+      items={ds.map((d) => ({ titre: d.titre ? d.titre[lang] : M(d.r).legende, a: img(d.r), b: d.projet ? img(d.projet) : undefined }))}
+      labels={{ existant: t.projet.existant, projet: t.projet.projet, glisser: t.projet.glisser, precedent: t.projet.precedent, suivant: t.projet.suivant, agrandir: t.projet.agrandir, fermer: t.projet.fermer, hint: t.projet.zoomHint, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, reset: t.projet.zoomReset }}
+    />
+  );
 
   const texte = (c: Chapitre) => {
     const k = c.texte;
@@ -86,7 +80,7 @@ export default function ProjetPage({ p, t, lang, chapitres, next, total }: { p: 
     <article className={styles.projet}>
       <header className={styles.ouv} data-format={paysage ? 'paysage' : 'portrait'}>
         <div className={styles.ouvTxt}>
-          <p className="eyebrow">{String(p.ordre).padStart(2, '0')} / {String(total).padStart(2, '0')}</p>
+          <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
           <h1 className={styles.ouvT}>{p.titre}</h1>
           <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.lieu, p.annee].filter(Boolean).join(' · ')}</p>
         </div>
@@ -100,17 +94,25 @@ export default function ProjetPage({ p, t, lang, chapitres, next, total }: { p: 
         const txt = texte(c);
         const numero = c.titre ? String(++n).padStart(2, '0') : null;
         const palette = c.palette && p.palette;
+        const titre = c.titre && (
+          <h2 className={styles.chapT}>
+            <span className={styles.chapN}>{numero}</span>
+            {c.titre[lang]}
+          </h2>
+        );
+        // chapitre « dessins » : la visionneuse prend toute la largeur
+        if (c.dessins) return (
+          <section key={i} className={`wrap ${styles.chapDessins}`}>
+            <div className={`${styles.chapDessinsHead} rv`}>{titre}{txt}</div>
+            {dessins(c.dessins)}
+          </section>
+        );
         return (
           <section key={i} className={`wrap ${styles.chap}`}>
-            <div className={styles.visuels}>{c.visuels.map(visuel)}</div>
+            <div className={styles.visuels}>{(c.visuels || []).map(visuel)}</div>
             <aside className={styles.colonne}>
               <div className={`${styles.colIn} rv`}>
-                {c.titre && (
-                  <h2 className={styles.chapT}>
-                    <span className="eyebrow">{numero}</span>
-                    {c.titre[lang]}
-                  </h2>
-                )}
+                {titre}
                 {txt}
                 {c.chiffres && (
                   <dl className={styles.chiffres}>

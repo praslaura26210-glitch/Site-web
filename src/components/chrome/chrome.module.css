@@ -15,6 +15,7 @@
 .links { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(18px, 2.6vw, 40px); }
 .links a { text-decoration: none; position: relative; padding-block: 6px; color: var(--gris); transition: color .3s; }
 .links a:hover, .links a[aria-current='page'] { color: var(--encre); }
+.links a[aria-current='page']::after { background: var(--accent); }
 .links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: currentColor; transition: right .45s var(--ease); }
 .links a:hover::after, .links a[aria-current='page']::after { right: 0; }
 
@@ -40,24 +41,15 @@
 
 /* ---------- fin de page ---------- */
 .footer { position: relative; margin-top: clamp(96px, 16vh, 180px); }
-.book { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 96px); align-items: end; padding-block: clamp(56px, 10vh, 112px); border-top: 1px solid var(--encre); background-clip: content-box; }
-.bookTitle { font-size: clamp(2.2rem, 4.6vw, 4.2rem); margin-top: 16px; max-width: 16ch; }
-.bookText { margin-top: 18px; color: var(--gris); max-width: 46ch; }
-.dl { display: grid; gap: 12px; }
-.dl a { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 16px; text-decoration: none; padding: 20px 24px; transition: background-color .4s var(--ease), color .4s var(--ease); }
-.dl small { font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
-.dlMain { background: var(--encre); color: var(--fond); font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; }
-.dlMain:hover { background: var(--accent-f); }
-.dlSub { grid-template-columns: 1fr auto !important; border: 1px solid var(--encre); font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; }
-.dlSub:hover { background: var(--fond-2); }
-.base { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px 40px; padding-block: 26px 34px; border-top: 1px solid var(--filet); font-size: .7rem; letter-spacing: .08em; color: var(--gris); }
-.baseLogo { width: 26px; height: auto; color: var(--encre); }
-.baseLinks { display: flex; flex-wrap: wrap; gap: 8px 28px; list-style: none; margin: 0; padding: 0; }
-.base a { text-decoration: none; }
-.base a:hover { color: var(--encre); }
-.copy { letter-spacing: .16em; text-transform: uppercase; font-size: .64rem; }
+.base { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px 40px; padding-block: 28px 34px; border-top: 1px solid var(--encre); font-size: .7rem; letter-spacing: .08em; color: var(--gris); }
+.baseBrand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--encre); font-size: .64rem; letter-spacing: .26em; text-transform: uppercase; justify-self: start; }
+.baseLogo { width: 24px; height: auto; color: var(--encre); }
+.baseLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 32px; list-style: none; margin: 0; padding: 0; }
+.base a { text-decoration: none; transition: color .3s; }
+.baseLinks a:hover { color: var(--accent-f); }
+.copy { justify-self: end; letter-spacing: .16em; text-transform: uppercase; font-size: .62rem; }
 @media (max-width: 900px) {
-  .book { grid-template-columns: 1fr; }
-  .base { grid-template-columns: auto 1fr; }
-  .copy { grid-column: 1 / -1; }
+  .base { grid-template-columns: 1fr; justify-items: start; }
+  .baseLinks { justify-content: flex-start; flex-direction: column; gap: 10px; }
+  .copy { justify-self: start; }
 }

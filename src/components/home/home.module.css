@@ -1,31 +1,37 @@
-/* ---------- ouverture : le logo se dessine ---------- */
+/* ---------- ouverture : la cabane se dessine, puis on entre par la porte ---------- */
 .ouverture { display: none; }
 :global(html[data-intro]) .ouverture { display: grid; }
-.ouverture { position: fixed; inset: 0; z-index: 80; place-items: center; background: var(--fond); cursor: pointer; animation: ouvSecours 0s 6.5s forwards; }
+.ouverture { --px: 50vw; --py: 50vh; position: fixed; inset: 0; z-index: 80; place-items: center; background: var(--fond); cursor: pointer; animation: ouvSecours 0s 6.5s forwards; }
 .ouverture[data-out] { display: grid; opacity: 0; visibility: hidden; transition: opacity .9s var(--ease), visibility 0s .9s; }
 @keyframes ouvSecours { to { opacity: 0; visibility: hidden; } }
 .ouvIn { display: grid; justify-items: center; }
-.ouvLogo { width: min(34vw, 170px); height: auto; color: var(--encre); }
+.ouvLogoBox { width: min(34vw, 170px); }
+.ouvLogo { width: 100%; height: auto; color: var(--encre); }
 .ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .9s var(--ease) forwards; }
 .ouvNom { margin-top: 30px; font-size: .9rem; font-weight: 400; letter-spacing: .42em; text-transform: uppercase; animation-delay: 2.55s; margin-right: -.42em; }
 .ouvSous { margin-top: 10px; font-size: .62rem; letter-spacing: .5em; text-transform: uppercase; color: var(--gris); animation-delay: 2.85s; margin-right: -.5em; }
 @keyframes nom { to { opacity: 1; transform: none; } }
-.ouvSkip { position: absolute; right: var(--gut); bottom: 28px; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
+/* la porte s'ouvre : un disque terre cuite part de la porte de la cabane */
+.porte { position: absolute; inset: 0; background: var(--accent); clip-path: circle(0 at var(--px) var(--py)); animation: porte .85s cubic-bezier(.65, 0, .35, 1) 3.55s forwards; pointer-events: none; }
+@keyframes porte { to { clip-path: circle(150vmax at var(--px) var(--py)); } }
+.ouvSkip { position: absolute; right: var(--gut); bottom: 28px; z-index: 1; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
 
-/* ---------- présentation (en deux parties, comme une planche) ----------
-   La scène fait 150 % de la hauteur d'écran : la présentation reste en place pendant
-   qu'on « avance » dans le couloir (--p va de 0 à 1), puis les projets arrivent. */
-.scene { --p: 0; height: 150svh; }
-.hero { position: sticky; top: 0; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); height: 100svh; padding-top: var(--header-h); overflow: hidden; }
-.heroTxt { align-self: end; padding: 0 var(--gut) clamp(40px, 9vh, 96px); max-width: 640px; opacity: calc(1 - var(--p) * 1.6); transform: translateY(calc(var(--p) * -40px)); }
+/* ---------- présentation (en deux parties, comme une planche) ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: 100svh; padding-top: var(--header-h); }
+.heroTxt { align-self: end; padding: 0 var(--gut) clamp(40px, 9vh, 96px); max-width: 640px; }
 .nom { font-size: clamp(3.8rem, 8.6vw, 9rem); line-height: .95; letter-spacing: -0.035em; margin-top: 22px; }
 .statut { margin-top: 30px; color: var(--encre); }
-.approche { font-family: var(--serif); font-style: italic; font-size: clamp(1.2rem, 1.7vw, 1.5rem); line-height: 1.45; margin: 22px 0 36px; max-width: 32ch; color: var(--encre); }
-.heroDessin { position: relative; overflow: hidden; height: calc(100svh - var(--header-h) - 24px); margin-right: calc(var(--gut) * (1 - var(--p))); display: grid; place-items: center; }
-.couloir { width: min(100%, (100svh - var(--header-h) - 24px) * 1.053); transform: scale(calc(1 + var(--p) * .9)); transform-origin: var(--fx) var(--fy); will-change: transform; }
+.approche { font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.6; margin: 18px 0 36px; max-width: 36ch; color: var(--gris); }
+.liens { display: flex; flex-wrap: wrap; gap: 14px 36px; }
+.heroDessin { height: calc(100svh - var(--header-h) - 24px); margin-right: var(--gut); display: grid; place-items: center; }
+/* le dessin en deux tons : le trait prend la couleur --trait (terre cuite puis mine de plomb) */
+.couloir { --trait: var(--encre); width: min(100%, (100svh - var(--header-h) - 24px) * 1.053); background: var(--trait); transition: --trait 2.8s var(--ease), transform 3s var(--ease); }
+.couloir img { width: 100%; height: auto; mix-blend-mode: screen; filter: grayscale(1) contrast(1.12) brightness(1.06); }
+.couloir[data-terre] { --trait: var(--accent); transform: scale(1.03); }
 
 /* ---------- index des projets ---------- */
-.projets { padding-top: clamp(24px, 4vh, 56px); scroll-margin-top: var(--header-h); }
+.projets { padding-top: clamp(48px, 9vh, 112px); scroll-margin-top: var(--header-h); }
+.apresListe { padding-top: 28px; }
 .projetsHead { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid var(--encre); }
 .index { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 4vw, 72px); align-items: start; }
 .liste { list-style: none; margin: 0; padding: 0; }
@@ -33,6 +39,7 @@
 .liste a { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr) auto; grid-template-areas: 'n t a' 'n p a'; column-gap: 18px; align-items: baseline; padding: 22px 0 20px; text-decoration: none; transition: padding .5s var(--ease); }
 .vignette { display: none; }
 .lN { grid-area: n; font-size: .68rem; letter-spacing: .2em; color: var(--gris); transition: color .4s; }
+.liste li[data-on] .lN { color: var(--accent) !important; }
 .lT { grid-area: t; font-size: clamp(1.7rem, 3vw, 2.7rem); font-weight: 300; line-height: 1.08; letter-spacing: -0.02em; color: var(--gris); transition: color .4s; }
 .lP { grid-area: p; margin-top: 6px; font-size: .66rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
 .lA { grid-area: a; font-size: .68rem; letter-spacing: .2em; color: var(--gris); }
@@ -54,11 +61,10 @@
 .carteP { margin-top: 6px; font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
 
 @media (max-width: 900px) {
-  .scene { height: auto; }
-  .hero { position: relative; grid-template-columns: 1fr; height: auto; }
-  .heroTxt { order: 2; padding-top: 28px; padding-bottom: 8px; opacity: 1; transform: none; }
+  .hero { grid-template-columns: 1fr; min-height: 0; }
+  .heroTxt { order: 2; padding-top: 28px; padding-bottom: 8px; }
   .heroDessin { order: 1; height: auto; margin: 12px var(--gut) 0; }
-  .couloir { width: 100%; transform: none; }
+  .couloir { width: 100%; }
   .index { grid-template-columns: 1fr; }
   .apercu { display: none; }
   .liste a { grid-template-columns: 76px minmax(0, 1fr) auto; grid-template-areas: 'v t a' 'v p a'; padding: 14px 0; column-gap: 14px; }
@@ -71,8 +77,4 @@
 @media (max-width: 560px) {
   .grille { grid-template-columns: 1fr; }
   .carteImg { aspect-ratio: 4 / 3; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .scene { height: auto; }
-  .hero { position: relative; }
 }

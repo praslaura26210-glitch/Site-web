@@ -60,7 +60,9 @@
   "fermer": "Fermer",
   "commencer": "Lire le projet",
   "role": "Mon rôle",
-  "glisser": "Glisser pour comparer"
+  "glisser": "Glisser pour comparer",
+  "precedent": "Dessin précédent",
+  "suivant": "Dessin suivant"
  },
  "footer": {
   "rights": "Tous droits réservés",

@@ -40,6 +40,7 @@ for (const slug of fs.readdirSync(path.join(src, 'projets'))) {
   }
 }
 n += copyDir(path.join(src, 'site', 'images'), path.join(dst, 'site'));
+n += copyDir(path.join(src, 'site', 'inspirations'), path.join(dst, 'site', 'inspirations'));
 n += copyDir(path.join(src, 'intro'), path.join(dst, 'intro'));
 n += copyDir(path.join(src, 'logo', 'cabane'), path.join(dst, 'logo'));
 fs.copyFileSync(path.join(src, 'logo', 'cabane', 'favicon.svg'), path.join(root, 'public', 'favicon.svg'));

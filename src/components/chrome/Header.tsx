@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import type { Dict, Lang } from '@/i18n';
 import { LANGS } from '@/i18n';
 import Logo from './Logo';
-import { CV_HREF } from './liens';
 import styles from './chrome.module.css';
 
 const NOMS: Record<Lang, string> = { fr: 'Français', en: 'English', it: 'Italiano' };
@@ -72,10 +71,11 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`} data-open={open || undefined}>
-      <Link href={`/${lang}/`} className={styles.brand} aria-label={`Laura Pras, ${t.nav.home}`}>
+      {/* lien classique (rechargement) : l'ouverture se rejoue à chaque retour à l'accueil par le logo */}
+      <a href={`/${lang}/`} className={styles.brand} aria-label={`Laura Pras, ${t.nav.home}`}>
         <Logo className={styles.brandLogo} poids={1.7} label="" />
         <span className={styles.brandName}>Laura Pras</span>
-      </Link>
+      </a>
       <div className={styles.right}>
         <button className={styles.burger} aria-expanded={open} aria-controls="menu-principal" onClick={() => setOpen((o) => !o)}>
           {open ? t.nav.close : t.nav.menu}
@@ -87,7 +87,6 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
                 <Link href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</Link>
               </li>
             ))}
-            <li><a href={CV_HREF} target="_blank" rel="noopener">{t.nav.cv}</a></li>
           </ul>
         </nav>
         <Langues lang={lang} path={path} label={t.nav.langue} />
