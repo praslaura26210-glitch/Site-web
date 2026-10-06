@@ -25,10 +25,8 @@ export default function Couloir({ legende, ouvrir, fermer }: { legende: string; 
         <dialog ref={dlg} className={styles.grand} onClose={() => setOpen(false)} onClick={(e) => e.target === dlg.current && dlg.current?.close()} aria-label={legende}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/media/site/dessin-couverture-2000.webp" alt={legende} width={1398} height={1328} />
-          <p className={styles.grandBar}>
-            <span>{legende}</span>
-            <button type="button" className="lien" onClick={() => dlg.current?.close()} autoFocus>{fermer}</button>
-          </p>
+          <button type="button" className={styles.grandFermer} onClick={() => dlg.current?.close()} aria-label={fermer} autoFocus>✕</button>
+          <p className={styles.grandCredit}>© Laura Pras</p>
         </dialog>
       )}
     </>

@@ -83,7 +83,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </div>
         <figure className={styles.portrait}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/media/site/portrait-2000.webp" srcSet="/media/site/portrait-1000.webp 1000w, /media/site/portrait-2000.webp 1042w" sizes="(max-width: 900px) 100vw, 50vw" alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
+          <img src="/media/site/portrait-2000.webp"  alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
         </figure>
       </header>
 

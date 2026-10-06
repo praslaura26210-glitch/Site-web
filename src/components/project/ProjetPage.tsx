@@ -6,7 +6,6 @@ import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Visionneuse from './Visionneuse';
-import Parallaxe from './Parallaxe';
 import styles from './project.module.css';
 
 const PALETTE: Record<string, { en: string; it: string }> = {
@@ -18,13 +17,6 @@ const PALETTE: Record<string, { en: string; it: string }> = {
   'Menuiseries aluminium': { en: 'Aluminium frames', it: 'Serramenti in alluminio' },
 };
 
-/** Sépare la première phrase (chapeau) du reste du texte. */
-function chapeau(texte: string) {
-  const i = texte.search(/[.!?]\s/);
-  if (i < 0 || i > 260) return { chap: '', reste: texte };
-  return { chap: texte.slice(0, i + 1), reste: texte.slice(i + 2) };
-}
-
 /** Page projet : ouverture (titre et grande image), présentation, puis les blocs choisis pour ce projet. */
 export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; total: number }) {
   const L: Labels = { agrandir: t.projet.agrandir, fermer: t.projet.fermer, hint: t.projet.zoomHint, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, reset: t.projet.zoomReset };
@@ -33,15 +25,8 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
   const M = (r: string) => { if (!cache.has(r)) cache.set(r, media(p, r)); return cache.get(r)!; };
   const cr = CREDITS[p.slug] || { defaut: '' };
   const credit = (r: string) => cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined);
-  const { chap, reste } = chapeau(p.texte);
   const cov = M(mise.ouverture);
   const paysage = cov.w > cov.h;
-  const fiche = [
-    { label: t.projet.programme, value: p.programme },
-    { label: t.projet.lieu, value: p.lieu },
-    { label: t.projet.annee, value: p.annee ? String(p.annee) : null },
-    { label: t.projet.cadre, value: p.cadre },
-  ].filter((x) => x.value);
   let inter = 0;
 
   const texte = (k: string) => {
@@ -84,11 +69,11 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
           </header>
         );
       case 'grand':
-        return <div key={k} className={`${styles.grand} rv`}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} /></div>;
+        return <div key={k} className={styles.grand}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} /></div>;
       case 'rang':
         // chaque image prend une largeur proportionnelle à son format : toutes ont la même hauteur
         return (
-          <div key={k} className={`${styles.rangee} rv`}>
+          <div key={k} className={styles.rangee}>
             {b.r.map((r) => {
               const m = M(r);
               return (
@@ -115,32 +100,20 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
       }
       case 'visionneuse':
         return <Visionneuse key={k} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
-      case 'composition': {
-        // cases carrées : une image de largeur l et de format w/h occupe environ l / (w/h) lignes
-        const fin = Math.max(...b.items.map((it) => { const m = M(it.r); return it.ligne + Math.ceil(it.col[1] / (m.w / m.h)); }));
+      case 'composition':
         return (
           <div key={k} className={styles.compo}>
-            <div className={styles.compoGrille} style={{ gridTemplateRows: `repeat(${fin - 1}, var(--u))` }}>
-              {b.items.map((it, j) => {
-                const m = M(it.r);
-                const lignes = Math.ceil(it.col[1] / (m.w / m.h));
-                return (
-                  <div
-                    key={it.r}
-                    className={`${styles.compoItem} ${it.dessus ? styles.dessus : ''} rv`}
-                    style={{ gridColumn: `${it.col[0]} / span ${it.col[1]}`, gridRow: `${it.ligne} / span ${lignes}`, ['--d' as string]: `${j * 0.12}s` }}
-                    data-v={it.dessus ? '0.07' : undefined}
-                  >
-                    <Planche m={m} sizes={`(max-width: 900px) 100vw, ${Math.round((it.col[1] / 12) * 100)}vw`} labels={L} credit={credit(it.r)} caption={false} />
+            {b.rangs.map((rang, j) => (
+              <div key={j} className={styles.compoRang}>
+                {rang.map((it) => (
+                  <div key={it.r} className={styles.compoItem} style={{ gridColumn: `${it.col[0]} / span ${it.col[1]}`, marginTop: it.mt ? `${it.mt}vh` : undefined }}>
+                    <Planche m={M(it.r)} sizes={`(max-width: 900px) 100vw, ${Math.round((it.col[1] / 12) * 100)}vw`} labels={L} credit={credit(it.r)} />
                   </div>
-                );
-              })}
-            </div>
-            {b.legende !== false && <p className={styles.compoLeg}>{b.items.map((it) => M(it.r).legende).join(' · ')}</p>}
-            {b.legende === false && <p className={styles.compoLeg}>{M(b.items[0].r).legende}</p>}
+                ))}
+              </div>
+            ))}
           </div>
         );
-      }
       case 'comparer':
         return (
           <div key={k} className={styles.comparer} data-deux={b.deux || undefined}>
@@ -175,16 +148,22 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
         </figure>
       </header>
 
+      {/* présentation, comme dans le portfolio : numéro, titre, programme, cadre, année, lieu, puis le texte */}
       <section className={`wrap ${styles.presentation}`}>
-        <p className={`${styles.chapeau} rv`}>{chap}</p>
-        <div className={`${styles.corps} rv`}>{reste.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
-        <dl className={`${styles.fiche} rv`}>
-          {fiche.map((f) => <div key={f.label}><dt>{f.label}</dt><dd>{f.value}</dd></div>)}
-        </dl>
+        <p className={styles.folio} aria-hidden="true">{String(p.ordre).padStart(2, '0')}</p>
+        <div className={`${styles.livret} rv`}>
+          <h2 className={styles.livretT}><span>{String(p.ordre).padStart(2, '0')}</span>{p.titre}</h2>
+          <ul className={styles.livretInfos}>
+            <li>{p.programme}</li>
+            {p.cadre && <li>{p.cadre}</li>}
+            {p.annee && <li>{t.projet.annee} : {p.annee}</li>}
+            {p.lieu && <li>{t.projet.lieu} : {p.lieu}</li>}
+          </ul>
+          <div className={styles.livretTexte}>{p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
+        </div>
       </section>
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
-      {mise.blocs.some((b) => b.t === 'composition') && <Parallaxe />}
 
       <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next}>
         <Link href={`/${lang}/projets/${next.slug}/`} className={styles.suivant}>

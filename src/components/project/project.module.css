@@ -16,14 +16,15 @@
 .ouvT { font-size: clamp(3rem, 7vw, 8rem); line-height: .94; letter-spacing: -0.035em; margin-top: 20px; max-width: 12ch; }
 .ouvMeta { margin-top: 28px; }
 
-/* ---------- présentation ---------- */
-.presentation { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 36px clamp(24px, 4vw, 80px); padding-top: clamp(72px, 12vh, 140px); }
-.chapeau { grid-column: 1 / span 6; font-size: clamp(1.45rem, 2.2vw, 2.2rem); font-weight: 300; line-height: 1.32; letter-spacing: -0.015em; }
-.corps { grid-column: 8 / span 5; display: grid; gap: 1em; font-size: 1rem; line-height: 1.85; padding-top: 6px; }
-.fiche { grid-column: 1 / -1; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); border-top: 1px solid var(--encre); }
-.fiche div { display: grid; gap: 6px; align-content: start; padding: 16px 20px 18px 0; border-bottom: 1px solid var(--filet); }
-.fiche dt { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
-.fiche dd { margin: 0; font-size: .92rem; line-height: 1.45; }
+/* ---------- présentation, comme dans le portfolio ---------- */
+.presentation { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px clamp(24px, 4vw, 80px); padding-top: clamp(72px, 12vh, 140px); align-items: start; }
+.folio { grid-column: 1 / span 5; font-size: clamp(6rem, 16vw, 15rem); font-weight: 300; line-height: .8; letter-spacing: -0.05em; color: var(--filet); }
+.livret { grid-column: 7 / span 6; display: grid; gap: 22px; }
+.livretT { display: flex; gap: 22px; align-items: baseline; font-size: clamp(1.2rem, 1.6vw, 1.5rem); font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
+.livretT span { color: var(--accent); }
+.livretInfos { list-style: none; margin: 0; padding: 0 0 0 calc(1.2em + 22px); display: grid; gap: 4px; font-size: .92rem; color: var(--gris); }
+.livretInfos li:first-child { color: var(--encre); }
+.livretTexte { display: grid; gap: 1em; padding-left: calc(1.2em + 22px); font-size: 1rem; line-height: 1.85; max-width: 62ch; }
 
 /* ---------- blocs ---------- */
 .corpsProjet { display: grid; gap: var(--rythme); padding-top: var(--rythme); }
@@ -84,16 +85,12 @@
 .visListe button[aria-current] { color: var(--encre); border-color: var(--encre); }
 .visAside { grid-column: 2; grid-row: 1; align-self: center; }
 
-/* composition de magazine : grille de 12 colonnes à cases carrées, images qui se chevauchent */
-.compo { container-type: inline-size; }
-.compoGrille { --u: calc(100cqw / 12); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
-.compoItem { position: relative; z-index: 1; align-self: start; padding: 0 clamp(6px, .8vw, 14px); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease); transition-delay: var(--d, 0s); }
-.compoItem[data-rv='wait'] { transform: translateY(50px); }
-.dessus { z-index: 2; }
-/* l'image du dessus couvre proprement celle d'en dessous : fond de page, pas de mélange des traits */
-.dessus :global(.fig), .dessus .fig { background: var(--fond); padding: clamp(10px, 1.2vw, 20px); }
-.dessus .figBtn img { mix-blend-mode: normal !important; }
-.compoLeg { margin-top: 14px; font-size: .68rem; letter-spacing: .06em; color: var(--gris); }
+/* composition de magazine : images côte à côte, de tailles différentes, décalées */
+.compo { display: grid; gap: clamp(48px, 9vh, 110px); }
+.compoRang { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2.4vw, 40px); align-items: start; }
+.compoItem { min-width: 0; }
+.compoItem .figBtn img { max-height: none; }
+
 /* poème en deux colonnes */
 .texteImg[data-colonnes] { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); justify-items: stretch; align-items: start; }
 .poemeTitre { font-size: clamp(2rem, 4vw, 3.8rem); font-weight: 300; line-height: 1; letter-spacing: -0.03em; color: var(--gris); }
@@ -131,13 +128,16 @@
 .suivantT { font-size: clamp(1.15rem, 1.8vw, 1.5rem); font-weight: 300; letter-spacing: -0.01em; transition: color .4s, letter-spacing .4s; }
 .suivant:hover .suivantT { color: var(--accent-f); }
 
-/* ---------- agrandissement ---------- */
-.lightbox { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--fond); color: var(--encre); }
-.lightbox::backdrop { background: var(--fond); }
-.lbBar { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 56px; padding-inline: var(--gut); font-size: .74rem; letter-spacing: .06em; border-bottom: 1px solid var(--filet); }
-.lbBar button { background: none; border: 0; font-size: .66rem; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; }
+/* ---------- agrandissement : l'image seule, sans cadre ; le © en bas ---------- */
+.lightbox { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--encre); }
+.lightbox::backdrop { background: rgba(254, 254, 252, .95); backdrop-filter: blur(6px); }
+.lbFermer { position: absolute; top: 18px; right: var(--gut); z-index: 3; width: 44px; height: 44px; border-radius: 50%; border: 0; background: transparent; font-size: 1.1rem; cursor: pointer; }
+.lbFermer:hover { color: var(--accent-f); }
+.lbCredit { position: absolute; left: 0; right: 0; bottom: 16px; text-align: center; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); pointer-events: none; }
 .viewerWrap { width: 100%; }
-.lbViewer { height: calc(100svh - 56px) !important; border: 0 !important; }
+.lbViewer { height: 100svh !important; border: 0 !important; background: transparent !important; }
+.lbViewer [class*='hint'], .lbViewer [class*='scale'] { display: none; }
+.lbViewer .tools { top: auto; bottom: 16px; right: var(--gut); }
 .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
 .tab { border: 1px solid var(--filet); background: transparent; padding: 6px 12px; font-size: .78rem; border-radius: 99px; }
 .tab[aria-selected='true'] { border-color: var(--encre); background: var(--encre); color: var(--fond); }
@@ -155,12 +155,13 @@
   .ouv[data-format='portrait'] .ouvTxt { padding-bottom: 28px; }
   .ouv[data-format='portrait'] .ouvImg img { height: auto; max-height: 80svh; }
   .presentation { grid-template-columns: 1fr; }
-  .chapeau, .corps, .fiche { grid-column: 1 / -1; }
+  .folio { display: none; }
+  .livret { grid-column: 1 / -1; }
   .texteImg, .texteImg[data-cote='g'], .comparer[data-deux], .vis[data-aside] { grid-template-columns: 1fr; }
   .texteImg[data-cote='g'] .imageCol { order: 0; }
   .rangee { flex-direction: column; }
-  .compoGrille { grid-template-columns: 1fr; grid-template-rows: none !important; gap: 32px; }
-  .compoItem { grid-column: 1 / -1 !important; grid-row: auto !important; padding: 0; translate: none !important; }
+  .compoRang { grid-template-columns: 1fr; row-gap: 32px; }
+  .compoItem { grid-column: 1 / -1 !important; margin-top: 0 !important; }
   .texteImg[data-colonnes] { grid-template-columns: 1fr; }
   .texteImg[data-colonnes] .poeme { columns: 1; }
   .rangItem { flex: none !important; width: 100%; }

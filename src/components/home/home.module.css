@@ -33,12 +33,12 @@
 .heroDessin { height: calc(100svh - var(--header-h) - 24px); margin-right: var(--gut); display: grid; place-items: center; }
 .couloir { position: relative; display: block; width: min(100%, (100svh - var(--header-h) - 24px) * 1.053); padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; }
 .couloir img { width: 100%; height: auto; mix-blend-mode: multiply; }
-/* le dessin en grand */
-.grand { width: min(1100px, calc(100vw - 32px)); max-height: calc(100svh - 32px); padding: 0; border: 0; background: var(--fond); box-shadow: 0 30px 80px rgba(43, 33, 28, .2); }
-.grand::backdrop { background: rgba(43, 33, 28, .4); backdrop-filter: blur(3px); }
-.grand img { width: 100%; height: auto; max-height: calc(100svh - 110px); object-fit: contain; }
-.grand .grandBar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 22px; font-size: .74rem; letter-spacing: .06em; color: var(--gris); border-top: 1px solid var(--filet); }
-.grandBar :global(.lien) { background-color: transparent; border: 0; padding-inline: 0; cursor: pointer; }
+/* le dessin en grand : l'image seule, le © en bas */
+.grand { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; display: grid; place-items: center; }
+.grand::backdrop { background: rgba(254, 254, 252, .95); backdrop-filter: blur(6px); }
+.grand img { max-width: calc(100vw - 2 * var(--gut)); max-height: calc(100svh - 120px); width: auto; height: auto; mix-blend-mode: multiply; }
+.grandFermer { position: absolute; top: 18px; right: var(--gut); width: 44px; height: 44px; border: 0; background: transparent; font-size: 1.1rem; cursor: pointer; }
+.grandCredit { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
 
 /* ---------- index des projets ---------- */
 .projets { padding-top: clamp(48px, 9vh, 112px); scroll-margin-top: var(--header-h); }
@@ -51,11 +51,11 @@
 .apercu { aspect-ratio: 4 / 5; height: auto !important; max-height: calc(100svh - var(--header-h) - 48px); min-height: 0 !important; }
 .liste { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--filet); }
 .liste li { border-bottom: 1px solid var(--filet); }
-.liste a { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; grid-template-areas: 'n t a' 'n p a'; column-gap: 14px; align-items: baseline; padding: 24px 0 22px; text-decoration: none; transition: padding .5s var(--ease); }
+.liste a { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); grid-template-areas: 'n t' 'n p'; column-gap: 14px; align-items: baseline; padding: 24px 0 22px; text-decoration: none; transition: padding .5s var(--ease); }
 .vignette { display: none; }
-.lN { grid-area: n; font-size: .66rem; letter-spacing: .2em; color: var(--gris); transition: color .4s; }
-.lT { grid-area: t; font-size: clamp(1.5rem, 2.2vw, 2.1rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.02em; color: var(--gris); transition: color .4s; }
-.lP { grid-area: p; margin-top: 6px; font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); line-height: 1.6; }
+.lN { grid-area: n; font-size: clamp(1.2rem, 1.7vw, 1.6rem); font-weight: 300; color: var(--gris); transition: color .4s; }
+.lT { grid-area: t; font-size: clamp(1.2rem, 1.7vw, 1.6rem); font-weight: 400; line-height: 1.2; letter-spacing: .08em; text-transform: uppercase; color: var(--gris); transition: color .4s; }
+.lP { grid-area: p; margin-top: 8px; font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); line-height: 1.6; }
 .lA { grid-area: a; font-size: .66rem; letter-spacing: .2em; color: var(--gris); }
 .liste li[data-on] .lT { color: var(--encre); }
 .liste li[data-on] .lN { color: var(--accent); }
@@ -79,11 +79,11 @@
   .couloir { width: 100%; }
   .index { grid-template-columns: 1fr; }
   .apercu { display: none; }
-  .liste a { grid-template-columns: 76px minmax(0, 1fr) auto; grid-template-areas: 'v t a' 'v p a'; padding: 14px 0; column-gap: 14px; }
+  .liste a { grid-template-columns: 76px minmax(0, 1fr); grid-template-areas: 'v t' 'v p'; padding: 14px 0; column-gap: 14px; }
   .liste li[data-on] a { padding-left: 0; }
   .vignette { display: block; grid-area: v; width: 76px; height: 76px; object-fit: cover; align-self: center; }
   .lN { display: none; }
-  .lT { color: var(--encre); font-size: 1.35rem; }
+  .lT { color: var(--encre); font-size: 1rem; }
   .grille { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 560px) {

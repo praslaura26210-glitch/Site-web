@@ -37,15 +37,13 @@ export default function Planche({ m, sizes, labels, className, caption = true, e
       {caption && <figcaption className={styles.cap}>{m.legende}</figcaption>}
       {open && (
         <dialog ref={dlg} className={styles.lightbox} onClose={() => setOpen(false)} aria-label={m.legende}>
-          <div className={styles.lbBar}>
-            <p>{m.legende}{credit && <span className={styles.credit}>{credit}</span>}</p>
-            <button type="button" onClick={() => dlg.current?.close()} autoFocus>{labels.fermer} ✕</button>
-          </div>
+          <button type="button" className={styles.lbFermer} onClick={() => dlg.current?.close()} aria-label={labels.fermer} autoFocus>✕</button>
           <PlanViewer
             className={styles.lbViewer}
             plans={[{ id: m.src, label: m.legende, svg: m.svg, preview: vectoriel ? undefined : m.src, full: m.full, ratio: m.w / m.h }]}
             labels={{ hint: labels.hint, zoomIn: labels.zoomIn, zoomOut: labels.zoomOut, reset: labels.reset }}
           />
+          {credit && <p className={styles.lbCredit}>{credit}</p>}
         </dialog>
       )}
     </figure>

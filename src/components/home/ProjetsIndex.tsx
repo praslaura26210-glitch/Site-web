@@ -21,8 +21,7 @@ export default function ProjetsIndex({ lignes, lang, voir }: { lignes: Ligne[]; 
               <img className={styles.vignette} src={l.img.srcSmall} alt="" width={l.img.w} height={l.img.h} loading="lazy" style={l.img.pos ? { objectPosition: l.img.pos } : undefined} />
               <span className={styles.lN}>{String(i + 1).padStart(2, '0')}</span>
               <span className={styles.lT}>{l.titre}</span>
-              <span className={styles.lP}>{l.programme}</span>
-              <span className={styles.lA}>{l.annee}</span>
+              <span className={styles.lP}>{l.programme}{l.annee ? ` • ${l.annee}` : ''}</span>
             </Link>
           </li>
         ))}

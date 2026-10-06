@@ -16,11 +16,10 @@ export type Bloc =
   /** une visionneuse : un grand dessin à la fois, flèches pour passer au suivant */
   | { t: 'visionneuse'; titre: L3; r: string[]; k?: 'chiffres' }
   /**
-   * composition de magazine : images placées librement sur une grille de 12 colonnes à cases carrées,
-   * qui peuvent se chevaucher. col = [colonne de départ, largeur], ligne = première ligne ;
-   * « dessus » : l'image passe par-dessus sa voisine et glisse un peu plus vite au défilement.
+   * composition de magazine : rangs de 12 colonnes ; dans chaque rang les images sont côte à côte,
+   * de largeurs différentes et décalées en hauteur (mt, en vh), sans se superposer.
    */
-  | { t: 'composition'; items: { r: string; col: [number, number]; ligne: number; dessus?: boolean }[]; legende?: boolean }
+  | { t: 'composition'; rangs: { r: string; col: [number, number]; mt?: number }[][] }
   /** existant / projet à comparer en faisant glisser un trait ; deux par ligne si « deux » */
   | { t: 'comparer'; deux?: boolean; items: { existant: string; projet: string; titre: L3 }[] };
 
@@ -73,26 +72,18 @@ export const MISES: Record<string, Mise> = {
   'illusion-d-envol': {
     ouverture: 'maquette',
     blocs: [
-      // double page 1 : la perspective à la main, l'axonométrie posée par-dessus, un détail en contrepoint
-      { t: 'composition', items: [
-        { r: 'croquis-perspective', col: [1, 5], ligne: 1 },
-        { r: 'axonometrie-eclatee', col: [4, 6], ligne: 4, dessus: true },
-        { r: 'detail-assemblage-3', col: [10, 3], ligne: 2 },
+      { t: 'composition', rangs: [
+        [{ r: 'croquis-perspective', col: [1, 5] }, { r: 'axonometrie-eclatee', col: [7, 6], mt: 14 }],
       ] },
       { t: 'texte', k: 'poeme', colonnes: true },
       { t: 'inter', titre: T.dessins },
-      // double page 2 : coupe et plan qui se chevauchent, la façade décalée dessous
-      { t: 'composition', items: [
-        { r: 'coupe-aa', col: [1, 8], ligne: 1 },
-        { r: 'plan-rdc', col: [6, 6], ligne: 3, dessus: true },
-        { r: 'facade-sud', col: [1, 7], ligne: 7 },
+      { t: 'composition', rangs: [
+        [{ r: 'coupe-aa', col: [1, 7] }, { r: 'plan-rdc', col: [9, 4], mt: 10 }],
+        [{ r: 'facade-sud', col: [3, 8] }],
       ] },
       { t: 'inter', titre: T.assemblages },
-      // double page 3 : les détails, en escalier, qui se recouvrent deux à deux
-      { t: 'composition', legende: false, items: [
-        { r: 'detail-assemblage-1', col: [1, 4], ligne: 1 },
-        { r: 'detail-assemblage-2', col: [3, 4], ligne: 4, dessus: true },
-        { r: 'detail-assemblage-4', col: [8, 4], ligne: 2, dessus: true },
+      { t: 'composition', rangs: [
+        [{ r: 'detail-assemblage-1', col: [1, 3] }, { r: 'detail-assemblage-2', col: [4, 3], mt: 8 }, { r: 'detail-assemblage-3', col: [7, 3] }, { r: 'detail-assemblage-4', col: [10, 3], mt: 8 }],
       ] },
     ],
   },

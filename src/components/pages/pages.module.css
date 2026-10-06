@@ -64,6 +64,9 @@
 /* ---------- à propos ---------- */
 .apropos > * + * { margin-top: clamp(88px, 14vh, 168px); }
 .aHead { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; padding-top: var(--header-h); max-width: var(--max); margin: 0 auto; padding-right: var(--gut); }
+.portrait { margin: 0; justify-self: end; }
+/* proportions toujours respectées : la hauteur suit la largeur (jamais d'étirement) */
+.portrait img { display: block; width: auto; height: min(calc(100svh - var(--header-h) - 24px), 900px); max-width: 100%; object-fit: contain; }
 .aHeadTxt { align-self: end; display: grid; gap: 26px; justify-items: start; padding: calc(var(--header-h) + 40px) var(--gut) clamp(40px, 8vh, 88px); max-width: 720px; }
 .aNom { font-size: clamp(3rem, 6.4vw, 6.4rem); font-weight: 300; line-height: .95; letter-spacing: -0.035em; }
 .avant { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.8; max-width: 46ch; }
@@ -105,7 +108,7 @@
   .head, .deux, .outils, .legal, .form { grid-template-columns: 1fr; }
   .aHead { grid-template-columns: 1fr; min-height: 0; }
   .aHeadTxt { order: 2; padding-top: 32px; padding-bottom: 0; }
-  .portrait img { height: auto; max-height: 76svh; margin-top: var(--header-h); }
+  .portrait img { width: 100%; height: auto; margin-top: var(--header-h); }
   .etapes li { grid-template-columns: 1fr; }
   .etDate { grid-row: auto; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
