@@ -7,7 +7,7 @@ import styles from '@/components/pages/pages.module.css';
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
-  return { ...meta(lang, '/mentions-legales/', `${t.meta.mentionsTitle} · Laura Pras`, t.meta.mentionsTitle), robots: { index: false } };
+  return { ...meta(lang, '/mentions-legales/', `${t.meta.mentionsTitle} · Laura Pras`, t.meta.mentionsTitle), robots: { index: false, follow: true } };
 }
 
 // Hébergeur : à vérifier sur netlify.com au moment de la mise en ligne (adresse relevée dans des sources secondaires).
