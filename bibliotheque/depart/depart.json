@@ -42,7 +42,8 @@
       "modifieLe": "2026-09-01T12:00:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "rde",
+        "visite"
       ],
       "resume": "Hameau d’alpage de la vallée de la Stura (1 360 m), refuge de la première bande partisane « Giustizia e Libertà » en 1943-1944, puis abandonné. Racheté par la Fondation Nuto Revelli, il est restauré à partir de 2008 : refuge, bibliothèque, musée des récits, théâtre en plein air."
     },
@@ -122,7 +123,8 @@
       "modifieLe": "2026-09-01T12:02:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "rde",
+        "visite"
       ]
     },
     {
@@ -294,7 +296,8 @@
       "modifieLe": "2026-09-01T12:06:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "rde",
+        "visite"
       ],
       "resume": "Office de tourisme livré en 2024 (avec DLD architectes), au pied des arches de l’aqueduc romain du Gier, au Plat de l’Air. Limité à 100 m² d’emprise sur un terrain agricole en pente, le bâtiment se compose en strates et accompagne l’aqueduc sans s’imposer."
     },
@@ -336,7 +339,7 @@
       "modifieLe": "2026-09-01T12:07:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "anglais"
       ],
       "resume": "École construite en quatre mois (2005) avec les habitants de Rudrapur : terre et paille au rez-de-chaussée, bambou à l’étage, et six « grottes » où les enfants lisent ou se reposent. Prix Aga Khan d’architecture 2007."
     },
@@ -375,7 +378,8 @@
       "modifieLe": "2026-09-01T12:08:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "rde",
+        "visite"
       ],
       "resume": "Immeuble de bureaux de trois niveaux (2018-2020) : quatorze arches paraboliques monumentales en pisé enveloppent un noyau en bois. La terre vient de Saint-Quentin-Fallavier, à 30 km, le bois des Alpes. Le pisé revient en ville, où il avait été interdit dans les zones basses de Lyon après la crue de 1856."
     },
@@ -416,7 +420,8 @@
       "modifieLe": "2026-09-01T12:09:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "rde",
+        "visite"
       ],
       "resume": "Maison communale conçue et construite en 2018-2019 par l’atelier designbuildLAB, étudiants de première année de master de l’ENSA Grenoble, avec le LabEx AE&CC. Enveloppe en pisé, isolant en fibre de bois et charpente bois."
     },
@@ -457,7 +462,8 @@
       "modifieLe": "2026-09-01T12:10:00.000Z",
       "depuis": 1,
       "categories": [
-        "rde"
+        "rde",
+        "visite"
       ]
     },
     {
@@ -1048,7 +1054,9 @@
       "source": "https://www.powerhouse-company.com/huis-aan-de-haven",
       "images": [],
       "credit": "",
-      "categories": [],
+      "categories": [
+        "numerique"
+      ],
       "motsCles": [
         "terre cuite",
         "métal",
@@ -1079,7 +1087,9 @@
       "source": "https://www.archdaily.com/1020455",
       "images": [],
       "credit": "",
-      "categories": [],
+      "categories": [
+        "anglais"
+      ],
       "motsCles": [
         "paille",
         "bois",
@@ -1148,7 +1158,9 @@
       "source": "https://www.metalocus.es/en/news/camouflaged-forest-buen-retiro-rural-house-renovation-dario-castellino",
       "images": [],
       "credit": "",
-      "categories": [],
+      "categories": [
+        "visite"
+      ],
       "motsCles": [
         "pierre",
         "bois brûlé",
@@ -1202,6 +1214,18 @@
     {
       "id": "studio-villefort",
       "nom": "Studio Vielfaure"
+    },
+    {
+      "id": "anglais",
+      "nom": "Anglais"
+    },
+    {
+      "id": "numerique",
+      "nom": "Numérique"
+    },
+    {
+      "id": "visite",
+      "nom": "Visite de projet"
     }
   ]
 }

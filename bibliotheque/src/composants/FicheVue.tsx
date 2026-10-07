@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import type { Fiche } from '../types';
 import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
@@ -480,50 +480,35 @@ export function FicheVue({ id }: { id: string }) {
   );
 }
 
-/** Plans, coupes, façades : une image à la fois, entière, qu'on fait défiler (flèches ou doigt). */
+/** Plans, coupes, façades : en quinconce sur deux colonnes, chaque image entière, avec sa légende. */
 function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void }) {
-  const piste = useRef<HTMLUListElement>(null);
-  const [actuel, setActuel] = useState(0);
-  const documents = fiche.images.slice(1);
-  const n = documents.length;
-  const aller = (i: number) => {
-    const el = piste.current;
-    if (!el) return;
-    el.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * el.clientWidth, behavior: 'smooth' });
-  };
+  const documents = fiche.images.slice(1).map((im, k) => ({ im, i: k + 1 }));
+  const colonnes = [documents.filter((_, k) => k % 2 === 0), documents.filter((_, k) => k % 2 === 1)];
   const ajout = (
     <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
       <Icone nom="plus" taille={18} />
     </AjoutImage>
   );
-  if (!n) return <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>;
+  if (!documents.length) return <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>;
   return (
-    <section className="bloc documents">
-      <div className="documents-tete">
-        <h2>Plans, coupes et documents</h2>
-        <span className="documents-actions">
-          {n > 1 && <span className="compteur">{actuel + 1} / {n}</span>}
-          {n > 1 && <button className="bouton-icone" onClick={() => aller(actuel - 1)} disabled={actuel === 0} aria-label="Précédent"><Icone nom="gauche" taille={18} /></button>}
-          {n > 1 && <button className="bouton-icone" onClick={() => aller(actuel + 1)} disabled={actuel === n - 1} aria-label="Suivant"><Icone nom="droite" taille={18} /></button>}
-          <span title="Ajouter un plan, une coupe, une façade">{ajout}</span>
-        </span>
-      </div>
-      <ul
-        className="carrousel"
-        ref={piste}
-        onScroll={(e) => { const el = e.currentTarget; setActuel(Math.round(el.scrollLeft / Math.max(1, el.clientWidth))); }}
-      >
-        {documents.map((im, k) => (
-          <li key={im.id}>
-            <figure>
-              <button onClick={() => ouvrir(k + 1)} aria-label={`Agrandir : ${im.credit || `document ${k + 1}`}`}>
-                <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
-              </button>
-              <figcaption>{im.credit}</figcaption>
-            </figure>
-          </li>
+    <section className="documents" aria-label="Plans, coupes et documents">
+      <div className="quinconce">
+        {colonnes.map((col, c) => (
+          <ul key={c}>
+            {col.map(({ im, i }) => (
+              <li key={im.id}>
+                <figure>
+                  <button onClick={() => ouvrir(i)} aria-label={`Agrandir : ${im.credit || `document ${i}`}`}>
+                    <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
+                  </button>
+                  {im.credit && <figcaption>{im.credit}</figcaption>}
+                </figure>
+              </li>
+            ))}
+          </ul>
         ))}
-      </ul>
+      </div>
+      <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>
     </section>
   );
 }

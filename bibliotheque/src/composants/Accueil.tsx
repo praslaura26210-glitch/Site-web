@@ -86,6 +86,19 @@ function CarteProjet({ fiche: f }: { fiche: Fiche }) {
   );
 }
 
+/** Accueil : quelques projets côte à côte, à la même hauteur, chaque image entière. */
+function RangeeProjets({ fiches }: { fiches: Fiche[] }) {
+  const ratios = fiches.map((f) => (f.images[0] ? f.images[0].w / f.images[0].h : 4 / 3));
+  const somme = (n: number) => ratios.slice(0, n).reduce((a, b) => a + b, 0);
+  // la largeur est limitée pour que la rangée ne soit jamais trop haute (images en portrait)
+  const style = { '--r3': somme(3), '--r2': somme(2) } as React.CSSProperties;
+  return (
+    <ul className="rangee-projets" style={style}>
+      {fiches.map((f, i) => <li key={f.id} style={{ flexGrow: ratios[i], flexBasis: 0 }}><CarteProjet fiche={f} /></li>)}
+    </ul>
+  );
+}
+
 function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
   if (rayon === 'projets') {
     return (
@@ -241,7 +254,7 @@ function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
   // quelques fiches seulement ; le reste avec « Voir plus »
-  const LIMITE: Record<Rayon, number> = { livres: 6, articles: 4, projets: 6 };
+  const LIMITE: Record<Rayon, number> = { livres: 6, articles: 4, projets: 3 };
 
   if (!biblio.fiches.length) {
     return (
@@ -264,7 +277,7 @@ function VueAccueil() {
             </div>
             {liste.length ? (
               <>
-                <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />
+                {r === 'projets' ? <RangeeProjets fiches={liste.slice(0, LIMITE.projets)} /> : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />}
               </>
             ) : (
               <p className="discret rangee-vide">

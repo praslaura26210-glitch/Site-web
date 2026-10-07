@@ -5,6 +5,9 @@ export const CATEGORIES_DEPART: Categorie[] = [
   { id: 'memoire', nom: 'Mémoire' },
   { id: 'rde', nom: 'Rapport d’études' },
   { id: 'studio-villefort', nom: 'Studio Vielfaure' },
+  { id: 'anglais', nom: 'Anglais' },
+  { id: 'numerique', nom: 'Numérique' },
+  { id: 'visite', nom: 'Visite de projet' },
 ];
 
 /** Liste de départ des mots-clés, modifiable dans les réglages. */
