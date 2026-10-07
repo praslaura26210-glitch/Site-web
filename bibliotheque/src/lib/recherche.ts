@@ -94,6 +94,7 @@ function champs(f: Fiche): Champ[] {
     { nom: 'résumé', poids: 3, textes: [f.resume ?? ''] },
     { nom: 'mes notes', poids: 2, textes: [f.retenu ?? ''] },
     { nom: 'citation', poids: 2, textes: f.citations.map((c) => `${c.texte} ${c.note ?? ''}`) },
+    { nom: 'lien', poids: 1, textes: (f.liens ?? []).map((l) => l.titre).concat(f.images.map((i) => i.credit ?? '')) },
     { nom: 'autre', poids: 1, textes: [f.emplacement ?? '', f.source ?? '', f.credit ?? '', f.annee ?? ''] },
   ];
 }

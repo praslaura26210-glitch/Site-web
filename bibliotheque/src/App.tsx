@@ -9,7 +9,7 @@ import { Accueil } from './composants/Accueil';
 import { FicheVue } from './composants/FicheVue';
 import { Formulaire, type Preremplissage } from './composants/Formulaire';
 import { Reglages } from './composants/Reglages';
-import { DEMO } from './lib/demo';
+import { DEMO, enregistreEnLigne, envoyerImagesLocales, imagesLocales } from './lib/demo';
 import { domaine } from './lib/libelles';
 
 type Phase = { nom: 'chargement' } | { nom: 'connexion'; configure: boolean } | { nom: 'erreur'; message: string } | { nom: 'prete' };
@@ -124,6 +124,16 @@ export function App() {
     })();
   }, [biblio, majFiche]);
 
+  // version claude.ai : les images gardées dans ce navigateur partent en ligne, pour le téléphone aussi
+  const envoiLance = useRef(false);
+  useEffect(() => {
+    if (!biblio || !DEMO || envoiLance.current || !imagesLocales()) return;
+    envoiLance.current = true;
+    envoyerImagesLocales()
+      .then(async (r) => { if (r.envoyees) setBiblio(await api.bibliotheque()); })
+      .catch(() => { /* on réessaiera au prochain lancement */ });
+  }, [biblio]);
+
   const ctx = useMemo<Contexte | null>(() => {
     if (!biblio) return null;
     const motsCles = biblio.familles.flatMap((f) => f.groupes.flatMap((g) => g.mots.map((mot) => ({ mot, famille: f.nom, groupe: g.nom }))));
@@ -173,9 +183,9 @@ export function App() {
 
   return (
     <Ctx.Provider value={ctx}>
-      {DEMO && (
+      {DEMO && !enregistreEnLigne && (
         <p className="bandeau-demo">
-          Aperçu de démonstration : tes essais restent dans ce navigateur. <a href="#/reglages">En savoir plus</a>
+          Aperçu : tes ajouts restent dans ce navigateur. <a href="#/reglages">En savoir plus</a>
         </p>
       )}
       <Navigation>

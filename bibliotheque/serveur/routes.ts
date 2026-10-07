@@ -108,6 +108,10 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     citations: (Array.isArray(f.citations) ? f.citations : [])
       .filter((c: any) => c && typeof c.texte === 'string' && c.texte.trim())
       .map((c: any) => ({ texte: texte(c.texte)!, page: texte(c.page, 40), note: texte(c.note, 2000) })),
+    liens: (Array.isArray(f.liens) ? f.liens : [])
+      .filter((l: any) => l && typeof l.url === 'string' && /^https?:\/\//i.test(l.url.trim()))
+      .slice(0, 50)
+      .map((l: any) => ({ titre: texte(l.titre, 300) ?? '', url: texte(l.url, 2000)!.trim() })),
     voirAussi: (Array.isArray(f.voirAussi) ? f.voirAussi : [])
       .filter((l: any) => l && typeof l.id === 'string' && l.id !== f.id)
       .map((l: any) => ({ id: l.id, note: texte(l.note, 500) })),

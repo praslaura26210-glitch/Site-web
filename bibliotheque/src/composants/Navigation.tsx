@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { RAYONS, type Rayon } from '../types';
 import { useBiblio } from '../contexte';
@@ -47,29 +47,29 @@ export function Navigation({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="entete-droite">
-            <form className="recherche" role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
-              <Icone nom="loupe" taille={18} />
-              <input
-                ref={champ}
-                id="recherche"
-                type="search"
-                enterKeyHint="search"
-                placeholder="Rechercher"
-                aria-label="Rechercher un titre, un auteur, un mot de mes notes"
-                value={filtres.q}
-                onChange={(e) => chercher(e.target.value)}
-              />
-              {filtres.q && (
-                <button type="button" className="recherche-vider" onClick={() => chercher('')} aria-label="Effacer la recherche">
-                  <Icone nom="fermer" taille={15} />
-                </button>
-              )}
-            </form>
+            <div className="zone-recherche">
+              <MenuCategories />
+              <form className="recherche" role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
+                <Icone nom="loupe" taille={18} />
+                <input
+                  ref={champ}
+                  id="recherche"
+                  type="search"
+                  enterKeyHint="search"
+                  placeholder="Rechercher"
+                  aria-label="Rechercher un titre, un auteur, un mot de mes notes"
+                  value={filtres.q}
+                  onChange={(e) => chercher(e.target.value)}
+                />
+                {filtres.q && (
+                  <button type="button" className="recherche-vider" onClick={() => chercher('')} aria-label="Effacer la recherche">
+                    <Icone nom="fermer" taille={15} />
+                  </button>
+                )}
+              </form>
+            </div>
             <a className="bouton-icone lien-coeur" href="#/favoris" aria-current={actuel('favoris')} aria-label="Favoris" title="Favoris" onClick={vider}>
-              <Icone nom="coeur" />
-            </a>
-            <a className="bouton-icone" href="#/reglages" aria-current={actuel('reglages')} aria-label="Réglages" title="Réglages">
-              <Icone nom="reglages" />
+              <Icone nom="coeur" taille={22} />
             </a>
             <a className="bouton principal petit ajouter" href="#/ajouter"><Icone nom="plus" taille={16} /> Ajouter</a>
           </div>
@@ -83,11 +83,58 @@ export function Navigation({ children }: { children: ReactNode }) {
         {RAYONS.map((r) => (
           <a key={r} href={`#/${r}`} aria-current={actuel(r)} onClick={vider}><Icone nom={ICONE_RAYON[r]} /> {NOM_RAYON[r]}</a>
         ))}
-        <a href="#/favoris" aria-current={actuel('favoris')} onClick={vider}><Icone nom="coeur" /> Favoris</a>
       </nav>
       {!/^(ajouter|modifier)/.test(route) && (
         <a className="ajout-flottant" href="#/ajouter" aria-label="Ajouter une fiche"><Icone nom="plus" taille={24} /></a>
       )}
     </>
+  );
+}
+
+/** Petit menu à côté de la recherche : les catégories (mémoire, studio…), et les réglages. */
+function MenuCategories() {
+  const { biblio, route, setFiltres } = useBiblio();
+  const [ouvert, setOuvert] = useState(false);
+  const boite = useRef<HTMLDivElement>(null);
+  const actuelle = route.startsWith('travail/') ? decodeURIComponent(route.split('/')[1]) : null;
+  const nom = actuelle ? biblio.categories.find((c) => c.id === actuelle)?.nom : null;
+
+  useEffect(() => setOuvert(false), [route]);
+
+  useEffect(() => {
+    if (!ouvert) return;
+    const fermer = (e: Event) => { if (!boite.current?.contains(e.target as Node)) setOuvert(false); };
+    const echap = (e: KeyboardEvent) => { if (e.key === 'Escape') setOuvert(false); };
+    addEventListener('pointerdown', fermer);
+    addEventListener('keydown', echap);
+    return () => { removeEventListener('pointerdown', fermer); removeEventListener('keydown', echap); };
+  }, [ouvert]);
+
+  const aller = () => { setOuvert(false); setFiltres(FILTRES_VIDES); };
+
+  return (
+    <div className="menu-categories" ref={boite}>
+      <button type="button" className={`bouton-menu${actuelle ? ' actif' : ''}`} aria-expanded={ouvert} aria-haspopup="menu" onClick={() => setOuvert((o) => !o)}>
+        <span>{nom ?? 'Catégories'}</span>
+        <Icone nom="bas" taille={14} />
+      </button>
+      {ouvert && (
+        <div className="menu" role="menu">
+          {biblio.categories.length === 0 && <p className="discret">Aucune catégorie.</p>}
+          {biblio.categories.map((c) => {
+            const n = biblio.fiches.filter((f) => f.categories?.includes(c.id)).length;
+            return (
+              <a key={c.id} role="menuitem" href={`#/travail/${encodeURIComponent(c.id)}`} aria-current={actuelle === c.id ? 'page' : undefined} onClick={aller}>
+                {c.nom}<span className="compte">{n}</span>
+              </a>
+            );
+          })}
+          <hr />
+          <a role="menuitem" href="#/reglages" className="menu-secondaire" onClick={aller}>
+            <Icone nom="reglages" taille={16} /> Gérer les catégories et réglages
+          </a>
+        </div>
+      )}
+    </div>
   );
 }

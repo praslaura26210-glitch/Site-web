@@ -169,11 +169,11 @@ export function Accueil() {
   );
 }
 
+/** Accueil : pour chaque rayon, une rangée des derniers ajouts et « Voir plus ». */
 function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
-  const parRayon = (r: Rayon) => recents.filter((f) => rayonDe(f.type) === r);
-  const LIMITE: Record<Rayon, number> = { livres: 12, projets: 9, articles: 6 };
+  const LIMITE = 10;
 
   if (!biblio.fiches.length) {
     return (
@@ -185,22 +185,33 @@ function VueAccueil() {
   }
 
   return (
-    <div>
-      <div style={{ height: 24 }} />
+    <div className="accueil">
       {RAYONS.map((r) => {
-        const liste = parRayon(r);
+        const liste = recents.filter((f) => rayonDe(f.type) === r);
         return (
-          <Section key={r} titre={NOM_RAYON[r]} compte={liste.length} vers={liste.length > LIMITE[r] ? `#/${r}` : undefined}>
+          <section key={r} className="section">
+            <div className="section-tete">
+              <h2><a href={`#/${r}`}>{NOM_RAYON[r]}</a><span className="compte">{liste.length}</span></h2>
+              {liste.length > 0 && <a className="voir-plus" href={`#/${r}`}>Voir plus <span aria-hidden="true">→</span></a>}
+            </div>
             {liste.length ? (
-              <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />
+              <ul className={`rangee ${r}`}>
+                {liste.slice(0, LIMITE).map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
+                {liste.length > LIMITE && (
+                  <li className="rangee-fin">
+                    <a href={`#/${r}`}>Voir les {liste.length} <span aria-hidden="true">→</span></a>
+                  </li>
+                )}
+              </ul>
             ) : (
-              <p className="discret">
+              <p className="discret rangee-vide">
                 Aucun {r === 'articles' ? 'article' : r === 'livres' ? 'livre' : 'projet'} pour l’instant. <a className="lien-texte" href="#/ajouter">Ajouter</a>
               </p>
             )}
-          </Section>
+          </section>
         );
       })}
+      <p className="pied-accueil"><a className="lien-texte petit" href="#/reglages">Réglages</a></p>
     </div>
   );
 }

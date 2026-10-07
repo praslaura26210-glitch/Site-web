@@ -31,7 +31,7 @@ fs.mkdirSync(path.join(OUT, 'demo-images'), { recursive: true });
 for (const [id, b64] of Object.entries(depart.images)) {
   fs.writeFileSync(path.join(OUT, 'demo-images', `${id}.webp`), Buffer.from(b64, 'base64'));
 }
-const fiches = depart.fiches.map(({ depuis, ...f }) => f);
+const fiches = depart.fiches;
 fs.writeFileSync(path.join(OUT, 'demo-depart.json'), JSON.stringify({ version: depart.version, fiches, categories: depart.categories }));
 
 console.log(`Aperçu : ${(page.length / 1024 / 1024).toFixed(2)} Mo, ${Object.keys(depart.images).length} images`);

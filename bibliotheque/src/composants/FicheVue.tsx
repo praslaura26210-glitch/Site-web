@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useState } from 'react';
-import type { Fiche } from '../types';
+import type { Fiche, LienWeb } from '../types';
 import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
+import { compresser } from '../lib/images';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
 
@@ -100,6 +101,80 @@ function MesNotes({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
         {avecProjets && <ProjetsCites fiche={fiche} projets={projets} />}
       </div>
     </details>
+  );
+}
+
+/** Liens utiles (vidéo, plans…), avec un petit formulaire pour en ajouter un sur place. */
+function Liens({ fiche, enregistrer }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void }) {
+  const liens = fiche.liens ?? [];
+  const [ouvert, setOuvert] = useState(false);
+  const [titre, setTitre] = useState('');
+  const [url, setUrl] = useState('');
+  const valider = () => {
+    let u = url.trim();
+    if (!u) return;
+    if (!/^https?:\/\//i.test(u)) u = `https://${u}`;
+    const l: LienWeb = { titre: titre.trim() || domaine(u), url: u };
+    enregistrer({ ...fiche, liens: [...liens, l] }, 'Lien ajouté.');
+    setTitre(''); setUrl(''); setOuvert(false);
+  };
+  return (
+    <section className="bloc liens-fiche">
+      {liens.length > 0 && <h2>Liens</h2>}
+      {liens.length > 0 && (
+        <ul>
+          {liens.map((l, i) => (
+            <li key={i}>
+              <a href={l.url} target="_blank" rel="noreferrer">
+                <span>{l.titre || domaine(l.url)}</span>
+                <span className="discret">{domaine(l.url)} <Icone nom="lien" taille={14} /></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      {ouvert ? (
+        <div className="ajout-lien">
+          <input autoFocus placeholder="Titre : Visite en vidéo, Plans…" value={titre} onChange={(e) => setTitre(e.target.value)} />
+          <input type="url" inputMode="url" placeholder="Adresse : https://…" value={url} onChange={(e) => setUrl(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); valider(); } }} />
+          <div className="champ-ligne">
+            <button type="button" className="bouton petit principal" onClick={valider} disabled={!url.trim()}>Ajouter</button>
+            <button type="button" className="bouton petit" onClick={() => setOuvert(false)}>Annuler</button>
+          </div>
+        </div>
+      ) : (
+        <button type="button" className="lien-texte petit ajout-discret" onClick={() => setOuvert(true)}>
+          <Icone nom="plus" taille={14} /> Ajouter un lien (vidéo, plans, article…)
+        </button>
+      )}
+    </section>
+  );
+}
+
+/** Choisir une image sur l'appareil et l'ajouter tout de suite à la fiche. */
+function AjoutImage({ fiche, enregistrer, className, children }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; className: string; children: React.ReactNode }) {
+  const { notifier } = useBiblio();
+  const [envoi, setEnvoi] = useState(false);
+  async function ajouter(fichiers: FileList | null) {
+    if (!fichiers?.length) return;
+    setEnvoi(true);
+    const nouvelles = [];
+    for (const fichier of [...fichiers]) {
+      try {
+        nouvelles.push(await api.envoyerImage(await compresser(fichier)));
+      } catch (e) {
+        notifier(e instanceof Error ? e.message : 'Image non envoyée.');
+      }
+    }
+    setEnvoi(false);
+    if (nouvelles.length) enregistrer({ ...fiche, images: [...fiche.images, ...nouvelles] }, nouvelles.length > 1 ? 'Images ajoutées.' : 'Image ajoutée.');
+  }
+  return (
+    <label className={className} aria-busy={envoi}>
+      {envoi ? <span>Envoi de l’image…</span> : children}
+      <input type="file" accept="image/*" multiple hidden onChange={(e) => { ajouter(e.target.files); e.target.value = ''; }} />
+    </label>
   );
 }
 
@@ -318,6 +393,8 @@ export function FicheVue({ id }: { id: string }) {
         </section>
       )}
 
+      <Liens fiche={fiche} enregistrer={enregistrer} />
+
       {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} />}
 
       {fiche.citations.length > 0 && (
@@ -367,9 +444,10 @@ export function FicheVue({ id }: { id: string }) {
                 <img src={srcImage(fiche.images[0].id)} alt={`Couverture : ${fiche.titre}`} style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
               </button>
             ) : (
-              <a className="couv-a-ajouter" href={`#/modifier/${encodeURIComponent(id)}`} title="Ajouter la couverture">
+              <AjoutImage fiche={fiche} enregistrer={enregistrer} className="couv-a-ajouter">
                 <Couverture fiche={fiche} />
-              </a>
+                <span className="couv-ajout-texte"><Icone nom="photo" taille={16} /> Ajouter la couverture</span>
+              </AjoutImage>
             )}
           </div>
           <div className="fiche-contenu">
@@ -397,13 +475,21 @@ export function FicheVue({ id }: { id: string }) {
                   ))}
                 </div>
               )}
-              {credit(active) && <p className="credit-image">{credit(active)}</p>}
+              <div className="sous-galerie">
+                {credit(active) ? <p className="credit-image">{credit(active)}</p> : <span />}
+                <span className="actions-images">
+                  <AjoutImage fiche={fiche} enregistrer={enregistrer} className="lien-texte petit">
+                    <Icone nom="plus" taille={14} /> Image (plan, coupe…)
+                  </AjoutImage>
+                  <a className="lien-texte petit" href={`#/modifier/${encodeURIComponent(id)}`}>Ordre et légendes</a>
+                </span>
+              </div>
             </div>
           ) : (
-            <a className="image-a-ajouter" href={`#/modifier/${encodeURIComponent(id)}`}>
+            <AjoutImage fiche={fiche} enregistrer={enregistrer} className="image-a-ajouter">
               <Icone nom="photo" taille={24} />
-              <span>Pas encore d’image. Ajouter une photo ou une illustration trouvée en ligne</span>
-            </a>
+              <span>Pas encore d’image. Touche ici pour ajouter une photo, une capture ou un plan.</span>
+            </AjoutImage>
           )}
           <div className="fiche-contenu">{corps}</div>
         </div>

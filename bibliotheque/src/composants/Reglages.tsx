@@ -5,7 +5,7 @@ import { api, srcImage } from '../lib/api';
 import { lireFavoris, estVideo, type Favori } from '../lib/favoris';
 import { normaliser } from '../lib/recherche';
 import { creerZip } from '../lib/zip';
-import { DEMO, reinitialiserDemo } from '../lib/demo';
+import { DEMO, enregistreEnLigne, envoyerImagesLocales, imagesLocales, reinitialiserDemo } from '../lib/demo';
 import { Icone } from './Icone';
 
 export function Reglages() {
@@ -114,11 +114,40 @@ function Travaux() {
 function Demo() {
   const { remplacer, notifier, naviguer } = useBiblio();
   const [confirmer, setConfirmer] = useState(false);
+  const [locales, setLocales] = useState(imagesLocales);
+  const [envoi, setEnvoi] = useState(false);
+  if (enregistreEnLigne) {
+    return (
+      <section className="reglage">
+        <h2>Enregistrement</h2>
+        {locales > 0 && (
+          <>
+            <p className="aide aide-forte">
+              {locales} image{locales > 1 ? 's sont' : ' est'} encore seulement sur cet appareil : envoie-les pour les voir aussi sur ton téléphone.
+            </p>
+            <button className="bouton principal" disabled={envoi} onClick={async () => {
+              setEnvoi(true);
+              const r = await envoyerImagesLocales().catch(() => ({ envoyees: 0, restantes: locales }));
+              remplacer(await api.bibliotheque());
+              setLocales(r.restantes);
+              setEnvoi(false);
+              notifier(r.restantes ? 'Envoi impossible pour le moment. Vérifie les autorisations de la page (menu Permissions).' : 'Images envoyées.');
+            }}>{envoi ? 'Envoi…' : 'Envoyer les images'}</button>
+          </>
+        )}
+        <p className="aide">
+          Tes fiches et tes images sont enregistrées sur claude.ai, avec cette page : tu les retrouves sur l’ordinateur
+          et le téléphone, connectée à ton compte. Seul ce qui demande d’aller chercher sur Internet (couverture par ISBN,
+          image d’une page web) n’est pas possible ici : ajoute une capture d’écran ou une photo.
+        </p>
+      </section>
+    );
+  }
   return (
     <section className="reglage">
-      <h2>Aperçu de démonstration</h2>
+      <h2>Aperçu</h2>
       <p className="aide">
-        Ici, tes essais restent dans ce navigateur. Sur le site en ligne s’ajoutent : la recherche par ISBN,
+        Ici, tes ajouts restent dans ce navigateur. Sur le site en ligne s’ajoutent : la recherche par ISBN,
         la récupération des images, la sauvegarde en .zip, l’installation sur le téléphone et le mot de passe.
       </p>
       {confirmer ? (
@@ -127,7 +156,7 @@ function Demo() {
             reinitialiserDemo();
             remplacer(await api.bibliotheque());
             setConfirmer(false);
-            notifier('Démo remise à zéro.');
+            notifier('Aperçu remis à zéro.');
             naviguer('');
           }}>Oui, tout effacer</button>
           <button className="bouton" onClick={() => setConfirmer(false)}>Annuler</button>

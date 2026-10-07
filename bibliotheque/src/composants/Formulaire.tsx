@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Citation, Famille, Fiche, TypeFiche } from '../types';
+import type { Citation, Famille, Fiche, LienWeb, TypeFiche } from '../types';
 import { TYPES } from '../types';
 import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { compresser } from '../lib/images';
-import { NOM_AUTEUR, NOM_EDITEUR, NOM_TYPE } from '../lib/libelles';
+import { NOM_EDITEUR, NOM_TYPE } from '../lib/libelles';
+import { DEMO } from '../lib/demo';
 import { normaliser, suggerer } from '../lib/recherche';
 import { estVideo } from '../lib/favoris';
 import { Icone } from './Icone';
@@ -24,6 +25,34 @@ interface NouveauMot {
   famille: string;
   groupe: string;
 }
+
+/** Les intitulés du formulaire, dits simplement selon ce qu'on ajoute. */
+const LIBELLES: Record<TypeFiche, { titre: string; auteurs: string; editeur: string; exempleEditeur: string; lien: string; images: string; aideImages: string; aideResume: string }> = {
+  livre: {
+    titre: 'Titre du livre', auteurs: 'Auteur(s)', editeur: 'Éditeur', exempleEditeur: 'Ex. : Terre vivante', lien: '',
+    images: 'Couverture',
+    aideImages: 'Une photo ou une capture d’écran de la couverture.',
+    aideResume: 'De quoi parle le livre ? Quelques lignes.',
+  },
+  article: {
+    titre: 'Titre de l’article', auteurs: 'Auteur(s)', editeur: 'Revue ou site', exempleEditeur: 'Ex. : d’architectures', lien: 'Lien vers l’article',
+    images: 'Image', aideImages: 'Facultatif : une capture de l’article ou une illustration.', aideResume: 'De quoi parle l’article ?',
+  },
+  projet: {
+    titre: 'Nom du projet', auteurs: 'Architecte(s) ou agence', editeur: 'Lieu', exempleEditeur: 'Ex. : Palma, Espagne', lien: 'Page du projet (ArchDaily, site de l’architecte…)',
+    images: 'Images du projet',
+    aideImages: 'La plus belle photo en premier : elle s’affiche en grand. Ajoute ensuite plans, coupes, façades, axonométries, avec une légende.',
+    aideResume: 'Le programme, le site, les matériaux, ce qui fait le projet.',
+  },
+  site: {
+    titre: 'Titre de la page', auteurs: 'Auteur(s)', editeur: 'Nom du site', exempleEditeur: '', lien: 'Adresse de la page',
+    images: 'Image', aideImages: 'Facultatif : une capture de la page.', aideResume: 'Ce qu’on y trouve.',
+  },
+  video: {
+    titre: 'Titre de la vidéo', auteurs: 'Réalisation ou intervenant', editeur: 'Chaîne ou plateforme', exempleEditeur: 'Ex. : YouTube, Arte', lien: 'Lien vers la vidéo',
+    images: 'Image', aideImages: 'Facultatif : une capture de la vidéo.', aideResume: 'De quoi parle la vidéo ?',
+  },
+};
 
 const aujourdhui = () => new Date().toISOString().slice(0, 10);
 
@@ -201,22 +230,13 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
   }
 
   const t = f.type;
-  const lienRecuperable = t !== 'livre' && /^https?:\/\/\S+\.\S+/.test(f.source ?? '');
+  const lienRecuperable = !DEMO && t !== 'livre' && /^https?:\/\/\S+\.\S+/.test(f.source ?? '');
+  const L = LIBELLES[t];
+  const nbPlus = [f.isbn, f.pages, f.numero, f.emplacement, t === 'livre' ? f.source : '', ...(f.citeDans ?? [])].filter(Boolean).length + f.motsCles.length;
 
   return (
     <form className="formulaire" onSubmit={enregistrer}>
       <h1 className="titre-page">{existante ? 'Modifier la fiche' : 'Nouvelle fiche'}</h1>
-
-      <fieldset className="champ">
-        <legend className="etiquette">Type</legend>
-        <div className="segments">
-          {TYPES.map((x) => (
-            <button type="button" key={x} className="pastille" aria-pressed={t === x} onClick={() => maj({ type: x, consulte: (x === 'site' || x === 'video') && !f.consulte ? aujourdhui() : f.consulte })}>
-              {NOM_TYPE[x]}
-            </button>
-          ))}
-        </div>
-      </fieldset>
 
       {restaure && (
         <p className="aide aide-forte">
@@ -228,9 +248,21 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </p>
       )}
 
-      {t === 'livre' && (
-        <div className="champ">
-          <label className="etiquette" htmlFor="isbn">ISBN</label>
+      <fieldset className="champ">
+        <legend className="etiquette">C’est…</legend>
+        <div className="segments">
+          {TYPES.map((x) => (
+            <button type="button" key={x} className="pastille" aria-pressed={t === x} onClick={() => maj({ type: x, consulte: (x === 'site' || x === 'video') && !f.consulte ? aujourdhui() : f.consulte })}>
+              {NOM_TYPE[x]}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      {t === 'livre' && !DEMO && (
+        <div className="encadre-isbn">
+          <label className="etiquette" htmlFor="isbn">Remplir automatiquement</label>
+          <p className="aide">Tape l’ISBN, le numéro à 13 chiffres au dos du livre (sous le code-barres, il commence par 978). Le titre, l’auteur, l’éditeur et la couverture se remplissent seuls.</p>
           <div className="champ-ligne">
             <input
               id="isbn"
@@ -245,88 +277,78 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
               {cherche === 'isbn' ? 'Recherche…' : 'Remplir'}
             </button>
           </div>
-          <p className="aide">Remplit le titre, l’auteur, l’année, l’éditeur et la couverture (Open Library, Google Books, BnF).</p>
         </div>
       )}
 
       {aide && <p className="aide aide-forte" role="status">{aide}</p>}
 
-      <div className="champ">
-        <label className="etiquette" htmlFor="titre">Titre</label>
-        <input id="titre" className="grand" value={f.titre} onChange={(e) => maj({ titre: e.target.value })} required />
-      </div>
-
-      <div className="champ">
-        <span className="etiquette">{NOM_AUTEUR[t]}{t === 'projet' ? 's ou agence' : 's'}</span>
-        <ChampPuces valeurs={f.auteurs} changer={(auteurs) => maj({ auteurs })} propositions={valeurs.auteurs} placeholder="Nom, puis Entrée" />
-      </div>
-
-      <div className="champs-ligne">
+      <section className="partie">
+        <h2>L’essentiel</h2>
         <div className="champ">
-          <label className="etiquette" htmlFor="annee">Année</label>
-          <input id="annee" inputMode="numeric" value={f.annee ?? ''} onChange={(e) => maj({ annee: e.target.value })} />
+          <label className="etiquette" htmlFor="titre">{L.titre}</label>
+          <input id="titre" className="grand" value={f.titre} onChange={(e) => maj({ titre: e.target.value })} required />
         </div>
-        <div className="champ large">
-          <label className="etiquette" htmlFor="editeur">{NOM_EDITEUR[t]}</label>
-          <input id="editeur" list="liste-editeurs" value={f.editeur ?? ''} onChange={(e) => maj({ editeur: e.target.value })} />
-          <datalist id="liste-editeurs">{valeurs.editeurs.map((v) => <option key={v} value={v} />)}</datalist>
-        </div>
-      </div>
 
-      {(t === 'livre' || t === 'article') && (
+        <div className="champ">
+          <span className="etiquette">{L.auteurs}</span>
+          <ChampPuces valeurs={f.auteurs} changer={(auteurs) => maj({ auteurs })} propositions={valeurs.auteurs} placeholder="Tape un nom, puis Entrée (un nom à la fois)" />
+        </div>
+
         <div className="champs-ligne">
-          {t === 'article' && (
-            <div className="champ">
-              <label className="etiquette" htmlFor="numero">Numéro</label>
-              <input id="numero" value={f.numero ?? ''} onChange={(e) => maj({ numero: e.target.value })} />
-            </div>
-          )}
           <div className="champ">
-            <label className="etiquette" htmlFor="pages">Pages</label>
-            <input id="pages" value={f.pages ?? ''} onChange={(e) => maj({ pages: e.target.value })} placeholder={t === 'article' ? '12-27' : ''} />
+            <label className="etiquette" htmlFor="annee">Année</label>
+            <input id="annee" inputMode="numeric" value={f.annee ?? ''} onChange={(e) => maj({ annee: e.target.value })} />
+          </div>
+          <div className="champ large">
+            <label className="etiquette" htmlFor="editeur">{L.editeur}</label>
+            <input id="editeur" list="liste-editeurs" placeholder={L.exempleEditeur} value={f.editeur ?? ''} onChange={(e) => maj({ editeur: e.target.value })} />
+            <datalist id="liste-editeurs">{valeurs.editeurs.map((v) => <option key={v} value={v} />)}</datalist>
           </div>
         </div>
-      )}
 
-      <div className="champ">
-        <label className="etiquette" htmlFor="source">{t === 'livre' ? 'Lien (facultatif)' : t === 'projet' ? 'Site du projet (ArchDaily, site de l’architecte…)' : 'Lien'}</label>
-        <div className="champ-ligne">
-          <input id="source" type="url" inputMode="url" placeholder="https://" value={f.source ?? ''} onChange={(e) => maj({ source: e.target.value })} />
-          {lienRecuperable && (
-            <button type="button" className="bouton" onClick={remplirLien} disabled={cherche !== null}>
-              {cherche === 'lien' ? 'Lecture…' : 'Récupérer'}
-            </button>
-          )}
-          {f.titre.trim() && (
-            <a className="bouton" href={rechercheWeb(f)} target="_blank" rel="noreferrer">
-              <Icone nom="chercher" taille={16} /> Chercher en ligne
-            </a>
-          )}
-        </div>
-        <p className="aide">
-          {lienRecuperable ? '« Récupérer » lit la page : titre, site, année et image. ' : ''}
-          « Chercher en ligne » ouvre une recherche avec le titre : copie ensuite l’adresse trouvée ici.
-        </p>
-      </div>
+        {t !== 'livre' && (
+          <div className="champ">
+            <label className="etiquette" htmlFor="source">{L.lien}</label>
+            <div className="champ-ligne">
+              <input id="source" type="url" inputMode="url" placeholder="https://" value={f.source ?? ''} onChange={(e) => maj({ source: e.target.value })} />
+              {lienRecuperable && (
+                <button type="button" className="bouton" onClick={remplirLien} disabled={cherche !== null}>
+                  {cherche === 'lien' ? 'Lecture…' : 'Récupérer'}
+                </button>
+              )}
+              {f.titre.trim() && (
+                <a className="bouton" href={rechercheWeb(f)} target="_blank" rel="noreferrer">
+                  <Icone nom="chercher" taille={16} /> Chercher
+                </a>
+              )}
+            </div>
+            <p className="aide">
+              Colle l’adresse de la page (copiée dans la barre du navigateur).
+              {lienRecuperable ? ' « Récupérer » remplit le titre, l’année et l’image depuis cette page.' : ''}
+            </p>
+          </div>
+        )}
 
-      {(t === 'site' || t === 'video') && (
-        <div className="champ etroit">
-          <label className="etiquette" htmlFor="consulte">Consulté le</label>
-          <input id="consulte" type="date" value={f.consulte ?? ''} onChange={(e) => maj({ consulte: e.target.value })} />
-        </div>
-      )}
+        {(t === 'site' || t === 'video') && (
+          <div className="champ etroit">
+            <label className="etiquette" htmlFor="consulte">Consulté le</label>
+            <input id="consulte" type="date" value={f.consulte ?? ''} onChange={(e) => maj({ consulte: e.target.value })} />
+          </div>
+        )}
+      </section>
 
-      <div className="champ">
-        <span className="etiquette">{t === 'livre' ? 'Couverture et photos' : 'Images'}</span>
+      <section className="partie">
+        <h2>{L.images}</h2>
+        <p className="aide">{L.aideImages}</p>
         <div className="images-form">
           {f.images.map((im, i) => (
             <div key={im.id} className="image-form">
               <img src={srcImage(im.id)} alt="" />
               <div className="champ">
-                <label className="image-une" htmlFor={`credit-${im.id}`}>{i === 0 ? (t === 'livre' ? 'Couverture' : 'Image principale') : `Image ${i + 1}`}</label>
+                <label className="image-une" htmlFor={`credit-${im.id}`}>{i === 0 ? (t === 'livre' ? 'Couverture' : 'Image principale (en grand sur la fiche)') : `Image ${i + 1}`}</label>
                 <input
                   id={`credit-${im.id}`}
-                  placeholder="Crédit : © photographe, source…"
+                  placeholder={t === 'livre' ? 'Crédit (facultatif)' : 'Légende et crédit : Plan RDC, © photographe…'}
                   value={im.credit ?? ''}
                   onChange={(e) => maj({ images: f.images.map((x) => (x.id === im.id ? { ...x, credit: e.target.value } : x)) })}
                 />
@@ -339,94 +361,148 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
                     maj({ images: im2 });
                   }}><Icone nom="gauche" taille={16} /></button>
                 )}
-                <button type="button" className="bouton-icone" aria-label="Retirer" title="Retirer" onClick={() => maj({ images: f.images.filter((x) => x.id !== im.id) })}>
+                <button type="button" className="bouton-icone" aria-label="Retirer l’image" title="Retirer l’image" onClick={() => maj({ images: f.images.filter((x) => x.id !== im.id) })}>
                   <Icone nom="fermer" taille={16} />
                 </button>
               </div>
             </div>
           ))}
-          {Array.from({ length: imagesEnCours }, (_, i) => <div key={`e${i}`} className="image-form en-cours"><span>Envoi de la photo…</span></div>)}
+          {Array.from({ length: imagesEnCours }, (_, i) => <div key={`e${i}`} className="image-form en-cours"><span>Envoi de l’image…</span></div>)}
           <label className="image-ajout">
             <Icone nom="photo" taille={22} />
-            <span>{f.images.length ? 'Ajouter une photo' : t === 'livre' ? 'Photographier la couverture' : 'Ajouter une photo'}</span>
+            <span>{f.images.length ? 'Ajouter une image' : t === 'livre' ? 'Ajouter la couverture' : 'Ajouter une image'}</span>
             <input type="file" accept="image/*" multiple onChange={(e) => { ajouterImages(e.target.files); e.target.value = ''; }} />
           </label>
-          <div className="champ-ligne">
-            <input
-              id="adresse-image"
-              type="url"
-              inputMode="url"
-              placeholder="Ou coller l’adresse d’une image trouvée en ligne"
-              value={adresseImage}
-              onChange={(e) => setAdresseImage(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); imageDepuisAdresse(); } }}
-            />
-            <button type="button" className="bouton" onClick={imageDepuisAdresse} disabled={!adresseImage.trim() || imagesEnCours > 0}>Ajouter</button>
-          </div>
-          <p className="aide">Sur une page (ArchDaily, site de l’architecte…), clic droit sur l’image → « Copier l’adresse de l’image », puis colle-la ici.</p>
+          {!DEMO && (
+            <>
+              <div className="champ-ligne">
+                <input
+                  id="adresse-image"
+                  type="url"
+                  inputMode="url"
+                  placeholder="Ou coller l’adresse d’une image trouvée en ligne"
+                  value={adresseImage}
+                  onChange={(e) => setAdresseImage(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); imageDepuisAdresse(); } }}
+                />
+                <button type="button" className="bouton" onClick={imageDepuisAdresse} disabled={!adresseImage.trim() || imagesEnCours > 0}>Ajouter</button>
+              </div>
+              <p className="aide">Sur une page (ArchDaily, site de l’architecte…), clic droit sur l’image → « Copier l’adresse de l’image », puis colle-la ici.</p>
+            </>
+          )}
         </div>
-      </div>
+      </section>
 
-      <div className="champ">
-        <label className="etiquette" htmlFor="resume">Résumé</label>
-        <textarea id="resume" className="lecture" rows={4} value={f.resume ?? ''} onChange={(e) => maj({ resume: e.target.value })} placeholder="De quoi parle ce livre, ce projet ? Quelques lignes." />
-      </div>
+      <section className="partie">
+        <h2>Contenu</h2>
+        <div className="champ">
+          <label className="etiquette" htmlFor="resume">Résumé</label>
+          <textarea id="resume" className="lecture" rows={4} value={f.resume ?? ''} onChange={(e) => maj({ resume: e.target.value })} placeholder={L.aideResume} />
+        </div>
 
-      <div className="champ">
-        <label className="etiquette" htmlFor="retenu">Mes notes</label>
-        <textarea id="retenu" className="lecture long" rows={10} value={f.retenu ?? ''} onChange={(e) => maj({ retenu: e.target.value })} placeholder="Ce que j’en retiens, en détail." />
-        <p className="aide">Une ligne vide entre deux paragraphes. « ## » au début d’une ligne pour un intertitre, « - » pour une liste, « [?] » après un mot à vérifier.</p>
-      </div>
+        <div className="champ">
+          <label className="etiquette" htmlFor="retenu">Mes notes</label>
+          <textarea id="retenu" className="lecture long" rows={10} value={f.retenu ?? ''} onChange={(e) => maj({ retenu: e.target.value })} placeholder="Ce que j’en retiens, en détail." />
+          <p className="aide">Une ligne vide entre deux paragraphes. « ## » au début d’une ligne pour un intertitre, « - » pour une liste, « [?] » après un mot à vérifier.</p>
+        </div>
 
-      <div className="champ">
-        <span className="etiquette">Catégorie (mémoire, studio, cours…)</span>
-        <ChampTravaux choisis={f.categories} changer={(categories) => maj({ categories })} />
-      </div>
+        <div className="champ">
+          <span className="etiquette">Citations</span>
+          <ChampCitations citations={f.citations} changer={(citations) => maj({ citations })} />
+        </div>
+
+        <div className="champ">
+          <span className="etiquette">Liens utiles</span>
+          <p className="aide">Une vidéo, une conférence, les plans en PDF, un entretien, un article…</p>
+          <ChampLiens liens={f.liens ?? []} changer={(liens) => maj({ liens })} />
+        </div>
+      </section>
+
+      <section className="partie">
+        <h2>Rangement</h2>
+        <div className="champ">
+          <span className="etiquette">Catégorie</span>
+          <p className="aide">Le travail pour lequel tu gardes cette référence : mémoire, rapport d’études, un studio, un cours.</p>
+          <ChampTravaux choisis={f.categories} changer={(categories) => maj({ categories })} />
+        </div>
+
+        <div className="cases">
+          {t !== 'projet' && (
+            <label className="case">
+              <input type="checkbox" checked={f.statut === 'lu'} onChange={(e) => maj({ statut: e.target.checked ? 'lu' : 'a-lire' })} />
+              <span className="point-lu" /> Lu
+            </label>
+          )}
+          <label className="case">
+            <input type="checkbox" checked={!!f.favori} onChange={(e) => maj({ favori: e.target.checked })} />
+            <Icone nom="coeur" taille={18} /> Favori
+          </label>
+        </div>
+      </section>
 
       <details className="avance">
-        <summary>Mots-clés pour la recherche {f.motsCles.length > 0 && <span className="discret">({f.motsCles.length})</span>}</summary>
+        <summary>Plus d’informations {nbPlus > 0 && <span className="discret">({nbPlus})</span>}</summary>
         <div>
-      <div className="champ">
-        <p className="aide">Ils ne s’affichent qu’en petit sur la fiche ; ils servent à retrouver la fiche par thème.</p>
-        <ChampMotsCles
-          choisis={f.motsCles}
-          changer={(motsCles) => maj({ motsCles })}
-          nouveaux={etat.nouveaux}
-          ajouterNouveau={(n) => setEtat((e) => ({ f: { ...e.f, motsCles: [...e.f.motsCles, n.mot] }, nouveaux: [...e.nouveaux, n] }))}
-        />
-      </div>
+          {t === 'livre' && DEMO && (
+            <div className="champ">
+              <label className="etiquette" htmlFor="isbn">ISBN</label>
+              <input id="isbn" inputMode="numeric" autoComplete="off" placeholder="978…" value={f.isbn ?? ''} onChange={(e) => maj({ isbn: e.target.value })} />
+              <p className="aide">Le numéro à 13 chiffres au dos du livre, sous le code-barres. Facultatif : il sert à identifier l’édition exacte.</p>
+            </div>
+          )}
+
+          {(t === 'livre' || t === 'article') && (
+            <div className="champs-ligne">
+              {t === 'article' && (
+                <div className="champ">
+                  <label className="etiquette" htmlFor="numero">Numéro de la revue</label>
+                  <input id="numero" value={f.numero ?? ''} onChange={(e) => maj({ numero: e.target.value })} />
+                </div>
+              )}
+              <div className="champ">
+                <label className="etiquette" htmlFor="pages">{t === 'livre' ? 'Nombre de pages' : 'Pages'}</label>
+                <input id="pages" value={f.pages ?? ''} onChange={(e) => maj({ pages: e.target.value })} placeholder={t === 'article' ? '12-27' : ''} />
+              </div>
+            </div>
+          )}
+
+          {t === 'livre' && (
+            <div className="champ">
+              <label className="etiquette" htmlFor="source">Page du livre en ligne (éditeur, librairie)</label>
+              <div className="champ-ligne">
+                <input id="source" type="url" inputMode="url" placeholder="https://" value={f.source ?? ''} onChange={(e) => maj({ source: e.target.value })} />
+                {f.titre.trim() && (
+                  <a className="bouton" href={rechercheWeb(f)} target="_blank" rel="noreferrer"><Icone nom="chercher" taille={16} /> Chercher</a>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="champ">
+            <label className="etiquette" htmlFor="emplacement">Où la trouver</label>
+            <input id="emplacement" list="liste-emplacements" value={f.emplacement ?? ''} onChange={(e) => maj({ emplacement: e.target.value })} placeholder="Chez moi, BU ENSAG, PDF…" />
+            <datalist id="liste-emplacements">{valeurs.emplacements.map((v) => <option key={v} value={v} />)}</datalist>
+          </div>
+
+          {t === 'projet' && (
+            <div className="champ">
+              <span className="etiquette">Présenté dans (livre ou article)</span>
+              <ChampCiteDans fiche={f} changer={(citeDans) => maj({ citeDans })} />
+            </div>
+          )}
+
+          <div className="champ">
+            <span className="etiquette">Mots-clés pour la recherche</span>
+            <p className="aide">Discrets sur la fiche ; ils servent à retrouver la fiche par thème (terre crue, réhabilitation…).</p>
+            <ChampMotsCles
+              choisis={f.motsCles}
+              changer={(motsCles) => maj({ motsCles })}
+              nouveaux={etat.nouveaux}
+              ajouterNouveau={(n) => setEtat((e) => ({ f: { ...e.f, motsCles: [...e.f.motsCles, n.mot] }, nouveaux: [...e.nouveaux, n] }))}
+            />
+          </div>
         </div>
       </details>
-
-      <div className="champ">
-        <span className="etiquette">Citations</span>
-        <ChampCitations citations={f.citations} changer={(citations) => maj({ citations })} />
-      </div>
-
-      {t === 'projet' && (
-        <div className="champ">
-          <span className="etiquette">Cité dans (livre ou article)</span>
-          <ChampCiteDans fiche={f} changer={(citeDans) => maj({ citeDans })} />
-        </div>
-      )}
-
-      {t !== 'projet' && (
-        <label className="case">
-          <input type="checkbox" checked={f.statut === 'lu'} onChange={(e) => maj({ statut: e.target.checked ? 'lu' : 'a-lire' })} />
-          <span className="point-lu" /> Lu
-        </label>
-      )}
-
-      <label className="case">
-        <input type="checkbox" checked={!!f.favori} onChange={(e) => maj({ favori: e.target.checked })} />
-        <Icone nom="coeur" taille={18} /> Dans mes favoris
-      </label>
-
-      <div className="champ">
-        <label className="etiquette" htmlFor="emplacement">Où la trouver</label>
-        <input id="emplacement" list="liste-emplacements" value={f.emplacement ?? ''} onChange={(e) => maj({ emplacement: e.target.value })} placeholder="Chez moi, BU ENSAG, PDF…" />
-        <datalist id="liste-emplacements">{valeurs.emplacements.map((v) => <option key={v} value={v} />)}</datalist>
-      </div>
 
       <div className="formulaire-pied">
         <button type="button" className="bouton" onClick={annuler}>Annuler</button>
@@ -435,6 +511,27 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </button>
       </div>
     </form>
+  );
+}
+
+/** Liens ajoutés à la fiche : un titre et une adresse. */
+export function ChampLiens({ liens, changer }: { liens: LienWeb[]; changer: (l: LienWeb[]) => void }) {
+  const majL = (i: number, p: Partial<LienWeb>) => changer(liens.map((l, k) => (k === i ? { ...l, ...p } : l)));
+  return (
+    <div className="liens-form">
+      {liens.map((l, i) => (
+        <div key={i} className="champ-ligne lien-form">
+          <input className="lien-titre" placeholder="Titre : Visite en vidéo, Plans…" value={l.titre} onChange={(e) => majL(i, { titre: e.target.value })} />
+          <input type="url" inputMode="url" placeholder="https://" value={l.url} onChange={(e) => majL(i, { url: e.target.value })} />
+          <button type="button" className="bouton-icone" aria-label="Retirer le lien" onClick={() => changer(liens.filter((_, k) => k !== i))}>
+            <Icone nom="fermer" taille={16} />
+          </button>
+        </div>
+      ))}
+      <button type="button" className="bouton" onClick={() => changer([...liens, { titre: '', url: '' }])}>
+        <Icone nom="plus" taille={16} /> Ajouter un lien
+      </button>
+    </div>
   );
 }
 

@@ -30,6 +30,12 @@ export interface Lien {
   note?: string;
 }
 
+/** Lien ajouté à une fiche : vidéo, conférence, plans, article… */
+export interface LienWeb {
+  titre: string;
+  url: string;
+}
+
 export interface Fiche {
   id: string;
   type: TypeFiche;
@@ -55,6 +61,8 @@ export interface Fiche {
   /** Ancien champ, n'est plus affiché. */
   lienTravail?: string;
   citations: Citation[];
+  /** Liens utiles : vidéo, plans, entretien, documents. */
+  liens?: LienWeb[];
   voirAussi: Lien[];
   statut: Statut;
   /** Où la trouver : chez moi, BU, PDF, dossier des favoris… */
