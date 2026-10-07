@@ -140,15 +140,7 @@ function Mosaique({ fiches }: { fiches: Fiche[] }) {
   );
 }
 
-function Grille({ fiches, rayon, mixte }: { fiches: Fiche[]; rayon: Rayon; mixte?: boolean }) {
-  // favoris, catégories, architecte : les projets à la même taille que les livres
-  if (rayon === 'projets' && mixte) {
-    return (
-      <ul className="grille livres grille-projets-mixte">
-        {fiches.map((f) => <li key={f.id}><PetitProjet fiche={f} /></li>)}
-      </ul>
-    );
-  }
+function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
   if (rayon === 'projets') return <Mosaique fiches={fiches} />;
   return (
     <ul className={`grille ${rayon}`}>
@@ -157,14 +149,36 @@ function Grille({ fiches, rayon, mixte }: { fiches: Fiche[]; rayon: Rayon; mixte
   );
 }
 
-function Section({ titre, compte, vers, children }: { titre: string; compte?: number; vers?: string; children: React.ReactNode }) {
+/**
+ * Favoris, catégorie, architecte : une rangée par rayon, comme sur l'accueil, sans trait sous le titre.
+ * La flèche n'apparaît que s'il y a plus de fiches que la rangée n'en montre ; elle déplie le reste.
+ */
+function Rangee({ rayon: r, fiches }: { rayon: Rayon; fiches: Fiche[] }) {
+  const [tout, setTout] = useState(false);
+  const max = useColonnes() === 2 ? 3 : 8;
+  const affiches = tout ? fiches : fiches.slice(0, max);
   return (
-    <section className="section">
+    <section className={`section${tout ? ' toutes' : ''}`}>
       <div className="section-tete">
-        <h2>{titre}{compte !== undefined && <span className="compte">{compte}</span>}</h2>
-        {vers && <a href={vers}>Tout voir</a>}
+        <h2>{NOM_RAYON[r]}</h2>
+        {fiches.length > max && (
+          <button
+            type="button"
+            className="voir-plus"
+            aria-expanded={tout}
+            aria-label={tout ? 'Montrer moins' : `Voir les ${fiches.length} ${NOM_RAYON[r].toLowerCase()}`}
+            title={tout ? 'Montrer moins' : `Voir les ${fiches.length}`}
+            onClick={() => setTout((t) => !t)}
+          >
+            <Icone nom="fleche" taille={22} />
+          </button>
+        )}
       </div>
-      {children}
+      {r === 'projets' ? (
+        <ul className="grille projets">
+          {affiches.map((f) => <li key={f.id}><PetitProjet fiche={f} /></li>)}
+        </ul>
+      ) : <Grille fiches={affiches} rayon={r} />}
     </section>
   );
 }
@@ -276,15 +290,12 @@ export function Accueil() {
       ) : rayon ? (
         <Grille fiches={fiches} rayon={rayon} />
       ) : (
-        RAYONS.map((r) => {
-          const part = fiches.filter((f) => rayonDe(f.type) === r);
-          if (!part.length) return null;
-          return (
-            <Section key={r} titre={NOM_RAYON[r]} compte={part.length}>
-              <Grille fiches={part} rayon={r} mixte />
-            </Section>
-          );
-        })
+        <div className="accueil rangees">
+          {RAYONS.map((r) => {
+            const part = fiches.filter((f) => rayonDe(f.type) === r);
+            return part.length ? <Rangee key={r} rayon={r} fiches={part} /> : null;
+          })}
+        </div>
       )}
     </div>
   );

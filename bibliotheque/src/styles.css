@@ -1116,11 +1116,6 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 .accueil .carte-projet-petit:hover .carte-image > img.couv { transform: scale(1.03); }
 .carte-projet-petit .carte-titre { text-wrap: balance; }
 
-/* ===== Favoris, catégories, architecte : projets à la taille des livres, photo recadrée ===== */
-.grille-projets-mixte .carte-projet-petit .carte-image { display: block; aspect-ratio: 4 / 3; overflow: hidden; }
-.grille-projets-mixte .carte-projet-petit .carte-image > img.couv { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
-.grille-projets-mixte .carte-projet-petit .couv-dessinee { height: 100%; aspect-ratio: auto; }
-
 /* ===== Accueil (ordinateur) : nom des projets centré sous la photo ===== */
 @media (min-width: 961px) {
   .accueil .carte-projet-petit .carte-texte { text-align: center; }
@@ -1129,10 +1124,38 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 
 /* ===== Téléphone : « Bibliothèque » reste le plus grand titre, les titres de page passent en dessous ===== */
 @media (max-width: 700px) {
-  .tete-page { gap: 6px; padding: 30px 0 14px; }
   .tete-page h1 { font-size: 24px; }
-  .tete-page .barre-filtres { padding: 18px 0 6px; }
   .tete-page .tri { font-size: 13px; }
-  .tete-page ~ .section { padding: 26px 0 12px; gap: 18px; }
   .section-tete h2, .accueil .section-tete h2 { font-size: 20px; }
 }
+
+/* ===== Favoris, catégories, architecte : rangées comme l'accueil, sans trait sous Livres / Projets ===== */
+.rangees .section-tete { border-bottom: 0; padding-bottom: 0; }
+.rangees .section.toutes .grille > li { display: block !important; }
+.section-tete > button.voir-plus { display: grid; place-items: center; width: 38px; height: 38px; margin: -6px -8px -6px 0; border: 0; border-radius: 50%; background: none; color: var(--terracotta); cursor: pointer; align-self: center; }
+.section-tete > button.voir-plus:hover { background: var(--terracotta-fond); }
+.section-tete > button.voir-plus svg { transition: transform .2s; }
+.section-tete > button.voir-plus[aria-expanded='true'] svg { transform: rotate(90deg); }
+
+/* ===== Titre de page posé sur son trait, le tri à droite sur la même ligne ===== */
+.tete-page { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 20px; padding: 44px 0 10px; border-bottom: 1px solid var(--filet); }
+.tete-page h1 { flex: 0 1 auto; line-height: 1; }
+.tete-page .barre-filtres { flex: 0 1 auto; margin-left: auto; padding: 0 0 2px; border-bottom: 0; }
+.tete-page .etiquette { flex-basis: 100%; }
+.tete-page .sous-titre { order: 5; flex-basis: 100%; }
+.tete-page .filtres-actifs { order: 6; flex-basis: 100%; }
+@media (max-width: 700px) {
+  .tete-page { padding: 34px 0 8px; gap: 8px 14px; }
+  .tete-page .barre-filtres { padding: 0 0 1px; }
+}
+
+/* ===== Titres centrés sous les couvertures et les photos, partout ===== */
+.carte .carte-texte { text-align: center; }
+.carte .carte-meta { justify-content: center; }
+/* favoris : la couverture prend sa propre hauteur, sans blanc au-dessus */
+.rangees .grille.livres .carte-image { aspect-ratio: auto !important; }
+.rangees .grille.livres { align-items: start; }
+.rangees .section:first-child { padding-top: 22px; }
+/* un peu d'air entre le trait du titre et les couvertures */
+.tete-page + .grille, .tete-page + .mosaique { margin-top: 26px; }
+@media (max-width: 700px) { .tete-page + .grille, .tete-page + .mosaique { margin-top: 16px; } }
