@@ -6,6 +6,7 @@ declare module 'cloudflare:workers' {
         sql: {
           exec<T = Record<string, unknown>>(query: string, ...params: unknown[]): { toArray(): T[]; one(): T };
         };
+        transactionSync<T>(fn: () => T): T;
       };
     };
     env: Env;

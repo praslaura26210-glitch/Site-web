@@ -126,7 +126,7 @@ export async function telechargerImage(url: string): Promise<{ data: ArrayBuffer
   const r = await lire(url, 8000);
   if (!r) return null;
   const data = await r.arrayBuffer();
-  if (data.byteLength > 4_000_000) return null;
+  if (data.byteLength > 10_000_000) return null;
   const type = typeImage(data);
   const dim = dimensions(data);
   if (!type || !dim || dim.w < 40 || dim.h < 40) return null;

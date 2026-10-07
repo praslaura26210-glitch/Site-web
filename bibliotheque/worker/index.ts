@@ -25,6 +25,8 @@ export class Coffre extends DurableObject<Env> {
     super(ctx, env);
     this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS donnees (cle TEXT PRIMARY KEY, valeur TEXT NOT NULL)');
     this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS images (id TEXT PRIMARY KEY, type TEXT NOT NULL, data BLOB NOT NULL)');
+    // une case de la base ne prend pas plus de 2 Mo : les grandes images sont rangées en plusieurs morceaux
+    this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS morceaux (id TEXT NOT NULL, n INTEGER NOT NULL, data BLOB NOT NULL, PRIMARY KEY (id, n))');
   }
 
   async lireBibliotheque(): Promise<Bibliotheque | null> {
@@ -40,16 +42,31 @@ export class Coffre extends DurableObject<Env> {
 
   async lireImage(id: string): Promise<{ data: ArrayBuffer; type: string } | null> {
     const r = this.ctx.storage.sql.exec<{ type: string; data: ArrayBuffer }>('SELECT type, data FROM images WHERE id = ?', id).toArray();
-    return r.length ? { data: r[0].data, type: r[0].type } : null;
+    if (!r.length) return null;
+    const suite = this.ctx.storage.sql.exec<{ data: ArrayBuffer }>('SELECT data FROM morceaux WHERE id = ? ORDER BY n', id).toArray();
+    if (!suite.length) return { data: r[0].data, type: r[0].type };
+    const parts = [r[0].data, ...suite.map((m) => m.data)].map((d) => new Uint8Array(d));
+    const tout = new Uint8Array(parts.reduce((t, p) => t + p.byteLength, 0));
+    let i = 0;
+    for (const p of parts) { tout.set(p, i); i += p.byteLength; }
+    return { data: tout.buffer, type: r[0].type };
   }
 
   async ecrireImage(id: string, data: ArrayBuffer, type: string): Promise<void> {
-    if (data.byteLength > MAX) throw new Error('Image trop lourde (2 Mo au plus).');
-    this.ctx.storage.sql.exec('INSERT INTO images (id, type, data) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET type = excluded.type, data = excluded.data', id, type, data);
+    if (data.byteLength > 12_000_000) throw new Error('Image trop lourde (12 Mo au plus).');
+    this.ctx.storage.transactionSync(() => {
+      this.ctx.storage.sql.exec('DELETE FROM morceaux WHERE id = ?', id);
+      const morceau = (n: number) => data.slice(n * MAX, (n + 1) * MAX);
+      this.ctx.storage.sql.exec('INSERT INTO images (id, type, data) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET type = excluded.type, data = excluded.data', id, type, morceau(0));
+      for (let n = 1; n * MAX < data.byteLength; n++) {
+        this.ctx.storage.sql.exec('INSERT INTO morceaux (id, n, data) VALUES (?, ?, ?)', id, n, morceau(n));
+      }
+    });
   }
 
   async supprimerImage(id: string): Promise<void> {
     this.ctx.storage.sql.exec('DELETE FROM images WHERE id = ?', id);
+    this.ctx.storage.sql.exec('DELETE FROM morceaux WHERE id = ?', id);
   }
 }
 

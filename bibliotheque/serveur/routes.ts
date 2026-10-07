@@ -262,7 +262,7 @@ export async function gerer(req: Request): Promise<Response> {
       const type = typeImage(data);
       const dim = dimensions(data);
       if (!type || !dim) return erreur('Format d’image non reconnu.', 400);
-      if (data.byteLength > 5_000_000) return erreur('Image trop lourde.', 413);
+      if (data.byteLength > 12_000_000) return erreur('Image trop lourde.', 413);
       const id = crypto.randomUUID();
       await ecrireImage(id, data, type);
       return json({ id, ...dim });
@@ -335,6 +335,6 @@ export async function gerer(req: Request): Promise<Response> {
     return erreur('Adresse inconnue.', 404);
   } catch (e) {
     console.error(e);
-    return erreur('Erreur du serveur.', 500);
+    return erreur(`Erreur du serveur${e instanceof Error && e.message ? ` : ${e.message}` : '.'}`, 500);
   }
 }
