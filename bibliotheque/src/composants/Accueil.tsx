@@ -140,7 +140,15 @@ function Mosaique({ fiches }: { fiches: Fiche[] }) {
   );
 }
 
-function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
+function Grille({ fiches, rayon, mixte }: { fiches: Fiche[]; rayon: Rayon; mixte?: boolean }) {
+  // favoris, catégories, architecte : les projets à la même taille que les livres
+  if (rayon === 'projets' && mixte) {
+    return (
+      <ul className="grille livres grille-projets-mixte">
+        {fiches.map((f) => <li key={f.id}><PetitProjet fiche={f} /></li>)}
+      </ul>
+    );
+  }
   if (rayon === 'projets') return <Mosaique fiches={fiches} />;
   return (
     <ul className={`grille ${rayon}`}>
@@ -273,7 +281,7 @@ export function Accueil() {
           if (!part.length) return null;
           return (
             <Section key={r} titre={NOM_RAYON[r]} compte={part.length}>
-              <Grille fiches={part} rayon={r} />
+              <Grille fiches={part} rayon={r} mixte />
             </Section>
           );
         })

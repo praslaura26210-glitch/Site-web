@@ -1115,3 +1115,24 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 .accueil .carte-projet-petit .carte-image > img.couv { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
 .accueil .carte-projet-petit:hover .carte-image > img.couv { transform: scale(1.03); }
 .carte-projet-petit .carte-titre { text-wrap: balance; }
+
+/* ===== Favoris, catégories, architecte : projets à la taille des livres, photo recadrée ===== */
+.grille-projets-mixte .carte-projet-petit .carte-image { display: block; aspect-ratio: 4 / 3; overflow: hidden; }
+.grille-projets-mixte .carte-projet-petit .carte-image > img.couv { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
+.grille-projets-mixte .carte-projet-petit .couv-dessinee { height: 100%; aspect-ratio: auto; }
+
+/* ===== Accueil (ordinateur) : nom des projets centré sous la photo ===== */
+@media (min-width: 961px) {
+  .accueil .carte-projet-petit .carte-texte { text-align: center; }
+  .accueil .carte-projet-petit .carte-meta { justify-content: center; }
+}
+
+/* ===== Téléphone : « Bibliothèque » reste le plus grand titre, les titres de page passent en dessous ===== */
+@media (max-width: 700px) {
+  .tete-page { gap: 6px; padding: 30px 0 14px; }
+  .tete-page h1 { font-size: 24px; }
+  .tete-page .barre-filtres { padding: 18px 0 6px; }
+  .tete-page .tri { font-size: 13px; }
+  .tete-page ~ .section { padding: 26px 0 12px; gap: 18px; }
+  .section-tete h2, .accueil .section-tete h2 { font-size: 20px; }
+}
