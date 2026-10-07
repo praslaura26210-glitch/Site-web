@@ -35,8 +35,8 @@ export function Connexion({ configure, apres }: { configure: boolean; apres: () 
           </>
         ) : (
           <p className="erreur">
-            Le mot de passe n’est pas encore réglé. Dans Netlify : Site configuration → Environment variables → ajouter
-            <code> MOT_DE_PASSE</code>, puis redéployer le site.
+            Le mot de passe n’est pas encore réglé. Dans Cloudflare : Settings → Runtime → Variables and Secrets →
+            ajouter le secret <code>MOT_DE_PASSE</code>.
           </p>
         )}
       </form>
