@@ -10,7 +10,7 @@
   --encre: #2B201B;
   --encre-2: #6E5E55;
   --encre-3: #A08F84;
-  --filet: #EADFD2;
+  --filet: #DCDAD7;
   /* palette de Laura : warm clay, terra cotta, dusty orange, latte, et les tons sable, tan, lion */
   --terracotta: #A45D44;
   --terracotta-fond: #F6EAE3;
@@ -1042,3 +1042,31 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
   .fiche-projet .infos-projet div:nth-child(2) { padding-top: 0; }
   .fiche-projet .infos-projet div:nth-last-child(2) { border-bottom: 0; }
 }
+
+/* ---------- retouches : traits gris, titres de rayon en capitales, plus d'air ---------- */
+
+/* titres de rayon et de page : petites capitales espacées ; « Bibliothèque » reste le seul grand titre */
+.section-tete h2, .accueil .section-tete h2 { font: 450 14px/1.2 var(--texte); letter-spacing: .2em; text-transform: uppercase; color: var(--encre); }
+.tete-page h1 { font: 450 15px/1.2 var(--texte); letter-spacing: .2em; text-transform: uppercase; }
+.tete-page h1 .compte { font-size: 12px; letter-spacing: 0; color: var(--encre-3); margin-left: 10px; vertical-align: baseline; }
+.tete-page { padding: 30px 0 14px; }
+
+/* traits gris neutre, un peu plus présents sous les titres */
+.section-tete, .accueil .section-tete, .tete-page .barre-filtres { border-bottom-color: #CFCCC8; }
+.section-tete > a.voir-plus, .accueil .section-tete > a.voir-plus { margin-top: -10px; margin-bottom: -10px; }
+
+/* accueil : plus d'air entre les rayons et sous chaque titre */
+.accueil .section { gap: 16px; padding-top: 34px; }
+.accueil .section:first-child { padding-top: 30px; }
+
+/* fiche projet : pas de trait au-dessus des images */
+.fiche-projet > .documents { border-top: 0; }
+
+@media (max-width: 960px) {
+  .section-tete h2, .accueil .section-tete h2 { font-size: 13px; }
+  .tete-page h1 { font-size: 14px; }
+  .accueil .section { gap: 12px; padding-top: 18px; }
+  .accueil .section:first-child { padding-top: 16px; }
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .section-tete, :root:not([data-theme="light"]) .tete-page .barre-filtres { border-bottom-color: #3A3430; } }
+.section-tete h2 a { text-transform: inherit; letter-spacing: inherit; font-weight: inherit; }

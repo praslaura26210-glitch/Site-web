@@ -274,7 +274,7 @@ function VueAccueil() {
         return (
           <section key={r} className="section">
             <div className="section-tete">
-              <h2><a href={`#/${r}`}>{NOM_RAYON[r]}</a><span className="compte">{liste.length}</span></h2>
+              <h2><a href={`#/${r}`}>{NOM_RAYON[r]}</a></h2>
               {liste.length > 0 && (
                 <a className="voir-plus" href={`#/${r}`} aria-label={`Voir tous les ${NOM_RAYON[r].toLowerCase()}`} title={`Voir tous les ${NOM_RAYON[r].toLowerCase()}`}>
                   <Icone nom="fleche" taille={22} />
