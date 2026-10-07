@@ -62,6 +62,23 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
   const [aide, setAide] = useState<string | null>(null);
   const [cherche, setCherche] = useState<'isbn' | 'lien' | null>(null);
   const [imagesEnCours, setImagesEnCours] = useState(0);
+  const [adresseImage, setAdresseImage] = useState('');
+
+  async function imageDepuisAdresse() {
+    const url = adresseImage.trim();
+    if (!url) return;
+    setImagesEnCours((n) => n + 1);
+    try {
+      const image = await api.imageDistante(url);
+      const site = url.match(/^https?:\/\/(?:www\.)?([^/]+)/)?.[1];
+      setEtat((e) => ({ ...e, f: { ...e.f, images: [...e.f.images, { ...image, credit: site ? `Source : ${site}` : undefined }] } }));
+      setAdresseImage('');
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Image non récupérée.');
+    } finally {
+      setImagesEnCours((n) => n - 1);
+    }
+  }
 
   useEffect(() => {
     try { localStorage.setItem(cleBrouillon, JSON.stringify(etat)); } catch { /* sans stockage */ }
@@ -334,12 +351,20 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
             <span>{f.images.length ? 'Ajouter une photo' : t === 'livre' ? 'Photographier la couverture' : 'Ajouter une photo'}</span>
             <input type="file" accept="image/*" multiple onChange={(e) => { ajouterImages(e.target.files); e.target.value = ''; }} />
           </label>
+          <div className="champ-ligne">
+            <input
+              id="adresse-image"
+              type="url"
+              inputMode="url"
+              placeholder="Ou coller l’adresse d’une image trouvée en ligne"
+              value={adresseImage}
+              onChange={(e) => setAdresseImage(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); imageDepuisAdresse(); } }}
+            />
+            <button type="button" className="bouton" onClick={imageDepuisAdresse} disabled={!adresseImage.trim() || imagesEnCours > 0}>Ajouter</button>
+          </div>
+          <p className="aide">Sur une page (ArchDaily, site de l’architecte…), clic droit sur l’image → « Copier l’adresse de l’image », puis colle-la ici.</p>
         </div>
-      </div>
-
-      <div className="champ">
-        <span className="etiquette">Pour quel travail ?</span>
-        <ChampTravaux choisis={f.categories} changer={(categories) => maj({ categories })} />
       </div>
 
       <div className="champ">
@@ -351,6 +376,11 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         <label className="etiquette" htmlFor="retenu">Mes notes</label>
         <textarea id="retenu" className="lecture long" rows={10} value={f.retenu ?? ''} onChange={(e) => maj({ retenu: e.target.value })} placeholder="Ce que j’en retiens, en détail." />
         <p className="aide">Une ligne vide entre deux paragraphes. « ## » au début d’une ligne pour un intertitre, « - » pour une liste, « [?] » après un mot à vérifier.</p>
+      </div>
+
+      <div className="champ">
+        <span className="etiquette">Catégorie (mémoire, studio, cours…)</span>
+        <ChampTravaux choisis={f.categories} changer={(categories) => maj({ categories })} />
       </div>
 
       <details className="avance">
@@ -440,14 +470,14 @@ function ChampTravaux({ choisis, changer }: { choisis: string[]; changer: (c: st
         </button>
       ))}
       {nouveau === null ? (
-        <button type="button" className="mot" onClick={() => setNouveau('')}><Icone nom="plus" taille={14} /> Nouveau travail</button>
+        <button type="button" className="mot" onClick={() => setNouveau('')}><Icone nom="plus" taille={14} /> Nouvelle catégorie</button>
       ) : (
         <span className="champ-ligne">
           <input
             id="nouveau-travail-form"
             autoFocus
             style={{ minHeight: 34, width: 220 }}
-            placeholder="Ex. : Cours expérimentation"
+            placeholder="Ex. : Studio, cours expérimentation"
             value={nouveau}
             onChange={(e) => setNouveau(e.target.value)}
             onKeyDown={(e) => {

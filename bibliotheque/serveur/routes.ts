@@ -72,6 +72,7 @@ async function charger(): Promise<Bibliotheque> {
     await ecrireImagesDepart(nouvelles);
     b.fiches.push(...nouvelles);
     completerVocabulaire(b);
+    for (const c of DEPART.categories ?? []) if (!b.categories.some((x) => x.id === c.id)) b.categories.push(c);
     b.departVersion = DEPART.version;
     b.rev++;
     await ecrireBibliotheque(b);
@@ -117,6 +118,7 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     pages: texte(f.pages, 40),
     consulte: texte(f.consulte, 20),
     couvertureCherchee: f.couvertureCherchee === true || undefined,
+    imageCherchee: f.imageCherchee === true || undefined,
     creeLe: ancienne?.creeLe ?? texte(f.creeLe, 40) ?? maintenant,
     modifieLe: maintenant,
   };
@@ -262,6 +264,14 @@ export async function gerer(req: Request): Promise<Response> {
       }
       const { couvertures: _, ...reste } = notice;
       return json({ ...reste, image });
+    }
+
+    if (route === 'image-distante' && m === 'POST') {
+      // image trouvée sur Internet : le serveur la télécharge et la garde
+      const corps = await req.json().catch(() => ({}));
+      const image = await enregistrerDistante(String(corps.url ?? ''));
+      if (!image) return erreur('Image introuvable à cette adresse (il faut l’adresse de l’image elle-même).', 404);
+      return json(image);
     }
 
     if (route === 'apercu') {

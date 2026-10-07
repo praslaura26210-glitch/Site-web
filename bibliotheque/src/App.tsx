@@ -10,6 +10,7 @@ import { FicheVue } from './composants/FicheVue';
 import { Formulaire, type Preremplissage } from './composants/Formulaire';
 import { Reglages } from './composants/Reglages';
 import { DEMO } from './lib/demo';
+import { domaine } from './lib/libelles';
 
 type Phase = { nom: 'chargement' } | { nom: 'connexion'; configure: boolean } | { nom: 'erreur'; message: string } | { nom: 'prete' };
 
@@ -93,25 +94,29 @@ export function App() {
       fiches: b.fiches.some((x) => x.id === f.id) ? b.fiches.map((x) => (x.id === f.id ? f : x)) : [...b.fiches, f],
     }), []);
 
-  // couvertures : cherchées toutes seules par l'ISBN, une fois par livre
+  // images manquantes cherchées toutes seules, une fois par fiche :
+  // couverture des livres par l'ISBN, photo des projets et articles sur la page de leur lien (ArchDaily…)
   useEffect(() => {
     if (!biblio || DEMO || couverturesLancees.current) return;
-    const cibles = biblio.fiches.filter((f) => f.type === 'livre' && f.isbn && !f.images.length && !f.couvertureCherchee);
-    if (!cibles.length) return;
+    const livres = biblio.fiches.filter((f) => f.type === 'livre' && f.isbn && !f.images.length && !f.couvertureCherchee);
+    const autres = biblio.fiches.filter((f) => f.type !== 'livre' && f.source && !f.images.length && !f.imageCherchee);
+    if (!livres.length && !autres.length) return;
     couverturesLancees.current = true;
     (async () => {
-      for (const f of cibles) {
+      for (const f of [...livres, ...autres]) {
         try {
-          const n = await api.isbn(f.isbn!).catch(() => null);
-          const maj: Fiche = {
-            ...f,
-            couvertureCherchee: true,
-            images: n?.image ? [n.image] : f.images,
-            source: f.source || n?.lien || f.source,
-            editeur: f.editeur || n?.editeur,
-            annee: f.annee || n?.annee,
-            pages: f.pages || n?.pages,
-          };
+          let maj: Fiche;
+          if (f.type === 'livre') {
+            const n = await api.isbn(f.isbn!).catch(() => null);
+            maj = {
+              ...f, couvertureCherchee: true, images: n?.image ? [n.image] : f.images,
+              editeur: f.editeur || n?.editeur, annee: f.annee || n?.annee, pages: f.pages || n?.pages,
+            };
+          } else {
+            const a = await api.apercu(f.source!).catch(() => null);
+            const site = a?.site || domaine(f.source);
+            maj = { ...f, imageCherchee: true, images: a?.image ? [{ ...a.image, credit: `Source : ${site}` }] : f.images };
+          }
           const r = await api.enregistrer(maj);
           majFiche(r.fiche, r.rev);
         } catch { /* hors ligne : on réessaiera au prochain lancement */ }

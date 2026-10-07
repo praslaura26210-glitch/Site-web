@@ -38,6 +38,7 @@ export const api = {
   envoyerImage: (blob: Blob) => appel<Image>('images', { method: 'POST', headers: { 'content-type': blob.type }, body: blob }),
   isbn: (isbn: string) =>
     appel<{ titre?: string; auteurs?: string[]; annee?: string; editeur?: string; pages?: string; lien?: string; image: Image | null }>(`isbn/${encodeURIComponent(isbn)}`),
+  imageDistante: (url: string) => appel<Image>('image-distante', corps('POST', { url })),
   apercu: (url: string) => appel<{ titre?: string; site?: string; annee?: string; image: Image | null }>(`apercu?url=${encodeURIComponent(url)}`),
 };
 

@@ -13,36 +13,32 @@ export function Reglages() {
     <div className="reglages">
       <h1 className="titre-page">Réglages</h1>
       <Travaux />
-      <ImportFavoris />
-      {DEMO ? <Demo /> : (
-        <>
-          <Completer />
-          <Sauvegarde />
-          <Installer />
-        </>
-      )}
       <details className="avance">
-        <summary>Mots-clés et synonymes de la recherche</summary>
+        <summary>Plus de réglages</summary>
         <div>
-          <p className="aide">
-            La recherche s’en sert en coulisses : « terre compactée » trouve aussi « pisé ». Tu n’as besoin d’y toucher
-            que pour corriger un mot-clé ou ajouter un synonyme.
-          </p>
+          {DEMO ? <Demo /> : (
+            <>
+              <Sauvegarde />
+              <Installer />
+              <Completer />
+            </>
+          )}
+          <ImportFavoris />
           <MotsCles />
           <Synonymes />
+          {!DEMO && (
+            <section className="reglage">
+              <h2>Session</h2>
+              <button className="bouton" onClick={async () => {
+                await api.deconnexion().catch(() => {});
+                // les données gardées hors ligne sont effacées de l'appareil
+                try { for (const k of await caches.keys()) await caches.delete(k); } catch { /* rien */ }
+                location.href = '/';
+              }}>Se déconnecter de cet appareil</button>
+            </section>
+          )}
         </div>
       </details>
-      {!DEMO && (
-        <section className="reglage">
-          <h2>Session</h2>
-          <button className="bouton" onClick={async () => {
-            await api.deconnexion().catch(() => {});
-            // les données gardées hors ligne sont effacées de l'appareil
-            try { for (const k of await caches.keys()) await caches.delete(k); } catch { /* rien */ }
-            location.href = '/';
-          }}>Se déconnecter de cet appareil</button>
-        </section>
-      )}
     </div>
   );
 }
@@ -66,8 +62,11 @@ function Travaux() {
 
   return (
     <section className="reglage">
-      <h2>Mes travaux</h2>
-      <p className="aide">Chaque fiche peut servir à un ou plusieurs travaux : mémoire, rapport d’études, un cours, une expérimentation…</p>
+      <h2>Catégories</h2>
+      <p className="aide">
+        Dans quel cadre tu as croisé une référence : mémoire, rapport d’études, un studio, un cours… Elles restent discrètes
+        sur les fiches, mais la recherche les trouve : taper « studio » retrouve tout ce qui y est rangé.
+      </p>
       <div className="liste-travaux">
         {biblio.categories.map((c) => (
           <div key={c.id} className="ligne-travail">
@@ -104,7 +103,7 @@ function Travaux() {
           setNouveau('');
           envoyer([...biblio.categories, { id, nom }], `« ${nom} » ajouté.`);
         }}>
-          <input id="travail-nouveau" placeholder="Nouveau travail, ex. : Cours expérimentation" value={nouveau} onChange={(e) => setNouveau(e.target.value)} />
+          <input id="travail-nouveau" placeholder="Nouvelle catégorie, ex. : Studio, cours expérimentation" value={nouveau} onChange={(e) => setNouveau(e.target.value)} />
           <button className="bouton principal petit" disabled={!nouveau.trim()}>Ajouter</button>
         </form>
       </div>

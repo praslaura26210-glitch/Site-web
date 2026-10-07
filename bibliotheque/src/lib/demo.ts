@@ -7,7 +7,7 @@ import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../vocabul
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
 
-const CLE = 'demo-bibliotheque-v3';
+const CLE = 'demo-bibliotheque-v4';
 const PREFIXE_IMAGE = 'demo-img:';
 const images = new Map<string, string>();
 
@@ -131,7 +131,7 @@ async function route(chemin: string, methode: string, corps: BodyInit | null | u
     ecrire(PREFIXE_IMAGE + id, url);
     return reponse({ id, w: bmp.width, h: bmp.height });
   }
-  if (nom === 'isbn' || nom === 'apercu') {
+  if (nom === 'isbn' || nom === 'apercu' || nom === 'image-distante') {
     return erreur('Dans l’aperçu, cette recherche est désactivée : elle fonctionnera sur le site en ligne.', 503);
   }
   return erreur('Adresse inconnue.', 404);

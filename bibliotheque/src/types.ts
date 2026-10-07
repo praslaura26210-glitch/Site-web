@@ -66,6 +66,8 @@ export interface Fiche {
   consulte?: string;
   /** La couverture a déjà été cherchée automatiquement (trouvée ou non). */
   couvertureCherchee?: boolean;
+  /** L'image a déjà été cherchée sur la page du lien (projets, articles). */
+  imageCherchee?: boolean;
   creeLe: string;
   modifieLe: string;
 }

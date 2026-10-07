@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useState } from 'react';
 import type { Fiche } from '../types';
 import { rayonDe } from '../types';
-import { classeTravail, nomTravail, useBiblio } from '../contexte';
+import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
-import { FILTRES_VIDES } from '../lib/recherche';
+import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
 
@@ -49,18 +49,143 @@ export function Notes({ texte }: { texte: string }) {
   );
 }
 
-/** Mes notes repliées : on les déroule quand on veut les relire. */
-function MesNotes({ texte }: { texte: string }) {
-  const mots = texte.split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(mots / 230));
+/** Les projets présentés dans un livre : des encarts, et de quoi en ajouter un. */
+function ProjetsCites({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
+  return (
+    <div className="bloc projets-cites">
+      <h3 className="titre-encarts">Projets présentés{fiche.type === 'livre' ? ' dans le livre' : ''}</h3>
+      <ul className={`encarts${projets.length ? '' : ' vides'}`}>
+        {projets.map((p) => (
+          <li key={p.id}>
+            <a className={`encart${p.images.length ? '' : ' sans-image'}`} href={`#/fiche/${encodeURIComponent(p.id)}`}>
+              {p.images.length > 0 && <span className="carte-image"><Couverture fiche={p} /></span>}
+              <span className="carte-texte">
+                <span className="carte-titre">{p.titre}</span>
+                <span className="carte-meta"><span>{[p.auteurs[0], p.editeur].filter(Boolean).join(' · ')}</span></span>
+                {(p.resume || p.retenu) && <span className="encart-note">{(p.resume || p.retenu)!.replace(/^#+\s*/gm, '')}</span>}
+              </span>
+            </a>
+          </li>
+        ))}
+        <li>
+          <a className="encart-ajout" href={`#/ajouter/projet/${encodeURIComponent(fiche.id)}`}>
+            <Icone nom="plus" taille={20} />
+            Ajouter un projet présenté dans {fiche.type === 'livre' ? 'ce livre' : 'cet article'}
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+/** Mes notes repliées : on les déroule quand on veut les relire. Les projets du livre y sont rangés. */
+function MesNotes({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
+  const texte = fiche.retenu ?? '';
+  const minutes = Math.max(1, Math.round(texte.split(/\s+/).length / 230));
+  const avecProjets = fiche.type !== 'projet';
   return (
     <details className="deroulant">
       <summary>
         <h2>Mes notes</h2>
-        <span className="discret">{minutes} min de lecture</span>
+        <span className="discret">
+          {texte ? `${minutes} min de lecture` : 'pas encore de notes'}
+          {projets.length > 0 && ` · ${projets.length} projet${projets.length > 1 ? 's' : ''}`}
+        </span>
         <span className="fleche"><Icone nom="droite" taille={20} /></span>
       </summary>
-      <Notes texte={texte} />
+      <div className="deroulant-contenu">
+        {texte ? <Notes texte={texte} /> : (
+          <p className="discret">Pour écrire tes notes : <a className="lien-texte" href={`#/modifier/${encodeURIComponent(fiche.id)}`}>Modifier</a>.</p>
+        )}
+        {avecProjets && <ProjetsCites fiche={fiche} projets={projets} />}
+      </div>
+    </details>
+  );
+}
+
+/** Le bas de la fiche, replié : catégories, mots-clés, références, suppression. */
+function Details({ fiche, enregistrer, demanderSuppression }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; demanderSuppression: () => void }) {
+  const { biblio, motsCles, setFiltres, naviguer } = useBiblio();
+  const [mot, setMot] = useState('');
+  const cats = fiche.categories ?? [];
+  const libres = biblio.categories.filter((c) => !cats.includes(c.id));
+  const props = suggerer(mot, motsCles, fiche.motsCles).slice(0, 5);
+
+  const ajouterMot = (m: string) => {
+    const x = m.trim();
+    setMot('');
+    if (!x || fiche.motsCles.some((y) => normaliser(y) === normaliser(x))) return;
+    // un mot déjà dans la liste garde son orthographe
+    const connu = motsCles.find((y) => normaliser(y.mot) === normaliser(x))?.mot;
+    enregistrer({ ...fiche, motsCles: [...fiche.motsCles, connu ?? x] }, 'Mot-clé ajouté.');
+  };
+
+  return (
+    <details className="details-fiche">
+      <summary>Catégories, mots-clés et détails</summary>
+      <dl>
+        <div>
+          <dt>Catégories</dt>
+          <dd className="mots">
+            {cats.map((c) => (
+              <span key={c} className="mot">
+                <a href={`#/travail/${encodeURIComponent(c)}`}>{nomTravail(biblio, c)}</a>
+                <button type="button" aria-label={`Retirer ${nomTravail(biblio, c)}`} onClick={() => enregistrer({ ...fiche, categories: cats.filter((x) => x !== c) })}>
+                  <Icone nom="fermer" taille={11} />
+                </button>
+              </span>
+            ))}
+            {libres.length > 0 && (
+              <select
+                id="ajout-categorie"
+                className="ajout-petit"
+                value=""
+                aria-label="Ajouter une catégorie"
+                onChange={(e) => e.target.value && enregistrer({ ...fiche, categories: [...cats, e.target.value] }, 'Catégorie ajoutée.')}
+              >
+                <option value="">+ catégorie</option>
+                {libres.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
+              </select>
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt>Mots-clés</dt>
+          <dd className="mots">
+            {fiche.motsCles.map((m) => (
+              <span key={m} className="mot">
+                <button type="button" className="mot-lien" onClick={() => { setFiltres({ ...FILTRES_VIDES, motsCles: [m] }); naviguer(rayonDe(fiche.type)); }}>{m}</button>
+                <button type="button" aria-label={`Retirer ${m}`} onClick={() => enregistrer({ ...fiche, motsCles: fiche.motsCles.filter((x) => x !== m) })}>
+                  <Icone nom="fermer" taille={11} />
+                </button>
+              </span>
+            ))}
+            <span className="ajout-mot-fiche">
+              <input
+                id="ajout-mot-cle"
+                className="ajout-petit"
+                placeholder="+ mot-clé"
+                aria-label="Ajouter un mot-clé"
+                value={mot}
+                onChange={(e) => setMot(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); ajouterMot(mot); } }}
+              />
+              {props.length > 0 && (
+                <span className="suggestions petites">
+                  {props.map((p) => <button type="button" key={p.mot} onMouseDown={(e) => e.preventDefault()} onClick={() => ajouterMot(p.mot)}>{p.mot}</button>)}
+                </span>
+              )}
+            </span>
+          </dd>
+        </div>
+        {fiche.isbn && <div><dt>ISBN</dt><dd>{fiche.isbn}</dd></div>}
+        {fiche.pages && <div><dt>Pages</dt><dd>{fiche.pages}</dd></div>}
+        {fiche.numero && <div><dt>Numéro</dt><dd>{fiche.numero}</dd></div>}
+        {fiche.consulte && <div><dt>Consulté le</dt><dd>{date(fiche.consulte)}</dd></div>}
+        {fiche.emplacement && <div><dt>Où la trouver</dt><dd>{fiche.emplacement}</dd></div>}
+        <div><dt>Ajoutée le</dt><dd>{date(fiche.creeLe)}</dd></div>
+      </dl>
+      <button className="lien-texte petit supprimer" onClick={demanderSuppression}>Supprimer la fiche…</button>
     </details>
   );
 }
@@ -85,7 +210,6 @@ export function FicheVue({ id }: { id: string }) {
   const livre = rayon === 'livres';
   const projet = rayon === 'projets';
   const active = Math.min(imageActive, Math.max(0, fiche.images.length - 1));
-  // les projets cités dans ce livre (ou cet article), et inversement les livres qui citent ce projet
   const projetsCites = biblio.fiches.filter((f) => f.citeDans?.includes(fiche.id));
   const citePar = (fiche.citeDans ?? []).map((i) => biblio.fiches.find((f) => f.id === i)).filter((f): f is Fiche => Boolean(f));
 
@@ -120,21 +244,15 @@ export function FicheVue({ id }: { id: string }) {
     setFiltres({ ...FILTRES_VIDES, q: a });
     naviguer('');
   };
-  const voirMotCle = (m: string) => {
-    setFiltres({ ...FILTRES_VIDES, motsCles: [m] });
-    naviguer(rayon);
-  };
   const retour = () => (history.length > 1 ? history.back() : naviguer(rayon));
   const credit = (i: number) => fiche.images[i]?.credit || fiche.credit;
   const lu = fiche.statut === 'lu';
 
-  const surtitre = projet ? [NOM_TYPE[fiche.type], fiche.annee].filter(Boolean).join(' · ') : [NOM_TYPE[fiche.type], fiche.editeur, fiche.annee].filter(Boolean).join(' · ');
-
   const titres = (
     <div className="fiche-titres">
-      <p className="surtitre">{surtitre}</p>
+      <p className="surtitre">{projet ? NOM_TYPE[fiche.type] : [NOM_TYPE[fiche.type], fiche.editeur, fiche.annee].filter(Boolean).join(' · ')}</p>
       <h1 className="fiche-titre">{fiche.titre}</h1>
-      {fiche.auteurs.length > 0 && (
+      {fiche.auteurs.length > 0 && !projet && (
         <p className="fiche-auteurs">
           {fiche.auteurs.map((a, i) => (
             <span key={a}>
@@ -144,11 +262,8 @@ export function FicheVue({ id }: { id: string }) {
           ))}
         </p>
       )}
-      <div className="fiche-boutons">
-        {(fiche.categories ?? []).map((c) => (
-          <a key={c} className={`travail ${classeTravail(biblio, c)}`} href={`#/travail/${encodeURIComponent(c)}`}>{nomTravail(biblio, c)}</a>
-        ))}
-        {!projet && (
+      {!projet && (
+        <div className="fiche-boutons">
           <button
             className="bascule-lu"
             aria-pressed={lu}
@@ -156,12 +271,42 @@ export function FicheVue({ id }: { id: string }) {
           >
             <span className="point-lu" /> {lu ? 'Lu' : 'Pas encore lu'}
           </button>
-        )}
-        {!livre && !projet && fiche.source && (
-          <a className="lien-site" href={fiche.source} target="_blank" rel="noreferrer">Lire l’article <Icone nom="lien" taille={15} /></a>
-        )}
-      </div>
+          {!livre && fiche.source && (
+            <a className="lien-site" href={fiche.source} target="_blank" rel="noreferrer">Lire l’article <Icone nom="lien" taille={15} /></a>
+          )}
+        </div>
+      )}
     </div>
+  );
+
+  // projet : les informations essentielles, tout de suite sous le titre
+  const infosProjet = projet && (
+    <dl className="infos-projet">
+      {fiche.auteurs.length > 0 && (
+        <div>
+          <dt>Architectes</dt>
+          <dd>{fiche.auteurs.map((a, i) => <Fragment key={a}>{i > 0 && ', '}<button className="lien-texte nu" onClick={() => voirAuteur(a)}>{a}</button></Fragment>)}</dd>
+        </div>
+      )}
+      {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
+      {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
+      <div>
+        <dt>En savoir plus</dt>
+        <dd>
+          {fiche.source ? (
+            <a href={fiche.source} target="_blank" rel="noreferrer">Site du projet ↗</a>
+          ) : (
+            <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
+          )}
+        </dd>
+      </div>
+      {citePar.length > 0 && (
+        <div>
+          <dt>Présenté dans</dt>
+          <dd>{citePar.map((f, i) => <Fragment key={f.id}>{i > 0 && ', '}<a href={`#/fiche/${encodeURIComponent(f.id)}`}>{f.titre}</a></Fragment>)}</dd>
+        </div>
+      )}
+    </dl>
   );
 
   const corps = (
@@ -173,33 +318,7 @@ export function FicheVue({ id }: { id: string }) {
         </section>
       )}
 
-      {!projet && (projetsCites.length > 0 || livre) && (
-        <section className="bloc">
-          <h2>{livre ? 'Projets du livre' : 'Projets cités'}</h2>
-          <ul className={`encarts${projetsCites.length ? '' : ' vides'}`}>
-            {projetsCites.map((p) => (
-              <li key={p.id}>
-                <a className={`encart${p.images.length ? '' : ' sans-image'}`} href={`#/fiche/${encodeURIComponent(p.id)}`}>
-                  {p.images.length > 0 && <span className="carte-image"><Couverture fiche={p} /></span>}
-                  <span className="carte-texte">
-                    <span className="carte-titre">{p.titre}</span>
-                    <span className="carte-meta"><span>{[p.auteurs[0], p.editeur].filter(Boolean).join(' · ')}</span></span>
-                    {(p.resume || p.retenu) && <span className="encart-note">{(p.resume || p.retenu)!.replace(/^#+\s*/gm, '')}</span>}
-                  </span>
-                </a>
-              </li>
-            ))}
-            <li>
-              <a className="encart-ajout" href={`#/ajouter/projet/${encodeURIComponent(fiche.id)}`}>
-                <Icone nom="plus" taille={22} />
-                Ajouter un projet {livre ? 'de ce livre' : 'cité'}
-              </a>
-            </li>
-          </ul>
-        </section>
-      )}
-
-      {fiche.retenu && <MesNotes texte={fiche.retenu} />}
+      {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} />}
 
       {fiche.citations.length > 0 && (
         <section className="bloc">
@@ -218,27 +337,7 @@ export function FicheVue({ id }: { id: string }) {
         </section>
       )}
 
-      <footer className="fiche-pied">
-        <dl>
-          {fiche.motsCles.length > 0 && (
-            <div>
-              <dt>Mots-clés</dt>
-              <dd className="mots">
-                {fiche.motsCles.map((m) => <button key={m} className="mot" onClick={() => voirMotCle(m)}>{m}</button>)}
-              </dd>
-            </div>
-          )}
-          {fiche.isbn && <div><dt>ISBN</dt><dd>{fiche.isbn}</dd></div>}
-          {fiche.pages && <div><dt>Pages</dt><dd>{fiche.pages}</dd></div>}
-          {fiche.numero && <div><dt>Numéro</dt><dd>{fiche.numero}</dd></div>}
-          {fiche.consulte && <div><dt>Consulté le</dt><dd>{date(fiche.consulte)}</dd></div>}
-          {fiche.emplacement && <div><dt>Où la trouver</dt><dd>{fiche.emplacement}</dd></div>}
-          <div><dt>Ajoutée le</dt><dd>{date(fiche.creeLe)}</dd></div>
-        </dl>
-        <div>
-          <button className="lien-texte petit" style={{ color: 'var(--encre-3)' }} onClick={() => setConfirmer(true)}>Supprimer la fiche</button>
-        </div>
-      </footer>
+      <Details fiche={fiche} enregistrer={enregistrer} demanderSuppression={() => setConfirmer(true)} />
     </>
   );
 
@@ -268,7 +367,9 @@ export function FicheVue({ id }: { id: string }) {
                 <img src={srcImage(fiche.images[0].id)} alt={`Couverture : ${fiche.titre}`} style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
               </button>
             ) : (
-              <Couverture fiche={fiche} />
+              <a className="couv-a-ajouter" href={`#/modifier/${encodeURIComponent(id)}`} title="Ajouter la couverture">
+                <Couverture fiche={fiche} />
+              </a>
             )}
           </div>
           <div className="fiche-contenu">
@@ -277,10 +378,14 @@ export function FicheVue({ id }: { id: string }) {
           </div>
         </div>
       ) : (
-        <>
-          {fiche.images.length > 0 && (
+        <div className="fiche-projet">
+          <div className="fiche-contenu large">
+            {titres}
+            {infosProjet}
+          </div>
+          {fiche.images.length > 0 ? (
             <div className="fiche-galerie">
-              <button className="grande" onClick={() => setVisionneuse(active)} aria-label="Agrandir l’image et voir son crédit">
+              <button className="grande" onClick={() => setVisionneuse(active)} aria-label="Agrandir l’image">
                 <img src={srcImage(fiche.images[active].id)} alt="" style={{ aspectRatio: `${fiche.images[active].w} / ${fiche.images[active].h}` }} />
               </button>
               {fiche.images.length > 1 && (
@@ -294,47 +399,26 @@ export function FicheVue({ id }: { id: string }) {
               )}
               {credit(active) && <p className="credit-image">{credit(active)}</p>}
             </div>
+          ) : (
+            <a className="image-a-ajouter" href={`#/modifier/${encodeURIComponent(id)}`}>
+              <Icone nom="photo" taille={24} />
+              <span>Pas encore d’image. Ajouter une photo ou une illustration trouvée en ligne</span>
+            </a>
           )}
-          <div className="fiche-projet-grille">
-            <div className="fiche-contenu">
-              {titres}
-              {corps}
-            </div>
-            <dl className="infos-projet">
-              {fiche.auteurs.length > 0 && <div><dt>{projet ? 'Architectes' : 'Auteur'}</dt><dd>{fiche.auteurs.join(', ')}</dd></div>}
-              {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
-              {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
-              <div>
-                <dt>{projet ? 'En savoir plus' : 'Lien'}</dt>
-                <dd>
-                  {fiche.source ? (
-                    <a href={fiche.source} target="_blank" rel="noreferrer">{projet ? 'Site du projet' : 'Ouvrir'} · {domaine(fiche.source)} ↗</a>
-                  ) : (
-                    <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
-                  )}
-                </dd>
-              </div>
-              {citePar.length > 0 && (
-                <div>
-                  <dt>Cité dans</dt>
-                  <dd>{citePar.map((f, i) => <Fragment key={f.id}>{i > 0 && ', '}<a href={`#/fiche/${encodeURIComponent(f.id)}`}>{f.titre}</a></Fragment>)}</dd>
-                </div>
-              )}
-            </dl>
-          </div>
-        </>
+          <div className="fiche-contenu">{corps}</div>
+        </div>
       )}
 
       {visionneuse !== null && <Visionneuse fiche={fiche} depart={visionneuse} fermer={() => setVisionneuse(null)} />}
 
       {confirmer && (
         <div className="dialogue-fond" onClick={() => setConfirmer(false)}>
-          <div className="dialogue" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-            <p>Supprimer « {fiche.titre} » ?</p>
-            <span className="aide">Ses images seront effacées aussi.</span>
+          <div className="dialogue" role="alertdialog" aria-modal="true" aria-labelledby="titre-suppression" onClick={(e) => e.stopPropagation()}>
+            <p id="titre-suppression">Es-tu sûre de vouloir supprimer « {fiche.titre} » ?</p>
+            <span className="aide">La fiche, ses notes et ses images seront effacées définitivement.</span>
             <div className="dialogue-actions">
-              <button className="bouton" onClick={() => setConfirmer(false)} autoFocus>Annuler</button>
-              <button className="bouton danger" onClick={supprimer}>Supprimer</button>
+              <button className="bouton" onClick={() => setConfirmer(false)} autoFocus>Non, garder la fiche</button>
+              <button className="bouton danger" onClick={supprimer}>Oui, supprimer</button>
             </div>
           </div>
         </div>

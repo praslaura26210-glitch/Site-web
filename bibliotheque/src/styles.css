@@ -449,6 +449,50 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 .encarts.vides .encart-ajout { aspect-ratio: auto; min-height: 0; display: flex; justify-content: flex-start; padding: 14px 16px; gap: 10px; }
 @media (max-width: 960px) { .encart-ajout { aspect-ratio: auto; min-height: 110px; } }
 
+/* projet : titre, informations essentielles, puis la photo */
+.fiche-projet { display: grid; gap: 36px; }
+.fiche-contenu.large { max-width: none; gap: 28px; }
+.fiche-projet .infos-projet {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0;
+  border-top: 1px solid var(--encre); border-bottom: 1px solid var(--filet); padding: 0;
+}
+.fiche-projet .infos-projet div { padding: 14px 18px 14px 0; border-bottom: 0; display: grid; gap: 4px; }
+.fiche-projet .infos-projet dd { font-size: 15.5px; }
+.lien-texte.nu { color: inherit; text-decoration: none; font: inherit; }
+.lien-texte.nu:hover { color: var(--terracotta); }
+.image-a-ajouter {
+  display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 140px; padding: 20px;
+  border: 1px dashed var(--couv-filet); background: var(--fond-2); color: var(--encre-2); text-decoration: none; text-align: center;
+}
+.image-a-ajouter:hover { color: var(--terracotta); border-color: var(--terracotta); }
+.couv-a-ajouter { display: block; width: 100%; text-decoration: none; }
+
+.titre-encarts { font: 500 23px/1.2 var(--titre); padding-top: 8px; border-top: 1px solid var(--filet); }
+.deroulant-contenu { display: grid; gap: 36px; padding: 4px 0 34px; }
+
+/* détails repliés en bas de fiche : catégories, mots-clés, références */
+.details-fiche { border-top: 1px solid var(--filet); padding-top: 4px; font-size: 13px; color: var(--encre-3); }
+.details-fiche > summary { cursor: pointer; padding: 12px 0; list-style: none; letter-spacing: .1em; text-transform: uppercase; font-size: 11px; }
+.details-fiche > summary::-webkit-details-marker { display: none; }
+.details-fiche > summary::before { content: '+ '; }
+.details-fiche[open] > summary::before { content: '– '; }
+.details-fiche dl { margin: 4px 0 14px; display: grid; gap: 10px; }
+.details-fiche dl > div { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; }
+.details-fiche dt { letter-spacing: .12em; text-transform: uppercase; font-size: 10.5px; min-width: 100px; }
+.details-fiche dd { margin: 0; overflow-wrap: anywhere; }
+.details-fiche .mot { font-size: 12px; color: var(--encre-2); }
+.details-fiche .mot a, .mot-lien { color: inherit; text-decoration: none; background: none; border: 0; padding: 0; font: inherit; }
+.details-fiche .mot a:hover, .mot-lien:hover { color: var(--terracotta); }
+.details-fiche .supprimer { color: var(--encre-3); margin-bottom: 12px; }
+.ajout-petit {
+  width: auto !important; min-height: 26px !important; padding: 2px 8px !important; font-size: 12px !important;
+  border: 1px dashed var(--couv-filet) !important; background-image: none !important; color: var(--encre-2);
+}
+.ajout-mot-fiche { position: relative; display: inline-block; }
+.ajout-mot-fiche input { width: 130px !important; }
+.suggestions.petites { position: absolute; top: 100%; left: 0; z-index: 5; width: 200px; }
+.suggestions.petites button { padding: 7px 10px; font-size: 13px; }
+
 /* mes notes : repliées, on les déroule */
 .deroulant { border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); }
 .deroulant > summary {
@@ -460,7 +504,6 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 .deroulant > summary .fleche { margin-left: auto; color: var(--encre-3); transition: transform .2s; display: inline-grid; }
 .deroulant[open] > summary .fleche { transform: rotate(90deg); }
 .deroulant > summary:hover h2 { color: var(--terracotta); }
-.deroulant > .notes { padding: 4px 0 32px; }
 
 .notes { font-size: 17px; line-height: 1.8; color: var(--encre); display: grid; gap: 16px; max-width: 66ch; }
 .notes h3 { font: 500 25px/1.2 var(--titre); margin-top: 18px; }
