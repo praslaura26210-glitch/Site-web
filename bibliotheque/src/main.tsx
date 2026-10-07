@@ -6,6 +6,13 @@ import '@fontsource-variable/jost/wght.css';
 import './styles.css';
 import { App } from './App';
 import { DEMO, installerDemo } from './lib/demo';
+import { Ouverture } from './composants/Logo';
+
+// à l'ouverture : le logo se dessine sur une page blanche, pendant que la bibliothèque se charge
+const boite = document.createElement('div');
+document.body.appendChild(boite);
+const ouverture = createRoot(boite);
+ouverture.render(<Ouverture fin={() => { ouverture.unmount(); boite.remove(); }} />);
 
 const demarrer = () =>
   createRoot(document.getElementById('racine')!).render(

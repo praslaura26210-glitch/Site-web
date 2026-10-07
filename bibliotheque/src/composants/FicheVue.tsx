@@ -493,7 +493,7 @@ export function FicheVue({ id }: { id: string }) {
   );
 }
 
-/** Plans, coupes, façades : en quinconce sur deux colonnes, chaque image entière, avec sa légende. */
+/** Photos puis plans, coupes, façades : les uns sous les autres, chaque image entière, avec sa légende. */
 function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void }) {
   // les photos d'abord, puis les plans, coupes et façades (reconnus tout seuls, ou indiqués)
   const [, setVu] = useState(0);
@@ -505,7 +505,6 @@ function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: 
   const tous = fiche.images.slice(1).map((im, k) => ({ im, i: k + 1 }));
   const plan = (im: Image) => dessinConnu(im) ?? false;
   const documents = [...tous.filter((d) => !plan(d.im)), ...tous.filter((d) => plan(d.im))];
-  const colonnes = [documents.filter((_, k) => k % 2 === 0), documents.filter((_, k) => k % 2 === 1)];
   const ajout = (
     <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
       <Icone nom="plus" taille={18} />
@@ -514,22 +513,18 @@ function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: 
   if (!documents.length) return <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>;
   return (
     <section className="documents" aria-label="Plans, coupes et documents">
-      <div className="quinconce">
-        {colonnes.map((col, c) => (
-          <ul key={c}>
-            {col.map(({ im, i }) => (
-              <li key={im.id}>
-                <figure>
-                  <button onClick={() => ouvrir(i)} aria-label={`Agrandir : ${im.credit || `document ${i}`}`}>
-                    <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
-                  </button>
-                  {im.credit && <figcaption>{im.credit}</figcaption>}
-                </figure>
-              </li>
-            ))}
-          </ul>
+      <ul className="pile">
+        {documents.map(({ im, i }) => (
+          <li key={im.id}>
+            <figure>
+              <button onClick={() => ouvrir(i)} aria-label={`Agrandir : ${im.credit || `document ${i}`}`}>
+                <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
+              </button>
+              {im.credit && <figcaption>{im.credit}</figcaption>}
+            </figure>
+          </li>
         ))}
-      </div>
+      </ul>
       <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>
     </section>
   );

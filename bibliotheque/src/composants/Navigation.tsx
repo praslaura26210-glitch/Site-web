@@ -4,7 +4,6 @@ import { RAYONS, type Rayon } from '../types';
 import { useBiblio } from '../contexte';
 import { FILTRES_VIDES } from '../lib/recherche';
 import { Icone, type NomIcone } from './Icone';
-import { Logo } from './Logo';
 
 export const NOM_RAYON: Record<Rayon, string> = { livres: 'Livres', articles: 'Articles', projets: 'Projets' };
 const ICONE_RAYON: Record<Rayon, NomIcone> = { livres: 'livre', articles: 'article', projets: 'projet' };
@@ -50,7 +49,7 @@ export function Navigation({ children }: { children: ReactNode }) {
     <>
       <header className="entete">
         <div className="entete-in">
-          <a className="marque" href="#/" onClick={vider}><Logo largeur={52} epaissir={18} /><span>Bibliothèque</span></a>
+          <a className="marque" href="#/" onClick={vider}>Bibliothèque</a>
           <form className={`recherche${ouverte || filtres.q ? ' ouverte' : ''}`} role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
             <Icone nom="loupe" taille={18} />
             <input

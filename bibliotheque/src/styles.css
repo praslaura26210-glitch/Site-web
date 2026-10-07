@@ -939,3 +939,60 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 }
 
 @media (max-width: 960px) { .accueil .carte-projet-petit .carte-image { aspect-ratio: 1 / 1; } }
+
+/* ---------- écran d'ouverture : le logo se dessine ---------- */
+.ouverture { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: var(--fond); transition: opacity .6s ease; }
+.ouverture svg { width: min(220px, 52vw); height: auto; overflow: visible; }
+.ouverture path {
+  fill: var(--terracotta); fill-opacity: 0; stroke: var(--terracotta); stroke-width: 7; stroke-linejoin: round;
+  stroke-dasharray: var(--longueur, 12000); stroke-dashoffset: var(--longueur, 12000);
+  animation: dessiner 1.6s cubic-bezier(.45,.05,.35,1) forwards, remplir .5s ease 1.3s forwards;
+}
+.ouverture.part { opacity: 0; pointer-events: none; }
+@keyframes dessiner { to { stroke-dashoffset: 0; } }
+@keyframes remplir { to { fill-opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ouverture path { animation: none; fill-opacity: 1; stroke-dashoffset: 0; } }
+
+/* plans et documents : les uns sous les autres, centrés */
+.pile { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: clamp(28px, 4vw, 56px); width: 100%; max-width: 980px; }
+.pile figure { margin: 0; display: table; margin-inline: auto; }
+.pile button { display: block; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.pile img { display: block; width: auto; height: auto; max-width: min(980px, calc(100vw - 2 * var(--marge))); max-height: 80vh; }
+.pile figcaption { display: table-caption; caption-side: bottom; padding-top: 8px; font-size: 12.5px; color: var(--encre-3); }
+@media (max-width: 960px) { .pile img { max-height: none; width: 100%; } .pile figure { display: block; } .pile figcaption { display: block; } }
+
+/* en-tête sans logo ; recherche bien au centre */
+.marque .logo { display: none; }
+.entete-in { grid-template-columns: minmax(0, 1fr) minmax(0, 520px) minmax(0, 1fr); }
+.entete-in > .recherche { justify-self: center; }
+
+/* pages Livres, Articles, Projets : titre plus discret, moins de blanc */
+.tete-page { gap: 12px; padding: 26px 0 18px; }
+.tete-page h1 { font-size: clamp(32px, 3.4vw, 44px); }
+.tete-page .barre-filtres { padding-bottom: 10px; }
+
+/* fiche projet : infos et texte à parts égales, le texte centré en hauteur ; infos lisibles */
+.projet-corps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+.fiche-projet .infos-projet dd { font: 400 16.5px/1.4 var(--texte); color: var(--encre); }
+.fiche-projet .infos-projet dt { font: 400 11px/1.3 var(--texte); letter-spacing: .14em; color: var(--encre-3); }
+.projet-texte { max-width: 62ch; }
+@media (max-width: 960px) {
+  .projet-corps { grid-template-columns: 1fr; }
+  .fiche-projet .infos-projet dd { font-size: 15.5px; }
+  /* accueil : tout sur le premier écran du téléphone */
+  .accueil .section { padding: 10px 0 2px; gap: 10px; }
+  .accueil .section:first-child { padding-top: 8px; }
+  .accueil .section-tete { padding-bottom: 6px; }
+  .accueil .section-tete h2 { font-size: 22px; }
+  .accueil .section-tete > a { font-size: 11.5px; }
+  .accueil .carte { gap: 6px; }
+  .accueil .carte-titre { font-size: 14px; -webkit-line-clamp: 2; }
+  .accueil .carte-meta { font-size: 11px; }
+  .accueil .section-tete h2 .compte { font-size: 11px; }
+  .accueil .grille.livres .carte-image { aspect-ratio: 2 / 2.75; }
+  .accueil .carte-projet-petit .carte-image { aspect-ratio: 4 / 3; }
+  .accueil .rangee-vide { font-size: 14px; }
+}
+.fiche-projet .infos-projet dd { font-size: 17.5px; }
+.projet-texte .texte-projet { font-size: 15.5px; line-height: 1.85; }
+@media (max-width: 960px) { .fiche-projet .infos-projet dd { font-size: 16.5px; } .projet-texte .texte-projet { font-size: 15px; } }
