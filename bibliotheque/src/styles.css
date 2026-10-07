@@ -1088,3 +1088,7 @@ html { font-synthesis-weight: none; }
 .details-fiche { border-top: 0; }
 /* fiche projet : un trait noir, comme celui du dessus, avant les images */
 .fiche-projet > .documents { border-top: 1px solid var(--encre); padding-top: clamp(24px, 3vw, 40px); }
+
+/* Instrument Serif est serrée : on espace un peu les lettres */
+.marque { letter-spacing: .045em; }
+.section-tete h2, .accueil .section-tete h2, .tete-page h1 { letter-spacing: .035em; }
