@@ -12,5 +12,7 @@
     "bindings": [{ "name": "COFFRE", "class_name": "Coffre" }]
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Coffre"] }],
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // garde les variables réglées dans le tableau de bord Cloudflare (MOT_DE_PASSE) à chaque déploiement
+  "keep_vars": true
 }
