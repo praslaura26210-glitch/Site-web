@@ -203,7 +203,7 @@ export function Accueil() {
     <div>
       <header className="tete-page">
         <h1>
-          {titre}<span className="compte">{base.length}</span>
+          {titre}
         </h1>
         {travail && <p className="sous-titre">Les livres, articles et projets qui nourrissent ce travail.</p>}
         {page === 'auteur' && <p className="sous-titre">Toutes les fiches de {param} : projets, livres, articles.</p>}

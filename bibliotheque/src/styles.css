@@ -1,6 +1,6 @@
 /*
  * Bibliothèque — fond blanc, typographie fine.
- * Cormorant Garamond pour les titres, Jost (géométrique, léger) pour le texte.
+ * Instrument Serif pour les titres, Instrument Sans pour le texte : deux polices dessinées ensemble.
  * Couleurs : la palette de Laura (warm clay, terra cotta, dusty orange, latte).
  */
 
@@ -37,8 +37,8 @@
   --couv-fond: #F5EBDD;
   --couv-filet: #E0CDB3;
 
-  --titre: 'Cormorant Garamond Variable', 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
-  --texte: 'Jost Variable', Jost, 'Futura', 'Century Gothic', system-ui, sans-serif;
+  --titre: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --texte: 'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --marge: clamp(16px, 4vw, 56px);
   --max: 1320px;
   color-scheme: light;
@@ -1070,3 +1070,28 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .section-tete, :root:not([data-theme="light"]) .tete-page .barre-filtres { border-bottom-color: #3A3430; } }
 .section-tete h2 a { text-transform: inherit; letter-spacing: inherit; font-weight: inherit; }
+
+/* ---------- polices : Instrument Serif (titres) et Instrument Sans (texte) ---------- */
+html { font-synthesis-weight: none; }
+body { letter-spacing: .005em; }
+.marque { font-size: 38px; letter-spacing: -.005em; }
+/* titres de rayon et de page : de nouveau en titre, dans la police des titres, sans nombre */
+.section-tete h2, .accueil .section-tete h2 { font: 400 28px/1.1 var(--titre); letter-spacing: 0; text-transform: none; color: var(--encre); }
+.tete-page h1 { font: 400 34px/1.1 var(--titre); letter-spacing: 0; text-transform: none; }
+.tete-page h1 .compte, .section-tete h2 .compte { display: none; }
+.fiche-titre { font-weight: 400; letter-spacing: -.01em; }
+.carte-titre, .carte-livre .carte-titre { font-weight: 400; }
+.carte-titre { font-size: 19px; line-height: 1.15; }
+.accueil .carte-titre { font-size: 17px; }
+.infos-projet dd { letter-spacing: 0; }
+@media (max-width: 960px) {
+  .marque { font-size: 32px; }
+  .section-tete h2, .accueil .section-tete h2 { font-size: 23px; }
+  .tete-page h1 { font-size: 28px; }
+  .accueil .carte-titre { font-size: 14.5px; }
+}
+
+/* plus de trait au-dessus de « Catégories, mots-clés et détails » */
+.details-fiche { border-top: 0; }
+/* fiche projet : un trait noir, comme celui du dessus, avant les images */
+.fiche-projet > .documents { border-top: 1px solid var(--encre); padding-top: clamp(24px, 3vw, 40px); }
