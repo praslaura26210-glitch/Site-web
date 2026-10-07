@@ -1097,3 +1097,6 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
   .fiche-projet { --respire: 22px; }
   .fiche-projet .infos-projet div:nth-last-child(2) { padding-bottom: 0; }
 }
+
+/* plus d'air entre le trait noir et les images du projet */
+.fiche-projet > .documents { padding-top: calc(var(--respire) * 2); }
