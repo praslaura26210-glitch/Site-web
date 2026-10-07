@@ -3,3 +3,4 @@ dist/
 .local/
 *.tsbuildinfo
 dist-apercu/
+.wrangler/
