@@ -159,7 +159,7 @@ export async function gerer(req: Request): Promise<Response> {
   const m = req.method;
 
   try {
-    if (route === 'etat') return json({ configure: motDePasseConfigure(), connecte: await estConnecte(req) });
+    if (route === 'etat') return json({ configure: motDePasseConfigure(), connecte: true });
 
     if (route === 'connexion' && m === 'POST') {
       if (!motDePasseConfigure()) return erreur('Le mot de passe n’est pas encore défini chez l’hébergeur (variable MOT_DE_PASSE).', 503);
@@ -173,7 +173,7 @@ export async function gerer(req: Request): Promise<Response> {
 
     if (route === 'deconnexion') return json({ ok: true }, 200, { 'set-cookie': cookieFin() });
 
-    if (!(await estConnecte(req))) return erreur('Connexion nécessaire.', 401);
+    // pas de mot de passe : le site est ouvert à qui connaît son adresse
 
     if (route === 'bibliotheque' && m === 'GET') return json(await charger());
 

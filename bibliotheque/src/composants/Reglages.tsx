@@ -27,17 +27,6 @@ export function Reglages() {
           <ImportFavoris />
           <MotsCles />
           <Synonymes />
-          {!DEMO && (
-            <section className="reglage">
-              <h2>Session</h2>
-              <button className="bouton" onClick={async () => {
-                await api.deconnexion().catch(() => {});
-                // les données gardées hors ligne sont effacées de l'appareil
-                try { for (const k of await caches.keys()) await caches.delete(k); } catch { /* rien */ }
-                location.href = '/';
-              }}>Se déconnecter de cet appareil</button>
-            </section>
-          )}
         </div>
       </details>
     </div>
