@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
-import type { Fiche, LienWeb } from '../types';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import type { Fiche } from '../types';
 import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
@@ -104,50 +104,23 @@ function MesNotes({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
   );
 }
 
-/** Liens utiles (vidéo, plans…), avec un petit formulaire pour en ajouter un sur place. */
-function Liens({ fiche, enregistrer }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void }) {
+/** Liens utiles (vidéo, plans…) ; on les ajoute avec le crayon (Modifier la fiche). */
+function Liens({ fiche }: { fiche: Fiche }) {
   const liens = fiche.liens ?? [];
-  const [ouvert, setOuvert] = useState(false);
-  const [titre, setTitre] = useState('');
-  const [url, setUrl] = useState('');
-  const valider = () => {
-    let u = url.trim();
-    if (!u) return;
-    if (!/^https?:\/\//i.test(u)) u = `https://${u}`;
-    const l: LienWeb = { titre: titre.trim() || domaine(u), url: u };
-    enregistrer({ ...fiche, liens: [...liens, l] }, 'Lien ajouté.');
-    setTitre(''); setUrl(''); setOuvert(false);
-  };
+  if (!liens.length) return null;
   return (
     <section className="bloc liens-fiche">
-      {liens.length > 0 && <h2>Liens</h2>}
-      {liens.length > 0 && (
-        <ul>
-          {liens.map((l, i) => (
-            <li key={i}>
-              <a href={l.url} target="_blank" rel="noreferrer">
-                <span>{l.titre || domaine(l.url)}</span>
-                <span className="discret">{domaine(l.url)} <Icone nom="lien" taille={14} /></span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-      {ouvert ? (
-        <div className="ajout-lien">
-          <input autoFocus placeholder="Titre : Visite en vidéo, Plans…" value={titre} onChange={(e) => setTitre(e.target.value)} />
-          <input type="url" inputMode="url" placeholder="Adresse : https://…" value={url} onChange={(e) => setUrl(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); valider(); } }} />
-          <div className="champ-ligne">
-            <button type="button" className="bouton petit principal" onClick={valider} disabled={!url.trim()}>Ajouter</button>
-            <button type="button" className="bouton petit" onClick={() => setOuvert(false)}>Annuler</button>
-          </div>
-        </div>
-      ) : (
-        <button type="button" className="lien-texte petit ajout-discret" onClick={() => setOuvert(true)}>
-          <Icone nom="plus" taille={14} /> Ajouter un lien (vidéo, plans, article…)
-        </button>
-      )}
+      <h2>Liens</h2>
+      <ul>
+        {liens.map((l, i) => (
+          <li key={i}>
+            <a href={l.url} target="_blank" rel="noreferrer">
+              <span>{l.titre || domaine(l.url)}</span>
+              <span className="discret">{domaine(l.url)} <Icone nom="lien" taille={14} /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
@@ -349,8 +322,8 @@ export function FicheVue({ id }: { id: string }) {
     </div>
   );
 
-  // projet : architecte, lieu, année, lien, sous la grande image
-  const infosProjet = projet && (
+  // projet : architecte, lieu, année, sur toute la largeur sous la grande image
+  const infosProjet = projet && (fiche.auteurs.length > 0 || fiche.editeur || fiche.annee || citePar.length > 0) && (
     <dl className="infos-projet">
       {fiche.auteurs.length > 0 && (
         <div>
@@ -360,16 +333,6 @@ export function FicheVue({ id }: { id: string }) {
       )}
       {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
       {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
-      <div>
-        <dt>En savoir plus</dt>
-        <dd>
-          {fiche.source ? (
-            <a href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Site du projet'} ↗</a>
-          ) : (
-            <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
-          )}
-        </dd>
-      </div>
       {citePar.length > 0 && (
         <div>
           <dt>Présenté dans</dt>
@@ -380,42 +343,34 @@ export function FicheVue({ id }: { id: string }) {
   );
 
   // la grande image (projets, articles) : on la touche pour l'agrandir, la changer, la légender
+  const source = !livre && (fiche.source ? (
+    <a className="source-image" href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Source'} ↗</a>
+  ) : projet ? (
+    <a className="source-image" href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
+  ) : null);
   const imagePrincipale = !livre && (fiche.images.length > 0 ? (
     <figure className="image-principale">
       <button className="grande" onClick={() => setVisionneuse(0)} aria-label="Agrandir ou modifier l’image">
         <img src={srcImage(fiche.images[0].id)} alt="" style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
       </button>
-      {credit(0) && <figcaption className="credit-image">{credit(0)}</figcaption>}
+      <figcaption>
+        <span className="credit-image">{credit(0)}</span>
+        {source}
+      </figcaption>
     </figure>
   ) : (
-    <AjoutImage fiche={fiche} enregistrer={enregistrer} className="image-a-ajouter">
-      <Icone nom="photo" taille={24} />
-      <span>Pas encore d’image. Touche ici pour ajouter une photo ou une capture.</span>
-    </AjoutImage>
+    <div className="image-principale">
+      <AjoutImage fiche={fiche} enregistrer={enregistrer} className="image-a-ajouter">
+        <Icone nom="photo" taille={24} />
+        <span>Pas encore d’image. Touche ici pour ajouter une photo ou une capture.</span>
+      </AjoutImage>
+      {source && <div className="legende-image"><span />{source}</div>}
+    </div>
   ));
 
-  // plans, coupes, façades… : les images suivantes, sous le texte
+  // plans, coupes, façades… : les images suivantes, sous le texte, qui défilent avec des flèches
   const blocDocuments = !livre && fiche.images.length > 0 && (
-    <section className="bloc documents">
-      {documents.length > 0 && <h2>Plans, coupes et documents</h2>}
-      {documents.length > 0 && (
-        <ul className="grille-documents">
-          {documents.map((im, k) => (
-            <li key={im.id}>
-              <figure>
-                <button onClick={() => setVisionneuse(k + 1)} aria-label={`Agrandir : ${im.credit || `image ${k + 2}`}`}>
-                  <img src={srcImage(im.id)} alt="" loading="lazy" />
-                </button>
-                {im.credit && <figcaption>{im.credit}</figcaption>}
-              </figure>
-            </li>
-          ))}
-        </ul>
-      )}
-      <AjoutImage fiche={fiche} enregistrer={enregistrer} className="lien-texte petit ajout-discret">
-        <Icone nom="plus" taille={14} /> Ajouter {projet ? 'un plan, une coupe, une façade…' : 'une image'}
-      </AjoutImage>
-    </section>
+    <Carrousel fiche={fiche} enregistrer={enregistrer} ouvrir={(i) => setVisionneuse(i)} />
   );
 
   const texte = fiche.resume && (
@@ -429,7 +384,7 @@ export function FicheVue({ id }: { id: string }) {
 
   const suite = (
     <>
-      <Liens fiche={fiche} enregistrer={enregistrer} />
+      <Liens fiche={fiche} />
 
       {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} />}
 
@@ -498,12 +453,10 @@ export function FicheVue({ id }: { id: string }) {
         <div className="fiche-projet">
           <div className="fiche-contenu large">{titres}</div>
           {imagePrincipale}
-          <div className="fiche-contenu">
-            {infosProjet}
-            {texte}
-            {blocDocuments}
-            {suite}
-          </div>
+          {infosProjet}
+          {texte && <div className="fiche-contenu">{texte}</div>}
+          {blocDocuments}
+          <div className="fiche-contenu">{suite}</div>
         </div>
       )}
 
@@ -524,6 +477,54 @@ export function FicheVue({ id }: { id: string }) {
         </div>
       )}
     </article>
+  );
+}
+
+/** Plans, coupes, façades : une image à la fois, entière, qu'on fait défiler (flèches ou doigt). */
+function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void }) {
+  const piste = useRef<HTMLUListElement>(null);
+  const [actuel, setActuel] = useState(0);
+  const documents = fiche.images.slice(1);
+  const n = documents.length;
+  const aller = (i: number) => {
+    const el = piste.current;
+    if (!el) return;
+    el.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * el.clientWidth, behavior: 'smooth' });
+  };
+  const ajout = (
+    <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
+      <Icone nom="plus" taille={18} />
+    </AjoutImage>
+  );
+  if (!n) return <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>;
+  return (
+    <section className="bloc documents">
+      <div className="documents-tete">
+        <h2>Plans, coupes et documents</h2>
+        <span className="documents-actions">
+          {n > 1 && <span className="compteur">{actuel + 1} / {n}</span>}
+          {n > 1 && <button className="bouton-icone" onClick={() => aller(actuel - 1)} disabled={actuel === 0} aria-label="Précédent"><Icone nom="gauche" taille={18} /></button>}
+          {n > 1 && <button className="bouton-icone" onClick={() => aller(actuel + 1)} disabled={actuel === n - 1} aria-label="Suivant"><Icone nom="droite" taille={18} /></button>}
+          <span title="Ajouter un plan, une coupe, une façade">{ajout}</span>
+        </span>
+      </div>
+      <ul
+        className="carrousel"
+        ref={piste}
+        onScroll={(e) => { const el = e.currentTarget; setActuel(Math.round(el.scrollLeft / Math.max(1, el.clientWidth))); }}
+      >
+        {documents.map((im, k) => (
+          <li key={im.id}>
+            <figure>
+              <button onClick={() => ouvrir(k + 1)} aria-label={`Agrandir : ${im.credit || `document ${k + 1}`}`}>
+                <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
+              </button>
+              <figcaption>{im.credit}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

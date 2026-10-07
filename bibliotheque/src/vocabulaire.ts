@@ -43,7 +43,7 @@ export const FAMILLES_DEPART: Famille[] = [
           'Dario Castellino', 'Peter Zumthor', 'Carlo Scarpa', 'Anna Heringer', 'RCR Arquitectes', 'Ryue Nishizawa',
           'Barbara Martino', 'Link Architectes', 'Colectivo C733', 'CoA arquitectura', 'Shinslab', 'designbuildLAB',
           'Martin Rauch', 'Gion A. Caminada', 'Wang Shu', 'Lacaton & Vassal', 'Sverre Fehn',
-          'Kengo Kuma', 'Studio Mumbai', 'Pierre Chareau', 'Powerhouse Company', 'La Cabina de la Curiosidad', 'HARQUITECTES',
+          'Kengo Kuma', 'Studio Mumbai', 'Pierre Chareau', 'Powerhouse Company', 'La Cabina de la Curiosidad', 'HARQUITECTES', 'Collection Architectes',
         ],
       },
     ],

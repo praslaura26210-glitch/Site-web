@@ -225,7 +225,7 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 }
 .entete-icones { justify-self: end; display: flex; align-items: center; gap: 2px; margin-right: -8px; }
 .lien-coeur { color: var(--bordeaux); }
-.lien-coeur[aria-current='page'] svg path { fill: currentColor; }
+.lien-coeur svg path { fill: currentColor; }
 .bouton-loupe { display: none !important; }
 
 /* la recherche : un champ arrondi, discret ; au bout, les catégories et réglages */
@@ -351,8 +351,8 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 }
 
 /* projets : une mosaïque d'images entières, le nom au survol (ou au premier toucher) */
-.mosaique { list-style: none; margin: 0; padding: 0; columns: 3 260px; column-gap: 22px; }
-.mosaique > li { break-inside: avoid; margin-bottom: 22px; }
+.mosaique { list-style: none; margin: 0; padding: 0; columns: 3 340px; column-gap: 14px; }
+.mosaique > li { break-inside: avoid; margin-bottom: 14px; }
 .carte-projet { position: relative; display: block; overflow: hidden; color: #FFFFFF; text-decoration: none; background: var(--fond-2); }
 .carte-projet .couv { display: block; width: 100%; height: auto; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .carte-projet.sans-image .couv-dessinee { aspect-ratio: 4 / 3; color: var(--encre); justify-content: center; gap: 10px; }
@@ -372,8 +372,8 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 .coeur-image svg path { fill: currentColor; }
 @media (hover: none) { .carte-voir { display: block; } }
 @media (max-width: 960px) {
-  .mosaique { columns: 2; column-gap: 12px; }
-  .mosaique > li { margin-bottom: 12px; }
+  .mosaique { columns: 2; column-gap: 6px; margin: 0 calc(var(--marge) * -1 + 6px); }
+  .mosaique > li { margin-bottom: 6px; }
   .carte-projet-texte { padding: 36px 12px 10px; }
   .carte-projet-texte .carte-titre { font-size: 17px; }
 }
@@ -491,16 +491,40 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 .resume { font-size: 17px; line-height: 1.8; color: var(--encre); max-width: 64ch; }
 
 /* projet : grande image, puis le texte et une colonne d'informations */
-.image-principale { display: grid; gap: 10px; margin: 0; }
-.image-principale .grande { display: flex; justify-content: center; padding: 0; border: 0; background: none; cursor: zoom-in; }
-.image-principale .grande img { width: auto; height: auto; max-width: 100%; max-height: 82vh; object-fit: contain; }
+/* grande image du projet, entière ; légende et source alignées sous l'image */
+.image-principale { display: table; margin: 0 auto; }
+.image-principale .grande { display: block; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.image-principale .grande img {
+  display: block; width: auto; height: auto; max-height: 82vh;
+  max-width: min(calc(100vw - 2 * var(--marge)), calc(var(--max) - 2 * var(--marge)));
+}
+.image-principale figcaption { display: table-caption; caption-side: bottom; padding-top: 10px; font-size: 12.5px; color: var(--encre-3); }
+.image-principale:has(.image-a-ajouter) { display: grid; gap: 10px; width: 100%; }
+.legende-image { display: flex; justify-content: space-between; gap: 16px; }
+.source-image { float: right; margin-left: 16px; font-size: 12.5px; color: var(--terracotta); text-decoration: none; }
+.source-image:hover { text-decoration: underline; text-underline-offset: 3px; }
+.legende-image .source-image { float: none; }
+
+/* plans, coupes : une image à la fois, entière, qu'on fait défiler */
+.documents { display: grid; gap: 14px; }
+.documents-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--filet); padding-bottom: 10px; }
+.documents-tete h2 { font: 500 26px/1.15 var(--titre); }
+.documents-actions { display: inline-flex; align-items: center; gap: 2px; }
+.documents-actions .compteur { font-size: 13px; color: var(--encre-3); margin-right: 8px; font-variant-numeric: tabular-nums; }
+.documents-actions button:disabled { opacity: .3; cursor: default; }
+.carrousel { list-style: none; margin: 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; }
+.carrousel::-webkit-scrollbar { display: none; }
+.carrousel > li { flex: 0 0 100%; scroll-snap-align: start; }
+.carrousel figure { margin: 0; display: grid; gap: 10px; justify-items: center; }
+.carrousel button { display: flex; align-items: center; justify-content: center; width: 100%; height: clamp(280px, 68vh, 760px); padding: 0; border: 0; background: none; cursor: zoom-in; }
+.carrousel img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; }
+.carrousel figcaption { font-size: 13px; color: var(--encre-2); text-align: center; min-height: 1.4em; }
+.ajout-rond { width: 34px !important; height: 34px !important; border: 1px solid var(--filet) !important; border-radius: 50%; color: var(--encre-2); cursor: pointer; }
+.ajout-rond:hover { color: var(--terracotta); border-color: var(--terracotta) !important; }
+.ajout-documents { margin-top: -12px; }
+.lien-texte.souligne { text-decoration: underline; text-decoration-color: var(--filet); text-underline-offset: 4px; }
 .texte-projet { font-size: 18px; line-height: 1.8; }
 .documents { display: grid; gap: 18px; }
-.grille-documents { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 22px; }
-.grille-documents figure { margin: 0; display: grid; gap: 8px; }
-.grille-documents button { padding: 0; border: 1px solid var(--filet); background: var(--fond-2); cursor: zoom-in; aspect-ratio: 4 / 3; overflow: hidden; }
-.grille-documents img { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; }
-.grille-documents figcaption { font-size: 13px; color: var(--encre-2); line-height: 1.45; }
 .lien-texte.souligne { text-decoration: underline; text-decoration-color: var(--filet); text-underline-offset: 4px; }
 .fiche-galerie { display: grid; gap: 12px; }
 .fiche-galerie .grande { padding: 0; border: 0; background: var(--fond-2); overflow: hidden; cursor: zoom-in; }
@@ -542,7 +566,7 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
 .fiche-projet { display: grid; gap: 36px; }
 .fiche-contenu.large { max-width: none; gap: 28px; }
 .fiche-projet .infos-projet {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 24px;
   border-top: 1px solid var(--encre); border-bottom: 1px solid var(--filet); padding: 0;
 }
 .fiche-projet .infos-projet div { padding: 14px 18px 14px 0; border-bottom: 0; display: grid; gap: 4px; }
@@ -636,9 +660,15 @@ button.mot:hover { border-color: var(--terracotta); color: var(--terracotta); }
   .fiche-livre-grille, .fiche-projet-grille { grid-template-columns: 1fr; gap: 32px; }
   .fiche-couv { position: static; }
   .fiche-couv img, .fiche-couv .couv-dessinee { max-width: 210px; }
-  .fiche-galerie, .image-principale { margin: 0 calc(var(--marge) * -1); }
-  .image-principale .credit-image { padding: 0 var(--marge); }
-  .grille-documents { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .fiche-galerie { margin: 0 calc(var(--marge) * -1); }
+  .image-principale:not(:has(.image-a-ajouter)) { display: block; margin: 0 calc(var(--marge) * -1); }
+  .image-principale .grande img { width: 100%; max-width: 100%; max-height: none; }
+  .image-principale figcaption { display: block; padding: 8px var(--marge) 0; }
+  .fiche-projet .infos-projet { grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  .carrousel button { height: auto; }
+  .carrousel img { max-height: 72vh; }
+  .carrousel { margin: 0 calc(var(--marge) * -1); }
+  .carrousel figcaption { padding: 0 var(--marge); }
   .texte-projet { font-size: 17px; }
   .vignettes-galerie, .fiche-galerie .credit-image { padding: 0 var(--marge); }
   .fiche-titre { font-size: 40px; }
@@ -819,3 +849,6 @@ textarea.synonymes { width: 100%; font-size: 14px; line-height: 1.7; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(safe-area-inset-top, 0px)); z-index: 200; }
+.choix-architecte { max-width: min(320px, 55vw) !important; min-width: 0; text-overflow: ellipsis; overflow: hidden; }
+.barre-filtres > * { min-width: 0; }
+@media (min-width: 961px) { .toast { bottom: 100px; } }
