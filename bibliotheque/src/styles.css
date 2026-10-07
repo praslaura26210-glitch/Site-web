@@ -943,15 +943,8 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 /* ---------- écran d'ouverture : le logo se dessine ---------- */
 .ouverture { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: var(--fond); transition: opacity .6s ease; }
 .ouverture svg { width: min(220px, 52vw); height: auto; overflow: visible; }
-.ouverture path {
-  fill: var(--terracotta); fill-opacity: 0; stroke: var(--terracotta); stroke-width: 7; stroke-linejoin: round;
-  stroke-dasharray: var(--longueur, 12000); stroke-dashoffset: var(--longueur, 12000);
-  animation: dessiner 1.6s cubic-bezier(.45,.05,.35,1) forwards, remplir .5s ease 1.3s forwards;
-}
+.ouverture path { fill: none; stroke: var(--terracotta); stroke-linecap: round; stroke-linejoin: round; }
 .ouverture.part { opacity: 0; pointer-events: none; }
-@keyframes dessiner { to { stroke-dashoffset: 0; } }
-@keyframes remplir { to { fill-opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .ouverture path { animation: none; fill-opacity: 1; stroke-dashoffset: 0; } }
 
 /* plans et documents : les uns sous les autres, centrés */
 .pile { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: clamp(28px, 4vw, 56px); width: 100%; max-width: 980px; }
@@ -996,3 +989,27 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 .fiche-projet .infos-projet dd { font-size: 17.5px; }
 .projet-texte .texte-projet { font-size: 15.5px; line-height: 1.85; }
 @media (max-width: 960px) { .fiche-projet .infos-projet dd { font-size: 16.5px; } .projet-texte .texte-projet { font-size: 15px; } }
+
+/* ---------- retouches : moins de traits, moins de couleur ---------- */
+
+/* en-tête un peu plus ample ; recherche au contour neutre */
+.entete-in { min-height: 86px; }
+.marque { font-size: 34px; }
+.recherche input { height: 46px; border-color: #E4E1DD; }
+.recherche input:focus { border-color: var(--encre-3); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .recherche input { border-color: var(--filet); } }
+@media (max-width: 960px) { .entete-in { min-height: 70px; } .marque { font-size: 30px; } }
+
+/* crédit de la photo collé à l'image */
+.image-principale figcaption { padding-top: 4px; }
+@media (max-width: 960px) { .image-principale figcaption { padding-top: 5px; } }
+
+/* moins de traits */
+.accueil .section-tete { border-bottom: 0; padding-bottom: 0; }
+.tete-page .barre-filtres { border-bottom: 0; }
+.fiche-projet .infos-projet div { border-bottom: 0; padding: 0 0 18px; }
+.section-tete { border-bottom-color: transparent; }
+
+/* moins de couleur : « Voir plus » en gris, la couleur reste pour l'essentiel */
+.section-tete > a, .accueil .section-tete > a { color: var(--encre-2); }
+.section-tete > a:hover { color: var(--terracotta); }
