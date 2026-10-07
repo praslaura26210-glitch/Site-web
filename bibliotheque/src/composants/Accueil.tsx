@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Fiche, Rayon } from '../types';
 import { RAYONS, rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
@@ -28,21 +28,20 @@ const TRIS: Record<Tri, (a: Fiche, b: Fiche) => number> = {
 const lien = (f: Fiche) => `#/fiche/${encodeURIComponent(f.id)}`;
 const estLu = (f: Fiche) => f.statut === 'lu';
 
-/** Une carte : couverture pour un livre, photo recadrée pour un projet ou un article. */
+/** Une carte : couverture pour un livre, image d'article. Les projets ont leur propre carte (mosaïque). */
 export function Carte({ fiche: f }: { fiche: Fiche }) {
   const rayon = rayonDe(f.type);
+  if (rayon === 'projets') return <CarteProjet fiche={f} />;
   const meta =
     rayon === 'livres' ? f.auteurs.join(', ') :
-    rayon === 'projets' ? [f.auteurs[0], f.editeur].filter(Boolean).join(' · ') :
     [f.auteurs[0] ?? (f.editeur || domaine(f.source)), f.type !== 'article' ? NOM_TYPE[f.type] : ''].filter(Boolean).join(' · ');
-  const lisible = rayon !== 'projets';
   return (
-    <a className={`carte carte-${rayon === 'livres' ? 'livre' : rayon === 'projets' ? 'projet' : 'article'}`} href={lien(f)}>
+    <a className={`carte carte-${rayon === 'livres' ? 'livre' : 'article'}`} href={lien(f)}>
       <span className="carte-image"><Couverture fiche={f} /></span>
       <span className="carte-texte">
         <span className="carte-titre">{f.titre}</span>
         <span className="carte-meta">
-          {lisible && estLu(f) && <span className="point-lu" title="Lu" aria-label="Lu" />}
+          {estLu(f) && <span className="point-lu" title="Lu" aria-label="Lu" />}
           <span>{meta}</span>
           {f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={13} /></span>}
         </span>
@@ -51,7 +50,50 @@ export function Carte({ fiche: f }: { fiche: Fiche }) {
   );
 }
 
+/**
+ * Projet : l'image entière, sans recadrage. Le nom apparaît au survol ;
+ * sur téléphone, un premier toucher l'affiche, un second ouvre la fiche.
+ */
+function CarteProjet({ fiche: f }: { fiche: Fiche }) {
+  const [revele, setRevele] = useState(false);
+  const tactile = useRef(false);
+  useEffect(() => {
+    if (!revele) return;
+    const t = setTimeout(() => setRevele(false), 5000);
+    return () => clearTimeout(t);
+  }, [revele]);
+  const meta = [f.auteurs[0], f.editeur].filter(Boolean).join(' · ');
+  return (
+    <a
+      className={`carte-projet${revele ? ' revele' : ''}${f.images.length ? '' : ' sans-image'}`}
+      href={lien(f)}
+      aria-label={[f.titre, meta].filter(Boolean).join(', ')}
+      onPointerDown={(e) => { tactile.current = e.pointerType !== 'mouse'; }}
+      onClick={(e) => {
+        if (tactile.current && f.images.length && !revele) { e.preventDefault(); setRevele(true); }
+      }}
+    >
+      <Couverture fiche={f} />
+      {f.images.length > 0 && (
+        <span className="carte-projet-texte" aria-hidden="true">
+          <span className="carte-titre">{f.titre}</span>
+          {meta && <span className="carte-meta">{meta}</span>}
+          <span className="carte-voir">Voir le projet →</span>
+        </span>
+      )}
+      {f.favori && <span className="coeur-image" aria-hidden="true"><Icone nom="coeur" taille={14} /></span>}
+    </a>
+  );
+}
+
 function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
+  if (rayon === 'projets') {
+    return (
+      <ul className="mosaique">
+        {fiches.map((f) => <li key={f.id}><CarteProjet fiche={f} /></li>)}
+      </ul>
+    );
+  }
   return (
     <ul className={`grille ${rayon}`}>
       {fiches.map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
@@ -198,7 +240,8 @@ export function Accueil() {
 function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
-  const LIMITE = 10;
+  // quelques fiches seulement ; le reste avec « Voir plus »
+  const LIMITE: Record<Rayon, number> = { livres: 6, articles: 4, projets: 6 };
 
   if (!biblio.fiches.length) {
     return (
@@ -220,14 +263,9 @@ function VueAccueil() {
               {liste.length > 0 && <a className="voir-plus" href={`#/${r}`}>Voir plus <span aria-hidden="true">→</span></a>}
             </div>
             {liste.length ? (
-              <ul className={`rangee ${r}`}>
-                {liste.slice(0, LIMITE).map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
-                {liste.length > LIMITE && (
-                  <li className="rangee-fin">
-                    <a href={`#/${r}`}>Voir les {liste.length} <span aria-hidden="true">→</span></a>
-                  </li>
-                )}
-              </ul>
+              <>
+                <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />
+              </>
             ) : (
               <p className="discret rangee-vide">
                 Aucun {r === 'articles' ? 'article' : r === 'livres' ? 'livre' : 'projet'} pour l’instant. <a className="lien-texte" href="#/ajouter">Ajouter</a>

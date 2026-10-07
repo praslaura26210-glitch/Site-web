@@ -9,8 +9,8 @@ export const NOM_RAYON: Record<Rayon, string> = { livres: 'Livres', articles: 'A
 const ICONE_RAYON: Record<Rayon, NomIcone> = { livres: 'livre', articles: 'article', projets: 'projet' };
 
 /**
- * En haut : « Bibliothèque » et le cœur, puis la barre de recherche (les catégories et réglages
- * dans le petit bouton à sa droite). Les rayons : au centre sur ordinateur, en bas sur téléphone.
+ * En haut : « Bibliothèque », la recherche au milieu (sur téléphone, derrière la loupe) avec les
+ * catégories et réglages au bout, et le cœur. Les rayons sont en bas.
  */
 export function Navigation({ children }: { children: ReactNode }) {
   const { route, filtres, setFiltres, naviguer } = useBiblio();
@@ -39,22 +39,18 @@ export function Navigation({ children }: { children: ReactNode }) {
   };
   const vider = () => setFiltres(FILTRES_VIDES);
 
+  // téléphone : la loupe ouvre la recherche ; elle reste ouverte tant qu'il y a une recherche
+  const [ouverte, setOuverte] = useState(false);
+  useEffect(() => { if (!filtres.q) setOuverte(false); }, [route]); // eslint-disable-line react-hooks/exhaustive-deps
+  const ouvrir = () => { setOuverte(true); requestAnimationFrame(() => champ.current?.focus()); };
+  const fermer = () => { chercher(''); setOuverte(false); };
+
   return (
     <>
       <header className="entete">
         <div className="entete-in">
           <a className="marque" href="#/" onClick={vider}>Bibliothèque</a>
-          <nav className="nav" aria-label="Rayons">
-            {RAYONS.map((r) => (
-              <a key={r} href={`#/${r}`} aria-current={actuel(r)} onClick={vider}>{NOM_RAYON[r]}</a>
-            ))}
-          </nav>
-          <a className="bouton-icone lien-coeur" href="#/favoris" aria-current={actuel('favoris')} aria-label="Favoris" title="Favoris" onClick={vider}>
-            <Icone nom="coeur" taille={24} />
-          </a>
-        </div>
-        <div className="entete-recherche">
-          <form className="recherche" role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
+          <form className={`recherche${ouverte || filtres.q ? ' ouverte' : ''}`} role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
             <Icone nom="loupe" taille={18} />
             <input
               ref={champ}
@@ -72,7 +68,18 @@ export function Navigation({ children }: { children: ReactNode }) {
               </button>
             )}
             <MenuFiltres />
+            <button type="button" className="recherche-fermer" onClick={fermer} aria-label="Fermer la recherche">
+              <Icone nom="fermer" taille={20} />
+            </button>
           </form>
+          <div className="entete-icones">
+            <button type="button" className="bouton-icone bouton-loupe" onClick={ouvrir} aria-label="Rechercher" title="Rechercher">
+              <Icone nom="loupe" taille={22} />
+            </button>
+            <a className="bouton-icone lien-coeur" href="#/favoris" aria-current={actuel('favoris')} aria-label="Favoris" title="Favoris" onClick={vider}>
+              <Icone nom="coeur" taille={24} />
+            </a>
+          </div>
         </div>
       </header>
 
