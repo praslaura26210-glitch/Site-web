@@ -42,4 +42,7 @@ export const api = {
   apercu: (url: string) => appel<{ titre?: string; site?: string; annee?: string; image: Image | null }>(`apercu?url=${encodeURIComponent(url)}`),
 };
 
-export const srcImage = (id: string) => (DEMO ? demoSrc(id) : `/api/images/${encodeURIComponent(id)}`);
+/** Photos reprises de claude.ai : fichiers publiés avec le site, servis directement (plus rapide). */
+const repriseClaude = (id: string) => /^[0-9a-f]{32}$/.test(id);
+export const srcImage = (id: string) =>
+  DEMO ? demoSrc(id) : repriseClaude(id) ? `/depart-images/${id}.webp` : `/api/images/${encodeURIComponent(id)}`;

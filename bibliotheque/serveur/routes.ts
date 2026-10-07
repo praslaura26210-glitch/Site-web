@@ -2,6 +2,7 @@ import type { Bibliotheque, Categorie, Famille, Fiche, Image } from '../src/type
 import { TYPES, STATUTS } from '../src/types';
 import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../src/vocabulaire';
 import depart from '../depart/depart.json';
+import claude from '../depart/claude.json';
 import { lireBibliotheque, ecrireBibliotheque, lireImage, ecrireImage, supprimerImage } from './stockage';
 import { cookieFin, cookieSession, estConnecte, motDePasseConfigure, verifierMotDePasse } from './session';
 import { chercherApercu, chercherIsbn, telechargerImage } from './recuperation';
@@ -13,6 +14,9 @@ const json = (data: unknown, status = 200, extra: Record<string, string> = {}) =
 const erreur = (message: string, status: number) => json({ erreur: message }, status);
 
 type FicheDepart = Fiche & { depuis: number };
+/** Bibliothèque faite sur claude.ai : elle remplace une fois le contenu du site (photos dans public/depart-images). */
+const CLAUDE = claude as unknown as { version: number; fiches: Fiche[]; categories: Categorie[]; familles: Famille[]; synonymes: string[][] };
+
 const DEPART = depart as unknown as { version: number; fiches: FicheDepart[]; categories?: Categorie[]; images: Record<string, string> };
 
 async function ecrireImagesDepart(fiches: Fiche[]) {
@@ -60,6 +64,18 @@ async function charger(): Promise<Bibliotheque> {
     };
     await ecrireBibliotheque(neuve);
     return neuve;
+  }
+  // une seule fois : le site reprend la bibliothèque faite sur claude.ai
+  if ((b.repriseClaude ?? 0) < CLAUDE.version) {
+    b.fiches = structuredClone(CLAUDE.fiches);
+    b.categories = structuredClone(CLAUDE.categories);
+    b.familles = structuredClone(CLAUDE.familles);
+    b.synonymes = structuredClone(CLAUDE.synonymes);
+    b.repriseClaude = CLAUDE.version;
+    b.departVersion = DEPART.version;
+    b.rev++;
+    await ecrireBibliotheque(b);
+    return b;
   }
   // bibliothèques créées avant l'ajout des catégories
   b.categories ??= structuredClone(DEPART.categories ?? CATEGORIES_DEPART);
@@ -276,6 +292,7 @@ export async function gerer(req: Request): Promise<Response> {
         familles: Array.isArray(corps.familles) ? corps.familles : FAMILLES_DEPART,
         synonymes: Array.isArray(corps.synonymes) ? corps.synonymes.map(textes).filter((l: string[]) => l.length > 1) : SYNONYMES_DEPART,
         departVersion: DEPART.version,
+        repriseClaude: CLAUDE.version,
       };
       await ecrireBibliotheque(b);
       return json(b);

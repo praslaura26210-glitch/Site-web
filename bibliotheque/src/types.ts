@@ -110,6 +110,8 @@ export interface Bibliotheque {
   synonymes: string[][];
   /** Version du contenu de départ déjà intégrée. */
   departVersion?: number;
+  /** Version de la bibliothèque claude.ai déjà reprise (depart/claude.json). */
+  repriseClaude?: number;
 }
 
 export const TYPES: TypeFiche[] = ['livre', 'article', 'projet', 'site', 'video'];

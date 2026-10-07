@@ -67,6 +67,10 @@ export default {
       supprimerImage: (id) => coffre.supprimerImage(id),
     };
     definirStockage(stockage);
-    return gerer(request);
+    const reponse = await gerer(request);
+    // photo reprise de claude.ai : publiée avec le site
+    const m = url.pathname.match(/^\/api\/images\/([0-9a-f]{32})$/);
+    if (reponse.status === 404 && m) return env.ASSETS.fetch(new Request(new URL(`/depart-images/${m[1]}.webp`, url)));
+    return reponse;
   },
 };
