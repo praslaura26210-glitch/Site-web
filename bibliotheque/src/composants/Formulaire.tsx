@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Citation, Famille, Fiche, Statut, TypeFiche } from '../types';
-import { STATUTS, TYPES } from '../types';
+import type { Citation, Famille, Fiche, TypeFiche } from '../types';
+import { TYPES } from '../types';
 import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { compresser } from '../lib/images';
-import { NOM_AUTEUR, NOM_EDITEUR, NOM_TYPE, nomStatut } from '../lib/libelles';
+import { NOM_AUTEUR, NOM_EDITEUR, NOM_TYPE } from '../lib/libelles';
 import { normaliser, suggerer } from '../lib/recherche';
 import { estVideo } from '../lib/favoris';
 import { Icone } from './Icone';
@@ -13,6 +13,10 @@ import { rechercheWeb } from './FicheVue';
 export interface Preremplissage {
   source?: string;
   titre?: string;
+  type?: TypeFiche;
+  /** Projet ajouté depuis un livre : le livre qui le cite. */
+  citeDans?: string[];
+  categories?: string[];
 }
 
 interface NouveauMot {
@@ -25,9 +29,9 @@ const aujourdhui = () => new Date().toISOString().slice(0, 10);
 
 function vierge(pre?: Preremplissage): Fiche {
   const maintenant = new Date().toISOString();
-  const type: TypeFiche = pre?.source ? (estVideo(pre.source) ? 'video' : 'site') : 'livre';
+  const type: TypeFiche = pre?.type ?? (pre?.source ? (estVideo(pre.source) ? 'video' : 'site') : 'livre');
   return {
-    id: crypto.randomUUID(), type, titre: pre?.titre ?? '', auteurs: [], images: [], motsCles: [], citations: [], voirAussi: [], categories: [],
+    id: crypto.randomUUID(), type, titre: pre?.titre ?? '', auteurs: [], images: [], motsCles: [], citations: [], voirAussi: [], categories: pre?.categories ?? [], citeDans: pre?.citeDans,
     statut: 'a-lire', source: pre?.source ?? '', consulte: pre?.source ? aujourdhui() : undefined, creeLe: maintenant, modifieLe: maintenant,
   };
 }
@@ -166,7 +170,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
       majFiche(r.fiche, r.rev);
       oublierBrouillon();
       notifier(existante ? 'Fiche modifiée.' : 'Fiche ajoutée.');
-      naviguer(`fiche/${encodeURIComponent(r.fiche.id)}`);
+      naviguer(`fiche/${encodeURIComponent(preremplissage?.citeDans?.[0] ?? r.fiche.id)}`);
     } catch (err) {
       notifier(err instanceof Error ? err.message : 'Erreur.');
       setEnvoi(false);
@@ -268,7 +272,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
       )}
 
       <div className="champ">
-        <label className="etiquette" htmlFor="source">{t === 'livre' ? 'Lien vers le livre en ligne' : t === 'projet' ? 'Site du projet' : 'Lien'}</label>
+        <label className="etiquette" htmlFor="source">{t === 'livre' ? 'Lien (facultatif)' : t === 'projet' ? 'Site du projet (ArchDaily, site de l’architecte…)' : 'Lien'}</label>
         <div className="champ-ligne">
           <input id="source" type="url" inputMode="url" placeholder="https://" value={f.source ?? ''} onChange={(e) => maj({ source: e.target.value })} />
           {lienRecuperable && (
@@ -369,21 +373,19 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         <ChampCitations citations={f.citations} changer={(citations) => maj({ citations })} />
       </div>
 
-      <div className="champ">
-        <span className="etiquette">Voir aussi</span>
-        <ChampVoirAussi fiche={f} changer={(voirAussi) => maj({ voirAussi })} />
-      </div>
-
-      <fieldset className="champ">
-        <legend className="etiquette">Statut</legend>
-        <div className="segments">
-          {STATUTS.map((s: Statut) => (
-            <button type="button" key={s} className="pastille" aria-pressed={f.statut === s} onClick={() => maj({ statut: s })}>
-              {nomStatut(s, t)}
-            </button>
-          ))}
+      {t === 'projet' && (
+        <div className="champ">
+          <span className="etiquette">Cité dans (livre ou article)</span>
+          <ChampCiteDans fiche={f} changer={(citeDans) => maj({ citeDans })} />
         </div>
-      </fieldset>
+      )}
+
+      {t !== 'projet' && (
+        <label className="case">
+          <input type="checkbox" checked={f.statut === 'lu'} onChange={(e) => maj({ statut: e.target.checked ? 'lu' : 'a-lire' })} />
+          <span className="point-lu" /> Lu
+        </label>
+      )}
 
       <label className="case">
         <input type="checkbox" checked={!!f.favori} onChange={(e) => maj({ favori: e.target.checked })} />
@@ -636,46 +638,37 @@ function ChampCitations({ citations, changer }: { citations: Citation[]; changer
   );
 }
 
-function ChampVoirAussi({ fiche, changer }: { fiche: Fiche; changer: (l: Fiche['voirAussi']) => void }) {
+/** Livres et articles qui citent ce projet. */
+function ChampCiteDans({ fiche, changer }: { fiche: Fiche; changer: (ids: string[]) => void }) {
   const { biblio } = useBiblio();
   const [saisie, setSaisie] = useState('');
-  const index = new Map(biblio.fiches.map((x) => [x.id, x]));
-  const entrants = biblio.fiches.filter((x) => x.id !== fiche.id && x.voirAussi.some((l) => l.id === fiche.id) && !fiche.voirAussi.some((l) => l.id === x.id));
+  const choisis = fiche.citeDans ?? [];
+  const sources = biblio.fiches.filter((x) => x.type !== 'projet' && x.id !== fiche.id);
   const s = normaliser(saisie);
-  const pris = new Set([fiche.id, ...fiche.voirAussi.map((l) => l.id)]);
-  const props = s
-    ? biblio.fiches.filter((x) => !pris.has(x.id) && normaliser(`${x.titre} ${x.auteurs.join(' ')}`).includes(s)).slice(0, 6)
-    : [];
+  const props = s ? sources.filter((x) => !choisis.includes(x.id) && normaliser(`${x.titre} ${x.auteurs.join(' ')}`).includes(s)).slice(0, 6) : [];
   return (
-    <div className="voir-aussi-form">
-      {fiche.voirAussi.map((l, i) => {
-        const cible = index.get(l.id);
-        if (!cible) return null;
-        return (
-          <div key={l.id} className="lien-form">
-            <span className="lien-form-titre">{cible.titre}</span>
-            <input placeholder="Pourquoi ce lien ? (facultatif)" value={l.note ?? ''} onChange={(e) => changer(fiche.voirAussi.map((x, k) => (k === i ? { ...x, note: e.target.value } : x)))} />
-            <button type="button" className="bouton-icone" aria-label="Retirer le lien" onClick={() => changer(fiche.voirAussi.filter((x) => x.id !== l.id))}>
-              <Icone nom="fermer" taille={16} />
-            </button>
-          </div>
-        );
-      })}
-      {entrants.length > 0 && (
-        <p className="aide">Déjà reliée depuis : {entrants.map((x) => x.titre).join(', ')}.</p>
-      )}
-      <div className="puces">
-        <input placeholder="Chercher une fiche à relier…" value={saisie} onChange={(e) => setSaisie(e.target.value)} />
-        {props.length > 0 && (
-          <div className="suggestions">
-            {props.map((x) => (
-              <button type="button" key={x.id} onClick={() => { changer([...fiche.voirAussi, { id: x.id }]); setSaisie(''); }}>
-                {x.titre} <span className="discret">{NOM_TYPE[x.type]}{x.auteurs[0] ? ` · ${x.auteurs[0]}` : ''}</span>
-              </button>
-            ))}
-          </div>
-        )}
+    <div className="puces">
+      <div className="puces-boite">
+        {choisis.map((id) => {
+          const x = biblio.fiches.find((y) => y.id === id);
+          return x ? (
+            <span key={id} className="mot actif">
+              {x.titre}
+              <button type="button" aria-label={`Retirer ${x.titre}`} onClick={() => changer(choisis.filter((y) => y !== id))}><Icone nom="fermer" taille={12} /></button>
+            </span>
+          ) : null;
+        })}
+        <input placeholder={choisis.length ? '' : 'Chercher un livre…'} value={saisie} onChange={(e) => setSaisie(e.target.value)} />
       </div>
+      {props.length > 0 && (
+        <div className="suggestions">
+          {props.map((x) => (
+            <button type="button" key={x.id} onClick={() => { changer([...choisis, x.id]); setSaisie(''); }}>
+              {x.titre} <span className="discret">{NOM_TYPE[x.type]}{x.auteurs[0] ? ` · ${x.auteurs[0]}` : ''}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../vocabul
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
 
-const CLE = 'demo-bibliotheque-v2';
+const CLE = 'demo-bibliotheque-v3';
 const PREFIXE_IMAGE = 'demo-img:';
 const images = new Map<string, string>();
 

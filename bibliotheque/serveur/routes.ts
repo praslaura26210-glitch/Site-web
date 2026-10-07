@@ -99,6 +99,7 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     credit: texte(f.credit, 500),
     categories: [...new Set(textes(f.categories))],
     favori: f.favori === true || undefined,
+    citeDans: textes(f.citeDans),
     resume: texte(f.resume),
     motsCles: [...new Set(textes(f.motsCles))],
     retenu: texte(f.retenu),

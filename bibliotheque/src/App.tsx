@@ -157,7 +157,11 @@ export function App() {
   const [page, param] = route.split('/');
   let contenu;
   if (page === 'fiche' && param) contenu = <FicheVue key={param} id={decodeURIComponent(param)} />;
-  else if (page === 'ajouter') contenu = <Formulaire key="nouvelle" preremplissage={partage.current ?? undefined} />;
+  else if (page === 'ajouter' && param === 'projet' && route.split('/')[2]) {
+    // projet ajouté depuis un livre : relié au livre, avec les mêmes travaux
+    const livre = biblio?.fiches.find((f) => f.id === decodeURIComponent(route.split('/')[2]));
+    contenu = <Formulaire key={`projet-${livre?.id}`} preremplissage={{ type: 'projet', citeDans: livre ? [livre.id] : [], categories: livre?.categories ?? [] }} />;
+  } else if (page === 'ajouter') contenu = <Formulaire key="nouvelle" preremplissage={partage.current ?? undefined} />;
   else if (page === 'modifier' && param) contenu = <Formulaire key={param} id={decodeURIComponent(param)} />;
   else if (page === 'reglages') contenu = <Reglages />;
   else contenu = <Accueil />;

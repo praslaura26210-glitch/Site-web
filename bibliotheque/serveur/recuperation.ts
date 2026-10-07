@@ -26,6 +26,16 @@ async function lire(url: string, ms = 7000): Promise<Response | null> {
 
 const annee = (s?: string) => s?.match(/\b(1[5-9]\d\d|20\d\d)\b/)?.[1];
 
+/** ISBN-13 (978…) → ISBN-10, qui sert d'identifiant de produit chez Amazon. */
+export function versIsbn10(isbn: string): string | null {
+  if (isbn.length === 10) return isbn;
+  if (isbn.length !== 13 || !isbn.startsWith('978')) return null;
+  const corps = isbn.slice(3, 12);
+  const somme = [...corps].reduce((s, c, i) => s + Number(c) * (10 - i), 0);
+  const cle = (11 - (somme % 11)) % 11;
+  return corps + (cle === 10 ? 'X' : String(cle));
+}
+
 export function nettoyerIsbn(s: string): string {
   return s.toUpperCase().replace(/[^0-9X]/g, '');
 }
@@ -103,7 +113,9 @@ export async function chercherIsbn(isbnBrut: string): Promise<Notice | null> {
     fusion.lien ??= n.lien;
     fusion.couvertures.push(...n.couvertures);
   }
-  // couverture Open Library par ISBN, même quand la notice n'existe pas
+  // couvertures par ISBN, même sans notice : Amazon (souvent la meilleure pour les livres français), puis Open Library
+  const isbn10 = versIsbn10(isbn);
+  if (isbn10) fusion.couvertures.unshift(`https://m.media-amazon.com/images/P/${isbn10}.01._SCLZZZZZZZ_.jpg`);
   fusion.couvertures.push(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`);
   return fusion;
 }

@@ -44,6 +44,8 @@ export interface Fiche {
   /** Travaux auxquels la fiche sert (identifiants de catégories). */
   categories: string[];
   favori?: boolean;
+  /** Projet cité dans un livre ou un article (identifiants des fiches). */
+  citeDans?: string[];
   /** Résumé de l'ouvrage ou du projet. */
   resume?: string;
   /** Mots-clés : servent à la recherche, discrets à l'écran. */

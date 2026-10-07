@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { Fiche, Rayon, Statut } from '../types';
+import type { Fiche, Rayon } from '../types';
 import { RAYONS, rayonDe } from '../types';
 import { classeTravail, nomTravail, useBiblio } from '../contexte';
 import { chercher, concepts, FILTRES_VIDES, type Resultat } from '../lib/recherche';
@@ -26,6 +26,7 @@ const TRIS: Record<Tri, (a: Fiche, b: Fiche) => number> = {
 };
 
 const lien = (f: Fiche) => `#/fiche/${encodeURIComponent(f.id)}`;
+const estLu = (f: Fiche) => f.statut === 'lu';
 
 /** Une carte : couverture pour un livre, photo recadrée pour un projet ou un article. */
 export function Carte({ fiche: f }: { fiche: Fiche }) {
@@ -33,63 +34,28 @@ export function Carte({ fiche: f }: { fiche: Fiche }) {
   const meta =
     rayon === 'livres' ? f.auteurs.join(', ') :
     rayon === 'projets' ? [f.auteurs[0], f.editeur].filter(Boolean).join(' · ') :
-    [f.auteurs[0] ?? (f.editeur || domaine(f.source)), NOM_TYPE[f.type]].filter(Boolean).join(' · ');
+    [f.auteurs[0] ?? (f.editeur || domaine(f.source)), f.type !== 'article' ? NOM_TYPE[f.type] : ''].filter(Boolean).join(' · ');
+  const lisible = rayon !== 'projets';
   return (
     <a className={`carte carte-${rayon === 'livres' ? 'livre' : rayon === 'projets' ? 'projet' : 'article'}`} href={lien(f)}>
-      <span className="carte-image">
-        <Couverture fiche={f} />
-        {(f.favori || f.statut === 'en-cours') && (
-          <span className="carte-badges">
-            {f.statut === 'en-cours' && <span className="badge">En cours</span>}
-            {f.favori && <span className="badge coeur" aria-label="Favori"><Icone nom="coeur" taille={14} /></span>}
-          </span>
-        )}
-      </span>
+      <span className="carte-image"><Couverture fiche={f} /></span>
       <span className="carte-texte">
         <span className="carte-titre">{f.titre}</span>
-        {meta && <span className="carte-meta">{meta}</span>}
+        <span className="carte-meta">
+          {lisible && estLu(f) && <span className="point-lu" title="Lu" aria-label="Lu" />}
+          <span>{meta}</span>
+          {f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={13} /></span>}
+        </span>
       </span>
     </a>
   );
 }
 
-function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon | 'melange' }) {
+function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
   return (
     <ul className={`grille ${rayon}`}>
       {fiches.map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
     </ul>
-  );
-}
-
-function Rangee({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
-  return (
-    <ul className={`rangee ${rayon}`}>
-      {fiches.map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
-    </ul>
-  );
-}
-
-const STATUTS_LIVRES: { s: Statut; titre: string }[] = [
-  { s: 'en-cours', titre: 'En cours de lecture' },
-  { s: 'a-lire', titre: 'À lire' },
-  { s: 'lu', titre: 'Lus' },
-];
-
-/** Les livres rangés en trois piles : en cours, à lire, lus. */
-function LivresParStatut({ fiches }: { fiches: Fiche[] }) {
-  return (
-    <>
-      {STATUTS_LIVRES.map(({ s, titre }) => {
-        const pile = fiches.filter((f) => f.statut === s);
-        if (!pile.length) return null;
-        return (
-          <section key={s} className="section">
-            <div className="section-tete"><h2>{titre}<span className="compte">{pile.length}</span></h2></div>
-            <Grille fiches={pile} rayon="livres" />
-          </section>
-        );
-      })}
-    </>
   );
 }
 
@@ -98,28 +64,29 @@ function Section({ titre, compte, vers, children }: { titre: string; compte?: nu
     <section className="section">
       <div className="section-tete">
         <h2>{titre}{compte !== undefined && <span className="compte">{compte}</span>}</h2>
-        {vers && <a href={vers}>Tout voir →</a>}
+        {vers && <a href={vers}>Tout voir</a>}
       </div>
       {children}
     </section>
   );
 }
 
-/** Puces pour filtrer par travail (mémoire, rapport d'études…). */
+/** Onglets pour filtrer par travail (mémoire, rapport d'études…). */
 function FiltreTravaux({ fiches }: { fiches: Fiche[] }) {
   const { biblio, filtres, setFiltres } = useBiblio();
   const presents = biblio.categories.filter((c) => fiches.some((f) => f.categories?.includes(c.id)));
-  if (!presents.length) return null;
+  if (!presents.length) return <span />;
   return (
-    <div className="filtres-ligne" role="group" aria-label="Filtrer par travail">
+    <div className="onglets" role="group" aria-label="Filtrer par travail">
+      <button className="onglet" aria-pressed={!filtres.categorie} onClick={() => setFiltres((f) => ({ ...f, categorie: null }))}>Tout</button>
       {presents.map((c) => (
         <button
           key={c.id}
-          className={`travail ${classeTravail(biblio, c.id)}`}
+          className="onglet"
           aria-pressed={filtres.categorie === c.id}
           onClick={() => setFiltres((f) => ({ ...f, categorie: f.categorie === c.id ? null : c.id }))}
         >
-          {c.nom}
+          {c.nom}<span className="compte">{fiches.filter((f) => f.categories?.includes(c.id)).length}</span>
         </button>
       ))}
     </div>
@@ -138,17 +105,6 @@ function MotsActifs() {
         </button>
       ))}
     </div>
-  );
-}
-
-function ChoixTri({ tri, changer }: { tri: Tri; changer: (t: Tri) => void }) {
-  return (
-    <select id="tri" className="tri" style={{ width: 'auto', minHeight: 34, fontSize: 13.5 }} value={tri} aria-label="Trier" onChange={(e) => changer(e.target.value as Tri)}>
-      <option value="recents">Les plus récents</option>
-      <option value="titre">Par titre</option>
-      <option value="auteur">Par auteur</option>
-      <option value="annee">Par année</option>
-    </select>
   );
 }
 
@@ -177,22 +133,30 @@ export function Accueil() {
   }, [base, filtres, biblio.synonymes, tri, page]);
 
   if (filtres.q.trim()) return <Resultats titre={titre} resultats={filtrees} />;
-
-  const fiches = filtrees.map((r) => r.fiche);
-
   if (page === '' && !filtres.categorie && !filtres.motsCles.length) return <VueAccueil />;
 
+  const fiches = filtrees.map((r) => r.fiche);
   const travail = page === 'travail';
+  const avecLus = rayon === 'livres' || rayon === 'articles' || !rayon;
+
   return (
     <div>
       <header className="tete-page">
-        <h1 className={travail ? classeTravail(biblio, param) : undefined} style={travail ? { color: 'var(--tc)' } : undefined}>
+        <h1 className={travail ? classeTravail(biblio, param) : undefined}>
           {titre}<span className="compte">{base.length}</span>
         </h1>
-        {travail && <p className="sous-titre">Les livres, articles et projets qui servent à ce travail.</p>}
-        <div className="filtres-ligne">
-          {!travail && <FiltreTravaux fiches={base} />}
-          <span style={{ marginLeft: 'auto' }}><ChoixTri tri={tri} changer={setTri} /></span>
+        {travail && <p className="sous-titre">Les livres, articles et projets qui nourrissent ce travail.</p>}
+        <div className="barre-filtres">
+          {travail ? <span /> : <FiltreTravaux fiches={base} />}
+          <span className="champ-ligne">
+            {avecLus && <span className="legende"><span className="point-lu" /> lu</span>}
+            <select id="tri" className="tri" value={tri} aria-label="Trier" onChange={(e) => setTri(e.target.value as Tri)}>
+              <option value="recents">Les plus récents</option>
+              <option value="titre">Par titre</option>
+              <option value="auteur">Par auteur</option>
+              <option value="annee">Par année</option>
+            </select>
+          </span>
         </div>
         <MotsActifs />
       </header>
@@ -210,8 +174,6 @@ export function Accueil() {
             <p>Aucune fiche avec ces filtres.</p>
           )}
         </div>
-      ) : rayon === 'livres' ? (
-        <LivresParStatut fiches={fiches} />
       ) : rayon ? (
         <Grille fiches={fiches} rayon={rayon} />
       ) : (
@@ -220,7 +182,7 @@ export function Accueil() {
           if (!part.length) return null;
           return (
             <Section key={r} titre={NOM_RAYON[r]} compte={part.length}>
-              {r === 'livres' ? <LivresParStatut fiches={part} /> : <Grille fiches={part} rayon={r} />}
+              <Grille fiches={part} rayon={r} />
             </Section>
           );
         })
@@ -233,8 +195,7 @@ function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
   const parRayon = (r: Rayon) => recents.filter((f) => rayonDe(f.type) === r);
-  const enCours = recents.filter((f) => f.type === 'livre' && f.statut === 'en-cours');
-  const resume = RAYONS.map((r) => `${parRayon(r).length} ${NOM_RAYON[r].toLowerCase()}`).join(' · ');
+  const LIMITE: Record<Rayon, number> = { livres: 12, projets: 9, articles: 6 };
 
   if (!biblio.fiches.length) {
     return (
@@ -247,52 +208,25 @@ function VueAccueil() {
 
   return (
     <div>
-      <header className="tete-page">
-        <h1>Ma bibliothèque</h1>
-        <p className="sous-titre">{resume}</p>
-      </header>
-
-      {enCours.length > 0 && (
-        <Section titre="En cours de lecture" compte={enCours.length}>
-          <Rangee fiches={enCours} rayon="livres" />
-        </Section>
-      )}
-
       {biblio.categories.length > 0 && (
-        <Section titre="Mes travaux">
-          <ul className="grille travaux-cartes">
-            {biblio.categories.map((c) => {
-              const liees = recents.filter((f) => f.categories?.includes(c.id));
-              const detail = RAYONS.map((r) => [r, liees.filter((f) => rayonDe(f.type) === r).length] as const)
-                .filter(([, n]) => n)
-                .map(([r, n]) => `${n} ${NOM_RAYON[r].toLowerCase()}`)
-                .join(' · ');
-              return (
-                <li key={c.id}>
-                  <a className={`carte-travail ${classeTravail(biblio, c.id)}`} href={`#/travail/${encodeURIComponent(c.id)}`}>
-                    <div>
-                      <h3>{c.nom}</h3>
-                      <p>{detail || 'Aucune fiche pour l’instant'}</p>
-                    </div>
-                    {liees.length > 0 && (
-                      <div className="vignettes" aria-hidden="true">
-                        {liees.slice(0, 5).map((f) => <Couverture key={f.id} fiche={f} />)}
-                      </div>
-                    )}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </Section>
+        <section className="tete-page">
+          <span className="etiquette">Mes travaux</span>
+          <nav className="index-travaux" aria-label="Mes travaux">
+            {biblio.categories.map((c) => (
+              <a key={c.id} className={classeTravail(biblio, c.id)} href={`#/travail/${encodeURIComponent(c.id)}`}>
+                {c.nom}<span className="compte">{recents.filter((f) => f.categories?.includes(c.id)).length}</span>
+              </a>
+            ))}
+          </nav>
+        </section>
       )}
 
       {RAYONS.map((r) => {
         const liste = parRayon(r);
         if (!liste.length) return null;
         return (
-          <Section key={r} titre={NOM_RAYON[r]} compte={liste.length} vers={`#/${r}`}>
-            <Rangee fiches={liste.slice(0, 14)} rayon={r} />
+          <Section key={r} titre={NOM_RAYON[r]} compte={liste.length} vers={liste.length > LIMITE[r] ? `#/${r}` : undefined}>
+            <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />
           </Section>
         );
       })}
@@ -309,20 +243,20 @@ function Resultats({ titre, resultats }: { titre: string; resultats: Resultat[] 
   return (
     <div>
       <header className="tete-page">
-        <h1>
-          « {filtres.q.trim()} »<span className="compte">{resultats.length}</span>
-        </h1>
-        <p className="sous-titre">{titre === 'Toute la bibliothèque' ? 'Dans toute la bibliothèque' : `Dans : ${titre}`}</p>
-        <div className="filtres-ligne">
-          <button className="pastille" aria-pressed={!rayon} onClick={() => setRayon(null)}>Tout</button>
-          {RAYONS.map((r) => {
-            const n = resultats.filter((x) => rayonDe(x.fiche.type) === r).length;
-            return n ? (
-              <button key={r} className="pastille" aria-pressed={rayon === r} onClick={() => setRayon(rayon === r ? null : r)}>
-                {NOM_RAYON[r]} <span className="compte">{n}</span>
-              </button>
-            ) : null;
-          })}
+        <span className="etiquette">{titre === 'Toute la bibliothèque' ? 'Recherche' : `Recherche dans : ${titre}`}</span>
+        <h1>« {filtres.q.trim()} »<span className="compte">{resultats.length}</span></h1>
+        <div className="barre-filtres">
+          <div className="onglets">
+            <button className="onglet" aria-pressed={!rayon} onClick={() => setRayon(null)}>Tout</button>
+            {RAYONS.map((r) => {
+              const n = resultats.filter((x) => rayonDe(x.fiche.type) === r).length;
+              return n ? (
+                <button key={r} className="onglet" aria-pressed={rayon === r} onClick={() => setRayon(rayon === r ? null : r)}>
+                  {NOM_RAYON[r]}<span className="compte">{n}</span>
+                </button>
+              ) : null;
+            })}
+          </div>
         </div>
         <MotsActifs />
       </header>

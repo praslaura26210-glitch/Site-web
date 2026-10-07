@@ -1,9 +1,9 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
-import type { Fiche, Statut } from '../types';
-import { STATUTS, rayonDe } from '../types';
-import { classeTravail, liensDe, nomTravail, useBiblio } from '../contexte';
+import { Fragment, useEffect, useState } from 'react';
+import type { Fiche } from '../types';
+import { rayonDe } from '../types';
+import { classeTravail, nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
-import { NOM_EDITEUR, NOM_TYPE, domaine, nomStatut } from '../lib/libelles';
+import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES } from '../lib/recherche';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
@@ -12,23 +12,23 @@ const date = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('fr-FR', 
 
 /** Recherche web prête à l'emploi quand on n'a pas encore de lien. */
 export const rechercheWeb = (f: Pick<Fiche, 'titre' | 'auteurs' | 'type' | 'editeur'>) =>
-  `https://www.google.com/search?q=${encodeURIComponent([f.titre, f.auteurs[0], f.type === 'livre' ? 'livre' : f.editeur].filter(Boolean).join(' '))}`;
+  `https://www.google.com/search?q=${encodeURIComponent([f.titre, f.auteurs[0], f.type === 'projet' ? 'architecture' : f.editeur].filter(Boolean).join(' '))}`;
 
-/** « [?] » dans mes notes : un mot à vérifier, mis en évidence. */
+/** « [?] » dans mes notes : un mot à vérifier, signalé discrètement. */
 function EnLigne({ texte }: { texte: string }) {
   const morceaux = texte.split(/(\[\?\]|\[[^\]]*à vérifier\])/);
   return (
     <>
       {morceaux.map((m, i) =>
         /^\[(\?|[^\]]*à vérifier)\]$/.test(m)
-          ? <span key={i} className="doute" title="Mot incertain, à vérifier">{m === '[?]' ? '?' : m.slice(1, -1)}</span>
+          ? <span key={i} className="doute" title={m === '[?]' ? 'Mot incertain, à vérifier' : m.slice(1, -1)}>?</span>
           : <Fragment key={i}>{m}</Fragment>,
       )}
     </>
   );
 }
 
-/** Mes notes en article : « ## » donne un intertitre, « - » une liste, une ligne vide sépare les paragraphes. */
+/** Mes notes : « ## » donne un intertitre, « - » une liste, une ligne vide sépare les paragraphes. */
 export function Notes({ texte }: { texte: string }) {
   const blocs = texte.trim().split(/\n\s*\n/);
   return (
@@ -49,13 +49,28 @@ export function Notes({ texte }: { texte: string }) {
   );
 }
 
+/** Mes notes repliées : on les déroule quand on veut les relire. */
+function MesNotes({ texte }: { texte: string }) {
+  const mots = texte.split(/\s+/).length;
+  const minutes = Math.max(1, Math.round(mots / 230));
+  return (
+    <details className="deroulant">
+      <summary>
+        <h2>Mes notes</h2>
+        <span className="discret">{minutes} min de lecture</span>
+        <span className="fleche"><Icone nom="droite" taille={20} /></span>
+      </summary>
+      <Notes texte={texte} />
+    </details>
+  );
+}
+
 export function FicheVue({ id }: { id: string }) {
   const { biblio, majFiche, retirerFiche, naviguer, notifier, setFiltres } = useBiblio();
   const fiche = biblio.fiches.find((f) => f.id === id);
   const [visionneuse, setVisionneuse] = useState<number | null>(null);
   const [imageActive, setImageActive] = useState(0);
   const [confirmer, setConfirmer] = useState(false);
-  const liens = useMemo(() => liensDe(biblio, id), [biblio, id]);
 
   if (!fiche) {
     return (
@@ -68,7 +83,11 @@ export function FicheVue({ id }: { id: string }) {
 
   const rayon = rayonDe(fiche.type);
   const livre = rayon === 'livres';
+  const projet = rayon === 'projets';
   const active = Math.min(imageActive, Math.max(0, fiche.images.length - 1));
+  // les projets cités dans ce livre (ou cet article), et inversement les livres qui citent ce projet
+  const projetsCites = biblio.fiches.filter((f) => f.citeDans?.includes(fiche.id));
+  const citePar = (fiche.citeDans ?? []).map((i) => biblio.fiches.find((f) => f.id === i)).filter((f): f is Fiche => Boolean(f));
 
   async function enregistrer(f: Fiche, message?: string) {
     majFiche(f);
@@ -106,10 +125,10 @@ export function FicheVue({ id }: { id: string }) {
     naviguer(rayon);
   };
   const retour = () => (history.length > 1 ? history.back() : naviguer(rayon));
-
-  const surtitre = [NOM_TYPE[fiche.type], fiche.editeur, fiche.annee].filter(Boolean).join(' · ');
-  const nomLien = livre ? 'Voir le livre en ligne' : rayon === 'projets' ? 'Site du projet' : 'Ouvrir la page';
   const credit = (i: number) => fiche.images[i]?.credit || fiche.credit;
+  const lu = fiche.statut === 'lu';
+
+  const surtitre = projet ? [NOM_TYPE[fiche.type], fiche.annee].filter(Boolean).join(' · ') : [NOM_TYPE[fiche.type], fiche.editeur, fiche.annee].filter(Boolean).join(' · ');
 
   const titres = (
     <div className="fiche-titres">
@@ -125,45 +144,108 @@ export function FicheVue({ id }: { id: string }) {
           ))}
         </p>
       )}
-      {(fiche.categories ?? []).length > 0 && (
-        <div className="travaux">
-          {fiche.categories.map((c) => (
-            <a key={c} className={`travail ${classeTravail(biblio, c)}`} href={`#/travail/${encodeURIComponent(c)}`}>{nomTravail(biblio, c)}</a>
-          ))}
-        </div>
-      )}
       <div className="fiche-boutons">
-        <div className="segments" role="radiogroup" aria-label="Statut">
-          {STATUTS.map((s: Statut) => (
-            <button
-              key={s}
-              role="radio"
-              aria-checked={fiche.statut === s}
-              className="pastille"
-              onClick={() => fiche.statut !== s && enregistrer({ ...fiche, statut: s }, `Statut : ${nomStatut(s, fiche.type).toLowerCase()}.`)}
-            >
-              {nomStatut(s, fiche.type)}
-            </button>
-          ))}
-        </div>
-        <span className="separateur" aria-hidden="true" />
-        {fiche.source ? (
-          <a className="bouton principal" href={fiche.source} target="_blank" rel="noreferrer">
-            {nomLien} <Icone nom="lien" taille={16} />
-          </a>
-        ) : (
-          <a className="bouton" href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">
-            Chercher en ligne <Icone nom="lien" taille={16} />
-          </a>
+        {(fiche.categories ?? []).map((c) => (
+          <a key={c} className={`travail ${classeTravail(biblio, c)}`} href={`#/travail/${encodeURIComponent(c)}`}>{nomTravail(biblio, c)}</a>
+        ))}
+        {!projet && (
+          <button
+            className="bascule-lu"
+            aria-pressed={lu}
+            onClick={() => enregistrer({ ...fiche, statut: lu ? 'a-lire' : 'lu' }, lu ? 'Marqué comme non lu.' : 'Marqué comme lu.')}
+          >
+            <span className="point-lu" /> {lu ? 'Lu' : 'Pas encore lu'}
+          </button>
+        )}
+        {!livre && !projet && fiche.source && (
+          <a className="lien-site" href={fiche.source} target="_blank" rel="noreferrer">Lire l’article <Icone nom="lien" taille={15} /></a>
         )}
       </div>
     </div>
   );
 
+  const corps = (
+    <>
+      {fiche.resume && (
+        <section className="bloc">
+          <h2>Résumé</h2>
+          <p className="resume">{fiche.resume}</p>
+        </section>
+      )}
+
+      {!projet && (projetsCites.length > 0 || livre) && (
+        <section className="bloc">
+          <h2>{livre ? 'Projets du livre' : 'Projets cités'}</h2>
+          <ul className={`encarts${projetsCites.length ? '' : ' vides'}`}>
+            {projetsCites.map((p) => (
+              <li key={p.id}>
+                <a className={`encart${p.images.length ? '' : ' sans-image'}`} href={`#/fiche/${encodeURIComponent(p.id)}`}>
+                  {p.images.length > 0 && <span className="carte-image"><Couverture fiche={p} /></span>}
+                  <span className="carte-texte">
+                    <span className="carte-titre">{p.titre}</span>
+                    <span className="carte-meta"><span>{[p.auteurs[0], p.editeur].filter(Boolean).join(' · ')}</span></span>
+                    {(p.resume || p.retenu) && <span className="encart-note">{(p.resume || p.retenu)!.replace(/^#+\s*/gm, '')}</span>}
+                  </span>
+                </a>
+              </li>
+            ))}
+            <li>
+              <a className="encart-ajout" href={`#/ajouter/projet/${encodeURIComponent(fiche.id)}`}>
+                <Icone nom="plus" taille={22} />
+                Ajouter un projet {livre ? 'de ce livre' : 'cité'}
+              </a>
+            </li>
+          </ul>
+        </section>
+      )}
+
+      {fiche.retenu && <MesNotes texte={fiche.retenu} />}
+
+      {fiche.citations.length > 0 && (
+        <section className="bloc">
+          <h2>Citations</h2>
+          {fiche.citations.map((c, i) => (
+            <figure key={i} className="citation">
+              <blockquote>« {c.texte} »</blockquote>
+              {(c.page || c.note) && (
+                <figcaption>
+                  {c.page && <span>p. {c.page}</span>}
+                  {c.note && <span>{c.note}</span>}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </section>
+      )}
+
+      <footer className="fiche-pied">
+        <dl>
+          {fiche.motsCles.length > 0 && (
+            <div>
+              <dt>Mots-clés</dt>
+              <dd className="mots">
+                {fiche.motsCles.map((m) => <button key={m} className="mot" onClick={() => voirMotCle(m)}>{m}</button>)}
+              </dd>
+            </div>
+          )}
+          {fiche.isbn && <div><dt>ISBN</dt><dd>{fiche.isbn}</dd></div>}
+          {fiche.pages && <div><dt>Pages</dt><dd>{fiche.pages}</dd></div>}
+          {fiche.numero && <div><dt>Numéro</dt><dd>{fiche.numero}</dd></div>}
+          {fiche.consulte && <div><dt>Consulté le</dt><dd>{date(fiche.consulte)}</dd></div>}
+          {fiche.emplacement && <div><dt>Où la trouver</dt><dd>{fiche.emplacement}</dd></div>}
+          <div><dt>Ajoutée le</dt><dd>{date(fiche.creeLe)}</dd></div>
+        </dl>
+        <div>
+          <button className="lien-texte petit" style={{ color: 'var(--encre-3)' }} onClick={() => setConfirmer(true)}>Supprimer la fiche</button>
+        </div>
+      </footer>
+    </>
+  );
+
   return (
-    <article className={`fiche fiche-${livre ? 'livre' : rayon === 'projets' ? 'projet' : 'article'}`}>
+    <article className="fiche">
       <div className="fiche-haut">
-        <button className="lien-retour" onClick={retour}><Icone nom="retour" taille={18} /> Retour</button>
+        <button className="lien-retour" onClick={retour}><Icone nom="retour" taille={17} /> Retour</button>
         <div className="fiche-actions">
           <button
             className="bouton-icone bouton-coeur"
@@ -174,12 +256,12 @@ export function FicheVue({ id }: { id: string }) {
           >
             <Icone nom="coeur" />
           </button>
-          <a className="bouton petit" href={`#/modifier/${encodeURIComponent(id)}`}><Icone nom="modifier" taille={16} /> Modifier</a>
+          <a className="bouton petit" href={`#/modifier/${encodeURIComponent(id)}`}><Icone nom="modifier" taille={15} /> Modifier</a>
         </div>
       </div>
 
       {livre ? (
-        <header className="fiche-tete">
+        <div className="fiche-livre-grille">
           <div className="fiche-couv">
             {fiche.images.length > 0 ? (
               <button onClick={() => setVisionneuse(0)} aria-label="Agrandir la couverture">
@@ -189,10 +271,13 @@ export function FicheVue({ id }: { id: string }) {
               <Couverture fiche={fiche} />
             )}
           </div>
-          {titres}
-        </header>
+          <div className="fiche-contenu">
+            {titres}
+            {corps}
+          </div>
+        </div>
       ) : (
-        <header className="fiche-tete">
+        <>
           {fiche.images.length > 0 && (
             <div className="fiche-galerie">
               <button className="grande" onClick={() => setVisionneuse(active)} aria-label="Agrandir l’image et voir son crédit">
@@ -210,90 +295,43 @@ export function FicheVue({ id }: { id: string }) {
               {credit(active) && <p className="credit-image">{credit(active)}</p>}
             </div>
           )}
-          {titres}
-        </header>
-      )}
-
-      <div className="fiche-corps">
-        {fiche.resume && (
-          <section className="bloc">
-            <h2>Résumé</h2>
-            <p className="resume">{fiche.resume}</p>
-          </section>
-        )}
-        {fiche.retenu && (
-          <section className="bloc">
-            <h2>Mes notes</h2>
-            <Notes texte={fiche.retenu} />
-          </section>
-        )}
-        {fiche.citations.length > 0 && (
-          <section className="bloc">
-            <h2>Citations</h2>
-            {fiche.citations.map((c, i) => (
-              <figure key={i} className="citation">
-                <blockquote>« {c.texte} »</blockquote>
-                {(c.page || c.note) && (
-                  <figcaption>
-                    {c.page && <span>p. {c.page}</span>}
-                    {c.note && <span>{c.note}</span>}
-                  </figcaption>
-                )}
-              </figure>
-            ))}
-          </section>
-        )}
-        {liens.length > 0 && (
-          <section className="bloc">
-            <h2>Voir aussi</h2>
-            <ul className="liens-fiche">
-              {liens.map(({ fiche: f, note }) => (
-                <li key={f.id}>
-                  <a className="lien-fiche" href={`#/fiche/${encodeURIComponent(f.id)}`}>
-                    <span className="lien-fiche-couv"><Couverture fiche={f} /></span>
-                    <span>
-                      <strong>{f.titre}</strong>
-                      <span className="discret">{[NOM_TYPE[f.type], f.auteurs[0]].filter(Boolean).join(' · ')}</span>
-                      {note && <span className="note">{note}</span>}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <footer className="fiche-pied">
-          <dl>
-            {fiche.motsCles.length > 0 && (
+          <div className="fiche-projet-grille">
+            <div className="fiche-contenu">
+              {titres}
+              {corps}
+            </div>
+            <dl className="infos-projet">
+              {fiche.auteurs.length > 0 && <div><dt>{projet ? 'Architectes' : 'Auteur'}</dt><dd>{fiche.auteurs.join(', ')}</dd></div>}
+              {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
+              {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
               <div>
-                <dt>Mots-clés</dt>
-                <dd className="mots">
-                  {fiche.motsCles.map((m) => <button key={m} className="mot" onClick={() => voirMotCle(m)}>{m}</button>)}
+                <dt>{projet ? 'En savoir plus' : 'Lien'}</dt>
+                <dd>
+                  {fiche.source ? (
+                    <a href={fiche.source} target="_blank" rel="noreferrer">{projet ? 'Site du projet' : 'Ouvrir'} · {domaine(fiche.source)} ↗</a>
+                  ) : (
+                    <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
+                  )}
                 </dd>
               </div>
-            )}
-            {fiche.source && <div><dt>Lien</dt><dd>{domaine(fiche.source)}</dd></div>}
-            {fiche.isbn && <div><dt>ISBN</dt><dd>{fiche.isbn}</dd></div>}
-            {fiche.pages && <div><dt>Pages</dt><dd>{fiche.pages}</dd></div>}
-            {fiche.numero && <div><dt>Numéro</dt><dd>{fiche.numero}</dd></div>}
-            {!livre && fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
-            {fiche.consulte && <div><dt>Consulté le</dt><dd>{date(fiche.consulte)}</dd></div>}
-            {fiche.emplacement && <div><dt>Où la trouver</dt><dd>{fiche.emplacement}</dd></div>}
-            <div><dt>Ajoutée le</dt><dd>{date(fiche.creeLe)}</dd></div>
-          </dl>
-          <div>
-            <button className="lien-texte petit" style={{ color: 'var(--danger)' }} onClick={() => setConfirmer(true)}>Supprimer la fiche</button>
+              {citePar.length > 0 && (
+                <div>
+                  <dt>Cité dans</dt>
+                  <dd>{citePar.map((f, i) => <Fragment key={f.id}>{i > 0 && ', '}<a href={`#/fiche/${encodeURIComponent(f.id)}`}>{f.titre}</a></Fragment>)}</dd>
+                </div>
+              )}
+            </dl>
           </div>
-        </footer>
-      </div>
+        </>
+      )}
 
       {visionneuse !== null && <Visionneuse fiche={fiche} depart={visionneuse} fermer={() => setVisionneuse(null)} />}
 
       {confirmer && (
         <div className="dialogue-fond" onClick={() => setConfirmer(false)}>
           <div className="dialogue" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-            <p>Supprimer « {fiche.titre} » ? Ses images et ses liens seront effacés aussi.</p>
+            <p>Supprimer « {fiche.titre} » ?</p>
+            <span className="aide">Ses images seront effacées aussi.</span>
             <div className="dialogue-actions">
               <button className="bouton" onClick={() => setConfirmer(false)} autoFocus>Annuler</button>
               <button className="bouton danger" onClick={supprimer}>Supprimer</button>
@@ -346,7 +384,7 @@ function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; 
         <figcaption onClick={(e) => e.stopPropagation()}>
           <strong>{fiche.titre}</strong>
           <br />{credit || 'Crédit non renseigné'}
-          {fiche.source && <><br /><a href={fiche.source} target="_blank" rel="noreferrer">Source : {domaine(fiche.source)}</a></>}
+          {fiche.source && fiche.type !== 'livre' && <><br /><a href={fiche.source} target="_blank" rel="noreferrer">Source : {domaine(fiche.source)}</a></>}
           {n > 1 && <><br />{i + 1} / {n}</>}
         </figcaption>
       </figure>
