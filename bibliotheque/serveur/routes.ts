@@ -97,7 +97,7 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     source: texte(f.source, 2000),
     images: (Array.isArray(f.images) ? f.images : [])
       .filter((i: any) => i && typeof i.id === 'string')
-      .map((i: any) => ({ id: i.id, w: Number(i.w) || 1, h: Number(i.h) || 1, credit: texte(i.credit, 300) || undefined })),
+      .map((i: any) => ({ id: i.id, w: Number(i.w) || 1, h: Number(i.h) || 1, credit: texte(i.credit, 300) || undefined, dessin: typeof i.dessin === 'boolean' ? i.dessin : undefined })),
     credit: texte(f.credit, 500),
     categories: [...new Set(textes(f.categories))],
     favori: f.favori === true || undefined,

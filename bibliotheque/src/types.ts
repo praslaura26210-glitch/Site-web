@@ -10,7 +10,13 @@ export interface Image {
   h: number;
   /** Photographe, source : affiché quand on agrandit l'image. */
   credit?: string;
+  /** Plan, coupe, façade, axonométrie… : rangé après les photos. */
+  dessin?: boolean;
 }
+
+/** Une image est un dessin si on l'a indiqué, ou si sa légende le dit (« Plan RDC », « Coupe »…). */
+export const estDessin = (i: Image) =>
+  i.dessin ?? /\b(plans?|coupes?|fa[cç]ades?|axono\w*|[ée]l[ée]vations?|croquis|sch[ée]mas?|dessins?|d[ée]tails?)\b/i.test(i.credit ?? '');
 
 /** Un travail auquel une référence sert : mémoire, rapport d'études, un cours… */
 export interface Categorie {

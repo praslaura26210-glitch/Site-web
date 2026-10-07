@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import type { Fiche } from '../types';
-import { rayonDe } from '../types';
+import { estDessin, rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
@@ -463,8 +463,10 @@ export function FicheVue({ id }: { id: string }) {
         <div className="fiche-projet">
           <div className="fiche-contenu large">{titres}</div>
           {imagePrincipale}
-          {infosProjet}
-          {texte && <div className="fiche-contenu">{texte}</div>}
+          <div className={`projet-corps${projet ? '' : ' sans-infos'}`}>
+            {infosProjet}
+            {texte && <div className="projet-texte">{texte}</div>}
+          </div>
           {blocDocuments}
           <div className="fiche-contenu">{suite}</div>
         </div>
@@ -492,7 +494,9 @@ export function FicheVue({ id }: { id: string }) {
 
 /** Plans, coupes, façades : en quinconce sur deux colonnes, chaque image entière, avec sa légende. */
 function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void }) {
-  const documents = fiche.images.slice(1).map((im, k) => ({ im, i: k + 1 }));
+  // les photos d'abord, puis les plans, coupes et façades
+  const tous = fiche.images.slice(1).map((im, k) => ({ im, i: k + 1 }));
+  const documents = [...tous.filter((d) => !estDessin(d.im)), ...tous.filter((d) => estDessin(d.im))];
   const colonnes = [documents.filter((_, k) => k % 2 === 0), documents.filter((_, k) => k % 2 === 1)];
   const ajout = (
     <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
@@ -614,6 +618,11 @@ function Visionneuse({ fiche, depart, fermer, enregistrer }: { fiche: Fiche; dep
                   <input type="file" accept="image/*" hidden onChange={(e) => { remplacer(e.target.files); e.target.value = ''; }} />
                 </label>
                 <button onClick={() => setLegende(im.credit ?? '')}>Légende</button>
+                {fiche.type !== 'livre' && (
+                  <button onClick={() => images(fiche.images.map((x) => (x.id === im.id ? { ...x, dessin: !estDessin(x) } : x)), estDessin(im) ? 'Rangée avec les photos.' : 'Rangée avec les plans.')}>
+                    {estDessin(im) ? 'C’est une photo' : 'C’est un plan'}
+                  </button>
+                )}
                 {i > 0 && <button onClick={() => { images([im, ...fiche.images.filter((x) => x.id !== im.id)], 'Image mise en premier.'); setI(0); }}>Mettre en premier</button>}
                 <button onClick={() => setRetirer(true)}>Retirer</button>
               </>

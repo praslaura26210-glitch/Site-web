@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Citation, Famille, Fiche, LienWeb, TypeFiche } from '../types';
-import { TYPES } from '../types';
+import { TYPES, estDessin } from '../types';
 import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { compresser } from '../lib/images';
@@ -356,6 +356,12 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
                   value={im.credit ?? ''}
                   onChange={(e) => maj({ images: f.images.map((x) => (x.id === im.id ? { ...x, credit: e.target.value } : x)) })}
                 />
+                {t !== 'livre' && i > 0 && (
+                  <label className="case petite">
+                    <input type="checkbox" checked={estDessin(im)} onChange={(e) => maj({ images: f.images.map((x) => (x.id === im.id ? { ...x, dessin: e.target.checked } : x)) })} />
+                    Plan, coupe ou dessin
+                  </label>
+                )}
               </div>
               <div className="image-actions">
                 {i > 0 && (
