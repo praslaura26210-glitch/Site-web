@@ -38,6 +38,8 @@ export function App() {
   const partage = useRef<Preremplissage | null>(lirePartage());
   const defilements = useRef(new Map<string, number>());
   const couverturesLancees = useRef(false);
+  const biblioActuelle = useRef<Bibliotheque | null>(null);
+  biblioActuelle.current = biblio;
 
   const charger = useCallback(async () => {
     setPhase({ nom: 'chargement' });
@@ -115,19 +117,27 @@ export function App() {
     if (!livres.length && !autres.length) return;
     couverturesLancees.current = true;
     (async () => {
-      for (const f of [...livres, ...autres]) {
+      for (const depart of [...livres, ...autres]) {
         try {
+          // toujours repartir de la fiche telle qu'elle est maintenant (elle a pu changer, ou être restaurée)
+          const actuelle = () => biblioActuelle.current?.fiches.find((x) => x.id === depart.id);
+          const dejaFaite = (x?: Fiche) => !x || x.images.length > 0 || (x.type === 'livre' ? x.couvertureCherchee : x.imageCherchee);
+          if (dejaFaite(actuelle())) continue;
           let maj: Fiche;
-          if (f.type === 'livre') {
-            const n = await api.isbn(f.isbn!).catch(() => null);
+          if (depart.type === 'livre') {
+            const n = await api.isbn(depart.isbn!).catch(() => null);
+            const f = actuelle();
+            if (dejaFaite(f)) continue;
             maj = {
-              ...f, couvertureCherchee: true, images: n?.image ? [n.image] : f.images,
-              editeur: f.editeur || n?.editeur, annee: f.annee || n?.annee, pages: f.pages || n?.pages,
+              ...f!, couvertureCherchee: true, images: n?.image ? [n.image] : f!.images,
+              editeur: f!.editeur || n?.editeur, annee: f!.annee || n?.annee, pages: f!.pages || n?.pages,
             };
           } else {
-            const a = await api.apercu(f.source!).catch(() => null);
-            const site = a?.site || domaine(f.source);
-            maj = { ...f, imageCherchee: true, images: a?.image ? [{ ...a.image, credit: `Source : ${site}` }] : f.images };
+            const a = await api.apercu(depart.source!).catch(() => null);
+            const f = actuelle();
+            if (dejaFaite(f)) continue;
+            const site = a?.site || domaine(f!.source);
+            maj = { ...f!, imageCherchee: true, images: a?.image ? [{ ...a.image, credit: `Source : ${site}` }] : f!.images };
           }
           const r = await api.enregistrer(maj);
           majFiche(r.fiche, r.rev);

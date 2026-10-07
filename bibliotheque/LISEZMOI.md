@@ -1,5 +1,22 @@
 # Bibliothèque
 
+## Mettre en ligne sur Cloudflare Workers (formule proposée par défaut, gratuite)
+
+Cloudflare → Compute → Workers & Pages → Create application → Import a repository → **Site-web**, puis :
+
+- Project name : `bibliotheque` (le même nom que dans `wrangler.jsonc`)
+- Build command : `npm run build`
+- Deploy command : `npx wrangler deploy`
+- Advanced settings → Path (dossier racine) : `bibliotheque`
+
+Après le premier déploiement :
+- Settings → Build → Branch control → branche de production : `claude/bibliotheque-cloudflare`
+- Settings → Variables and Secrets → ajouter `MOT_DE_PASSE` (type *Secret*)
+- Deployments → relancer le déploiement.
+
+Les données sont rangées dans un Durable Object (petite base SQLite créée toute seule au déploiement) :
+rien d'autre à configurer. Code : `worker/index.ts` et `wrangler.jsonc`.
+
 ## Mettre en ligne sur Cloudflare Pages (gratuit, sans carte bancaire)
 
 1. Créer un compte sur [dash.cloudflare.com](https://dash.cloudflare.com).
