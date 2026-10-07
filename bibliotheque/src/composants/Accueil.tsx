@@ -77,6 +77,7 @@ function CarteProjet({ fiche: f }: { fiche: Fiche }) {
       {f.images.length > 0 && (
         <span className="carte-projet-texte" aria-hidden="true">
           <span className="carte-titre">{f.titre}</span>
+          {f.sousTitre && <span className="carte-sous-titre">{f.sousTitre}</span>}
           {meta && <span className="carte-meta">{meta}</span>}
           <span className="carte-voir">Voir le projet →</span>
         </span>
@@ -86,16 +87,19 @@ function CarteProjet({ fiche: f }: { fiche: Fiche }) {
   );
 }
 
-/** Accueil : quelques projets côte à côte, à la même hauteur, chaque image entière. */
-function RangeeProjets({ fiches }: { fiches: Fiche[] }) {
-  const ratios = fiches.map((f) => (f.images[0] ? f.images[0].w / f.images[0].h : 4 / 3));
-  const somme = (n: number) => ratios.slice(0, n).reduce((a, b) => a + b, 0);
-  // la largeur est limitée pour que la rangée ne soit jamais trop haute (images en portrait)
-  const style = { '--r3': somme(3), '--r2': somme(2) } as React.CSSProperties;
+/** Accueil : un projet en petit, présenté comme un livre (image entière, nom et architecte dessous). */
+function PetitProjet({ fiche: f }: { fiche: Fiche }) {
   return (
-    <ul className="rangee-projets" style={style}>
-      {fiches.map((f, i) => <li key={f.id} style={{ flexGrow: ratios[i], flexBasis: 0 }}><CarteProjet fiche={f} /></li>)}
-    </ul>
+    <a className="carte carte-projet-petit" href={lien(f)}>
+      <span className="carte-image"><Couverture fiche={f} /></span>
+      <span className="carte-texte">
+        <span className="carte-titre">{f.titre}</span>
+        <span className="carte-meta">
+          <span>{[f.auteurs[0], f.editeur?.split(',')[0]].filter(Boolean).join(' · ')}</span>
+          {f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={13} /></span>}
+        </span>
+      </span>
+    </a>
   );
 }
 
@@ -254,7 +258,7 @@ function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
   // quelques fiches seulement ; le reste avec « Voir plus »
-  const LIMITE: Record<Rayon, number> = { livres: 6, articles: 4, projets: 3 };
+  const LIMITE: Record<Rayon, number> = { livres: 6, articles: 4, projets: 6 };
 
   if (!biblio.fiches.length) {
     return (
@@ -277,7 +281,11 @@ function VueAccueil() {
             </div>
             {liste.length ? (
               <>
-                {r === 'projets' ? <RangeeProjets fiches={liste.slice(0, LIMITE.projets)} /> : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />}
+                {r === 'projets' ? (
+                  <ul className="grille projets">
+                    {liste.slice(0, LIMITE.projets).map((f) => <li key={f.id}><PetitProjet fiche={f} /></li>)}
+                  </ul>
+                ) : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />}
               </>
             ) : (
               <p className="discret rangee-vide">

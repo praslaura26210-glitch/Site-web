@@ -86,7 +86,7 @@ export function definirCategories(cats: { id: string; nom: string }[]) {
 
 function champs(f: Fiche): Champ[] {
   return [
-    { nom: 'titre', poids: 10, textes: [f.titre] },
+    { nom: 'titre', poids: 10, textes: [f.titre, f.sousTitre ?? ''] },
     { nom: 'auteur', poids: 8, textes: f.auteurs },
     { nom: 'travail', poids: 6, textes: (f.categories ?? []).map((c) => nomsCategories.get(c) ?? '') },
     { nom: 'mot-clé', poids: 6, textes: f.motsCles },

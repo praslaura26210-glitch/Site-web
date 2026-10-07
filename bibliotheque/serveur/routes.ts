@@ -90,6 +90,7 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     id: String(f.id),
     type: TYPES.includes(f.type) ? f.type : 'livre',
     titre: (texte(f.titre, 500) ?? '').trim() || 'Sans titre',
+    sousTitre: texte(f.sousTitre, 300) || undefined,
     auteurs: textes(f.auteurs),
     annee: texte(f.annee, 20),
     editeur: texte(f.editeur, 300),

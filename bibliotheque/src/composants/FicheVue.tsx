@@ -295,6 +295,7 @@ export function FicheVue({ id }: { id: string }) {
     <div className="fiche-titres">
       <p className="surtitre">{projet ? NOM_TYPE[fiche.type] : [NOM_TYPE[fiche.type], fiche.editeur, fiche.annee].filter(Boolean).join(' · ')}</p>
       <h1 className="fiche-titre">{fiche.titre}</h1>
+      {fiche.sousTitre && <p className="fiche-sous-titre">{fiche.sousTitre}</p>}
       {fiche.auteurs.length > 0 && !projet && (
         <p className="fiche-auteurs">
           {fiche.auteurs.map((a, i) => (
@@ -323,7 +324,7 @@ export function FicheVue({ id }: { id: string }) {
   );
 
   // projet : architecte, lieu, année, sur toute la largeur sous la grande image
-  const infosProjet = projet && (fiche.auteurs.length > 0 || fiche.editeur || fiche.annee || citePar.length > 0) && (
+  const infosProjet = projet && (
     <dl className="infos-projet">
       {fiche.auteurs.length > 0 && (
         <div>
@@ -333,6 +334,16 @@ export function FicheVue({ id }: { id: string }) {
       )}
       {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
       {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
+      <div>
+        <dt>Site web</dt>
+        <dd>
+          {fiche.source ? (
+            <a href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Site du projet'} ↗</a>
+          ) : (
+            <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
+          )}
+        </dd>
+      </div>
       {citePar.length > 0 && (
         <div>
           <dt>Présenté dans</dt>
@@ -343,11 +354,10 @@ export function FicheVue({ id }: { id: string }) {
   );
 
   // la grande image (projets, articles) : on la touche pour l'agrandir, la changer, la légender
-  const source = !livre && (fiche.source ? (
+  // le site web d'un projet est avec ses informations ; pour un article, sous l'image
+  const source = !livre && !projet && fiche.source ? (
     <a className="source-image" href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Source'} ↗</a>
-  ) : projet ? (
-    <a className="source-image" href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
-  ) : null);
+  ) : null;
   const imagePrincipale = !livre && (fiche.images.length > 0 ? (
     <figure className="image-principale">
       <button className="grande" onClick={() => setVisionneuse(0)} aria-label="Agrandir ou modifier l’image">

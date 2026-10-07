@@ -40,6 +40,8 @@ export interface Fiche {
   id: string;
   type: TypeFiche;
   titre: string;
+  /** Précision sous le titre, en plus petit (ex. « Centre artisanal de la communauté de Shalalá »). */
+  sousTitre?: string;
   auteurs: string[];
   annee?: string;
   /** Éditeur (livre), revue (article), lieu (projet), site (site web), chaîne (vidéo). */

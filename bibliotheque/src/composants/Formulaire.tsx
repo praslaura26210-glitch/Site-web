@@ -289,6 +289,11 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </div>
 
         <div className="champ">
+          <label className="etiquette" htmlFor="sous-titre">Sous-titre (facultatif)</label>
+          <input id="sous-titre" value={f.sousTitre ?? ''} placeholder={t === 'projet' ? 'Ex. : Centre artisanal de la communauté de Shalalá' : ''} onChange={(e) => maj({ sousTitre: e.target.value })} />
+        </div>
+
+        <div className="champ">
           <span className="etiquette">{L.auteurs}</span>
           <ChampPuces valeurs={f.auteurs} changer={(auteurs) => maj({ auteurs })} propositions={valeurs.auteurs} placeholder="Tape un nom, puis Entrée (un nom à la fois)" />
         </div>
