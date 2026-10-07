@@ -41,8 +41,8 @@ const LIBELLES: Record<TypeFiche, { titre: string; auteurs: string; editeur: str
   projet: {
     titre: 'Nom du projet', auteurs: 'Architecte(s) ou agence', editeur: 'Lieu', exempleEditeur: 'Ex. : Palma, Espagne', lien: 'Page du projet (ArchDaily, site de l’architecte…)',
     images: 'Images du projet',
-    aideImages: 'La plus belle photo en premier : elle s’affiche en grand. Ajoute ensuite plans, coupes, façades, axonométries, avec une légende.',
-    aideResume: 'Le programme, le site, les matériaux, ce qui fait le projet.',
+    aideImages: 'La plus belle photo en premier : elle s’affiche en grand en haut de la fiche. Les suivantes (plans, coupes, façades, axonométries) s’affichent sous le texte, avec leur légende.',
+    aideResume: 'Un petit texte qui explique le projet : programme, site, matériaux, ce qui le rend intéressant.',
   },
   site: {
     titre: 'Titre de la page', auteurs: 'Auteur(s)', editeur: 'Nom du site', exempleEditeur: '', lien: 'Adresse de la page',
@@ -70,7 +70,7 @@ const lireBrouillon = (cle: string) => {
 };
 
 export function Formulaire({ id, preremplissage }: { id?: string; preremplissage?: Preremplissage }) {
-  const { biblio, majFiche, remplacer, naviguer, notifier } = useBiblio();
+  const { biblio, majFiche, remplacer, naviguer, notifier, retour } = useBiblio();
   const existante = id ? biblio.fiches.find((f) => f.id === id) : undefined;
   const cleBrouillon = `brouillon:${id ?? 'nouvelle'}`;
 
@@ -225,8 +225,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
 
   function annuler() {
     oublierBrouillon();
-    if (existante) naviguer(`fiche/${encodeURIComponent(existante.id)}`);
-    else history.length > 1 ? history.back() : naviguer('');
+    retour(existante ? `fiche/${encodeURIComponent(existante.id)}` : '');
   }
 
   const t = f.type;
@@ -396,7 +395,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
       <section className="partie">
         <h2>Contenu</h2>
         <div className="champ">
-          <label className="etiquette" htmlFor="resume">Résumé</label>
+          <label className="etiquette" htmlFor="resume">{t === 'projet' ? 'Texte sur le projet' : 'Résumé'}</label>
           <textarea id="resume" className="lecture" rows={4} value={f.resume ?? ''} onChange={(e) => maj({ resume: e.target.value })} placeholder={L.aideResume} />
         </div>
 

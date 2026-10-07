@@ -266,10 +266,9 @@ function Details({ fiche, enregistrer, demanderSuppression }: { fiche: Fiche; en
 }
 
 export function FicheVue({ id }: { id: string }) {
-  const { biblio, majFiche, retirerFiche, naviguer, notifier, setFiltres } = useBiblio();
+  const { biblio, majFiche, retirerFiche, naviguer, notifier, retour } = useBiblio();
   const fiche = biblio.fiches.find((f) => f.id === id);
   const [visionneuse, setVisionneuse] = useState<number | null>(null);
-  const [imageActive, setImageActive] = useState(0);
   const [confirmer, setConfirmer] = useState(false);
 
   if (!fiche) {
@@ -284,7 +283,6 @@ export function FicheVue({ id }: { id: string }) {
   const rayon = rayonDe(fiche.type);
   const livre = rayon === 'livres';
   const projet = rayon === 'projets';
-  const active = Math.min(imageActive, Math.max(0, fiche.images.length - 1));
   const projetsCites = biblio.fiches.filter((f) => f.citeDans?.includes(fiche.id));
   const citePar = (fiche.citeDans ?? []).map((i) => biblio.fiches.find((f) => f.id === i)).filter((f): f is Fiche => Boolean(f));
 
@@ -315,13 +313,10 @@ export function FicheVue({ id }: { id: string }) {
     }
   }
 
-  const voirAuteur = (a: string) => {
-    setFiltres({ ...FILTRES_VIDES, q: a });
-    naviguer('');
-  };
-  const retour = () => (history.length > 1 ? history.back() : naviguer(rayon));
-  const credit = (i: number) => fiche.images[i]?.credit || fiche.credit;
+  const voirAuteur = (a: string) => naviguer(`auteur/${encodeURIComponent(a)}`);
+  const credit = (i: number) => fiche.images[i]?.credit || (i === 0 ? fiche.credit : '');
   const lu = fiche.statut === 'lu';
+  const documents = fiche.images.slice(1);
 
   const titres = (
     <div className="fiche-titres">
@@ -354,13 +349,13 @@ export function FicheVue({ id }: { id: string }) {
     </div>
   );
 
-  // projet : les informations essentielles, tout de suite sous le titre
+  // projet : architecte, lieu, année, lien, sous la grande image
   const infosProjet = projet && (
     <dl className="infos-projet">
       {fiche.auteurs.length > 0 && (
         <div>
           <dt>Architectes</dt>
-          <dd>{fiche.auteurs.map((a, i) => <Fragment key={a}>{i > 0 && ', '}<button className="lien-texte nu" onClick={() => voirAuteur(a)}>{a}</button></Fragment>)}</dd>
+          <dd>{fiche.auteurs.map((a, i) => <Fragment key={a}>{i > 0 && ', '}<button className="lien-texte nu souligne" onClick={() => voirAuteur(a)}>{a}</button></Fragment>)}</dd>
         </div>
       )}
       {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
@@ -369,7 +364,7 @@ export function FicheVue({ id }: { id: string }) {
         <dt>En savoir plus</dt>
         <dd>
           {fiche.source ? (
-            <a href={fiche.source} target="_blank" rel="noreferrer">Site du projet ↗</a>
+            <a href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Site du projet'} ↗</a>
           ) : (
             <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
           )}
@@ -384,15 +379,56 @@ export function FicheVue({ id }: { id: string }) {
     </dl>
   );
 
-  const corps = (
-    <>
-      {fiche.resume && (
-        <section className="bloc">
-          <h2>Résumé</h2>
-          <p className="resume">{fiche.resume}</p>
-        </section>
-      )}
+  // la grande image (projets, articles) : on la touche pour l'agrandir, la changer, la légender
+  const imagePrincipale = !livre && (fiche.images.length > 0 ? (
+    <figure className="image-principale">
+      <button className="grande" onClick={() => setVisionneuse(0)} aria-label="Agrandir ou modifier l’image">
+        <img src={srcImage(fiche.images[0].id)} alt="" style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
+      </button>
+      {credit(0) && <figcaption className="credit-image">{credit(0)}</figcaption>}
+    </figure>
+  ) : (
+    <AjoutImage fiche={fiche} enregistrer={enregistrer} className="image-a-ajouter">
+      <Icone nom="photo" taille={24} />
+      <span>Pas encore d’image. Touche ici pour ajouter une photo ou une capture.</span>
+    </AjoutImage>
+  ));
 
+  // plans, coupes, façades… : les images suivantes, sous le texte
+  const blocDocuments = !livre && fiche.images.length > 0 && (
+    <section className="bloc documents">
+      {documents.length > 0 && <h2>Plans, coupes et documents</h2>}
+      {documents.length > 0 && (
+        <ul className="grille-documents">
+          {documents.map((im, k) => (
+            <li key={im.id}>
+              <figure>
+                <button onClick={() => setVisionneuse(k + 1)} aria-label={`Agrandir : ${im.credit || `image ${k + 2}`}`}>
+                  <img src={srcImage(im.id)} alt="" loading="lazy" />
+                </button>
+                {im.credit && <figcaption>{im.credit}</figcaption>}
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )}
+      <AjoutImage fiche={fiche} enregistrer={enregistrer} className="lien-texte petit ajout-discret">
+        <Icone nom="plus" taille={14} /> Ajouter {projet ? 'un plan, une coupe, une façade…' : 'une image'}
+      </AjoutImage>
+    </section>
+  );
+
+  const texte = fiche.resume && (
+    projet ? <p className="resume texte-projet">{fiche.resume}</p> : (
+      <section className="bloc">
+        <h2>Résumé</h2>
+        <p className="resume">{fiche.resume}</p>
+      </section>
+    )
+  );
+
+  const suite = (
+    <>
       <Liens fiche={fiche} enregistrer={enregistrer} />
 
       {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} />}
@@ -421,7 +457,7 @@ export function FicheVue({ id }: { id: string }) {
   return (
     <article className="fiche">
       <div className="fiche-haut">
-        <button className="lien-retour" onClick={retour}><Icone nom="retour" taille={17} /> Retour</button>
+        <button className="lien-retour" onClick={() => retour(rayon)}><Icone nom="retour" taille={17} /> Retour</button>
         <div className="fiche-actions">
           <button
             className="bouton-icone bouton-coeur"
@@ -432,7 +468,9 @@ export function FicheVue({ id }: { id: string }) {
           >
             <Icone nom="coeur" />
           </button>
-          <a className="bouton petit" href={`#/modifier/${encodeURIComponent(id)}`}><Icone nom="modifier" taille={15} /> Modifier</a>
+          <a className="bouton-icone" href={`#/modifier/${encodeURIComponent(id)}`} aria-label="Modifier la fiche" title="Modifier la fiche">
+            <Icone nom="modifier" taille={19} />
+          </a>
         </div>
       </div>
 
@@ -440,7 +478,7 @@ export function FicheVue({ id }: { id: string }) {
         <div className="fiche-livre-grille">
           <div className="fiche-couv">
             {fiche.images.length > 0 ? (
-              <button onClick={() => setVisionneuse(0)} aria-label="Agrandir la couverture">
+              <button onClick={() => setVisionneuse(0)} aria-label="Agrandir ou changer la couverture">
                 <img src={srcImage(fiche.images[0].id)} alt={`Couverture : ${fiche.titre}`} style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
               </button>
             ) : (
@@ -452,50 +490,26 @@ export function FicheVue({ id }: { id: string }) {
           </div>
           <div className="fiche-contenu">
             {titres}
-            {corps}
+            {texte}
+            {suite}
           </div>
         </div>
       ) : (
         <div className="fiche-projet">
-          <div className="fiche-contenu large">
-            {titres}
+          <div className="fiche-contenu large">{titres}</div>
+          {imagePrincipale}
+          <div className="fiche-contenu">
             {infosProjet}
+            {texte}
+            {blocDocuments}
+            {suite}
           </div>
-          {fiche.images.length > 0 ? (
-            <div className="fiche-galerie">
-              <button className="grande" onClick={() => setVisionneuse(active)} aria-label="Agrandir l’image">
-                <img src={srcImage(fiche.images[active].id)} alt="" style={{ aspectRatio: `${fiche.images[active].w} / ${fiche.images[active].h}` }} />
-              </button>
-              {fiche.images.length > 1 && (
-                <div className="vignettes-galerie">
-                  {fiche.images.map((im, i) => (
-                    <button key={im.id} aria-current={i === active} aria-label={`Image ${i + 1}`} onClick={() => setImageActive(i)}>
-                      <img src={srcImage(im.id)} alt="" />
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div className="sous-galerie">
-                {credit(active) ? <p className="credit-image">{credit(active)}</p> : <span />}
-                <span className="actions-images">
-                  <AjoutImage fiche={fiche} enregistrer={enregistrer} className="lien-texte petit">
-                    <Icone nom="plus" taille={14} /> Image (plan, coupe…)
-                  </AjoutImage>
-                  <a className="lien-texte petit" href={`#/modifier/${encodeURIComponent(id)}`}>Ordre et légendes</a>
-                </span>
-              </div>
-            </div>
-          ) : (
-            <AjoutImage fiche={fiche} enregistrer={enregistrer} className="image-a-ajouter">
-              <Icone nom="photo" taille={24} />
-              <span>Pas encore d’image. Touche ici pour ajouter une photo, une capture ou un plan.</span>
-            </AjoutImage>
-          )}
-          <div className="fiche-contenu">{corps}</div>
         </div>
       )}
 
-      {visionneuse !== null && <Visionneuse fiche={fiche} depart={visionneuse} fermer={() => setVisionneuse(null)} />}
+      {visionneuse !== null && fiche.images.length > 0 && (
+        <Visionneuse fiche={fiche} depart={Math.min(visionneuse, fiche.images.length - 1)} fermer={() => setVisionneuse(null)} enregistrer={enregistrer} />
+      )}
 
       {confirmer && (
         <div className="dialogue-fond" onClick={() => setConfirmer(false)}>
@@ -513,12 +527,19 @@ export function FicheVue({ id }: { id: string }) {
   );
 }
 
-/** Image en grand, avec qui l'a faite et d'où elle vient. */
-function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; fermer: () => void }) {
+/** Image en grand, avec sa légende ; on peut aussi la remplacer, la légender, la mettre en premier ou la retirer. */
+function Visionneuse({ fiche, depart, fermer, enregistrer }: { fiche: Fiche; depart: number; fermer: () => void; enregistrer: (f: Fiche, m?: string) => void }) {
+  const { notifier } = useBiblio();
   const [i, setI] = useState(depart);
+  const [legende, setLegende] = useState<string | null>(null);
+  const [retirer, setRetirer] = useState(false);
+  const [envoi, setEnvoi] = useState(false);
   const n = fiche.images.length;
+  const im = fiche.images[Math.min(i, n - 1)];
+
   useEffect(() => {
     const touche = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).tagName === 'INPUT') return;
       if (e.key === 'Escape') fermer();
       if (e.key === 'ArrowRight') setI((x) => (x + 1) % n);
       if (e.key === 'ArrowLeft') setI((x) => (x - 1 + n) % n);
@@ -531,8 +552,26 @@ function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; 
     };
   }, [fermer, n]);
 
+  useEffect(() => { setLegende(null); setRetirer(false); }, [i]);
+
   const [x0, setX0] = useState<number | null>(null);
-  const credit = fiche.images[i]?.credit || fiche.credit;
+  if (!im) return null;
+  const credit = im.credit || (i === 0 ? fiche.credit : '');
+  const images = (liste: Fiche['images'], message: string) => enregistrer({ ...fiche, images: liste }, message);
+
+  async function remplacer(fichiers: FileList | null) {
+    const fichier = fichiers?.[0];
+    if (!fichier) return;
+    setEnvoi(true);
+    try {
+      const nouvelle = await api.envoyerImage(await compresser(fichier));
+      images(fiche.images.map((x) => (x.id === im.id ? nouvelle : x)), 'Image remplacée.');
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Image non envoyée.');
+    } finally {
+      setEnvoi(false);
+    }
+  }
 
   return (
     <div
@@ -550,12 +589,40 @@ function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; 
       }}
     >
       <figure>
-        <img src={srcImage(fiche.images[i].id)} alt="" onClick={(e) => e.stopPropagation()} />
-        <figcaption onClick={(e) => e.stopPropagation()}>
-          <strong>{fiche.titre}</strong>
-          <br />{credit || 'Crédit non renseigné'}
-          {fiche.source && fiche.type !== 'livre' && <><br /><a href={fiche.source} target="_blank" rel="noreferrer">Source : {domaine(fiche.source)}</a></>}
-          {n > 1 && <><br />{i + 1} / {n}</>}
+        <img src={srcImage(im.id)} alt="" onClick={(e) => e.stopPropagation()} />
+        <figcaption onClick={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
+          {legende === null ? (
+            <span>{credit || <span className="discret-clair">Sans légende</span>}{n > 1 && <> · {i + 1} / {n}</>}</span>
+          ) : (
+            <span className="champ-ligne edition-legende">
+              <input autoFocus value={legende} placeholder="Plan RDC, © photographe…" onChange={(e) => setLegende(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') { images(fiche.images.map((x) => (x.id === im.id ? { ...x, credit: legende.trim() || undefined } : x)), 'Légende enregistrée.'); setLegende(null); }
+                  if (e.key === 'Escape') setLegende(null);
+                }} />
+              <button className="bouton petit principal" onClick={() => { images(fiche.images.map((x) => (x.id === im.id ? { ...x, credit: legende.trim() || undefined } : x)), 'Légende enregistrée.'); setLegende(null); }}>OK</button>
+            </span>
+          )}
+          {fiche.source && fiche.type !== 'livre' && legende === null && <a href={fiche.source} target="_blank" rel="noreferrer">Source : {domaine(fiche.source)}</a>}
+          <span className="actions-visionneuse">
+            {retirer ? (
+              <>
+                <span>Retirer cette image ?</span>
+                <button onClick={() => { images(fiche.images.filter((x) => x.id !== im.id), 'Image retirée.'); if (n === 1) fermer(); else setI(Math.max(0, i - 1)); }}>Oui, retirer</button>
+                <button onClick={() => setRetirer(false)}>Non</button>
+              </>
+            ) : (
+              <>
+                <label className={envoi ? 'occupe' : ''}>
+                  {envoi ? 'Envoi…' : 'Remplacer'}
+                  <input type="file" accept="image/*" hidden onChange={(e) => { remplacer(e.target.files); e.target.value = ''; }} />
+                </label>
+                <button onClick={() => setLegende(im.credit ?? '')}>Légende</button>
+                {i > 0 && <button onClick={() => { images([im, ...fiche.images.filter((x) => x.id !== im.id)], 'Image mise en premier.'); setI(0); }}>Mettre en premier</button>}
+                <button onClick={() => setRetirer(true)}>Retirer</button>
+              </>
+            )}
+          </span>
         </figcaption>
       </figure>
       <button className="visionneuse-fermer" onClick={fermer} aria-label="Fermer"><Icone nom="fermer" taille={24} /></button>

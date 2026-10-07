@@ -4,7 +4,7 @@ import type { Categorie, Famille } from './types';
 export const CATEGORIES_DEPART: Categorie[] = [
   { id: 'memoire', nom: 'Mémoire' },
   { id: 'rde', nom: 'Rapport d’études' },
-  { id: 'studio-villefort', nom: 'Studio Villefort' },
+  { id: 'studio-villefort', nom: 'Studio Vielfaure' },
 ];
 
 /** Liste de départ des mots-clés, modifiable dans les réglages. */
@@ -43,6 +43,7 @@ export const FAMILLES_DEPART: Famille[] = [
           'Dario Castellino', 'Peter Zumthor', 'Carlo Scarpa', 'Anna Heringer', 'RCR Arquitectes', 'Ryue Nishizawa',
           'Barbara Martino', 'Link Architectes', 'Colectivo C733', 'CoA arquitectura', 'Shinslab', 'designbuildLAB',
           'Martin Rauch', 'Gion A. Caminada', 'Wang Shu', 'Lacaton & Vassal', 'Sverre Fehn',
+          'Kengo Kuma', 'Studio Mumbai', 'Pierre Chareau', 'Powerhouse Company', 'La Cabina de la Curiosidad', 'HARQUITECTES',
         ],
       },
     ],
@@ -53,7 +54,7 @@ export const FAMILLES_DEPART: Famille[] = [
     groupes: [
       { nom: 'France', mots: ['Drôme', 'Ardèche', 'Isère', 'Hautes-Alpes', 'Rhône', 'Lyon', 'Grenoble'] },
       { nom: 'Europe', mots: ['Alpes', 'Piémont', 'Grisons', 'Italie', 'Suisse', 'Espagne'] },
-      { nom: 'Monde', mots: ['Japon', 'Mexique', 'Bangladesh', 'Corée du Sud'] },
+      { nom: 'Monde', mots: ['Japon', 'Mexique', 'Bangladesh', 'Corée du Sud', 'Inde', 'Équateur', 'États-Unis'] },
     ],
   },
 ];

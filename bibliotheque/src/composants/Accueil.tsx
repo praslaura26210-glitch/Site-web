@@ -71,6 +71,29 @@ function Section({ titre, compte, vers, children }: { titre: string; compte?: nu
   );
 }
 
+/** Les architectes des projets : on en choisit un pour voir tous ses projets. */
+function ChoixArchitecte({ actuel }: { actuel: string }) {
+  const { biblio, naviguer } = useBiblio();
+  const architectes = useMemo(() => {
+    const n = new Map<string, number>();
+    for (const f of biblio.fiches) if (f.type === 'projet') for (const a of f.auteurs) n.set(a, (n.get(a) ?? 0) + 1);
+    return [...n].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'fr'));
+  }, [biblio.fiches]);
+  if (!architectes.length) return <span />;
+  return (
+    <select
+      id="architecte"
+      className="tri choix-architecte"
+      value={actuel}
+      aria-label="Voir les projets d’un architecte"
+      onChange={(e) => naviguer(e.target.value ? `auteur/${encodeURIComponent(e.target.value)}` : 'projets')}
+    >
+      <option value="">Tous les architectes</option>
+      {architectes.map(([a, n]) => <option key={a} value={a}>{a} ({n})</option>)}
+    </select>
+  );
+}
+
 function MotsActifs() {
   const { filtres, setFiltres } = useBiblio();
   if (!filtres.motsCles.length) return null;
@@ -100,6 +123,7 @@ export function Accueil() {
       return { titre: NOM_RAYON[r], base: biblio.fiches.filter((f) => rayonDe(f.type) === r), rayon: r };
     }
     if (page === 'favoris') return { titre: 'Favoris', base: biblio.fiches.filter((f) => f.favori), rayon: null };
+    if (page === 'auteur') return { titre: param, base: biblio.fiches.filter((f) => f.auteurs.includes(param)), rayon: null };
     if (page === 'travail') return { titre: nomTravail(biblio, param), base: biblio.fiches.filter((f) => f.categories?.includes(param)), rayon: null };
     return { titre: 'Toute la bibliothèque', base: biblio.fiches, rayon: null };
   }, [biblio, page, param]);
@@ -124,8 +148,9 @@ export function Accueil() {
           {titre}<span className="compte">{base.length}</span>
         </h1>
         {travail && <p className="sous-titre">Les livres, articles et projets qui nourrissent ce travail.</p>}
+        {page === 'auteur' && <p className="sous-titre">Toutes les fiches de {param} : projets, livres, articles.</p>}
         <div className="barre-filtres">
-          <span />
+          {rayon === 'projets' || (page === 'auteur' && base.some((f) => f.type === 'projet')) ? <ChoixArchitecte actuel={page === 'auteur' ? param : ''} /> : <span />}
           <span className="champ-ligne">
             {avecLus && <span className="legende"><span className="point-lu" /> lu</span>}
             <select id="tri" className="tri" value={tri} aria-label="Trier" onChange={(e) => setTri(e.target.value as Tri)}>
@@ -211,7 +236,6 @@ function VueAccueil() {
           </section>
         );
       })}
-      <p className="pied-accueil"><a className="lien-texte petit" href="#/reglages">Réglages</a></p>
     </div>
   );
 }

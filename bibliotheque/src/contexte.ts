@@ -10,6 +10,8 @@ export interface Contexte {
   filtres: Filtres;
   setFiltres: (f: Filtres | ((f: Filtres) => Filtres)) => void;
   naviguer: (route: string) => void;
+  /** Revient à la page d'avant dans la bibliothèque (ou à `defaut` s'il n'y en a pas). */
+  retour: (defaut?: string) => void;
   notifier: (message: string) => void;
   /** Adresse de la page affichée (après « #/ »). */
   route: string;

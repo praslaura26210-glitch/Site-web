@@ -8,7 +8,10 @@ import { Icone, type NomIcone } from './Icone';
 export const NOM_RAYON: Record<Rayon, string> = { livres: 'Livres', articles: 'Articles', projets: 'Projets' };
 const ICONE_RAYON: Record<Rayon, NomIcone> = { livres: 'livre', articles: 'article', projets: 'projet' };
 
-/** Barre du haut (rayons, recherche, favoris, ajout) ; onglets en bas sur téléphone. */
+/**
+ * En haut : « Bibliothèque » et le cœur, puis la barre de recherche (les catégories et réglages
+ * dans le petit bouton à sa droite). Les rayons : au centre sur ordinateur, en bas sur téléphone.
+ */
 export function Navigation({ children }: { children: ReactNode }) {
   const { route, filtres, setFiltres, naviguer } = useBiblio();
   const champ = useRef<HTMLInputElement>(null);
@@ -46,33 +49,30 @@ export function Navigation({ children }: { children: ReactNode }) {
               <a key={r} href={`#/${r}`} aria-current={actuel(r)} onClick={vider}>{NOM_RAYON[r]}</a>
             ))}
           </nav>
-          <div className="entete-droite">
-            <div className="zone-recherche">
-              <MenuCategories />
-              <form className="recherche" role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
-                <Icone nom="loupe" taille={18} />
-                <input
-                  ref={champ}
-                  id="recherche"
-                  type="search"
-                  enterKeyHint="search"
-                  placeholder="Rechercher"
-                  aria-label="Rechercher un titre, un auteur, un mot de mes notes"
-                  value={filtres.q}
-                  onChange={(e) => chercher(e.target.value)}
-                />
-                {filtres.q && (
-                  <button type="button" className="recherche-vider" onClick={() => chercher('')} aria-label="Effacer la recherche">
-                    <Icone nom="fermer" taille={15} />
-                  </button>
-                )}
-              </form>
-            </div>
-            <a className="bouton-icone lien-coeur" href="#/favoris" aria-current={actuel('favoris')} aria-label="Favoris" title="Favoris" onClick={vider}>
-              <Icone nom="coeur" taille={22} />
-            </a>
-            <a className="bouton principal petit ajouter" href="#/ajouter"><Icone nom="plus" taille={16} /> Ajouter</a>
-          </div>
+          <a className="bouton-icone lien-coeur" href="#/favoris" aria-current={actuel('favoris')} aria-label="Favoris" title="Favoris" onClick={vider}>
+            <Icone nom="coeur" taille={24} />
+          </a>
+        </div>
+        <div className="entete-recherche">
+          <form className="recherche" role="search" onSubmit={(e) => { e.preventDefault(); champ.current?.blur(); }}>
+            <Icone nom="loupe" taille={18} />
+            <input
+              ref={champ}
+              id="recherche"
+              type="search"
+              enterKeyHint="search"
+              placeholder="Rechercher"
+              aria-label="Rechercher un titre, un auteur, un mot de mes notes"
+              value={filtres.q}
+              onChange={(e) => chercher(e.target.value)}
+            />
+            {filtres.q && (
+              <button type="button" className="recherche-vider" onClick={() => chercher('')} aria-label="Effacer la recherche">
+                <Icone nom="fermer" taille={15} />
+              </button>
+            )}
+            <MenuFiltres />
+          </form>
         </div>
       </header>
 
@@ -83,21 +83,21 @@ export function Navigation({ children }: { children: ReactNode }) {
         {RAYONS.map((r) => (
           <a key={r} href={`#/${r}`} aria-current={actuel(r)} onClick={vider}><Icone nom={ICONE_RAYON[r]} /> {NOM_RAYON[r]}</a>
         ))}
+        <a href="#/favoris" aria-current={actuel('favoris')} onClick={vider}><Icone nom="coeur" /> Favoris</a>
       </nav>
       {!/^(ajouter|modifier)/.test(route) && (
-        <a className="ajout-flottant" href="#/ajouter" aria-label="Ajouter une fiche"><Icone nom="plus" taille={24} /></a>
+        <a className="ajout-flottant" href="#/ajouter" aria-label="Ajouter une fiche" title="Ajouter une fiche"><Icone nom="plus" taille={24} /></a>
       )}
     </>
   );
 }
 
-/** Petit menu à côté de la recherche : les catégories (mémoire, studio…), et les réglages. */
-function MenuCategories() {
+/** Petit bouton au bout de la barre de recherche : les catégories (mémoire, studio…) et les réglages. */
+function MenuFiltres() {
   const { biblio, route, setFiltres } = useBiblio();
   const [ouvert, setOuvert] = useState(false);
   const boite = useRef<HTMLDivElement>(null);
   const actuelle = route.startsWith('travail/') ? decodeURIComponent(route.split('/')[1]) : null;
-  const nom = actuelle ? biblio.categories.find((c) => c.id === actuelle)?.nom : null;
 
   useEffect(() => setOuvert(false), [route]);
 
@@ -113,13 +113,21 @@ function MenuCategories() {
   const aller = () => { setOuvert(false); setFiltres(FILTRES_VIDES); };
 
   return (
-    <div className="menu-categories" ref={boite}>
-      <button type="button" className={`bouton-menu${actuelle ? ' actif' : ''}`} aria-expanded={ouvert} aria-haspopup="menu" onClick={() => setOuvert((o) => !o)}>
-        <span>{nom ?? 'Catégories'}</span>
-        <Icone nom="bas" taille={14} />
+    <div className="menu-filtres" ref={boite}>
+      <button
+        type="button"
+        className={`bouton-filtres${actuelle ? ' actif' : ''}`}
+        aria-expanded={ouvert}
+        aria-haspopup="menu"
+        aria-label="Catégories et réglages"
+        title="Catégories et réglages"
+        onClick={() => setOuvert((o) => !o)}
+      >
+        <Icone nom="reglages" taille={19} />
       </button>
       {ouvert && (
         <div className="menu" role="menu">
+          <p className="menu-titre">Catégories</p>
           {biblio.categories.length === 0 && <p className="discret">Aucune catégorie.</p>}
           {biblio.categories.map((c) => {
             const n = biblio.fiches.filter((f) => f.categories?.includes(c.id)).length;
@@ -131,7 +139,7 @@ function MenuCategories() {
           })}
           <hr />
           <a role="menuitem" href="#/reglages" className="menu-secondaire" onClick={aller}>
-            <Icone nom="reglages" taille={16} /> Gérer les catégories et réglages
+            <Icone nom="reglages" taille={16} /> Réglages
           </a>
         </div>
       )}

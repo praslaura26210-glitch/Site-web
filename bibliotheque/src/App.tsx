@@ -27,7 +27,7 @@ function lirePartage(): Preremplissage | null {
 }
 
 /** Pages de liste : on y retrouve la position de lecture au retour d'une fiche. */
-const estListe = (r: string) => r === '' || /^(livres|articles|projets|favoris|travail\/)/.test(r);
+const estListe = (r: string) => r === '' || /^(livres|articles|projets|favoris|travail\/|auteur\/)/.test(r);
 
 export function App() {
   const [phase, setPhase] = useState<Phase>({ nom: 'chargement' });
@@ -59,9 +59,21 @@ export function App() {
     charger();
   }, [charger]);
 
+  // historique tenu par la page : le « Retour » du navigateur ne marche pas partout (page intégrée dans claude.ai)
+  const historique = useRef<string[]>([lireRoute()]);
+  const enRetour = useRef(false);
+
   useEffect(() => {
     const suivre = () => {
       const r = lireRoute();
+      const h = historique.current;
+      if (enRetour.current) enRetour.current = false;
+      else if (h[h.length - 1] !== r) {
+        // un aller-retour navigateur (bouton du téléphone) revient sur la page d'avant : on la retire
+        if (h[h.length - 2] === r) h.pop();
+        else h.push(r);
+      }
+      if (h.length > 50) h.splice(0, h.length - 50);
       setRoute((avant) => {
         if (estListe(avant)) defilements.current.set(avant, window.scrollY);
         return r;
@@ -152,6 +164,15 @@ export function App() {
       setFiltres,
       naviguer: (r: string) => {
         location.hash = r ? `#/${r}` : '#/';
+      },
+      retour: (defaut = '') => {
+        const h = historique.current;
+        h.pop();
+        const avant = h.length ? h[h.length - 1] : defaut;
+        if (!h.length) h.push(avant);
+        enRetour.current = true;
+        if (lireRoute() === avant) { enRetour.current = false; return; }
+        location.hash = avant ? `#/${avant}` : '#/';
       },
       notifier: setMessage,
       route,
