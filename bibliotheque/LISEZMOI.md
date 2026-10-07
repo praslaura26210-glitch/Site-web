@@ -17,6 +17,8 @@ Après le premier déploiement :
 Les données sont rangées dans un Durable Object (petite base SQLite créée toute seule au déploiement) :
 rien d'autre à configurer. Code : `worker/index.ts` et `wrangler.jsonc`.
 
+Adresse du site : `https://bibliotheque.<nom-du-compte>.workers.dev` (affichée dans Cloudflare, onglet *Overview* du projet).
+
 ## Mettre en ligne sur Cloudflare Pages (gratuit, sans carte bancaire)
 
 1. Créer un compte sur [dash.cloudflare.com](https://dash.cloudflare.com).
