@@ -25,18 +25,18 @@ export function Ouverture({ fin }: { fin: () => void }) {
     const chemins = [...(svg.current?.querySelectorAll('path') ?? [])];
     const longueurs = chemins.map((c) => c.getTotalLength());
     const total = longueurs.reduce((a, b) => a + b, 0) || 1;
-    const duree = calme ? 0 : 1900;
+    const duree = calme ? 0 : 1150;
     let debut = 0;
     chemins.forEach((c, i) => {
       const l = Math.ceil(longueurs[i]) + 1;
       c.style.strokeDasharray = `${l}`;
       c.style.strokeDashoffset = calme ? '0' : `${l}`;
       const d = (longueurs[i] / total) * duree;
-      if (!calme) c.animate([{ strokeDashoffset: l }, { strokeDashoffset: 0 }], { duration: d, delay: debut + 150, fill: 'forwards', easing: 'linear' });
+      if (!calme) c.animate([{ strokeDashoffset: l }, { strokeDashoffset: 0 }], { duration: d, delay: debut + 100, fill: 'forwards', easing: 'linear' });
       debut += d;
     });
-    const t1 = setTimeout(() => setEtape('part'), calme ? 500 : debut + 650);
-    const t2 = setTimeout(fin, calme ? 800 : debut + 1250);
+    const t1 = setTimeout(() => setEtape('part'), calme ? 500 : debut + 450);
+    const t2 = setTimeout(fin, calme ? 800 : debut + 1000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [fin]);
   return (

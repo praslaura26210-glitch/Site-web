@@ -1013,3 +1013,32 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 /* moins de couleur : « Voir plus » en gris, la couleur reste pour l'essentiel */
 .section-tete > a, .accueil .section-tete > a { color: var(--encre-2); }
 .section-tete > a:hover { color: var(--terracotta); }
+
+/* ---------- retouches : recherche centrée entre titre et cœur, traits revenus, flèche ---------- */
+
+.entete-in { grid-template-columns: auto minmax(0, 1fr) auto; gap: 32px; }
+.entete-in > .recherche { justify-self: center; width: 100%; max-width: 560px; }
+
+/* « voir plus » : une simple flèche, en couleur */
+.section-tete > a.voir-plus, .accueil .section-tete > a.voir-plus { display: grid; place-items: center; width: 38px; height: 38px; margin: -6px -8px -6px 0; border-radius: 50%; color: var(--terracotta); align-self: center; }
+.section-tete > a.voir-plus:hover { background: var(--terracotta-fond); }
+
+/* les traits reviennent : sous les titres de rayon, sous les filtres, entre les informations */
+.section-tete, .accueil .section-tete { border-bottom: 1px solid var(--filet); padding-bottom: 8px; }
+.tete-page .barre-filtres { border-bottom: 1px solid var(--filet); }
+.fiche-projet .infos-projet div { border-bottom: 1px solid var(--filet); padding: 12px 0; }
+.fiche-projet .infos-projet div:first-child { padding-top: 0; }
+.fiche-projet .infos-projet div:last-child { border-bottom: 0; }
+/* un trait sépare le texte des images du projet */
+.fiche-projet > .documents { border-top: 1px solid var(--filet); padding-top: clamp(24px, 3vw, 40px); }
+
+/* accueil : un peu d'air sous l'en-tête, les fiches plus près de leur titre */
+.accueil .section:first-child { padding-top: 26px; }
+.accueil .section { gap: 10px; }
+@media (max-width: 960px) {
+  .accueil .section:first-child { padding-top: 16px; }
+  .accueil .section { gap: 8px; }
+  .entete-in { grid-template-columns: 1fr auto; gap: 8px; }
+  .fiche-projet .infos-projet div:nth-child(2) { padding-top: 0; }
+  .fiche-projet .infos-projet div:nth-last-child(2) { border-bottom: 0; }
+}
