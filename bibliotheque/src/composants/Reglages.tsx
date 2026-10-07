@@ -279,39 +279,52 @@ function ImportFavoris() {
   );
 }
 
-/** Va chercher le titre et l'image des pages web déjà enregistrées sans image. */
+/** Va chercher les images manquantes : couverture des livres par ISBN, image des pages web par leur lien. */
 function Completer() {
   const { biblio, majFiche, notifier } = useBiblio();
   const [progres, setProgres] = useState<{ fait: number; total: number } | null>(null);
-  const cibles = biblio.fiches.filter((f) => !f.images.length && f.source && f.type !== 'livre');
+  const livres = biblio.fiches.filter((f) => !f.images.length && f.type === 'livre' && f.isbn);
+  const web = biblio.fiches.filter((f) => !f.images.length && f.source && f.type !== 'livre');
+  const cibles = [...livres, ...web];
 
   async function lancer() {
     setProgres({ fait: 0, total: cibles.length });
     let trouvees = 0;
     for (const [i, f] of cibles.entries()) {
       try {
-        const a = await api.apercu(f.source!);
-        if (a.image) {
-          const r = await api.enregistrer({ ...f, images: [a.image], annee: f.annee || a.annee, editeur: f.editeur || a.site });
+        let maj: Fiche | null = null;
+        if (f.type === 'livre') {
+          const n = await api.isbn(f.isbn!);
+          if (n.image) maj = { ...f, images: [n.image], annee: f.annee || n.annee, editeur: f.editeur || n.editeur, pages: f.pages || n.pages };
+        } else {
+          const a = await api.apercu(f.source!);
+          if (a.image) maj = { ...f, images: [a.image], annee: f.annee || a.annee, editeur: f.editeur || a.site };
+        }
+        if (maj) {
+          const r = await api.enregistrer(maj);
           majFiche(r.fiche, r.rev);
           trouvees++;
         }
-      } catch { /* page inaccessible : on passe */ }
+      } catch { /* notice ou page introuvable : on passe */ }
       setProgres({ fait: i + 1, total: cibles.length });
     }
     setProgres(null);
-    notifier(`${trouvees} image${trouvees > 1 ? 's' : ''} récupérée${trouvees > 1 ? 's' : ''}.`);
+    notifier(`${trouvees} image${trouvees > 1 ? 's' : ''} récupérée${trouvees > 1 ? 's' : ''} sur ${cibles.length}.`);
   }
 
   if (!cibles.length && !progres) return null;
+  const morceaux = [
+    livres.length && `${livres.length} livre${livres.length > 1 ? 's' : ''} avec ISBN sans couverture`,
+    web.length && `${web.length} fiche${web.length > 1 ? 's' : ''} web sans image`,
+  ].filter(Boolean);
   return (
     <section className="reglage">
-      <h2 className="etiquette">Compléter les fiches web</h2>
-      <p className="aide">{cibles.length} fiche{cibles.length > 1 ? 's' : ''} avec un lien mais sans image. Le site peut lire chaque page pour en récupérer l’image (quelques secondes par page).</p>
+      <h2 className="etiquette">Compléter les images</h2>
+      <p className="aide">{morceaux.join(', ')}. Le site va chercher les couvertures (Open Library, Google Books) et les images des pages, quelques secondes par fiche.</p>
       {progres ? (
         <p className="mono">{progres.fait} / {progres.total}…</p>
       ) : (
-        <button className="bouton" onClick={lancer}>Récupérer les images</button>
+        <button className="bouton principal" onClick={lancer}>Récupérer les images</button>
       )}
     </section>
   );

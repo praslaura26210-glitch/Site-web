@@ -11,7 +11,8 @@ export const FAMILLES_DEPART: Famille[] = [
       { nom: 'Bois', mots: ['bois', 'charpente', 'ossature bois', 'bois massif', 'bardage', 'tavaillon'] },
       { nom: 'Fibres végétales', mots: ['paille', 'chanvre', 'roseau', 'bambou'] },
       { nom: 'Autres matériaux', mots: ['chaux', 'terre cuite', 'béton', 'métal', 'verre'] },
-      { nom: 'Démarches', mots: ['réemploi', 'ressources locales', 'low-tech', 'chantier participatif', 'savoir-faire', 'prototype'] },
+      { nom: 'Finitions', mots: ['finitions naturelles', 'bois brûlé', 'peinture naturelle', 'enduit'] },
+      { nom: 'Démarches', mots: ['écoconstruction', 'rénovation écologique', 'réemploi', 'ressources locales', 'low-tech', 'chantier participatif', 'savoir-faire', 'prototype'] },
     ],
   },
   {
@@ -22,7 +23,7 @@ export const FAMILLES_DEPART: Famille[] = [
       { nom: 'Existant', mots: ['réhabilitation', "dialogue avec l'existant", 'ruine', 'patrimoine', 'vernaculaire', 'reconversion', 'hameau abandonné'] },
       { nom: 'Territoire', mots: ['territoire', 'paysage', 'pente', 'ancrage', 'ruralité', 'eau'] },
       { nom: 'Usages', mots: ['habitat', 'équipement public', 'enfance', 'culte', 'mémoire'] },
-      { nom: 'Méthode', mots: ['dessin à la main', 'maquette', 'relevé', 'carnet de voyage'] },
+      { nom: 'Méthode', mots: ['dessin à la main', 'maquette', 'relevé', 'carnet de voyage', 'méthodologie', 'mémoire de master'] },
     ],
   },
   {
@@ -64,6 +65,9 @@ export const SYNONYMES_DEPART: string[][] = [
   ['toucher', 'tactile', 'haptique'],
   ['odeur', 'olfactif', 'odorat'],
   ['réemploi', 'remploi', 'récupération', 'reuse'],
+  ['écoconstruction', 'construction écologique', 'bioconstruction', 'construire en vert'],
+  ['bois brûlé', 'shou sugi ban', 'yakisugi'],
+  ['mémoire de master', 'mémoire de fin d’études', 'rédaction'],
   ['vernaculaire', 'traditionnel', 'architecture sans architecte'],
   ['bois massif', 'CLT', 'bois lamellé-croisé'],
   ['lumière', 'light', 'luce'],

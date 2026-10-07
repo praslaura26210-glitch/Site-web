@@ -13,18 +13,64 @@ const json = (data: unknown, status = 200, extra: Record<string, string> = {}) =
 
 const erreur = (message: string, status: number) => json({ erreur: message }, status);
 
-/** Première ouverture : la bibliothèque commence avec les références du rapport d'études. */
-async function charger(): Promise<Bibliotheque> {
-  const b = await lireBibliotheque();
-  if (b) return b;
-  const d = depart as unknown as { fiches: Fiche[]; images: Record<string, string> };
-  for (const [id, b64] of Object.entries(d.images)) {
+type FicheDepart = Fiche & { depuis: number };
+const DEPART = depart as unknown as { version: number; fiches: FicheDepart[]; images: Record<string, string> };
+
+async function ecrireImagesDepart(fiches: Fiche[]) {
+  for (const id of new Set(fiches.flatMap((f) => f.images.map((i) => i.id)))) {
+    const b64 = DEPART.images[id];
+    if (!b64) continue;
     const buf = Buffer.from(b64, 'base64');
     await ecrireImage(id, buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer, 'image/webp');
   }
-  const neuve: Bibliotheque = { version: 1, rev: 1, fiches: d.fiches, familles: FAMILLES_DEPART, synonymes: SYNONYMES_DEPART };
-  await ecrireBibliotheque(neuve);
-  return neuve;
+}
+
+const sansDepuis = ({ depuis: _, ...f }: FicheDepart): Fiche => f;
+
+/** Ajoute les mots-clés et synonymes de départ qui manquent, sans toucher aux réglages existants. */
+function completerVocabulaire(b: Bibliotheque) {
+  for (const fam of FAMILLES_DEPART) {
+    const cible = b.familles.find((f) => f.id === fam.id);
+    if (!cible) { b.familles.push(structuredClone(fam)); continue; }
+    const connus = new Set(b.familles.flatMap((f) => f.groupes.flatMap((g) => g.mots)));
+    for (const g of fam.groupes) {
+      const manquants = g.mots.filter((m) => !connus.has(m));
+      if (!manquants.length) continue;
+      const gc = cible.groupes.find((x) => x.nom === g.nom);
+      if (gc) gc.mots.push(...manquants);
+      else cible.groupes.push({ nom: g.nom, mots: manquants });
+    }
+  }
+  const premiers = new Set(b.synonymes.map((l) => l[0]));
+  for (const l of SYNONYMES_DEPART) if (!premiers.has(l[0])) b.synonymes.push(l);
+}
+
+/**
+ * Première ouverture : la bibliothèque commence avec le contenu de départ.
+ * Ensuite, seules les fiches ajoutées dans une version plus récente du contenu de départ sont intégrées
+ * (une fiche de départ supprimée ne revient pas).
+ */
+async function charger(): Promise<Bibliotheque> {
+  const b = await lireBibliotheque();
+  if (!b) {
+    const fiches = DEPART.fiches.map(sansDepuis);
+    await ecrireImagesDepart(fiches);
+    const neuve: Bibliotheque = { version: 1, rev: 1, fiches, familles: FAMILLES_DEPART, synonymes: SYNONYMES_DEPART, departVersion: DEPART.version };
+    await ecrireBibliotheque(neuve);
+    return neuve;
+  }
+  const deja = b.departVersion ?? 1;
+  if (deja < DEPART.version) {
+    const presentes = new Set(b.fiches.map((f) => f.id));
+    const nouvelles = DEPART.fiches.filter((f) => f.depuis > deja && !presentes.has(f.id)).map(sansDepuis);
+    await ecrireImagesDepart(nouvelles);
+    b.fiches.push(...nouvelles);
+    completerVocabulaire(b);
+    b.departVersion = DEPART.version;
+    b.rev++;
+    await ecrireBibliotheque(b);
+  }
+  return b;
 }
 
 const texte = (v: unknown, max = 20000) => (typeof v === 'string' ? v.slice(0, max) : undefined);

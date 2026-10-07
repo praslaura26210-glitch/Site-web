@@ -69,6 +69,8 @@ export interface Bibliotheque {
   familles: Famille[];
   /** Chaque ligne : des termes équivalents pour la recherche. */
   synonymes: string[][];
+  /** Version du contenu de départ déjà intégrée. */
+  departVersion?: number;
 }
 
 export const TYPES: TypeFiche[] = ['livre', 'article', 'projet', 'site', 'video'];
