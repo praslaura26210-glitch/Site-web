@@ -1,0 +1,12 @@
+# En-têtes pour Cloudflare Pages (Netlify lit les mêmes dans netlify.toml)
+/*
+  X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: same-origin
+
+/sw.js
+  Cache-Control: no-cache
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

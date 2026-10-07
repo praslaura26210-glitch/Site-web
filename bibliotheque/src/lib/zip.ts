@@ -54,3 +54,30 @@ export function creerZip(fichiers: { nom: string; data: Uint8Array }[]): Blob {
   fin.setUint32(16, decalage, true);
   return new Blob([...parties, ...(central as BlobPart[]), fin.buffer], { type: 'application/zip' });
 }
+
+/** Lit une archive ZIP sans compression (celles que crée cette page). */
+export function lireZip(buf: ArrayBuffer): { nom: string; data: Uint8Array }[] {
+  const v = new DataView(buf);
+  const dec = new TextDecoder();
+  let fin = -1;
+  for (let i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 66000); i--) {
+    if (v.getUint32(i, true) === 0x06054b50) { fin = i; break; }
+  }
+  if (fin < 0) throw new Error('Ce fichier n’est pas une archive .zip.');
+  const n = v.getUint16(fin + 10, true);
+  let p = v.getUint32(fin + 16, true);
+  const fichiers: { nom: string; data: Uint8Array }[] = [];
+  for (let k = 0; k < n; k++) {
+    if (v.getUint32(p, true) !== 0x02014b50) throw new Error('Archive abîmée.');
+    const methode = v.getUint16(p + 10, true);
+    const taille = v.getUint32(p + 20, true);
+    const lnom = v.getUint16(p + 28, true), lextra = v.getUint16(p + 30, true), lcom = v.getUint16(p + 32, true);
+    const local = v.getUint32(p + 42, true);
+    const nom = dec.decode(new Uint8Array(buf, p + 46, lnom));
+    if (methode !== 0) throw new Error('Archive compressée : utilise une sauvegarde faite par la bibliothèque.');
+    const debut = local + 30 + v.getUint16(local + 26, true) + v.getUint16(local + 28, true);
+    fichiers.push({ nom, data: new Uint8Array(buf, debut, taille) });
+    p += 46 + lnom + lextra + lcom;
+  }
+  return fichiers;
+}

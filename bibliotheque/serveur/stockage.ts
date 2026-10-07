@@ -1,30 +1,27 @@
-import { getStore } from '@netlify/blobs';
 import type { Bibliotheque } from '../src/types';
 
-/** Données dans Netlify Blobs : un document pour toutes les fiches, une entrée par image. */
-const donnees = () => getStore({ name: 'bibliotheque', consistency: 'strong' });
-const images = () => getStore({ name: 'images', consistency: 'strong' });
-
-const CLE = 'donnees';
-
-export async function lireBibliotheque(): Promise<Bibliotheque | null> {
-  return (await donnees().get(CLE, { type: 'json' })) ?? null;
+/**
+ * Où sont rangées les données : un document pour toutes les fiches, une entrée par image.
+ * Netlify Blobs (stockage-netlify.ts) ou base D1 de Cloudflare (stockage-d1.ts) ;
+ * le point d'entrée de chaque hébergeur choisit le sien.
+ */
+export interface Stockage {
+  lireBibliotheque(): Promise<Bibliotheque | null>;
+  ecrireBibliotheque(b: Bibliotheque): Promise<void>;
+  lireImage(id: string): Promise<{ data: ArrayBuffer; type: string } | null>;
+  ecrireImage(id: string, data: ArrayBuffer, type: string): Promise<void>;
+  supprimerImage(id: string): Promise<void>;
 }
 
-export async function ecrireBibliotheque(b: Bibliotheque): Promise<void> {
-  await donnees().setJSON(CLE, b);
-}
+let actif: Stockage | null = null;
+export const definirStockage = (s: Stockage) => { actif = s; };
+const s = () => {
+  if (!actif) throw new Error('Stockage non configuré');
+  return actif;
+};
 
-export async function lireImage(id: string): Promise<{ data: ArrayBuffer; type: string } | null> {
-  const r = await images().getWithMetadata(id, { type: 'arrayBuffer' });
-  if (!r) return null;
-  return { data: r.data, type: String(r.metadata?.type ?? 'image/webp') };
-}
-
-export async function ecrireImage(id: string, data: ArrayBuffer, type: string): Promise<void> {
-  await images().set(id, data, { metadata: { type } });
-}
-
-export async function supprimerImage(id: string): Promise<void> {
-  await images().delete(id);
-}
+export const lireBibliotheque = () => s().lireBibliotheque();
+export const ecrireBibliotheque = (b: Bibliotheque) => s().ecrireBibliotheque(b);
+export const lireImage = (id: string) => s().lireImage(id);
+export const ecrireImage = (id: string, data: ArrayBuffer, type: string) => s().ecrireImage(id, data, type);
+export const supprimerImage = (id: string) => s().supprimerImage(id);

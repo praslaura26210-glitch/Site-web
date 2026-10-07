@@ -13,5 +13,5 @@
     "allowImportingTsExtensions": false,
     "types": ["node", "vite/client"]
   },
-  "include": ["src", "serveur", "netlify", "scripts", "depart", "vite.config.ts"]
+  "include": ["src", "serveur", "netlify", "functions", "scripts", "depart", "vite.config.ts"]
 }

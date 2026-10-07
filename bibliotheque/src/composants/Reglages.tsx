@@ -4,7 +4,7 @@ import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { lireFavoris, estVideo, type Favori } from '../lib/favoris';
 import { normaliser } from '../lib/recherche';
-import { creerZip } from '../lib/zip';
+import { creerZip, lireZip } from '../lib/zip';
 import { DEMO, enregistreEnLigne, envoyerImagesLocales, imagesLocales, reinitialiserDemo } from '../lib/demo';
 import { Icone } from './Icone';
 
@@ -16,9 +16,10 @@ export function Reglages() {
       <details className="avance">
         <summary>Plus de réglages</summary>
         <div>
-          {DEMO ? <Demo /> : (
+          {DEMO ? <><Demo /><Sauvegarde /></> : (
             <>
               <Sauvegarde />
+              <Restaurer />
               <Installer />
               <Completer />
             </>
@@ -503,7 +504,15 @@ function Sauvegarde() {
   const { notifier } = useBiblio();
   const [envoi, setEnvoi] = useState<string | null>(null);
 
-  const telecharger = (blob: Blob, nom: string) => {
+  const telecharger = async (blob: Blob, nom: string) => {
+    if (DEMO) {
+      // sur claude.ai, le fichier passe par la fenêtre d'enregistrement de Claude
+      const dl = await (window as any).claude?.use?.('downloads');
+      if (dl) {
+        try { await dl.save({ filename: nom, data: blob }); notifier('Sauvegarde enregistrée.'); } catch (e: any) { if (e?.code !== 'declined') notifier('Enregistrement impossible ici.'); }
+        return;
+      }
+    }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = nom;
@@ -517,7 +526,7 @@ function Sauvegarde() {
       const b = await api.bibliotheque();
       const json = new TextEncoder().encode(JSON.stringify(b, null, 1));
       if (!avecImages) {
-        telecharger(new Blob([json], { type: 'application/json' }), `bibliotheque-${jour}.json`);
+        await telecharger(new Blob([json], { type: 'application/json' }), `bibliotheque-${jour}.json`);
         return;
       }
       const ids = [...new Set(b.fiches.flatMap((f) => f.images.map((i) => i.id)))];
@@ -529,7 +538,7 @@ function Sauvegarde() {
         const ext = (r.headers.get('content-type') ?? 'image/webp').split('/')[1].replace('jpeg', 'jpg');
         fichiers.push({ nom: `images/${id}.${ext}`, data: new Uint8Array(await r.arrayBuffer()) });
       }
-      telecharger(creerZip(fichiers), `bibliotheque-${jour}.zip`);
+      await telecharger(creerZip(fichiers), `bibliotheque-${jour}.zip`);
     } catch (e) {
       notifier(e instanceof Error ? e.message : 'Erreur.');
     } finally {
@@ -539,12 +548,61 @@ function Sauvegarde() {
 
   return (
     <section className="reglage">
-      <h2>Sauvegarde</h2>
-      <p className="aide">À faire de temps en temps sur l’ordinateur : tes fiches et tes images restent à toi, même sans ce site.</p>
+      <h2>{DEMO ? 'Exporter ma bibliothèque' : 'Sauvegarde'}</h2>
+      <p className="aide">{DEMO
+        ? 'Télécharge un fichier .zip avec toutes tes fiches et toutes tes images. Sur le site en ligne, « Restaurer une sauvegarde » les remet en place.'
+        : 'À faire de temps en temps sur l’ordinateur : tes fiches et tes images restent à toi, même sans ce site.'}</p>
       <div className="champ-ligne">
         <button className="bouton principal" onClick={() => exporter(true)} disabled={envoi !== null}>{envoi ?? 'Tout exporter (.zip)'}</button>
         <button className="bouton" onClick={() => exporter(false)} disabled={envoi !== null}>Fiches seules (.json)</button>
       </div>
+    </section>
+  );
+}
+
+/** Remet en place une sauvegarde .zip (fiches et images), par exemple celle exportée depuis claude.ai. */
+function Restaurer() {
+  const { remplacer, notifier, naviguer } = useBiblio();
+  const [fichier, setFichier] = useState<File | null>(null);
+  const [etat, setEtat] = useState<string | null>(null);
+
+  async function lancer() {
+    if (!fichier) return;
+    try {
+      setEtat('Lecture du fichier…');
+      const contenu = lireZip(await fichier.arrayBuffer());
+      const donnees = contenu.find((f) => f.nom === 'bibliotheque.json');
+      if (!donnees) throw new Error('Pas de bibliotheque.json dans ce fichier.');
+      const b = JSON.parse(new TextDecoder().decode(donnees.data));
+      const images = contenu.filter((f) => f.nom.startsWith('images/'));
+      for (const [k, im] of images.entries()) {
+        setEtat(`Images : ${k + 1} / ${images.length}`);
+        const nom = im.nom.slice(7);
+        const id = nom.replace(/\.[a-z0-9]+$/i, '');
+        const ext = nom.split('.').pop()?.toLowerCase() ?? 'webp';
+        const type = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`;
+        const r = await fetch(`/api/images/${encodeURIComponent(id)}`, { method: 'PUT', headers: { 'content-type': type }, body: im.data as BlobPart as Blob });
+        if (!r.ok) throw new Error(`Image ${k + 1} refusée par le serveur.`);
+      }
+      setEtat('Fiches…');
+      const r = await fetch('/api/restaurer', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) });
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).erreur ?? 'Restauration refusée.');
+      remplacer(await api.bibliotheque());
+      notifier(`Bibliothèque restaurée : ${b.fiches.length} fiches, ${images.length} images.`);
+      naviguer('');
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Erreur.');
+    } finally {
+      setEtat(null);
+    }
+  }
+
+  return (
+    <section className="reglage">
+      <h2>Restaurer une sauvegarde</h2>
+      <p className="aide">Choisis le fichier .zip exporté (depuis claude.ai ou depuis ce site). Il remplace tout le contenu actuel de la bibliothèque.</p>
+      <input type="file" accept=".zip,application/zip" onChange={(e) => setFichier(e.target.files?.[0] ?? null)} />
+      <button className="bouton principal" onClick={lancer} disabled={!fichier || etat !== null}>{etat ?? 'Restaurer'}</button>
     </section>
   );
 }

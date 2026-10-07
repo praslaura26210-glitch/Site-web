@@ -1,5 +1,34 @@
 # Bibliothèque
 
+## Mettre en ligne sur Cloudflare Pages (gratuit, sans carte bancaire)
+
+1. Créer un compte sur [dash.cloudflare.com](https://dash.cloudflare.com).
+2. **Workers & Pages** → **Créer** → onglet **Pages** → **Se connecter à Git** → autoriser GitHub → choisir le dépôt **Site-web**.
+3. Paramètres de build :
+   - Branche de production : `claude/bibliotheque-cloudflare`
+   - Préréglage de framework : *Aucun*
+   - Commande de build : `npm run build`
+   - Répertoire de sortie : `dist`
+   - Répertoire racine (avancé) : `bibliotheque`
+   - Variable d'environnement : `NODE_VERSION` = `22`
+4. **Enregistrer et déployer**.
+5. **Stockage et bases de données** → **D1** → **Créer** une base nommée `bibliotheque`.
+6. Retour au projet Pages → **Paramètres** → **Liaisons** → **Ajouter** → **Base de données D1** :
+   nom de la variable `BASE`, base `bibliotheque`.
+7. **Paramètres** → **Variables et secrets** → ajouter `MOT_DE_PASSE` (type *secret*) avec le mot de passe choisi.
+8. **Déploiements** → sur le dernier : **Réessayer le déploiement** (pour prendre en compte la base et le mot de passe).
+9. Ouvrir l'adresse `….pages.dev`, se connecter, puis **Réglages → Plus de réglages → Restaurer une sauvegarde**
+   avec le fichier exporté depuis claude.ai (**Réglages → Plus de réglages → Exporter ma bibliothèque**).
+
+Sur iPhone : ouvrir l'adresse dans Safari → bouton Partager → **Sur l'écran d'accueil**.
+
+Les données sont dans la base D1 (fiches et images ; une image ne dépasse pas 2 Mo, les photos sont réduites avant l'envoi).
+Le code serveur est commun : `functions/api/[[route]].ts` (Cloudflare) et `netlify/functions/api.ts` (Netlify).
+
+---
+
+# Bibliothèque
+
 Site privé pour ranger livres, articles, projets, sites et vidéos : une fiche par référence, une recherche qui ignore accents et majuscules et comprend les synonymes, des liens entre fiches. Il s'installe sur le téléphone comme une appli.
 
 Ce dossier est **indépendant du portfolio** : il a son propre site Netlify.

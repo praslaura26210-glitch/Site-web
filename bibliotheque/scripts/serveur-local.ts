@@ -16,6 +16,9 @@ const blobs = new BlobsServer({ directory: path.resolve('.local/blobs'), token: 
 await blobs.start();
 setEnvironmentContext({ edgeURL: 'http://localhost:8789', uncachedEdgeURL: 'http://localhost:8789', siteID: 'local', token: 'local' });
 
+const { definirStockage } = await import('../serveur/stockage');
+const { stockageNetlify } = await import('../serveur/stockage-netlify');
+definirStockage(stockageNetlify);
 const { gerer } = await import('../serveur/routes');
 
 const TYPES: Record<string, string> = {

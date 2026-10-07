@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import type { Bibliotheque, Categorie, Famille, Fiche, Image } from '../src/types';
 import { TYPES, STATUTS } from '../src/types';
 import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../src/vocabulaire';
@@ -20,8 +19,8 @@ async function ecrireImagesDepart(fiches: Fiche[]) {
   for (const id of new Set(fiches.flatMap((f) => f.images.map((i) => i.id)))) {
     const b64 = DEPART.images[id];
     if (!b64) continue;
-    const buf = Buffer.from(b64, 'base64');
-    await ecrireImage(id, buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer, 'image/webp');
+    const octets = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    await ecrireImage(id, octets.buffer, 'image/webp');
   }
 }
 
@@ -139,7 +138,7 @@ async function nettoyerImages(avant: Image[], b: Bibliotheque) {
 async function enregistrerDistante(url: string): Promise<Image | null> {
   const img = await telechargerImage(url);
   if (!img) return null;
-  const id = randomUUID();
+  const id = crypto.randomUUID();
   await ecrireImage(id, img.data, img.type);
   return { id, w: img.w, h: img.h };
 }
@@ -160,21 +159,21 @@ export async function gerer(req: Request): Promise<Response> {
   const m = req.method;
 
   try {
-    if (route === 'etat') return json({ configure: motDePasseConfigure(), connecte: estConnecte(req) });
+    if (route === 'etat') return json({ configure: motDePasseConfigure(), connecte: await estConnecte(req) });
 
     if (route === 'connexion' && m === 'POST') {
-      if (!motDePasseConfigure()) return erreur('Le mot de passe n’est pas encore défini dans Netlify (variable MOT_DE_PASSE).', 503);
+      if (!motDePasseConfigure()) return erreur('Le mot de passe n’est pas encore défini chez l’hébergeur (variable MOT_DE_PASSE).', 503);
       const corps = await req.json().catch(() => ({}));
-      if (!verifierMotDePasse(String(corps.motDePasse ?? ''))) {
+      if (!(await verifierMotDePasse(String(corps.motDePasse ?? '')))) {
         await new Promise((r) => setTimeout(r, 800));
         return erreur('Mot de passe incorrect.', 401);
       }
-      return json({ ok: true }, 200, { 'set-cookie': cookieSession() });
+      return json({ ok: true }, 200, { 'set-cookie': await cookieSession() });
     }
 
     if (route === 'deconnexion') return json({ ok: true }, 200, { 'set-cookie': cookieFin() });
 
-    if (!estConnecte(req)) return erreur('Connexion nécessaire.', 401);
+    if (!(await estConnecte(req))) return erreur('Connexion nécessaire.', 401);
 
     if (route === 'bibliotheque' && m === 'GET') return json(await charger());
 
@@ -196,7 +195,7 @@ export async function gerer(req: Request): Promise<Response> {
       // import groupé (favoris)
       const b = await charger();
       const corps = await req.json();
-      const nouvelles = (Array.isArray(corps) ? corps : []).map((f: any) => nettoyer({ ...f, id: f.id || randomUUID() }));
+      const nouvelles = (Array.isArray(corps) ? corps : []).map((f: any) => nettoyer({ ...f, id: f.id || crypto.randomUUID() }));
       b.fiches.push(...nouvelles);
       b.rev++;
       await ecrireBibliotheque(b);
@@ -248,9 +247,38 @@ export async function gerer(req: Request): Promise<Response> {
       const dim = dimensions(data);
       if (!type || !dim) return erreur('Format d’image non reconnu.', 400);
       if (data.byteLength > 5_000_000) return erreur('Image trop lourde.', 413);
-      const id = randomUUID();
+      const id = crypto.randomUUID();
       await ecrireImage(id, data, type);
       return json({ id, ...dim });
+    }
+
+    if (route === 'images' && m === 'PUT' && param) {
+      // restauration d'une sauvegarde : l'image garde son identifiant
+      if (!/^[\w.-]{1,80}$/.test(param)) return erreur('Identifiant invalide.', 400);
+      const data = await req.arrayBuffer();
+      const type = typeImage(data);
+      const dim = dimensions(data);
+      if (!type || !dim) return erreur('Format d’image non reconnu.', 400);
+      await ecrireImage(param, data, type);
+      return json({ id: param, ...dim });
+    }
+
+    if (route === 'restaurer' && m === 'POST') {
+      // remplace toute la bibliothèque par une sauvegarde (les images ont été envoyées avant)
+      const corps = await req.json().catch(() => null);
+      if (!corps || !Array.isArray(corps.fiches)) return erreur('Sauvegarde illisible.', 400);
+      const avant = await lireBibliotheque();
+      const b: Bibliotheque = {
+        version: 1,
+        rev: (avant?.rev ?? 0) + 1,
+        fiches: corps.fiches.map((f: any) => ({ ...nettoyer(f), creeLe: texte(f.creeLe, 40) ?? new Date().toISOString(), modifieLe: texte(f.modifieLe, 40) ?? new Date().toISOString() })),
+        categories: Array.isArray(corps.categories) ? corps.categories.filter((c: any) => c && c.id).map((c: any) => ({ id: String(c.id).slice(0, 80), nom: String(c.nom ?? c.id).slice(0, 80) })) : (DEPART.categories ?? CATEGORIES_DEPART),
+        familles: Array.isArray(corps.familles) ? corps.familles : FAMILLES_DEPART,
+        synonymes: Array.isArray(corps.synonymes) ? corps.synonymes.map(textes).filter((l: string[]) => l.length > 1) : SYNONYMES_DEPART,
+        departVersion: DEPART.version,
+      };
+      await ecrireBibliotheque(b);
+      return json(b);
     }
 
     if (route === 'images' && m === 'GET' && param) {
