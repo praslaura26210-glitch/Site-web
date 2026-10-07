@@ -1,4 +1,4 @@
-import type { Bibliotheque, Famille, Fiche, Image } from '../types';
+import type { Bibliotheque, Categorie, Famille, Fiche, Image } from '../types';
 import { DEMO, demoSrc } from './demo';
 
 export class ErreurApi extends Error {
@@ -33,11 +33,11 @@ export const api = {
   enregistrer: (f: Fiche) => appel<{ fiche: Fiche; rev: number }>(`fiches/${encodeURIComponent(f.id)}`, corps('PUT', f)),
   importer: (fiches: Partial<Fiche>[]) => appel<{ fiches: Fiche[]; rev: number }>('fiches', corps('POST', fiches)),
   supprimer: (id: string) => appel<{ rev: number }>(`fiches/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-  vocabulaire: (v: { familles?: Famille[]; synonymes?: string[][]; renommer?: { de: string; vers: string | null } }) =>
+  vocabulaire: (v: { familles?: Famille[]; synonymes?: string[][]; categories?: Categorie[]; renommer?: { de: string; vers: string | null } }) =>
     appel<Bibliotheque>('vocabulaire', corps('PUT', v)),
   envoyerImage: (blob: Blob) => appel<Image>('images', { method: 'POST', headers: { 'content-type': blob.type }, body: blob }),
   isbn: (isbn: string) =>
-    appel<{ titre?: string; auteurs?: string[]; annee?: string; editeur?: string; pages?: string; image: Image | null }>(`isbn/${encodeURIComponent(isbn)}`),
+    appel<{ titre?: string; auteurs?: string[]; annee?: string; editeur?: string; pages?: string; lien?: string; image: Image | null }>(`isbn/${encodeURIComponent(isbn)}`),
   apercu: (url: string) => appel<{ titre?: string; site?: string; annee?: string; image: Image | null }>(`apercu?url=${encodeURIComponent(url)}`),
 };
 

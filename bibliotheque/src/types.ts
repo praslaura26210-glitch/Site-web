@@ -8,6 +8,14 @@ export interface Image {
   id: string;
   w: number;
   h: number;
+  /** Photographe, source : affiché quand on agrandit l'image. */
+  credit?: string;
+}
+
+/** Un travail auquel une référence sert : mémoire, rapport d'études, un cours… */
+export interface Categorie {
+  id: string;
+  nom: string;
 }
 
 export interface Citation {
@@ -33,8 +41,16 @@ export interface Fiche {
   source?: string;
   images: Image[];
   credit?: string;
+  /** Travaux auxquels la fiche sert (identifiants de catégories). */
+  categories: string[];
+  favori?: boolean;
+  /** Résumé de l'ouvrage ou du projet. */
+  resume?: string;
+  /** Mots-clés : servent à la recherche, discrets à l'écran. */
   motsCles: string[];
+  /** Mes notes : ce que j'en retiens (texte long, « ## » pour un intertitre). */
   retenu?: string;
+  /** Ancien champ, n'est plus affiché. */
   lienTravail?: string;
   citations: Citation[];
   voirAussi: Lien[];
@@ -46,6 +62,8 @@ export interface Fiche {
   pages?: string;
   /** Date de consultation (site web, vidéo). */
   consulte?: string;
+  /** La couverture a déjà été cherchée automatiquement (trouvée ou non). */
+  couvertureCherchee?: boolean;
   creeLe: string;
   modifieLe: string;
 }
@@ -66,6 +84,7 @@ export interface Bibliotheque {
   /** Augmente à chaque écriture : évite d'écraser une version plus récente. */
   rev: number;
   fiches: Fiche[];
+  categories: Categorie[];
   familles: Famille[];
   /** Chaque ligne : des termes équivalents pour la recherche. */
   synonymes: string[][];
@@ -75,3 +94,8 @@ export interface Bibliotheque {
 
 export const TYPES: TypeFiche[] = ['livre', 'article', 'projet', 'site', 'video'];
 export const STATUTS: Statut[] = ['a-lire', 'en-cours', 'lu'];
+
+/** Trois rayons : les livres, les articles (avec sites et vidéos), les projets. */
+export type Rayon = 'livres' | 'articles' | 'projets';
+export const RAYONS: Rayon[] = ['livres', 'articles', 'projets'];
+export const rayonDe = (t: TypeFiche): Rayon => (t === 'livre' ? 'livres' : t === 'projet' ? 'projets' : 'articles');

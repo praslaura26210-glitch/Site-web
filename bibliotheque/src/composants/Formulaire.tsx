@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Citation, Famille, Fiche, Statut, TypeFiche } from '../types';
 import { STATUTS, TYPES } from '../types';
-import { useBiblio } from '../contexte';
+import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { compresser } from '../lib/images';
 import { NOM_AUTEUR, NOM_EDITEUR, NOM_TYPE, nomStatut } from '../lib/libelles';
 import { normaliser, suggerer } from '../lib/recherche';
 import { estVideo } from '../lib/favoris';
 import { Icone } from './Icone';
+import { rechercheWeb } from './FicheVue';
 
 export interface Preremplissage {
   source?: string;
@@ -26,7 +27,7 @@ function vierge(pre?: Preremplissage): Fiche {
   const maintenant = new Date().toISOString();
   const type: TypeFiche = pre?.source ? (estVideo(pre.source) ? 'video' : 'site') : 'livre';
   return {
-    id: crypto.randomUUID(), type, titre: pre?.titre ?? '', auteurs: [], images: [], motsCles: [], citations: [], voirAussi: [],
+    id: crypto.randomUUID(), type, titre: pre?.titre ?? '', auteurs: [], images: [], motsCles: [], citations: [], voirAussi: [], categories: [],
     statut: 'a-lire', source: pre?.source ?? '', consulte: pre?.source ? aujourdhui() : undefined, creeLe: maintenant, modifieLe: maintenant,
   };
 }
@@ -48,7 +49,9 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
       setTimeout(() => setRestaure(true));
       return b;
     }
-    return { f: existante ? structuredClone(existante) : vierge(preremplissage), nouveaux: [] };
+    const f = existante ? structuredClone(existante) : vierge(preremplissage);
+    f.categories ??= [];
+    return { f, nouveaux: [] };
   });
   const f = etat.f;
   const [envoi, setEnvoi] = useState(false);
@@ -92,6 +95,8 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
       if (n.editeur && !f.editeur) { p.editeur = n.editeur; remplis.push('éditeur'); }
       if (n.pages && !f.pages) { p.pages = n.pages; remplis.push('pages'); }
       if (n.image && !f.images.length) { p.images = [n.image]; remplis.push('couverture'); }
+      if (n.lien && !f.source) { p.source = n.lien; remplis.push('lien en ligne'); }
+      p.couvertureCherchee = true;
       maj(p);
       setAide(remplis.length ? `Rempli : ${remplis.join(', ')}.` : 'Notice trouvée, mais les champs étaient déjà remplis.');
       if (!n.image && !f.images.length) setAide((a) => `${a} Pas de couverture trouvée : tu peux la photographier.`);
@@ -263,7 +268,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
       )}
 
       <div className="champ">
-        <label className="etiquette" htmlFor="source">Lien source</label>
+        <label className="etiquette" htmlFor="source">{t === 'livre' ? 'Lien vers le livre en ligne' : t === 'projet' ? 'Site du projet' : 'Lien'}</label>
         <div className="champ-ligne">
           <input id="source" type="url" inputMode="url" placeholder="https://" value={f.source ?? ''} onChange={(e) => maj({ source: e.target.value })} />
           {lienRecuperable && (
@@ -271,8 +276,16 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
               {cherche === 'lien' ? 'Lecture…' : 'Récupérer'}
             </button>
           )}
+          {f.titre.trim() && (
+            <a className="bouton" href={rechercheWeb(f)} target="_blank" rel="noreferrer">
+              <Icone nom="chercher" taille={16} /> Chercher en ligne
+            </a>
+          )}
         </div>
-        {lienRecuperable && <p className="aide">« Récupérer » lit la page : titre, site, année et image.</p>}
+        <p className="aide">
+          {lienRecuperable ? '« Récupérer » lit la page : titre, site, année et image. ' : ''}
+          « Chercher en ligne » ouvre une recherche avec le titre : copie ensuite l’adresse trouvée ici.
+        </p>
       </div>
 
       {(t === 'site' || t === 'video') && (
@@ -288,37 +301,59 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
           {f.images.map((im, i) => (
             <div key={im.id} className="image-form">
               <img src={srcImage(im.id)} alt="" />
-              {i === 0 && <span className="image-une mono">vignette</span>}
+              <div className="champ">
+                <label className="image-une" htmlFor={`credit-${im.id}`}>{i === 0 ? (t === 'livre' ? 'Couverture' : 'Image principale') : `Image ${i + 1}`}</label>
+                <input
+                  id={`credit-${im.id}`}
+                  placeholder="Crédit : © photographe, source…"
+                  value={im.credit ?? ''}
+                  onChange={(e) => maj({ images: f.images.map((x) => (x.id === im.id ? { ...x, credit: e.target.value } : x)) })}
+                />
+              </div>
               <div className="image-actions">
                 {i > 0 && (
-                  <button type="button" aria-label="Avancer" title="Mettre avant" onClick={() => {
+                  <button type="button" className="bouton-icone" aria-label="Mettre avant" title="Mettre avant" onClick={() => {
                     const im2 = [...f.images];
                     [im2[i - 1], im2[i]] = [im2[i], im2[i - 1]];
                     maj({ images: im2 });
                   }}><Icone nom="gauche" taille={16} /></button>
                 )}
-                <button type="button" aria-label="Retirer" title="Retirer" onClick={() => maj({ images: f.images.filter((x) => x.id !== im.id) })}>
+                <button type="button" className="bouton-icone" aria-label="Retirer" title="Retirer" onClick={() => maj({ images: f.images.filter((x) => x.id !== im.id) })}>
                   <Icone nom="fermer" taille={16} />
                 </button>
               </div>
             </div>
           ))}
-          {Array.from({ length: imagesEnCours }, (_, i) => <div key={`e${i}`} className="image-form en-cours"><span className="mono">Envoi…</span></div>)}
+          {Array.from({ length: imagesEnCours }, (_, i) => <div key={`e${i}`} className="image-form en-cours"><span>Envoi de la photo…</span></div>)}
           <label className="image-ajout">
-            <Icone nom="photo" taille={26} />
-            <span className="mono">Photo</span>
+            <Icone nom="photo" taille={22} />
+            <span>{f.images.length ? 'Ajouter une photo' : t === 'livre' ? 'Photographier la couverture' : 'Ajouter une photo'}</span>
             <input type="file" accept="image/*" multiple onChange={(e) => { ajouterImages(e.target.files); e.target.value = ''; }} />
           </label>
         </div>
       </div>
 
       <div className="champ">
-        <label className="etiquette" htmlFor="credit">Crédit des images</label>
-        <input id="credit" value={f.credit ?? ''} onChange={(e) => maj({ credit: e.target.value })} placeholder="© …, photo personnelle…" />
+        <span className="etiquette">Pour quel travail ?</span>
+        <ChampTravaux choisis={f.categories} changer={(categories) => maj({ categories })} />
       </div>
 
       <div className="champ">
-        <span className="etiquette">Mots-clés</span>
+        <label className="etiquette" htmlFor="resume">Résumé</label>
+        <textarea id="resume" className="lecture" rows={4} value={f.resume ?? ''} onChange={(e) => maj({ resume: e.target.value })} placeholder="De quoi parle ce livre, ce projet ? Quelques lignes." />
+      </div>
+
+      <div className="champ">
+        <label className="etiquette" htmlFor="retenu">Mes notes</label>
+        <textarea id="retenu" className="lecture long" rows={10} value={f.retenu ?? ''} onChange={(e) => maj({ retenu: e.target.value })} placeholder="Ce que j’en retiens, en détail." />
+        <p className="aide">Une ligne vide entre deux paragraphes. « ## » au début d’une ligne pour un intertitre, « - » pour une liste, « [?] » après un mot à vérifier.</p>
+      </div>
+
+      <details className="avance">
+        <summary>Mots-clés pour la recherche {f.motsCles.length > 0 && <span className="discret">({f.motsCles.length})</span>}</summary>
+        <div>
+      <div className="champ">
+        <p className="aide">Ils ne s’affichent qu’en petit sur la fiche ; ils servent à retrouver la fiche par thème.</p>
         <ChampMotsCles
           choisis={f.motsCles}
           changer={(motsCles) => maj({ motsCles })}
@@ -326,16 +361,8 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
           ajouterNouveau={(n) => setEtat((e) => ({ f: { ...e.f, motsCles: [...e.f.motsCles, n.mot] }, nouveaux: [...e.nouveaux, n] }))}
         />
       </div>
-
-      <div className="champ">
-        <label className="etiquette" htmlFor="retenu">Ce que j’en retiens</label>
-        <textarea id="retenu" rows={4} value={f.retenu ?? ''} onChange={(e) => maj({ retenu: e.target.value })} />
-      </div>
-
-      <div className="champ">
-        <label className="etiquette" htmlFor="lien-travail">Lien avec mon travail</label>
-        <textarea id="lien-travail" rows={3} value={f.lienTravail ?? ''} onChange={(e) => maj({ lienTravail: e.target.value })} />
-      </div>
+        </div>
+      </details>
 
       <div className="champ">
         <span className="etiquette">Citations</span>
@@ -358,6 +385,11 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </div>
       </fieldset>
 
+      <label className="case">
+        <input type="checkbox" checked={!!f.favori} onChange={(e) => maj({ favori: e.target.checked })} />
+        <Icone nom="coeur" taille={18} /> Dans mes favoris
+      </label>
+
       <div className="champ">
         <label className="etiquette" htmlFor="emplacement">Où la trouver</label>
         <input id="emplacement" list="liste-emplacements" value={f.emplacement ?? ''} onChange={(e) => maj({ emplacement: e.target.value })} placeholder="Chez moi, BU ENSAG, PDF…" />
@@ -371,6 +403,60 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </button>
       </div>
     </form>
+  );
+}
+
+/** Les travaux auxquels la fiche sert ; on peut en créer un nouveau sur place. */
+function ChampTravaux({ choisis, changer }: { choisis: string[]; changer: (c: string[]) => void }) {
+  const { biblio, remplacer, notifier } = useBiblio();
+  const [nouveau, setNouveau] = useState<string | null>(null);
+  async function creer() {
+    const nom = nouveau?.trim();
+    setNouveau(null);
+    if (!nom) return;
+    const id = normaliser(nom).replace(/\s+/g, '-') || crypto.randomUUID();
+    if (!biblio.categories.some((c) => c.id === id)) {
+      try {
+        remplacer(await api.vocabulaire({ categories: [...biblio.categories, { id, nom }] }));
+      } catch (e) {
+        return notifier(e instanceof Error ? e.message : 'Erreur.');
+      }
+    }
+    if (!choisis.includes(id)) changer([...choisis, id]);
+  }
+  return (
+    <div className="travaux">
+      {biblio.categories.map((c) => (
+        <button
+          type="button"
+          key={c.id}
+          className={`travail ${classeTravail(biblio, c.id)}`}
+          aria-pressed={choisis.includes(c.id)}
+          onClick={() => changer(choisis.includes(c.id) ? choisis.filter((x) => x !== c.id) : [...choisis, c.id])}
+        >
+          {c.nom}
+        </button>
+      ))}
+      {nouveau === null ? (
+        <button type="button" className="mot" onClick={() => setNouveau('')}><Icone nom="plus" taille={14} /> Nouveau travail</button>
+      ) : (
+        <span className="champ-ligne">
+          <input
+            id="nouveau-travail-form"
+            autoFocus
+            style={{ minHeight: 34, width: 220 }}
+            placeholder="Ex. : Cours expérimentation"
+            value={nouveau}
+            onChange={(e) => setNouveau(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') { e.preventDefault(); creer(); }
+              if (e.key === 'Escape') setNouveau(null);
+            }}
+          />
+          <button type="button" className="bouton petit principal" onClick={creer}>Créer</button>
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -473,7 +559,7 @@ function ChampMotsCles({ choisis, changer, nouveaux, ajouterNouveau }: {
         <div className="suggestions" role="listbox">
           {options.map((o, i) => (
             <button type="button" key={`${o.type}${o.mot}`} role="option" aria-selected={i === rang} onMouseDown={(e) => e.preventDefault()} onClick={() => choisir(o)}>
-              {o.type === 'creer' ? <>Nouveau mot-clé : « {o.mot} »</> : <>{o.mot} <span className="mono discret">{o.famille === 'nouveau' ? 'nouveau' : o.famille}</span></>}
+              {o.type === 'creer' ? <>Nouveau mot-clé : « {o.mot} »</> : <>{o.mot} <span className="discret">{o.famille === 'nouveau' ? 'nouveau' : o.famille}</span></>}
             </button>
           ))}
         </div>
@@ -584,7 +670,7 @@ function ChampVoirAussi({ fiche, changer }: { fiche: Fiche; changer: (l: Fiche['
           <div className="suggestions">
             {props.map((x) => (
               <button type="button" key={x.id} onClick={() => { changer([...fiche.voirAussi, { id: x.id }]); setSaisie(''); }}>
-                {x.titre} <span className="mono discret">{NOM_TYPE[x.type]}{x.auteurs[0] ? ` · ${x.auteurs[0]}` : ''}</span>
+                {x.titre} <span className="discret">{NOM_TYPE[x.type]}{x.auteurs[0] ? ` · ${x.auteurs[0]}` : ''}</span>
               </button>
             ))}
           </div>

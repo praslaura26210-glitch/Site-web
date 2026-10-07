@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import type { Bibliotheque, Famille, Fiche, Image } from '../src/types';
+import type { Bibliotheque, Categorie, Famille, Fiche, Image } from '../src/types';
 import { TYPES, STATUTS } from '../src/types';
-import { FAMILLES_DEPART, SYNONYMES_DEPART } from '../src/vocabulaire';
+import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../src/vocabulaire';
 import depart from '../depart/depart.json';
 import { lireBibliotheque, ecrireBibliotheque, lireImage, ecrireImage, supprimerImage } from './stockage';
 import { cookieFin, cookieSession, estConnecte, motDePasseConfigure, verifierMotDePasse } from './session';
@@ -14,7 +14,7 @@ const json = (data: unknown, status = 200, extra: Record<string, string> = {}) =
 const erreur = (message: string, status: number) => json({ erreur: message }, status);
 
 type FicheDepart = Fiche & { depuis: number };
-const DEPART = depart as unknown as { version: number; fiches: FicheDepart[]; images: Record<string, string> };
+const DEPART = depart as unknown as { version: number; fiches: FicheDepart[]; categories?: Categorie[]; images: Record<string, string> };
 
 async function ecrireImagesDepart(fiches: Fiche[]) {
   for (const id of new Set(fiches.flatMap((f) => f.images.map((i) => i.id)))) {
@@ -55,10 +55,16 @@ async function charger(): Promise<Bibliotheque> {
   if (!b) {
     const fiches = DEPART.fiches.map(sansDepuis);
     await ecrireImagesDepart(fiches);
-    const neuve: Bibliotheque = { version: 1, rev: 1, fiches, familles: FAMILLES_DEPART, synonymes: SYNONYMES_DEPART, departVersion: DEPART.version };
+    const neuve: Bibliotheque = {
+      version: 1, rev: 1, fiches, categories: DEPART.categories ?? CATEGORIES_DEPART,
+      familles: FAMILLES_DEPART, synonymes: SYNONYMES_DEPART, departVersion: DEPART.version,
+    };
     await ecrireBibliotheque(neuve);
     return neuve;
   }
+  // bibliothèques créées avant l'ajout des catégories
+  b.categories ??= structuredClone(DEPART.categories ?? CATEGORIES_DEPART);
+  for (const f of b.fiches) f.categories ??= [];
   const deja = b.departVersion ?? 1;
   if (deja < DEPART.version) {
     const presentes = new Set(b.fiches.map((f) => f.id));
@@ -89,8 +95,11 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     source: texte(f.source, 2000),
     images: (Array.isArray(f.images) ? f.images : [])
       .filter((i: any) => i && typeof i.id === 'string')
-      .map((i: any) => ({ id: i.id, w: Number(i.w) || 1, h: Number(i.h) || 1 })),
+      .map((i: any) => ({ id: i.id, w: Number(i.w) || 1, h: Number(i.h) || 1, credit: texte(i.credit, 300) || undefined })),
     credit: texte(f.credit, 500),
+    categories: [...new Set(textes(f.categories))],
+    favori: f.favori === true || undefined,
+    resume: texte(f.resume),
     motsCles: [...new Set(textes(f.motsCles))],
     retenu: texte(f.retenu),
     lienTravail: texte(f.lienTravail),
@@ -106,6 +115,7 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     numero: texte(f.numero, 40),
     pages: texte(f.pages, 40),
     consulte: texte(f.consulte, 20),
+    couvertureCherchee: f.couvertureCherchee === true || undefined,
     creeLe: ancienne?.creeLe ?? texte(f.creeLe, 40) ?? maintenant,
     modifieLe: maintenant,
   };
@@ -206,6 +216,14 @@ export async function gerer(req: Request): Promise<Response> {
           nom: String(f.nom),
           groupes: (f.groupes ?? []).map((g) => ({ nom: String(g.nom), mots: [...new Set(textes(g.mots))] })),
         }));
+      }
+      if (Array.isArray(corps.categories)) {
+        b.categories = (corps.categories as Categorie[])
+          .filter((c) => c && c.id && String(c.nom ?? '').trim())
+          .map((c) => ({ id: String(c.id).slice(0, 80), nom: String(c.nom).trim().slice(0, 80) }));
+        // une catégorie supprimée disparaît aussi des fiches
+        const ids = new Set(b.categories.map((c) => c.id));
+        for (const f of b.fiches) f.categories = (f.categories ?? []).filter((c) => ids.has(c));
       }
       if (Array.isArray(corps.synonymes)) {
         b.synonymes = corps.synonymes.map(textes).filter((l: string[]) => l.length > 1);

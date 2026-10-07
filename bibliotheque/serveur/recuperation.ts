@@ -8,6 +8,8 @@ export interface Notice {
   annee?: string;
   editeur?: string;
   pages?: string;
+  /** Page en ligne du livre (Google Books, Open Library). */
+  lien?: string;
   couvertures: string[];
 }
 
@@ -37,6 +39,7 @@ export function lireOpenLibrary(json: any, isbn: string): Notice | null {
     annee: annee(d.publish_date),
     editeur: d.publishers?.[0]?.name,
     pages: d.number_of_pages ? String(d.number_of_pages) : undefined,
+    lien: d.url,
     couvertures: [d.cover?.large, d.cover?.medium].filter(Boolean),
   };
 }
@@ -51,6 +54,7 @@ export function lireGoogleBooks(json: any): Notice | null {
     annee: annee(v.publishedDate),
     editeur: v.publisher,
     pages: v.pageCount ? String(v.pageCount) : undefined,
+    lien: v.infoLink ? String(v.infoLink).replace(/^http:/, 'https:') : undefined,
     couvertures: vignette ? [String(vignette).replace(/^http:/, 'https:').replace('&edge=curl', '')] : [],
   };
 }
@@ -96,6 +100,7 @@ export async function chercherIsbn(isbnBrut: string): Promise<Notice | null> {
     fusion.annee ??= n.annee;
     fusion.editeur ??= n.editeur;
     fusion.pages ??= n.pages;
+    fusion.lien ??= n.lien;
     fusion.couvertures.push(...n.couvertures);
   }
   // couverture Open Library par ISBN, même quand la notice n'existe pas

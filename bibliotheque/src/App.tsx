@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Bibliotheque, Fiche } from './types';
 import { api, ErreurApi } from './lib/api';
-import { FILTRES_VIDES, type Filtres } from './lib/recherche';
+import { FILTRES_VIDES, definirCategories, type Filtres } from './lib/recherche';
 import { Ctx, type Contexte } from './contexte';
 import { Connexion } from './composants/Connexion';
-import { EnTete } from './composants/EnTete';
+import { Navigation } from './composants/Navigation';
 import { Accueil } from './composants/Accueil';
 import { FicheVue } from './composants/FicheVue';
 import { Formulaire, type Preremplissage } from './composants/Formulaire';
@@ -25,6 +25,9 @@ function lirePartage(): Preremplissage | null {
   return { source: lien, titre: p.get('titre') ?? undefined };
 }
 
+/** Pages de liste : on y retrouve la position de lecture au retour d'une fiche. */
+const estListe = (r: string) => r === '' || /^(livres|articles|projets|favoris|travail\/)/.test(r);
+
 export function App() {
   const [phase, setPhase] = useState<Phase>({ nom: 'chargement' });
   const [biblio, setBiblio] = useState<Bibliotheque | null>(null);
@@ -32,7 +35,8 @@ export function App() {
   const [route, setRoute] = useState(lireRoute);
   const [message, setMessage] = useState<string | null>(null);
   const partage = useRef<Preremplissage | null>(lirePartage());
-  const defilement = useRef(0);
+  const defilements = useRef(new Map<string, number>());
+  const couverturesLancees = useRef(false);
 
   const charger = useCallback(async () => {
     setPhase({ nom: 'chargement' });
@@ -58,7 +62,7 @@ export function App() {
     const suivre = () => {
       const r = lireRoute();
       setRoute((avant) => {
-        if (avant === '') defilement.current = window.scrollY;
+        if (estListe(avant)) defilements.current.set(avant, window.scrollY);
         return r;
       });
     };
@@ -68,12 +72,8 @@ export function App() {
 
   useEffect(() => {
     if (route !== 'ajouter') partage.current = null;
-  }, [route]);
-
-  // retour à l'étagère : on retrouve la position de lecture
-  useEffect(() => {
-    if (route === '') requestAnimationFrame(() => window.scrollTo(0, defilement.current));
-    else window.scrollTo(0, 0);
+    const y = estListe(route) ? defilements.current.get(route) ?? 0 : 0;
+    requestAnimationFrame(() => window.scrollTo(0, y));
   }, [route]);
 
   useEffect(() => {
@@ -82,6 +82,43 @@ export function App() {
     return () => clearTimeout(t);
   }, [message]);
 
+  useEffect(() => {
+    if (biblio) definirCategories(biblio.categories);
+  }, [biblio]);
+
+  const majFiche = useCallback((f: Fiche, rev?: number) =>
+    setBiblio((b) => b && {
+      ...b,
+      rev: rev ?? b.rev,
+      fiches: b.fiches.some((x) => x.id === f.id) ? b.fiches.map((x) => (x.id === f.id ? f : x)) : [...b.fiches, f],
+    }), []);
+
+  // couvertures : cherchées toutes seules par l'ISBN, une fois par livre
+  useEffect(() => {
+    if (!biblio || DEMO || couverturesLancees.current) return;
+    const cibles = biblio.fiches.filter((f) => f.type === 'livre' && f.isbn && !f.images.length && !f.couvertureCherchee);
+    if (!cibles.length) return;
+    couverturesLancees.current = true;
+    (async () => {
+      for (const f of cibles) {
+        try {
+          const n = await api.isbn(f.isbn!).catch(() => null);
+          const maj: Fiche = {
+            ...f,
+            couvertureCherchee: true,
+            images: n?.image ? [n.image] : f.images,
+            source: f.source || n?.lien || f.source,
+            editeur: f.editeur || n?.editeur,
+            annee: f.annee || n?.annee,
+            pages: f.pages || n?.pages,
+          };
+          const r = await api.enregistrer(maj);
+          majFiche(r.fiche, r.rev);
+        } catch { /* hors ligne : on réessaiera au prochain lancement */ }
+      }
+    })();
+  }, [biblio, majFiche]);
+
   const ctx = useMemo<Contexte | null>(() => {
     if (!biblio) return null;
     const motsCles = biblio.familles.flatMap((f) => f.groupes.flatMap((g) => g.mots.map((mot) => ({ mot, famille: f.nom, groupe: g.nom }))));
@@ -89,12 +126,7 @@ export function App() {
       biblio,
       motsCles,
       remplacer: setBiblio,
-      majFiche: (f: Fiche, rev?: number) =>
-        setBiblio((b) => b && {
-          ...b,
-          rev: rev ?? b.rev,
-          fiches: b.fiches.some((x) => x.id === f.id) ? b.fiches.map((x) => (x.id === f.id ? f : x)) : [...b.fiches, f],
-        }),
+      majFiche,
       retirerFiche: (id: string, rev?: number) =>
         setBiblio((b) => b && {
           ...b,
@@ -107,10 +139,11 @@ export function App() {
         location.hash = r ? `#/${r}` : '#/';
       },
       notifier: setMessage,
+      route,
     };
-  }, [biblio, filtres]);
+  }, [biblio, filtres, majFiche, route]);
 
-  if (phase.nom === 'chargement') return <div className="ecran-centre"><p className="mono discret">Ouverture de la bibliothèque…</p></div>;
+  if (phase.nom === 'chargement') return <div className="ecran-centre"><p className="discret">Ouverture de la bibliothèque…</p></div>;
   if (phase.nom === 'connexion') return <Connexion configure={phase.configure} apres={charger} />;
   if (phase.nom === 'erreur' || !ctx) {
     return (
@@ -124,19 +157,21 @@ export function App() {
   const [page, param] = route.split('/');
   let contenu;
   if (page === 'fiche' && param) contenu = <FicheVue key={param} id={decodeURIComponent(param)} />;
-  else if (page === 'ajouter') contenu = <Formulaire key="nouvelle" preremplissage={partage.current ?? undefined} />; else if (page === 'modifier' && param) contenu = <Formulaire key={param} id={decodeURIComponent(param)} />;
+  else if (page === 'ajouter') contenu = <Formulaire key="nouvelle" preremplissage={partage.current ?? undefined} />;
+  else if (page === 'modifier' && param) contenu = <Formulaire key={param} id={decodeURIComponent(param)} />;
   else if (page === 'reglages') contenu = <Reglages />;
   else contenu = <Accueil />;
 
   return (
     <Ctx.Provider value={ctx}>
       {DEMO && (
-        <p className="bandeau-demo mono">
+        <p className="bandeau-demo">
           Aperçu de démonstration : tes essais restent dans ce navigateur. <a href="#/reglages">En savoir plus</a>
         </p>
       )}
-      <EnTete />
-      <main className="page">{contenu}</main>
+      <Navigation>
+        <main className="page">{contenu}</main>
+      </Navigation>
       {message && <div className="toast" role="status">{message}</div>}
     </Ctx.Provider>
   );

@@ -11,6 +11,8 @@ export interface Contexte {
   setFiltres: (f: Filtres | ((f: Filtres) => Filtres)) => void;
   naviguer: (route: string) => void;
   notifier: (message: string) => void;
+  /** Adresse de la page affichée (après « #/ »). */
+  route: string;
   /** Tous les mots-clés de la liste, avec leur famille. */
   motsCles: { mot: string; famille: string; groupe: string }[];
 }
@@ -47,3 +49,11 @@ export function liensDe(b: Bibliotheque, id: string): { fiche: Fiche; note?: str
   }
   return out;
 }
+
+/** Classe de couleur d'un travail (t0…t4), selon sa place dans la liste. */
+export function classeTravail(b: Bibliotheque, id: string): string {
+  const i = b.categories.findIndex((c) => c.id === id);
+  return `t${(i < 0 ? 0 : i) % 5}`;
+}
+
+export const nomTravail = (b: Bibliotheque, id: string) => b.categories.find((c) => c.id === id)?.nom ?? id;

@@ -1,4 +1,10 @@
-import type { Famille } from './types';
+import type { Categorie, Famille } from './types';
+
+/** Travaux de départ : on en ajoute d'autres depuis le site. */
+export const CATEGORIES_DEPART: Categorie[] = [
+  { id: 'memoire', nom: 'Mémoire' },
+  { id: 'rde', nom: 'Rapport d’études' },
+];
 
 /** Liste de départ des mots-clés, modifiable dans les réglages. */
 export const FAMILLES_DEPART: Famille[] = [
@@ -68,6 +74,7 @@ export const SYNONYMES_DEPART: string[][] = [
   ['écoconstruction', 'construction écologique', 'bioconstruction', 'construire en vert'],
   ['bois brûlé', 'shou sugi ban', 'yakisugi'],
   ['mémoire de master', 'mémoire de fin d’études', 'rédaction'],
+  ['rapport d’études', 'rapport d\'études', 'RDE'],
   ['vernaculaire', 'traditionnel', 'architecture sans architecte'],
   ['bois massif', 'CLT', 'bois lamellé-croisé'],
   ['lumière', 'light', 'luce'],

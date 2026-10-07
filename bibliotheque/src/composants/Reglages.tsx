@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { Famille, Fiche } from '../types';
-import { useBiblio } from '../contexte';
+import type { Categorie, Famille, Fiche } from '../types';
+import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { lireFavoris, estVideo, type Favori } from '../lib/favoris';
 import { normaliser } from '../lib/recherche';
@@ -12,8 +12,7 @@ export function Reglages() {
   return (
     <div className="reglages">
       <h1 className="titre-page">Réglages</h1>
-      <MotsCles />
-      <Synonymes />
+      <Travaux />
       <ImportFavoris />
       {DEMO ? <Demo /> : (
         <>
@@ -22,16 +21,94 @@ export function Reglages() {
           <Installer />
         </>
       )}
-      {!DEMO && <section className="reglage">
-        <h2 className="etiquette">Session</h2>
-        <button className="bouton" onClick={async () => {
-          await api.deconnexion().catch(() => {});
-          // les données gardées hors ligne sont effacées de l'appareil
-          if ('caches' in window) for (const k of await caches.keys()) await caches.delete(k);
-          location.href = '/';
-        }}>Se déconnecter de cet appareil</button>
-      </section>}
+      <details className="avance">
+        <summary>Mots-clés et synonymes de la recherche</summary>
+        <div>
+          <p className="aide">
+            La recherche s’en sert en coulisses : « terre compactée » trouve aussi « pisé ». Tu n’as besoin d’y toucher
+            que pour corriger un mot-clé ou ajouter un synonyme.
+          </p>
+          <MotsCles />
+          <Synonymes />
+        </div>
+      </details>
+      {!DEMO && (
+        <section className="reglage">
+          <h2>Session</h2>
+          <button className="bouton" onClick={async () => {
+            await api.deconnexion().catch(() => {});
+            // les données gardées hors ligne sont effacées de l'appareil
+            try { for (const k of await caches.keys()) await caches.delete(k); } catch { /* rien */ }
+            location.href = '/';
+          }}>Se déconnecter de cet appareil</button>
+        </section>
+      )}
     </div>
+  );
+}
+
+/** Les travaux : mémoire, rapport d'études, cours… */
+function Travaux() {
+  const { biblio, remplacer, notifier } = useBiblio();
+  const [noms, setNoms] = useState<Record<string, string>>({});
+  const [aSupprimer, setASupprimer] = useState<string | null>(null);
+  const [nouveau, setNouveau] = useState('');
+
+  async function envoyer(categories: Categorie[], message: string) {
+    try {
+      remplacer(await api.vocabulaire({ categories }));
+      notifier(message);
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Erreur.');
+    }
+  }
+  const compte = (id: string) => biblio.fiches.filter((f) => f.categories?.includes(id)).length;
+
+  return (
+    <section className="reglage">
+      <h2>Mes travaux</h2>
+      <p className="aide">Chaque fiche peut servir à un ou plusieurs travaux : mémoire, rapport d’études, un cours, une expérimentation…</p>
+      <div className="liste-travaux">
+        {biblio.categories.map((c) => (
+          <div key={c.id} className="ligne-travail">
+            <span className={`travail ${classeTravail(biblio, c.id)}`}>{compte(c.id)}</span>
+            <input
+              id={`travail-${c.id}`}
+              aria-label={`Nom du travail ${c.nom}`}
+              value={noms[c.id] ?? c.nom}
+              onChange={(e) => setNoms((n) => ({ ...n, [c.id]: e.target.value }))}
+              onBlur={() => {
+                const nom = (noms[c.id] ?? c.nom).trim();
+                if (nom && nom !== c.nom) envoyer(biblio.categories.map((x) => (x.id === c.id ? { ...x, nom } : x)), 'Travail renommé.');
+              }}
+            />
+            {aSupprimer === c.id ? (
+              <>
+                <button className="bouton danger petit" onClick={() => {
+                  setASupprimer(null);
+                  envoyer(biblio.categories.filter((x) => x.id !== c.id), `« ${c.nom} » supprimé ; les fiches restent dans la bibliothèque.`);
+                }}>Oui, supprimer</button>
+                <button className="bouton petit" onClick={() => setASupprimer(null)}>Annuler</button>
+              </>
+            ) : (
+              <button className="bouton danger-doux petit" onClick={() => setASupprimer(c.id)}>Supprimer</button>
+            )}
+          </div>
+        ))}
+        <form className="ligne-travail" onSubmit={(e) => {
+          e.preventDefault();
+          const nom = nouveau.trim();
+          if (!nom) return;
+          const id = normaliser(nom).replace(/\s+/g, '-') || crypto.randomUUID();
+          if (biblio.categories.some((x) => x.id === id)) return notifier('Ce travail existe déjà.');
+          setNouveau('');
+          envoyer([...biblio.categories, { id, nom }], `« ${nom} » ajouté.`);
+        }}>
+          <input id="travail-nouveau" placeholder="Nouveau travail, ex. : Cours expérimentation" value={nouveau} onChange={(e) => setNouveau(e.target.value)} />
+          <button className="bouton principal petit" disabled={!nouveau.trim()}>Ajouter</button>
+        </form>
+      </div>
+    </section>
   );
 }
 
@@ -40,7 +117,7 @@ function Demo() {
   const [confirmer, setConfirmer] = useState(false);
   return (
     <section className="reglage">
-      <h2 className="etiquette">Aperçu de démonstration</h2>
+      <h2>Aperçu de démonstration</h2>
       <p className="aide">
         Ici, tes essais restent dans ce navigateur. Sur le site en ligne s’ajoutent : la recherche par ISBN,
         la récupération des images, la sauvegarde en .zip, l’installation sur le téléphone et le mot de passe.
@@ -182,7 +259,7 @@ function MotsCles() {
 
   return (
     <section className="reglage">
-      <h2 className="etiquette">Mots-clés</h2>
+      <h2>Mots-clés</h2>
       <p className="aide">Toucher un mot-clé pour le renommer, le déplacer ou le supprimer. Renommer avec un nom existant fusionne les deux.</p>
       {biblio.familles.map((f) => (
         <div key={f.id} className="famille">
@@ -256,7 +333,7 @@ function Synonymes() {
   }
   return (
     <section className="reglage">
-      <h2 className="etiquette">Synonymes</h2>
+      <h2>Synonymes</h2>
       <p className="aide">Une ligne par groupe, termes séparés par « = ». Chercher l’un trouve aussi les autres.</p>
       <textarea className="mono synonymes" rows={Math.min(18, texte.split('\n').length + 2)} value={texte} onChange={(e) => setTexte(e.target.value)} spellCheck={false} />
       <button className="bouton principal" onClick={enregistrer} disabled={texte === initial}>Enregistrer les synonymes</button>
@@ -313,7 +390,7 @@ function ImportFavoris() {
 
   return (
     <section className="reglage">
-      <h2 className="etiquette">Importer des favoris</h2>
+      <h2>Importer des favoris</h2>
       <p className="aide">
         Dans Edge : <code>edge://favorites</code> → menu « … » → Exporter les favoris. Choisir ensuite le fichier .html ici.
         Chaque favori devient une fiche « à voir » ; le dossier d’origine est noté dans « Où la trouver ».
@@ -383,7 +460,7 @@ function Completer() {
   ].filter(Boolean);
   return (
     <section className="reglage">
-      <h2 className="etiquette">Compléter les images</h2>
+      <h2>Compléter les images</h2>
       <p className="aide">{morceaux.join(', ')}. Le site va chercher les couvertures (Open Library, Google Books) et les images des pages, quelques secondes par fiche.</p>
       {progres ? (
         <p className="mono">{progres.fait} / {progres.total}…</p>
@@ -434,7 +511,7 @@ function Sauvegarde() {
 
   return (
     <section className="reglage">
-      <h2 className="etiquette">Sauvegarde</h2>
+      <h2>Sauvegarde</h2>
       <p className="aide">À faire de temps en temps sur l’ordinateur : tes fiches et tes images restent à toi, même sans ce site.</p>
       <div className="champ-ligne">
         <button className="bouton principal" onClick={() => exporter(true)} disabled={envoi !== null}>{envoi ?? 'Tout exporter (.zip)'}</button>
@@ -458,7 +535,7 @@ function Installer() {
   const installee = matchMedia('(display-mode: standalone)').matches;
   return (
     <section className="reglage">
-      <h2 className="etiquette">Appli sur le téléphone</h2>
+      <h2>Appli sur le téléphone</h2>
       {installee ? (
         <p className="aide">La bibliothèque est installée sur cet appareil.</p>
       ) : (

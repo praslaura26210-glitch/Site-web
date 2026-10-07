@@ -47,9 +47,10 @@ export interface Filtres {
   type: TypeFiche | null;
   statut: Statut | null;
   motsCles: string[];
+  categorie: string | null;
 }
 
-export const FILTRES_VIDES: Filtres = { q: '', type: null, statut: null, motsCles: [] };
+export const FILTRES_VIDES: Filtres = { q: '', type: null, statut: null, motsCles: [], categorie: null };
 
 /** Chaque « concept » de la requête : l'un de ses termes doit apparaître dans la fiche. */
 export function concepts(q: string, synonymes: string[][]): string[][] {
@@ -76,14 +77,22 @@ interface Champ {
   textes: string[];
 }
 
+let nomsCategories = new Map<string, string>();
+
+/** Les noms des travaux (catégories) font partie de la recherche : « RDE » trouve le rapport d'études. */
+export function definirCategories(cats: { id: string; nom: string }[]) {
+  nomsCategories = new Map(cats.map((c) => [c.id, c.nom]));
+}
+
 function champs(f: Fiche): Champ[] {
   return [
     { nom: 'titre', poids: 10, textes: [f.titre] },
     { nom: 'auteur', poids: 8, textes: f.auteurs },
+    { nom: 'travail', poids: 6, textes: (f.categories ?? []).map((c) => nomsCategories.get(c) ?? '') },
     { nom: 'mot-clé', poids: 6, textes: f.motsCles },
     { nom: 'éditeur', poids: 3, textes: [f.editeur ?? ''] },
-    { nom: 'ce que j’en retiens', poids: 2, textes: [f.retenu ?? ''] },
-    { nom: 'lien avec mon travail', poids: 2, textes: [f.lienTravail ?? ''] },
+    { nom: 'résumé', poids: 3, textes: [f.resume ?? ''] },
+    { nom: 'mes notes', poids: 2, textes: [f.retenu ?? ''] },
     { nom: 'citation', poids: 2, textes: f.citations.map((c) => `${c.texte} ${c.note ?? ''}`) },
     { nom: 'autre', poids: 1, textes: [f.emplacement ?? '', f.source ?? '', f.credit ?? '', f.annee ?? ''] },
   ];
@@ -104,13 +113,15 @@ export interface Resultat {
   extrait?: Extrait;
 }
 
-const CHAMPS_EXTRAIT = new Set(['ce que j’en retiens', 'lien avec mon travail', 'citation', 'éditeur', 'autre']);
+const CHAMPS_EXTRAIT = new Set(['mes notes', 'résumé', 'citation', 'éditeur', 'autre']);
 
 function extrait(f: Fiche, termes: string[]): Extrait | undefined {
   for (const c of champs(f)) {
     if (!CHAMPS_EXTRAIT.has(c.nom)) continue;
-    for (const [i, t] of c.textes.entries()) {
-      if (!t) continue;
+    for (const [i, brut] of c.textes.entries()) {
+      if (!brut) continue;
+      // intertitres et puces des notes : retirés de l'extrait
+      const t = brut.replace(/^#{1,3}\s+|^[-•]\s+/gm, '').replace(/\s*\n+\s*/g, ' ');
       const { n, carte } = normAvecCarte(t);
       const pos = termes.map((x) => ` ${n}`.indexOf(` ${x}`)).filter((p) => p >= 0).sort((a, b) => a - b)[0];
       if (pos === undefined) continue;
@@ -134,6 +145,7 @@ export function chercher(fiches: Fiche[], filtres: Filtres, synonymes: string[][
     if (filtres.type && f.type !== filtres.type) continue;
     if (filtres.statut && f.statut !== filtres.statut) continue;
     if (filtres.motsCles.some((m) => !f.motsCles.includes(m))) continue;
+    if (filtres.categorie && !(f.categories ?? []).includes(filtres.categorie)) continue;
     if (!cs.length) {
       res.push({ fiche: f, score: 0 });
       continue;

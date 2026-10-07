@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import type { Fiche, Statut } from '../types';
-import { STATUTS } from '../types';
-import { liensDe, useBiblio } from '../contexte';
+import { STATUTS, rayonDe } from '../types';
+import { classeTravail, liensDe, nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine, nomStatut } from '../lib/libelles';
 import { FILTRES_VIDES } from '../lib/recherche';
@@ -10,33 +10,65 @@ import { Icone } from './Icone';
 
 const date = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '');
 
+/** Recherche web prête à l'emploi quand on n'a pas encore de lien. */
+export const rechercheWeb = (f: Pick<Fiche, 'titre' | 'auteurs' | 'type' | 'editeur'>) =>
+  `https://www.google.com/search?q=${encodeURIComponent([f.titre, f.auteurs[0], f.type === 'livre' ? 'livre' : f.editeur].filter(Boolean).join(' '))}`;
+
+/** « [?] » dans mes notes : un mot à vérifier, mis en évidence. */
+function EnLigne({ texte }: { texte: string }) {
+  const morceaux = texte.split(/(\[\?\]|\[[^\]]*à vérifier\])/);
+  return (
+    <>
+      {morceaux.map((m, i) =>
+        /^\[(\?|[^\]]*à vérifier)\]$/.test(m)
+          ? <span key={i} className="doute" title="Mot incertain, à vérifier">{m === '[?]' ? '?' : m.slice(1, -1)}</span>
+          : <Fragment key={i}>{m}</Fragment>,
+      )}
+    </>
+  );
+}
+
+/** Mes notes en article : « ## » donne un intertitre, « - » une liste, une ligne vide sépare les paragraphes. */
+export function Notes({ texte }: { texte: string }) {
+  const blocs = texte.trim().split(/\n\s*\n/);
+  return (
+    <div className="notes">
+      {blocs.map((b, i) => {
+        const lignes = b.split('\n').map((l) => l.trim()).filter(Boolean);
+        if (lignes.length === 1 && /^#{1,3}\s/.test(lignes[0])) return <h3 key={i}><EnLigne texte={lignes[0].replace(/^#+\s*/, '')} /></h3>;
+        if (lignes.every((l) => /^[-•]\s/.test(l))) {
+          return <ul key={i}>{lignes.map((l, k) => <li key={k}><EnLigne texte={l.replace(/^[-•]\s*/, '')} /></li>)}</ul>;
+        }
+        return (
+          <p key={i}>
+            {lignes.map((l, k) => <Fragment key={k}>{k > 0 && <br />}<EnLigne texte={l} /></Fragment>)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export function FicheVue({ id }: { id: string }) {
   const { biblio, majFiche, retirerFiche, naviguer, notifier, setFiltres } = useBiblio();
   const fiche = biblio.fiches.find((f) => f.id === id);
   const [visionneuse, setVisionneuse] = useState<number | null>(null);
+  const [imageActive, setImageActive] = useState(0);
   const [confirmer, setConfirmer] = useState(false);
   const liens = useMemo(() => liensDe(biblio, id), [biblio, id]);
-
-  // fiches qui partagent au moins deux mots-clés, pas encore liées
-  const proches = useMemo(() => {
-    if (!fiche) return [];
-    const lies = new Set([id, ...liens.map((l) => l.fiche.id)]);
-    return biblio.fiches
-      .filter((f) => !lies.has(f.id))
-      .map((f) => ({ f, communs: f.motsCles.filter((m) => fiche.motsCles.includes(m)) }))
-      .filter((x) => x.communs.length >= 2)
-      .sort((a, b) => b.communs.length - a.communs.length)
-      .slice(0, 6);
-  }, [biblio.fiches, fiche, id, liens]);
 
   if (!fiche) {
     return (
       <div className="vide">
         <p>Cette fiche n’existe plus.</p>
-        <a className="bouton" href="#/">Retour à l’étagère</a>
+        <a className="bouton" href="#/">Retour à l’accueil</a>
       </div>
     );
   }
+
+  const rayon = rayonDe(fiche.type);
+  const livre = rayon === 'livres';
+  const active = Math.min(imageActive, Math.max(0, fiche.images.length - 1));
 
   async function enregistrer(f: Fiche, message?: string) {
     majFiche(f);
@@ -54,196 +86,206 @@ export function FicheVue({ id }: { id: string }) {
     try {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
-      // les images gardées pour la lecture hors ligne disparaissent aussi de l'appareil
       try {
         const c = await caches.open('bibliotheque-v1');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
       } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');
-      naviguer('');
+      naviguer(rayon);
     } catch (e) {
       notifier(e instanceof Error ? e.message : 'Erreur.');
     }
   }
 
-  const voirMotCle = (m: string) => {
-    setFiltres({ ...FILTRES_VIDES, motsCles: [m] });
-    naviguer('');
-  };
   const voirAuteur = (a: string) => {
     setFiltres({ ...FILTRES_VIDES, q: a });
     naviguer('');
   };
+  const voirMotCle = (m: string) => {
+    setFiltres({ ...FILTRES_VIDES, motsCles: [m] });
+    naviguer(rayon);
+  };
+  const retour = () => (history.length > 1 ? history.back() : naviguer(rayon));
 
-  const infos: [string, string | undefined][] = [
-    ['ISBN', fiche.isbn],
-    ['Numéro', fiche.numero],
-    ['Pages', fiche.pages],
-    ['Consulté le', fiche.consulte ? date(fiche.consulte) : undefined],
-    ['Où la trouver', fiche.emplacement],
-    ['Crédit des images', fiche.credit],
-    ['Ajoutée le', date(fiche.creeLe)],
-  ];
+  const surtitre = [NOM_TYPE[fiche.type], fiche.editeur, fiche.annee].filter(Boolean).join(' · ');
+  const nomLien = livre ? 'Voir le livre en ligne' : rayon === 'projets' ? 'Site du projet' : 'Ouvrir la page';
+  const credit = (i: number) => fiche.images[i]?.credit || fiche.credit;
+
+  const titres = (
+    <div className="fiche-titres">
+      <p className="surtitre">{surtitre}</p>
+      <h1 className="fiche-titre">{fiche.titre}</h1>
+      {fiche.auteurs.length > 0 && (
+        <p className="fiche-auteurs">
+          {fiche.auteurs.map((a, i) => (
+            <span key={a}>
+              {i > 0 && ', '}
+              <button className="lien-texte" onClick={() => voirAuteur(a)}>{a}</button>
+            </span>
+          ))}
+        </p>
+      )}
+      {(fiche.categories ?? []).length > 0 && (
+        <div className="travaux">
+          {fiche.categories.map((c) => (
+            <a key={c} className={`travail ${classeTravail(biblio, c)}`} href={`#/travail/${encodeURIComponent(c)}`}>{nomTravail(biblio, c)}</a>
+          ))}
+        </div>
+      )}
+      <div className="fiche-boutons">
+        <div className="segments" role="radiogroup" aria-label="Statut">
+          {STATUTS.map((s: Statut) => (
+            <button
+              key={s}
+              role="radio"
+              aria-checked={fiche.statut === s}
+              className="pastille"
+              onClick={() => fiche.statut !== s && enregistrer({ ...fiche, statut: s }, `Statut : ${nomStatut(s, fiche.type).toLowerCase()}.`)}
+            >
+              {nomStatut(s, fiche.type)}
+            </button>
+          ))}
+        </div>
+        <span className="separateur" aria-hidden="true" />
+        {fiche.source ? (
+          <a className="bouton principal" href={fiche.source} target="_blank" rel="noreferrer">
+            {nomLien} <Icone nom="lien" taille={16} />
+          </a>
+        ) : (
+          <a className="bouton" href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">
+            Chercher en ligne <Icone nom="lien" taille={16} />
+          </a>
+        )}
+      </div>
+    </div>
+  );
 
   return (
-    <article className="fiche">
-      <div className="fiche-barre">
-        <a className="lien-retour mono" href="#/"><Icone nom="retour" taille={16} /> Étagère</a>
+    <article className={`fiche fiche-${livre ? 'livre' : rayon === 'projets' ? 'projet' : 'article'}`}>
+      <div className="fiche-haut">
+        <button className="lien-retour" onClick={retour}><Icone nom="retour" taille={18} /> Retour</button>
         <div className="fiche-actions">
-          <a className="bouton" href={`#/modifier/${encodeURIComponent(id)}`}>Modifier</a>
-          <button className="bouton danger-doux" onClick={() => setConfirmer(true)}>Supprimer</button>
+          <button
+            className="bouton-icone bouton-coeur"
+            aria-pressed={!!fiche.favori}
+            aria-label={fiche.favori ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            title={fiche.favori ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            onClick={() => enregistrer({ ...fiche, favori: !fiche.favori }, fiche.favori ? 'Retirée des favoris.' : 'Ajoutée aux favoris.')}
+          >
+            <Icone nom="coeur" />
+          </button>
+          <a className="bouton petit" href={`#/modifier/${encodeURIComponent(id)}`}><Icone nom="modifier" taille={16} /> Modifier</a>
         </div>
       </div>
 
-      <div className={`fiche-grille${fiche.images.length ? '' : ' sans-image'}`}>
-        <div className="fiche-images">
-          {fiche.images.length > 0 ? (
-            <>
-              <div className="defile">
-                {fiche.images.map((im, i) => (
-                  <button key={im.id} className="defile-item" onClick={() => setVisionneuse(i)} aria-label={`Agrandir l’image ${i + 1}`}>
-                    <img src={srcImage(im.id)} alt="" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
-                  </button>
-                ))}
-              </div>
-              {fiche.images.length > 1 && <p className="mono discret defile-compte">{fiche.images.length} images — faire glisser</p>}
-            </>
-          ) : (
-            <div className="fiche-couv-dessinee"><Couverture fiche={fiche} /></div>
-          )}
-        </div>
-
-        <div className="fiche-texte">
-          <p className="surtitre mono">
-            {NOM_TYPE[fiche.type]}
-            {fiche.annee && ` · ${fiche.annee}`}
-          </p>
-          <h1 className="fiche-titre">{fiche.titre}</h1>
-          {fiche.auteurs.length > 0 && (
-            <p className="fiche-auteurs">
-              {fiche.auteurs.map((a, i) => (
-                <span key={a}>
-                  {i > 0 && ', '}
-                  <button className="lien-texte" onClick={() => voirAuteur(a)}>{a}</button>
-                </span>
-              ))}
-            </p>
-          )}
-          {fiche.editeur && (
-            <p className="fiche-editeur"><span className="mono discret">{NOM_EDITEUR[fiche.type]} </span>{fiche.editeur}</p>
-          )}
-          {fiche.source && (
-            <p>
-              <a className="lien-source" href={fiche.source} target="_blank" rel="noreferrer">
-                <Icone nom="lien" taille={16} /> {domaine(fiche.source) || 'Source'}
-              </a>
-            </p>
-          )}
-
-          <div className="statut-choix" role="radiogroup" aria-label="Statut">
-            {STATUTS.map((s: Statut) => (
-              <button
-                key={s}
-                role="radio"
-                aria-checked={fiche.statut === s}
-                className="pastille"
-                onClick={() => fiche.statut !== s && enregistrer({ ...fiche, statut: s }, `Statut : ${nomStatut(s, fiche.type).toLowerCase()}.`)}
-              >
-                {nomStatut(s, fiche.type)}
+      {livre ? (
+        <header className="fiche-tete">
+          <div className="fiche-couv">
+            {fiche.images.length > 0 ? (
+              <button onClick={() => setVisionneuse(0)} aria-label="Agrandir la couverture">
+                <img src={srcImage(fiche.images[0].id)} alt={`Couverture : ${fiche.titre}`} style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
               </button>
-            ))}
+            ) : (
+              <Couverture fiche={fiche} />
+            )}
           </div>
-
-          {fiche.retenu && (
-            <section className="bloc">
-              <h2 className="etiquette">Ce que j’en retiens</h2>
-              <p className="texte-lecture">{fiche.retenu}</p>
-            </section>
-          )}
-          {fiche.lienTravail && (
-            <section className="bloc">
-              <h2 className="etiquette">Lien avec mon travail</h2>
-              <p className="texte-lecture">{fiche.lienTravail}</p>
-            </section>
-          )}
-          {fiche.citations.length > 0 && (
-            <section className="bloc">
-              <h2 className="etiquette">Citations</h2>
-              {fiche.citations.map((c, i) => (
-                <figure key={i} className="citation">
-                  <blockquote>« {c.texte} »</blockquote>
-                  {(c.page || c.note) && (
-                    <figcaption>
-                      {c.page && <span className="mono">p. {c.page}</span>}
-                      {c.note && <span className="citation-note">{c.note}</span>}
-                    </figcaption>
-                  )}
-                </figure>
-              ))}
-            </section>
-          )}
-          {fiche.motsCles.length > 0 && (
-            <section className="bloc">
-              <h2 className="etiquette">Mots-clés</h2>
-              <div className="mots">
-                {fiche.motsCles.map((m) => (
-                  <button key={m} className="mot" onClick={() => voirMotCle(m)}>{m}</button>
-                ))}
-              </div>
-            </section>
-          )}
-          {liens.length > 0 && (
-            <section className="bloc">
-              <h2 className="etiquette">Voir aussi</h2>
-              <ul className="cartes">
-                {liens.map(({ fiche: f, note }) => (
-                  <li key={f.id}>
-                    <a className="carte" href={`#/fiche/${encodeURIComponent(f.id)}`}>
-                      <span className="carte-couv"><Couverture fiche={f} /></span>
-                      <span>
-                        <span className="carte-titre">{f.titre}</span>
-                        <span className="mono discret carte-meta">{[NOM_TYPE[f.type], f.auteurs[0]].filter(Boolean).join(' · ')}</span>
-                        {note && <span className="carte-note">{note}</span>}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {proches.length > 0 && (
-            <section className="bloc">
-              <h2 className="etiquette">Fiches proches <span className="discret">(mots-clés en commun)</span></h2>
-              <ul className="cartes">
-                {proches.map(({ f, communs }) => (
-                  <li key={f.id} className="carte-proche">
-                    <a className="carte" href={`#/fiche/${encodeURIComponent(f.id)}`}>
-                      <span className="carte-couv"><Couverture fiche={f} /></span>
-                      <span>
-                        <span className="carte-titre">{f.titre}</span>
-                        <span className="mono discret carte-meta">{communs.join(' · ')}</span>
-                      </span>
-                    </a>
-                    <button
-                      className="lien-texte"
-                      onClick={() => enregistrer({ ...fiche, voirAussi: [...fiche.voirAussi, { id: f.id }] }, 'Lien ajouté.')}
-                    >
-                      + Relier
+          {titres}
+        </header>
+      ) : (
+        <header className="fiche-tete">
+          {fiche.images.length > 0 && (
+            <div className="fiche-galerie">
+              <button className="grande" onClick={() => setVisionneuse(active)} aria-label="Agrandir l’image et voir son crédit">
+                <img src={srcImage(fiche.images[active].id)} alt="" style={{ aspectRatio: `${fiche.images[active].w} / ${fiche.images[active].h}` }} />
+              </button>
+              {fiche.images.length > 1 && (
+                <div className="vignettes-galerie">
+                  {fiche.images.map((im, i) => (
+                    <button key={im.id} aria-current={i === active} aria-label={`Image ${i + 1}`} onClick={() => setImageActive(i)}>
+                      <img src={srcImage(im.id)} alt="" />
                     </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
+                  ))}
+                </div>
+              )}
+              {credit(active) && <p className="credit-image">{credit(active)}</p>}
+            </div>
           )}
-          <dl className="infos">
-            {infos.filter(([, v]) => v).map(([k, v]) => (
-              <div key={k}>
-                <dt className="mono">{k}</dt>
-                <dd>{v}</dd>
-              </div>
+          {titres}
+        </header>
+      )}
+
+      <div className="fiche-corps">
+        {fiche.resume && (
+          <section className="bloc">
+            <h2>Résumé</h2>
+            <p className="resume">{fiche.resume}</p>
+          </section>
+        )}
+        {fiche.retenu && (
+          <section className="bloc">
+            <h2>Mes notes</h2>
+            <Notes texte={fiche.retenu} />
+          </section>
+        )}
+        {fiche.citations.length > 0 && (
+          <section className="bloc">
+            <h2>Citations</h2>
+            {fiche.citations.map((c, i) => (
+              <figure key={i} className="citation">
+                <blockquote>« {c.texte} »</blockquote>
+                {(c.page || c.note) && (
+                  <figcaption>
+                    {c.page && <span>p. {c.page}</span>}
+                    {c.note && <span>{c.note}</span>}
+                  </figcaption>
+                )}
+              </figure>
             ))}
+          </section>
+        )}
+        {liens.length > 0 && (
+          <section className="bloc">
+            <h2>Voir aussi</h2>
+            <ul className="liens-fiche">
+              {liens.map(({ fiche: f, note }) => (
+                <li key={f.id}>
+                  <a className="lien-fiche" href={`#/fiche/${encodeURIComponent(f.id)}`}>
+                    <span className="lien-fiche-couv"><Couverture fiche={f} /></span>
+                    <span>
+                      <strong>{f.titre}</strong>
+                      <span className="discret">{[NOM_TYPE[f.type], f.auteurs[0]].filter(Boolean).join(' · ')}</span>
+                      {note && <span className="note">{note}</span>}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <footer className="fiche-pied">
+          <dl>
+            {fiche.motsCles.length > 0 && (
+              <div>
+                <dt>Mots-clés</dt>
+                <dd className="mots">
+                  {fiche.motsCles.map((m) => <button key={m} className="mot" onClick={() => voirMotCle(m)}>{m}</button>)}
+                </dd>
+              </div>
+            )}
+            {fiche.source && <div><dt>Lien</dt><dd>{domaine(fiche.source)}</dd></div>}
+            {fiche.isbn && <div><dt>ISBN</dt><dd>{fiche.isbn}</dd></div>}
+            {fiche.pages && <div><dt>Pages</dt><dd>{fiche.pages}</dd></div>}
+            {fiche.numero && <div><dt>Numéro</dt><dd>{fiche.numero}</dd></div>}
+            {!livre && fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
+            {fiche.consulte && <div><dt>Consulté le</dt><dd>{date(fiche.consulte)}</dd></div>}
+            {fiche.emplacement && <div><dt>Où la trouver</dt><dd>{fiche.emplacement}</dd></div>}
+            <div><dt>Ajoutée le</dt><dd>{date(fiche.creeLe)}</dd></div>
           </dl>
-        </div>
+          <div>
+            <button className="lien-texte petit" style={{ color: 'var(--danger)' }} onClick={() => setConfirmer(true)}>Supprimer la fiche</button>
+          </div>
+        </footer>
       </div>
 
       {visionneuse !== null && <Visionneuse fiche={fiche} depart={visionneuse} fermer={() => setVisionneuse(null)} />}
@@ -263,6 +305,7 @@ export function FicheVue({ id }: { id: string }) {
   );
 }
 
+/** Image en grand, avec qui l'a faite et d'où elle vient. */
 function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; fermer: () => void }) {
   const [i, setI] = useState(depart);
   const n = fiche.images.length;
@@ -280,14 +323,15 @@ function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; 
     };
   }, [fermer, n]);
 
-  // glisser le doigt pour changer d'image
   const [x0, setX0] = useState<number | null>(null);
+  const credit = fiche.images[i]?.credit || fiche.credit;
 
   return (
     <div
       className="visionneuse"
       role="dialog"
       aria-modal="true"
+      aria-label={`Image : ${fiche.titre}`}
       onClick={fermer}
       onTouchStart={(e) => setX0(e.touches[0].clientX)}
       onTouchEnd={(e) => {
@@ -297,13 +341,20 @@ function Visionneuse({ fiche, depart, fermer }: { fiche: Fiche; depart: number; 
         setX0(null);
       }}
     >
-      <img src={srcImage(fiche.images[i].id)} alt="" onClick={(e) => e.stopPropagation()} />
+      <figure>
+        <img src={srcImage(fiche.images[i].id)} alt="" onClick={(e) => e.stopPropagation()} />
+        <figcaption onClick={(e) => e.stopPropagation()}>
+          <strong>{fiche.titre}</strong>
+          <br />{credit || 'Crédit non renseigné'}
+          {fiche.source && <><br /><a href={fiche.source} target="_blank" rel="noreferrer">Source : {domaine(fiche.source)}</a></>}
+          {n > 1 && <><br />{i + 1} / {n}</>}
+        </figcaption>
+      </figure>
       <button className="visionneuse-fermer" onClick={fermer} aria-label="Fermer"><Icone nom="fermer" taille={24} /></button>
       {n > 1 && (
         <>
           <button className="visionneuse-nav gauche" onClick={(e) => { e.stopPropagation(); setI((x) => (x - 1 + n) % n); }} aria-label="Image précédente"><Icone nom="gauche" taille={28} /></button>
           <button className="visionneuse-nav droite" onClick={(e) => { e.stopPropagation(); setI((x) => (x + 1) % n); }} aria-label="Image suivante"><Icone nom="droite" taille={28} /></button>
-          <p className="visionneuse-compte mono">{i + 1} / {n}</p>
         </>
       )}
     </div>

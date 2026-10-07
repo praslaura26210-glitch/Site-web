@@ -2,12 +2,12 @@
  * Mode démonstration (aperçu sur claude.ai) : pas de serveur.
  * Les appels /api/* sont simulés dans le navigateur ; les essais restent dans ce navigateur (localStorage).
  */
-import type { Bibliotheque, Famille, Fiche } from '../types';
-import { FAMILLES_DEPART, SYNONYMES_DEPART } from '../vocabulaire';
+import type { Bibliotheque, Categorie, Famille, Fiche } from '../types';
+import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../vocabulaire';
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
 
-const CLE = 'demo-bibliotheque-v1';
+const CLE = 'demo-bibliotheque-v2';
 const PREFIXE_IMAGE = 'demo-img:';
 const images = new Map<string, string>();
 
@@ -24,13 +24,14 @@ const effacer = (cle: string) => {
   try { localStorage.removeItem(cle); } catch { /* rien */ }
 };
 
-let depart: { version: number; fiches: Fiche[] } = { version: 1, fiches: [] };
+let depart: { version: number; fiches: Fiche[]; categories?: Categorie[] } = { version: 1, fiches: [] };
 let b: Bibliotheque;
 
 function neuve(): Bibliotheque {
   return {
     version: 1, rev: 1, departVersion: depart.version,
     fiches: structuredClone(depart.fiches),
+    categories: structuredClone(depart.categories ?? CATEGORIES_DEPART),
     familles: structuredClone(FAMILLES_DEPART),
     synonymes: structuredClone(SYNONYMES_DEPART),
   };
@@ -84,7 +85,7 @@ async function route(chemin: string, methode: string, corps: BodyInit | null | u
   if (nom === 'fiches' && methode === 'POST') {
     const liste = (await json()) as Partial<Fiche>[];
     const nouvelles = liste.map((f) => ({
-      images: [], auteurs: [], motsCles: [], citations: [], voirAussi: [], statut: 'a-lire', type: 'site', titre: 'Sans titre',
+      images: [], auteurs: [], motsCles: [], citations: [], voirAussi: [], categories: [], statut: 'a-lire', type: 'site', titre: 'Sans titre',
       ...f, id: crypto.randomUUID(), creeLe: f.creeLe || maintenant, modifieLe: maintenant,
     }) as Fiche);
     b.fiches.push(...nouvelles);
@@ -103,8 +104,13 @@ async function route(chemin: string, methode: string, corps: BodyInit | null | u
     return reponse({ rev: b.rev });
   }
   if (nom === 'vocabulaire') {
-    const v = (await json()) as { familles?: Famille[]; synonymes?: string[][]; renommer?: { de: string; vers: string | null } };
+    const v = (await json()) as { familles?: Famille[]; synonymes?: string[][]; categories?: Categorie[]; renommer?: { de: string; vers: string | null } };
     if (v.familles) b.familles = v.familles;
+    if (v.categories) {
+      b.categories = v.categories;
+      const ids = new Set(v.categories.map((c) => c.id));
+      for (const f of b.fiches) f.categories = (f.categories ?? []).filter((c) => ids.has(c));
+    }
     if (v.synonymes) b.synonymes = v.synonymes;
     if (v.renommer?.de) {
       const { de, vers } = v.renommer;
