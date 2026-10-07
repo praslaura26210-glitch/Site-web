@@ -1,4 +1,5 @@
 import type { Bibliotheque, Famille, Fiche, Image } from '../types';
+import { DEMO, demoSrc } from './demo';
 
 export class ErreurApi extends Error {
   constructor(message: string, public status: number) {
@@ -40,4 +41,4 @@ export const api = {
   apercu: (url: string) => appel<{ titre?: string; site?: string; annee?: string; image: Image | null }>(`apercu?url=${encodeURIComponent(url)}`),
 };
 
-export const srcImage = (id: string) => `/api/images/${encodeURIComponent(id)}`;
+export const srcImage = (id: string) => (DEMO ? demoSrc(id) : `/api/images/${encodeURIComponent(id)}`);

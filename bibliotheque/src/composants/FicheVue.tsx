@@ -55,10 +55,10 @@ export function FicheVue({ id }: { id: string }) {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
       // les images gardées pour la lecture hors ligne disparaissent aussi de l'appareil
-      if ('caches' in window) {
+      try {
         const c = await caches.open('bibliotheque-v1');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
-      }
+      } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');
       naviguer('');
     } catch (e) {

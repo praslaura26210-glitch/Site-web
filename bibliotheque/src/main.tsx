@@ -6,14 +6,20 @@ import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import './styles.css';
 import { App } from './App';
+import { DEMO, installerDemo } from './lib/demo';
 
-createRoot(document.getElementById('racine')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+const demarrer = () =>
+  createRoot(document.getElementById('racine')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+
+// aperçu de démonstration : le serveur est simulé dans le navigateur
+if (DEMO) installerDemo().then(demarrer);
+else demarrer();
 
 // appli installable et lisible hors ligne
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+if ('serviceWorker' in navigator && import.meta.env.PROD && !DEMO) {
   addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 }

@@ -20,6 +20,7 @@
   --t-projet: #A8B296;
   --t-site: #CDAE9F;
   --t-video: #B0A8BD;
+  --couv-encre: #1C1B18;
 
   --serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -29,8 +30,9 @@
   color-scheme: light;
 }
 
+/* sombre : réglage du système, sauf choix explicite « clair » ; et choix explicite « sombre » */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --papier: #161513;
     --carte: #1F1E1B;
     --encre: #ECE7DC;
@@ -49,8 +51,32 @@
     --t-projet: #4F5A42;
     --t-site: #6B5045;
     --t-video: #554E64;
+    --couv-encre: #ECE7DC;
     color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --papier: #161513;
+  --carte: #1F1E1B;
+  --encre: #ECE7DC;
+  --encre-2: #AFA99B;
+  --encre-3: #7E796E;
+  --filet: #3A3732;
+  --filet-2: #2A2825;
+  --planche: #4D483F;
+  --accent: #A3BCDA;
+  --accent-doux: #25313E;
+  --marque: #5B4B16;
+  --danger: #E4917F;
+  --ombre: 0 1px 0 rgb(0 0 0 / .3), 0 10px 18px -10px rgb(0 0 0 / .8);
+  --t-livre: #6E5E42;
+  --t-article: #4A585E;
+  --t-projet: #4F5A42;
+  --t-site: #6B5045;
+  --t-video: #554E64;
+  --couv-encre: #ECE7DC;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -282,10 +308,9 @@ button.mot:hover { border-color: var(--accent); color: var(--accent); }
 .couv-dessinee {
   display: flex; flex-direction: column; gap: 6px;
   padding: 10% 9% 9%; overflow: hidden;
-  background: var(--t-livre); color: #1C1B18;
+  background: var(--t-livre); color: var(--couv-encre);
   container-type: inline-size;
 }
-@media (prefers-color-scheme: dark) { .couv-dessinee { color: #ECE7DC; } }
 .couv-dessinee.type-article { background: var(--t-article); }
 .couv-dessinee.type-projet { background: var(--t-projet); }
 .couv-dessinee.type-site { background: var(--t-site); }
@@ -504,6 +529,12 @@ input.grand { font-size: 24px; min-height: 52px; }
 textarea.synonymes { width: 100%; font: 400 13.5px/1.7 var(--mono); }
 .apercu-import { width: 100%; display: grid; gap: 10px; padding: 14px; background: var(--carte); border: 1px solid var(--filet); }
 .petit-texte { margin: 0; padding-left: 18px; color: var(--encre-2); max-height: 220px; overflow: auto; }
+
+.bandeau-demo {
+  margin: 0; padding: 8px var(--marge); text-align: center;
+  background: var(--accent-doux); color: var(--encre); font-size: 12px; line-height: 1.4;
+}
+.bandeau-demo a { color: var(--accent); }
 
 /* message bref */
 .toast {

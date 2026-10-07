@@ -9,6 +9,7 @@ import { Accueil } from './composants/Accueil';
 import { FicheVue } from './composants/FicheVue';
 import { Formulaire, type Preremplissage } from './composants/Formulaire';
 import { Reglages } from './composants/Reglages';
+import { DEMO } from './lib/demo';
 
 type Phase = { nom: 'chargement' } | { nom: 'connexion'; configure: boolean } | { nom: 'erreur'; message: string } | { nom: 'prete' };
 
@@ -129,6 +130,11 @@ export function App() {
 
   return (
     <Ctx.Provider value={ctx}>
+      {DEMO && (
+        <p className="bandeau-demo mono">
+          Aperçu de démonstration : tes essais restent dans ce navigateur. <a href="#/reglages">En savoir plus</a>
+        </p>
+      )}
       <EnTete />
       <main className="page">{contenu}</main>
       {message && <div className="toast" role="status">{message}</div>}

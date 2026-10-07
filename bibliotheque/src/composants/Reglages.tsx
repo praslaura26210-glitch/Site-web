@@ -5,6 +5,7 @@ import { api, srcImage } from '../lib/api';
 import { lireFavoris, estVideo, type Favori } from '../lib/favoris';
 import { normaliser } from '../lib/recherche';
 import { creerZip } from '../lib/zip';
+import { DEMO, reinitialiserDemo } from '../lib/demo';
 import { Icone } from './Icone';
 
 export function Reglages() {
@@ -14,10 +15,14 @@ export function Reglages() {
       <MotsCles />
       <Synonymes />
       <ImportFavoris />
-      <Completer />
-      <Sauvegarde />
-      <Installer />
-      <section className="reglage">
+      {DEMO ? <Demo /> : (
+        <>
+          <Completer />
+          <Sauvegarde />
+          <Installer />
+        </>
+      )}
+      {!DEMO && <section className="reglage">
         <h2 className="etiquette">Session</h2>
         <button className="bouton" onClick={async () => {
           await api.deconnexion().catch(() => {});
@@ -25,8 +30,36 @@ export function Reglages() {
           if ('caches' in window) for (const k of await caches.keys()) await caches.delete(k);
           location.href = '/';
         }}>Se déconnecter de cet appareil</button>
-      </section>
+      </section>}
     </div>
+  );
+}
+
+function Demo() {
+  const { remplacer, notifier, naviguer } = useBiblio();
+  const [confirmer, setConfirmer] = useState(false);
+  return (
+    <section className="reglage">
+      <h2 className="etiquette">Aperçu de démonstration</h2>
+      <p className="aide">
+        Ici, tes essais restent dans ce navigateur. Sur le site en ligne s’ajoutent : la recherche par ISBN,
+        la récupération des images, la sauvegarde en .zip, l’installation sur le téléphone et le mot de passe.
+      </p>
+      {confirmer ? (
+        <div className="champ-ligne">
+          <button className="bouton danger" onClick={async () => {
+            reinitialiserDemo();
+            remplacer(await api.bibliotheque());
+            setConfirmer(false);
+            notifier('Démo remise à zéro.');
+            naviguer('');
+          }}>Oui, tout effacer</button>
+          <button className="bouton" onClick={() => setConfirmer(false)}>Annuler</button>
+        </div>
+      ) : (
+        <button className="bouton" onClick={() => setConfirmer(true)}>Effacer mes essais</button>
+      )}
+    </section>
   );
 }
 
@@ -35,6 +68,8 @@ function MotsCles() {
   const [choisi, setChoisi] = useState<string | null>(null);
   const [nom, setNom] = useState('');
   const [ajouts, setAjouts] = useState<Record<string, string>>({});
+  const [confirmer, setConfirmer] = useState(false);
+  const [groupeNouveau, setGroupeNouveau] = useState<{ fid: string; nom: string } | null>(null);
 
   const compte = useMemo(() => {
     const c = new Map<string, number>();
@@ -68,8 +103,12 @@ function MotsCles() {
   }
 
   function supprimer(de: string) {
-    const n = compte.get(de) ?? 0;
-    if (n && !confirm(`Retirer « ${de} » de ${n} fiche${n > 1 ? 's' : ''} ?`)) return;
+    // un mot-clé utilisé demande une seconde confirmation, dans la page
+    if ((compte.get(de) ?? 0) > 0 && !confirmer) {
+      setConfirmer(true);
+      return;
+    }
+    setConfirmer(false);
     const fam = copie();
     for (const f of fam) for (const g of f.groupes) g.mots = g.mots.filter((m) => m !== de);
     setChoisi(null);
@@ -99,12 +138,13 @@ function MotsCles() {
     envoyer(fam);
   }
 
-  function nouveauGroupe(fid: string) {
-    const n = prompt('Nom du nouveau groupe :')?.trim();
-    if (!n) return;
+  function creerGroupe() {
+    const n = groupeNouveau?.nom.trim();
+    if (!groupeNouveau || !n) return setGroupeNouveau(null);
     const fam = copie();
-    fam.find((f) => f.id === fid)?.groupes.push({ nom: n, mots: [] });
-    envoyer(fam);
+    fam.find((f) => f.id === groupeNouveau.fid)?.groupes.push({ nom: n, mots: [] });
+    setGroupeNouveau(null);
+    envoyer(fam, undefined, 'Groupe créé.');
   }
 
   const editeur = (m: string) => (
@@ -119,14 +159,22 @@ function MotsCles() {
           </optgroup>
         ))}
       </select>
-      <button className="bouton danger-doux" onClick={() => supprimer(m)}>Supprimer</button>
-      <button className="bouton-icone" onClick={() => setChoisi(null)} aria-label="Fermer"><Icone nom="fermer" taille={16} /></button>
+      {confirmer ? (
+        <>
+          <span className="aide">Retirer « {m} » de {compte.get(m)} fiche{(compte.get(m) ?? 0) > 1 ? 's' : ''} ?</span>
+          <button className="bouton danger" onClick={() => supprimer(m)}>Oui, supprimer</button>
+          <button className="bouton" onClick={() => setConfirmer(false)}>Annuler</button>
+        </>
+      ) : (
+        <button className="bouton danger-doux" onClick={() => supprimer(m)}>Supprimer</button>
+      )}
+      <button className="bouton-icone" onClick={() => { setChoisi(null); setConfirmer(false); }} aria-label="Fermer"><Icone nom="fermer" taille={16} /></button>
     </div>
   );
 
   const puce = (m: string) => (
     <span key={m} className="mot-reglage">
-      <button className={`mot${choisi === m ? ' actif' : ''}`} onClick={() => { setChoisi(choisi === m ? null : m); setNom(m); }}>
+      <button className={`mot${choisi === m ? ' actif' : ''}`} onClick={() => { setChoisi(choisi === m ? null : m); setNom(m); setConfirmer(false); }}>
         {m} {compte.get(m) ? <span className="compte">{compte.get(m)}</span> : null}
       </button>
     </span>
@@ -161,7 +209,23 @@ function MotsCles() {
               </div>
             );
           })}
-          <button className="lien-texte petit" onClick={() => nouveauGroupe(f.id)}>+ Nouveau groupe</button>
+          {groupeNouveau?.fid === f.id ? (
+            <div className="editeur-mot">
+              <input
+                id={`groupe-${f.id}`}
+                value={groupeNouveau.nom}
+                placeholder="Nom du groupe"
+                aria-label="Nom du nouveau groupe"
+                autoFocus
+                onChange={(e) => setGroupeNouveau({ fid: f.id, nom: e.target.value })}
+                onKeyDown={(e) => e.key === 'Enter' && creerGroupe()}
+              />
+              <button className="bouton principal" onClick={creerGroupe}>Créer</button>
+              <button className="bouton" onClick={() => setGroupeNouveau(null)}>Annuler</button>
+            </div>
+          ) : (
+            <button className="lien-texte petit" onClick={() => setGroupeNouveau({ fid: f.id, nom: '' })}>+ Nouveau groupe</button>
+          )}
         </div>
       ))}
       {orphelins.length > 0 && (
