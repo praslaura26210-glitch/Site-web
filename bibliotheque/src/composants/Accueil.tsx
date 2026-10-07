@@ -198,7 +198,6 @@ export function Accueil() {
 
   const fiches = filtrees.map((r) => r.fiche);
   const travail = page === 'travail';
-  const avecLus = rayon === 'livres' || rayon === 'articles' || !rayon;
 
   return (
     <div>
@@ -211,7 +210,6 @@ export function Accueil() {
         <div className="barre-filtres">
           {rayon === 'projets' || (page === 'auteur' && base.some((f) => f.type === 'projet')) ? <ChoixArchitecte actuel={page === 'auteur' ? param : ''} /> : <span />}
           <span className="champ-ligne">
-            {avecLus && <span className="legende"><span className="point-lu" /> lu</span>}
             <select id="tri" className="tri" value={tri} aria-label="Trier" onChange={(e) => setTri(e.target.value as Tri)}>
               <option value="recents">Les plus récents</option>
               <option value="titre">Par titre</option>
@@ -258,7 +256,7 @@ function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
   // quelques fiches seulement ; le reste avec « Voir plus »
-  const LIMITE: Record<Rayon, number> = { livres: 6, articles: 4, projets: 6 };
+  const LIMITE: Record<Rayon, number> = { livres: 8, articles: 4, projets: 8 };
 
   if (!biblio.fiches.length) {
     return (

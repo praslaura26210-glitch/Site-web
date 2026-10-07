@@ -892,3 +892,50 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 .fiche-sous-titre { font: 400 clamp(19px, 2vw, 24px)/1.3 var(--titre); color: var(--encre-2); margin-top: -6px; }
 .carte-projet-texte .carte-sous-titre { font: 400 14px/1.25 var(--titre); color: rgba(255,255,255,.88); }
 .infos-projet dd button { text-align: left; }
+
+/* ---------- retouches : logo, cœur au trait, accueil compact, fiche projet ---------- */
+
+.marque { display: inline-flex; align-items: flex-end; gap: 12px; }
+.marque .logo { color: var(--terracotta); flex: none; margin-bottom: 2px; }
+@media (max-width: 960px) { .marque { gap: 9px; font-size: 27px; } .marque .logo { width: 42px; height: auto; } }
+
+/* cœur de l'en-tête : au trait, comme le bouton + */
+.lien-coeur svg path { fill: none !important; stroke-width: 1.9; }
+.lien-coeur[aria-current='page'] svg path { fill: currentColor !important; }
+
+/* accueil : tout tient sur le premier écran */
+.accueil .section { gap: 14px; padding: 20px 0 6px; }
+.accueil .section:first-child { padding-top: 14px; }
+.accueil .section-tete { padding-bottom: 8px; }
+.accueil .section-tete h2 { font-size: 28px; }
+.accueil .grille.livres, .accueil .grille.projets { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 16px 20px; }
+.accueil .carte-projet-petit .carte-image { aspect-ratio: 4 / 3; }
+.accueil .carte { gap: 10px; }
+.accueil .carte-titre { font-size: 16.5px; -webkit-line-clamp: 2; }
+.accueil .carte-meta { font-size: 12.5px; }
+.accueil .rangee-vide { padding: 0; }
+@media (max-width: 960px) {
+  .accueil .section { padding: 16px 0 4px; gap: 12px; }
+  .accueil .section-tete h2 { font-size: 24px; }
+  .accueil .grille.livres, .accueil .grille.projets { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 12px; }
+  .accueil .grille.livres > li:nth-child(n+4), .accueil .grille.projets > li:nth-child(n+4) { display: none; }
+  .accueil .carte-titre { font-size: 14.5px; }
+  .accueil .carte-meta { font-size: 11.5px; }
+}
+
+/* fiche projet : un vrai trait entre l'image et les informations */
+.projet-corps { border-top: 1px solid var(--encre); padding-top: 26px; }
+.fiche-projet .infos-projet { border-top: 0; }
+.fiche-projet .infos-projet div:first-child { padding-top: 0; }
+.fiche-projet .infos-projet dt { font: 300 11px/1.3 var(--texte); letter-spacing: .16em; color: var(--encre-3); }
+.fiche-projet .infos-projet dd { font: 600 21px/1.25 var(--titre); color: var(--encre); }
+.fiche-projet .infos-projet dd a { font: 400 15px var(--texte); color: var(--encre); text-decoration: underline; text-decoration-color: var(--encre-3); text-underline-offset: 4px; }
+.fiche-projet .infos-projet dd a:hover { color: var(--terracotta); }
+.projet-texte .texte-projet { font: 350 16.5px/1.8 var(--texte); color: var(--encre); }
+@media (max-width: 960px) {
+  .fiche-projet .infos-projet div:nth-child(2) { padding-top: 0; }
+  .fiche-projet .infos-projet dd { font-size: 19px; }
+  .projet-texte .texte-projet { font-size: 16px; }
+}
+
+@media (max-width: 960px) { .accueil .carte-projet-petit .carte-image { aspect-ratio: 1 / 1; } }

@@ -1,11 +1,12 @@
 import { Fragment, useEffect, useState } from 'react';
-import type { Fiche } from '../types';
-import { estDessin, rayonDe } from '../types';
+import type { Fiche, Image } from '../types';
+import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { compresser } from '../lib/images';
+import { dessinConnu, detecter } from '../lib/dessins';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
 
@@ -494,9 +495,16 @@ export function FicheVue({ id }: { id: string }) {
 
 /** Plans, coupes, façades : en quinconce sur deux colonnes, chaque image entière, avec sa légende. */
 function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void }) {
-  // les photos d'abord, puis les plans, coupes et façades
+  // les photos d'abord, puis les plans, coupes et façades (reconnus tout seuls, ou indiqués)
+  const [, setVu] = useState(0);
+  useEffect(() => {
+    let actif = true;
+    detecter(fiche.images.slice(1), srcImage).then((c) => { if (c && actif) setVu((x) => x + 1); });
+    return () => { actif = false; };
+  }, [fiche.images]);
   const tous = fiche.images.slice(1).map((im, k) => ({ im, i: k + 1 }));
-  const documents = [...tous.filter((d) => !estDessin(d.im)), ...tous.filter((d) => estDessin(d.im))];
+  const plan = (im: Image) => dessinConnu(im) ?? false;
+  const documents = [...tous.filter((d) => !plan(d.im)), ...tous.filter((d) => plan(d.im))];
   const colonnes = [documents.filter((_, k) => k % 2 === 0), documents.filter((_, k) => k % 2 === 1)];
   const ajout = (
     <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
@@ -619,8 +627,8 @@ function Visionneuse({ fiche, depart, fermer, enregistrer }: { fiche: Fiche; dep
                 </label>
                 <button onClick={() => setLegende(im.credit ?? '')}>Légende</button>
                 {fiche.type !== 'livre' && (
-                  <button onClick={() => images(fiche.images.map((x) => (x.id === im.id ? { ...x, dessin: !estDessin(x) } : x)), estDessin(im) ? 'Rangée avec les photos.' : 'Rangée avec les plans.')}>
-                    {estDessin(im) ? 'C’est une photo' : 'C’est un plan'}
+                  <button onClick={() => images(fiche.images.map((x) => (x.id === im.id ? { ...x, dessin: !(dessinConnu(x) ?? false) } : x)), dessinConnu(im) ? 'Rangée avec les photos.' : 'Rangée avec les plans.')}>
+                    {dessinConnu(im) ? 'C’est une photo' : 'C’est un plan'}
                   </button>
                 )}
                 {i > 0 && <button onClick={() => { images([im, ...fiche.images.filter((x) => x.id !== im.id)], 'Image mise en premier.'); setI(0); }}>Mettre en premier</button>}
