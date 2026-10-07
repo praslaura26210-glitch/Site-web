@@ -56,11 +56,11 @@ function completerVocabulaire(b: Bibliotheque) {
 async function charger(): Promise<Bibliotheque> {
   const b = await lireBibliotheque();
   if (!b) {
-    const fiches = DEPART.fiches.map(sansDepuis);
-    await ecrireImagesDepart(fiches);
+    // site tout neuf : il part de la bibliothèque faite sur claude.ai
     const neuve: Bibliotheque = {
-      version: 1, rev: 1, fiches, categories: DEPART.categories ?? CATEGORIES_DEPART,
-      familles: FAMILLES_DEPART, synonymes: SYNONYMES_DEPART, departVersion: DEPART.version,
+      version: 1, rev: 1, fiches: structuredClone(CLAUDE.fiches), categories: structuredClone(CLAUDE.categories),
+      familles: structuredClone(CLAUDE.familles), synonymes: structuredClone(CLAUDE.synonymes),
+      departVersion: DEPART.version, repriseClaude: CLAUDE.version,
     };
     await ecrireBibliotheque(neuve);
     return neuve;
@@ -198,6 +198,10 @@ export async function gerer(req: Request): Promise<Response> {
       const corps = await req.json();
       const i = b.fiches.findIndex((f) => f.id === param);
       const ancienne = i >= 0 ? b.fiches[i] : undefined;
+      // une page restée ouverte avec une vieille copie ne doit pas écraser une fiche plus récente
+      if (ancienne && typeof corps.modifieLe === 'string' && corps.modifieLe < ancienne.modifieLe) {
+        return erreur('Cette fiche a changé entre-temps (autre appareil ?) : recharge la page.', 409);
+      }
       const fiche = nettoyer({ ...corps, id: param }, ancienne);
       if (i >= 0) b.fiches[i] = fiche;
       else b.fiches.push(fiche);

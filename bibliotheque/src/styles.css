@@ -1100,3 +1100,18 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 
 /* plus d'air entre le trait noir et les images du projet */
 .fiche-projet > .documents { padding-top: calc(var(--respire) * 2); }
+
+/* ===== Mosaïque des projets en colonnes réelles (sans chevauchement sur iPhone) ===== */
+.mosaique { columns: auto; display: flex; align-items: flex-start; gap: 14px; }
+.mosaique-col { flex: 1 1 0; min-width: 0; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.mosaique-col > li { margin: 0; }
+@media (max-width: 960px) {
+  .mosaique { gap: 6px; }
+  .mosaique-col { gap: 6px; }
+}
+
+/* ===== Accueil : vignettes de projets recadrées pour remplir leur cadre, titres répartis sur deux lignes ===== */
+.accueil .carte-projet-petit .carte-image { display: block; overflow: hidden; }
+.accueil .carte-projet-petit .carte-image > img.couv { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
+.accueil .carte-projet-petit:hover .carte-image > img.couv { transform: scale(1.03); }
+.carte-projet-petit .carte-titre { text-wrap: balance; }

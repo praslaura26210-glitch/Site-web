@@ -103,14 +103,45 @@ function PetitProjet({ fiche: f }: { fiche: Fiche }) {
   );
 }
 
-function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
-  if (rayon === 'projets') {
-    return (
-      <ul className="mosaique">
-        {fiches.map((f) => <li key={f.id}><CarteProjet fiche={f} /></li>)}
-      </ul>
-    );
+/** Nombre de colonnes de la mosaïque : 2 sur téléphone et tablette, 3 au-delà. */
+function useColonnes() {
+  const requete = '(max-width: 960px)';
+  const [n, setN] = useState(() => (matchMedia(requete).matches ? 2 : 3));
+  useEffect(() => {
+    const m = matchMedia(requete);
+    const suivre = () => setN(m.matches ? 2 : 3);
+    m.addEventListener('change', suivre);
+    return () => m.removeEventListener('change', suivre);
+  }, []);
+  return n;
+}
+
+/**
+ * Mosaïque d'images entières, rangée en colonnes par le code (chaque projet va dans la colonne la plus courte).
+ * Les colonnes CSS (`columns`) faisaient se chevaucher les images sur iPhone pendant leur chargement.
+ */
+function Mosaique({ fiches }: { fiches: Fiche[] }) {
+  const n = useColonnes();
+  const colonnes = Array.from({ length: n }, () => ({ haut: 0, fiches: [] as Fiche[] }));
+  for (const f of fiches) {
+    const i = f.images[0];
+    const c = colonnes.reduce((a, b) => (b.haut < a.haut ? b : a));
+    c.fiches.push(f);
+    c.haut += (i ? i.h / i.w : 0.75) + 0.04;
   }
+  return (
+    <div className="mosaique">
+      {colonnes.map((c, k) => (
+        <ul key={k} className="mosaique-col">
+          {c.fiches.map((f) => <li key={f.id}><CarteProjet fiche={f} /></li>)}
+        </ul>
+      ))}
+    </div>
+  );
+}
+
+function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
+  if (rayon === 'projets') return <Mosaique fiches={fiches} />;
   return (
     <ul className={`grille ${rayon}`}>
       {fiches.map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
