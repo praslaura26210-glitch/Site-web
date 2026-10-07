@@ -1,6 +1,6 @@
 /*
  * Bibliothèque — fond blanc, typographie fine.
- * Cormorant Garamond pour les titres, Jost pour le texte ; Instrument Serif pour « Bibliothèque » et les titres de rayon.
+ * Cormorant Garamond pour les titres, Jost (géométrique, léger) pour le texte.
  * Couleurs : la palette de Laura (warm clay, terra cotta, dusty orange, latte).
  */
 
@@ -38,7 +38,6 @@
   --couv-filet: #E0CDB3;
 
   --titre: 'Cormorant Garamond Variable', 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
-  --enseigne: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --texte: 'Jost Variable', Jost, 'Futura', 'Century Gothic', system-ui, sans-serif;
   --marge: clamp(16px, 4vw, 56px);
   --max: 1320px;
@@ -1072,15 +1071,14 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .section-tete, :root:not([data-theme="light"]) .tete-page .barre-filtres { border-bottom-color: #3A3430; } }
 .section-tete h2 a { text-transform: inherit; letter-spacing: inherit; font-weight: inherit; }
 
-/* ---------- polices : Instrument Serif seulement pour « Bibliothèque » et les titres de rayon ---------- */
-html { font-synthesis-weight: none; }
-.marque { font: 400 38px/1 var(--enseigne); letter-spacing: -.005em; }
-.section-tete h2, .accueil .section-tete h2 { font: 400 28px/1.1 var(--enseigne); letter-spacing: 0; text-transform: none; color: var(--encre); }
-.tete-page h1 { font: 400 34px/1.1 var(--enseigne); letter-spacing: 0; text-transform: none; }
+/* ---------- polices : Cormorant Garamond (titres) et Jost (texte), partout ---------- */
+.marque { font: 500 36px/1 var(--titre); letter-spacing: .005em; }
+.section-tete h2, .accueil .section-tete h2 { font: 500 30px/1.1 var(--titre); letter-spacing: 0; text-transform: none; color: var(--encre); }
+.tete-page h1 { font: 500 30px/1.1 var(--titre); letter-spacing: 0; text-transform: none; }
 .tete-page h1 .compte, .section-tete h2 .compte { display: none; }
 @media (max-width: 960px) {
-  .marque { font-size: 32px; }
-  .section-tete h2, .accueil .section-tete h2 { font-size: 23px; }
+  .marque { font-size: 30px; }
+  .section-tete h2, .accueil .section-tete h2 { font-size: 25px; }
   .tete-page h1 { font-size: 28px; }
 }
 
@@ -1089,6 +1087,13 @@ html { font-synthesis-weight: none; }
 /* fiche projet : un trait noir, comme celui du dessus, avant les images */
 .fiche-projet > .documents { border-top: 1px solid var(--encre); padding-top: clamp(24px, 3vw, 40px); }
 
-/* Instrument Serif est serrée : on espace un peu les lettres */
-.marque { letter-spacing: .045em; }
-.section-tete h2, .accueil .section-tete h2, .tete-page h1 { letter-spacing: .035em; }
+/* fiche projet : même espace au-dessus des informations, sous le site web, et entre le trait et les images */
+.fiche-projet { --respire: 30px; }
+.projet-corps { padding-top: var(--respire); }
+.fiche-projet .infos-projet div:last-child { padding-bottom: 0; }
+.fiche-projet .infos-projet { margin: 0; }
+.fiche-projet > .documents { margin-top: calc(var(--respire) - 36px); padding-top: var(--respire); }
+@media (max-width: 960px) {
+  .fiche-projet { --respire: 22px; }
+  .fiche-projet .infos-projet div:nth-last-child(2) { padding-bottom: 0; }
+}

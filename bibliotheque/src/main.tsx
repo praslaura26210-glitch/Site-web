@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/cormorant-garamond/wght.css';
 import '@fontsource-variable/cormorant-garamond/wght-italic.css';
 import '@fontsource-variable/jost/wght.css';
-import '@fontsource/instrument-serif/latin-400.css';
 import './styles.css';
 import { App } from './App';
 import { DEMO, installerDemo } from './lib/demo';
