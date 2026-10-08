@@ -47,7 +47,7 @@ export function Ouverture({ fin }: { fin: () => void }) {
       <svg ref={svg} viewBox={VUE_TRAITS} width="220">
         {TRAITS.map((d, i) => <path key={i} d={d} strokeWidth={EPAISSEUR} />)}
       </svg>
-      <p className="ouverture-nom">Arki</p>
+      <p className="ouverture-nom">Arkí</p>
     </div>
   );
 }
