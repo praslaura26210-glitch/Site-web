@@ -1,6 +1,6 @@
 {
-  "name": "Bibliothèque",
-  "short_name": "Bibliothèque",
+  "name": "Arki",
+  "short_name": "Arki",
   "description": "Livres, articles et références d'architecture.",
   "lang": "fr",
   "start_url": "/",
