@@ -222,7 +222,8 @@ export async function gerer(req: Request): Promise<Response> {
       const i = b.fiches.findIndex((f) => f.id === param);
       const ancienne = i >= 0 ? b.fiches[i] : undefined;
       // une page restée ouverte avec une vieille copie ne doit pas écraser une fiche plus récente
-      if (ancienne && typeof corps.modifieLe === 'string' && corps.modifieLe < ancienne.modifieLe) {
+      // (quelques minutes d'écart sont tolérées : une recherche d'image en arrière-plan ne doit pas bloquer un ajout)
+      if (ancienne && typeof corps.modifieLe === 'string' && Date.parse(ancienne.modifieLe) - Date.parse(corps.modifieLe) > 10 * 60_000) {
         return erreur('Cette fiche a changé entre-temps (autre appareil ?) : recharge la page.', 409);
       }
       const fiche = nettoyer({ ...corps, id: param }, ancienne);
