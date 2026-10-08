@@ -338,6 +338,7 @@ export function FicheVue({ id }: { id: string }) {
       )}
       {fiche.editeur && <div><dt>{NOM_EDITEUR[fiche.type]}</dt><dd>{fiche.editeur}</dd></div>}
       {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
+      {fiche.prix && <div><dt>Prix</dt><dd>{fiche.prix}</dd></div>}
       <div>
         <dt>Site web</dt>
         <dd>

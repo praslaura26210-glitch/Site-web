@@ -135,6 +135,7 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
     sousTitre: texte(f.sousTitre, 300) || undefined,
     auteurs: textes(f.auteurs),
     annee: texte(f.annee, 20),
+    prix: texte(f.prix, 500) || undefined,
     editeur: texte(f.editeur, 300),
     source: texte(f.source, 2000),
     images: (Array.isArray(f.images) ? f.images : [])

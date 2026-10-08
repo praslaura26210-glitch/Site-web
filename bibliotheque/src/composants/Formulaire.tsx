@@ -310,6 +310,13 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
           </div>
         </div>
 
+        {t === 'projet' && (
+          <div className="champ">
+            <label className="etiquette" htmlFor="prix">Prix et distinctions (facultatif)</label>
+            <input id="prix" placeholder="Ex. : Prix régional de la construction bois 2026" value={f.prix ?? ''} onChange={(e) => maj({ prix: e.target.value })} />
+          </div>
+        )}
+
         {t !== 'livre' && (
           <div className="champ">
             <label className="etiquette" htmlFor="source">{L.lien}</label>
