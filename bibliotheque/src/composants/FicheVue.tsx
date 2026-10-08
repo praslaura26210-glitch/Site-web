@@ -70,9 +70,13 @@ function ProjetsCites({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
           </li>
         ))}
         <li>
-          <a className="encart-ajout" href={`#/ajouter/projet/${encodeURIComponent(fiche.id)}`}>
+          <a
+            className="encart-ajout encart-ajout-petit"
+            href={`#/ajouter/projet/${encodeURIComponent(fiche.id)}`}
+            aria-label={`Ajouter un projet présenté dans ${fiche.type === 'livre' ? 'ce livre' : 'cet article'}`}
+            title={`Ajouter un projet présenté dans ${fiche.type === 'livre' ? 'ce livre' : 'cet article'}`}
+          >
             <Icone nom="plus" taille={20} />
-            Ajouter un projet présenté dans {fiche.type === 'livre' ? 'ce livre' : 'cet article'}
           </a>
         </li>
       </ul>
