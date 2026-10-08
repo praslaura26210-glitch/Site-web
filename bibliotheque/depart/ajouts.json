@@ -1,1 +1,330 @@
-{"version": 0, "ajouter": [], "modifier": []}
+{
+ "version": 1,
+ "ajouter": [
+  {
+   "annee": "2008",
+   "auteurs": [
+    "Alan Chu & Cristiano Kato"
+   ],
+   "categories": [
+    "memoire"
+   ],
+   "citations": [],
+   "citeDans": [
+    "darmon-ruines"
+   ],
+   "credit": "",
+   "creeLe": "2026-10-08T12:00:00.000Z",
+   "editeur": "Ilhabela, São Paulo, Brésil",
+   "emplacement": "",
+   "id": "box-house",
+   "images": [
+    {
+     "credit": "© Djan Chu",
+     "h": 1000,
+     "id": "ea21c581ff051a85ecbd553523520797",
+     "w": 1500
+    },
+    {
+     "credit": "© Djan Chu",
+     "h": 1000,
+     "id": "fffe3e1f8e71bc5ba0f55f3b936e17d7",
+     "w": 667
+    },
+    {
+     "credit": "© Djan Chu",
+     "h": 1000,
+     "id": "5a40bc9fe9344e26ba3ed75b2afa5fa2",
+     "w": 1500
+    },
+    {
+     "credit": "© Djan Chu",
+     "h": 800,
+     "id": "60402d0dd8b8bd603fb22f0da5c48932",
+     "w": 1068
+    },
+    {
+     "h": 1000,
+     "id": "936e1f00caab51019d65a79fbfcf91fd",
+     "w": 550
+    },
+    {
+     "h": 950,
+     "id": "758e2f3a6fd03dd877dd9b6d28e7697b",
+     "w": 1349
+    }
+   ],
+   "liens": [],
+   "modifieLe": "2026-10-08T10:20:30.627Z",
+   "motsCles": [
+    "ruine",
+    "pierre",
+    "réemploi",
+    "bois",
+    "boîte",
+    "paysage",
+    "Alan Chu & Cristiano Kato",
+    "Brésil"
+   ],
+   "resume": "Maison de gardien de 36 m², à 100 m au-dessus du canal de São Sebastião, au pied de deux énormes rochers. Sur le terrain se trouvait une petite maison en pierre couverte de tuiles en terre cuite. La chambre est logée dans une boîte blanche suspendue, posée sur un mur de pierre et tournée vers la mer ; le séjour, la cuisine et la salle de bains restent au niveau de la rue, sous la boîte, éclairés par des portes vitrées. Le bois des échafaudages du chantier a été réemployé pour les portes, les fenêtres, l’escalier et les meubles.",
+   "source": "https://www.archdaily.com/18262/box-house-alan-chu-and-cristiano-kato",
+   "sousTitre": "",
+   "statut": "a-lire",
+   "titre": "Box House",
+   "type": "projet",
+   "voirAussi": []
+  },
+  {
+   "annee": "2002",
+   "auteurs": [
+    "NRJA"
+   ],
+   "categories": [
+    "memoire"
+   ],
+   "citations": [],
+   "citeDans": [
+    "darmon-ruines"
+   ],
+   "credit": "",
+   "creeLe": "2026-10-08T12:01:00.000Z",
+   "editeur": "Saka, Lettonie",
+   "emplacement": "",
+   "id": "drupas",
+   "images": [
+    {
+     "h": 750,
+     "id": "4fdf96b17e31b2fd9833fe7c8fdfb912",
+     "w": 750
+    },
+    {
+     "h": 1000,
+     "id": "212bcce36609cb1676f5d15753daab53",
+     "w": 665
+    },
+    {
+     "h": 1000,
+     "id": "0832f3cbcd595d14ec2849c461d70ec3",
+     "w": 665
+    },
+    {
+     "h": 488,
+     "id": "12ac23ef799b6e4c8d09ad01239e38b7",
+     "w": 1582
+    },
+    {
+     "h": 628,
+     "id": "be5c1c54e77091e564a21ea1f9a3b364",
+     "w": 1000
+    },
+    {
+     "h": 557,
+     "id": "abc8da5f810a59f6f269e9718612aea4",
+     "w": 1000
+    }
+   ],
+   "liens": [],
+   "modifieLe": "2026-10-08T10:22:30.554Z",
+   "motsCles": [
+    "ruine",
+    "pierre",
+    "verre",
+    "grange",
+    "dialogue avec l’existant",
+    "NRJA",
+    "Lettonie"
+   ],
+   "resume": "Maison familiale d’environ 200 m² sur la côte balte, construite dans les restes d’une grange du XIXᵉ siècle (architectes : Uldis Lukševics et Mārtiņš Osāns). Tout tient sur un seul niveau, avec une cour et une terrasse sur le toit pour regarder la mer et les prés. Le projet joue des contrastes : le vent de la mer et la chaleur de la maison, le verre lisse et la vieille pierre. Grand Prix du Prix letton d’architecture 2005, nommé au prix Mies van der Rohe 2007.",
+   "source": "https://www.archdaily.com/14450/house-of-ruins-drupas-nrja",
+   "sousTitre": "",
+   "statut": "a-lire",
+   "titre": "House of Ruins",
+   "type": "projet",
+   "voirAussi": []
+  },
+  {
+   "annee": "",
+   "auteurs": [
+    "Jesús Castillo Oli"
+   ],
+   "categories": [
+    "memoire"
+   ],
+   "citations": [],
+   "citeDans": [
+    "darmon-ruines"
+   ],
+   "credit": "",
+   "creeLe": "2026-10-08T12:02:00.000Z",
+   "editeur": "Porquera de los Infantes, Palencia, Espagne",
+   "emplacement": "",
+   "id": "ruina-habitada",
+   "images": [
+    {
+     "credit": "© Ángel Baltanás",
+     "h": 767,
+     "id": "f26f34435f427784e0f6e1a00a1b3a79",
+     "w": 1150
+    },
+    {
+     "credit": "© Ángel Baltanás",
+     "h": 1487,
+     "id": "7e7f82176d8c00633a4c1bfe916e2b12",
+     "w": 1150
+    },
+    {
+     "credit": "© Ángel Baltanás",
+     "h": 767,
+     "id": "9466820e33332a7e990273c8aa10e8ab",
+     "w": 1150
+    }
+   ],
+   "liens": [],
+   "modifieLe": "2026-10-08T10:24:37.656Z",
+   "motsCles": [
+    "ruine",
+    "pierre",
+    "brique",
+    "bois",
+    "verre",
+    "cour",
+    "Jesús Castillo Oli",
+    "Espagne"
+   ],
+   "resume": "Un ancien grenier jamais achevé, abandonné pendant plus de cinquante ans : des murs de pierre maçonnée surmontés de brique rouge, sans toit ni planchers. La nouvelle structure en bois n’occupe qu’une partie de l’enveloppe ; les vieux murs deviennent la clôture d’une cour semi-privée. 115 m² sur deux niveaux : séjour, cuisine et salle de bains en bas, chambre en haut. Prix d’architecture du Colegio Oficial de Arquitectos de León en 2006.",
+   "source": "https://www.homedsgn.com/stunning-transformed-ruins-loft/",
+   "sousTitre": "",
+   "statut": "a-lire",
+   "titre": "La Ruina Habitada",
+   "type": "projet",
+   "voirAussi": []
+  },
+  {
+   "annee": "",
+   "auteurs": [
+    "naumannarchitektur",
+    "fnp architekten"
+   ],
+   "categories": [
+    "memoire"
+   ],
+   "citations": [],
+   "citeDans": [
+    "darmon-ruines"
+   ],
+   "credit": "",
+   "creeLe": "2026-10-08T12:03:00.000Z",
+   "editeur": "Ramsen, Rhénanie-Palatinat, Allemagne",
+   "emplacement": "",
+   "id": "schaustall-eiswoog",
+   "images": [
+    {
+     "credit": "© Zooey Braun",
+     "h": 667,
+     "id": "e885e860c51e35c806be121b40c5427c",
+     "w": 1000
+    },
+    {
+     "credit": "© Zooey Braun",
+     "h": 1000,
+     "id": "f7f5823a96161d12bf6ed905d559dcae",
+     "w": 667
+    },
+    {
+     "h": 280,
+     "id": "1bb536776b42aa48358a4de51e66b780",
+     "w": 410
+    },
+    {
+     "dessin": true,
+     "h": 992,
+     "id": "86117b0c233fb47c951802b6cda3bc94",
+     "w": 660
+    }
+   ],
+   "liens": [],
+   "modifieLe": "2026-10-08T10:29:56.879Z",
+   "motsCles": [
+    "ruine",
+    "pierre",
+    "bois",
+    "préfabrication",
+    "maison dans la maison",
+    "naumannarchitektur",
+    "Allemagne",
+    "boite"
+   ],
+   "resume": "Au bord du lac Eiswoog, une porcherie de 1780, en partie détruite pendant la Seconde Guerre mondiale, presque bonne à démolir. Plutôt que de reconstruire, les architectes glissent une maison dans la maison : une boîte en panneaux de bois lamellé (LVL de 39 mm), préfabriquée en atelier et descendue à la grue par le toit ouvert, sans toucher aux murs de pierre. Un nouveau toit abrite l’ancien et le neuf ; les fenêtres de la boîte reprennent les ouvertures du mur. Le bâtiment sert de salle d’exposition. Prix d’architecture du BDA Rhénanie-Palatinat.",
+   "source": "https://www.bda-bund.de/awards/schaustall-am-eiswoog/",
+   "sousTitre": "",
+   "statut": "a-lire",
+   "titre": "S(ch)austall am Eiswoog",
+   "type": "projet",
+   "voirAussi": []
+  },
+  {
+   "annee": "2013",
+   "auteurs": [
+    "Jesús Castillo Oli"
+   ],
+   "categories": [
+    "memoire"
+   ],
+   "citations": [],
+   "citeDans": [
+    "darmon-ruines"
+   ],
+   "credit": "",
+   "creeLe": "2026-10-08T12:04:00.000Z",
+   "editeur": "Matamorisca, Palencia, Espagne",
+   "emplacement": "",
+   "id": "matamorisca",
+   "images": [
+    {
+     "credit": "© Justino Díez Aspecto",
+     "h": 880,
+     "id": "572f7d0aedcbdddc8d3781af35f9578f",
+     "w": 1600
+    },
+    {
+     "credit": "© Justino Díez Aspecto",
+     "h": 1067,
+     "id": "5619277b6d9d7b75dd8b93e9a342d539",
+     "w": 1600
+    },
+    {
+     "credit": "© Justino Díez Aspecto",
+     "h": 1067,
+     "id": "b83b31766b7edb9fb569f6206fa05cf3",
+     "w": 1600
+    }
+   ],
+   "liens": [],
+   "modifieLe": "2026-10-08T10:28:57.534Z",
+   "motsCles": [
+    "ruine",
+    "pierre",
+    "bois",
+    "verre",
+    "dialogue avec l’existant",
+    "Jesús Castillo Oli",
+    "Espagne"
+   ],
+   "resume": "Ni restauration ni réhabilitation : le nouveau projet se glisse entre les murs en ruine de la maison d’origine. Il en comprend la typologie mais garde sa propre composition et ses propres usages. La nouvelle architecture a besoin de la ruine pour prendre sens, et la vieille maison a besoin de ce nouvel occupant pour survivre. Faute de budget, l’intervention se limite à un étage : celui du haut, plus ouvert et plus haut, qui échappe à l’humidité et au froid et profite du soleil par le toit ; le rez-de-chaussée garde son sol de pierre et ses pièces étroites. Finaliste de la XIIᵉ Biennale espagnole d’architecture et d’urbanisme.",
+   "source": "https://lacasadelaarquitectura.es/recurso/reforma-de-vivienda-unifamiliar-en-matamorisca/c1009510-84b1-409c-ad5a-8f18dacda7fe",
+   "sousTitre": "",
+   "statut": "a-lire",
+   "titre": "Maison à Matamorisca",
+   "type": "projet",
+   "voirAussi": []
+  }
+ ],
+ "modifier": [
+  {
+   "id": "paraloup",
+   "ajouterMotsCles": [
+    "boite"
+   ]
+  }
+ ]
+}

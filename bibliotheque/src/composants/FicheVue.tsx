@@ -83,15 +83,14 @@ function ProjetsCites({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
 /** Mes notes repliées : on les déroule quand on veut les relire. Les projets du livre y sont rangés. */
 function MesNotes({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
   const texte = fiche.retenu ?? '';
-  const minutes = Math.max(1, Math.round(texte.split(/\s+/).length / 230));
   const avecProjets = fiche.type !== 'projet';
   return (
     <details className="deroulant">
       <summary>
         <h2>Mes notes</h2>
         <span className="discret">
-          {texte ? `${minutes} min de lecture` : 'pas encore de notes'}
-          {projets.length > 0 && ` · ${projets.length} projet${projets.length > 1 ? 's' : ''}`}
+          {texte ? '' : 'pas encore de notes'}
+          {projets.length > 0 && `${texte ? '' : ' · '}${projets.length} projet${projets.length > 1 ? 's' : ''}`}
         </span>
         <span className="fleche"><Icone nom="droite" taille={20} /></span>
       </summary>

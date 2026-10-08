@@ -21,9 +21,9 @@ const CLAUDE = claude as unknown as { version: number; fiches: Fiche[]; categori
 /**
  * Ajouts ponctuels, appliqués une seule fois sans toucher au reste :
  * les fiches de `ajouter` arrivent si elles n'existent pas encore ;
- * `modifier` ne change que les champs indiqués d'une fiche existante.
+ * `modifier` ne change que les champs indiqués d'une fiche existante, ou lui ajoute des mots-clés.
  */
-const AJOUTS = ajouts as unknown as { version: number; ajouter: Fiche[]; modifier: { id: string; champs: Partial<Fiche> }[] };
+const AJOUTS = ajouts as unknown as { version: number; ajouter: Fiche[]; modifier: { id: string; champs?: Partial<Fiche>; ajouterMotsCles?: string[] }[] };
 
 function appliquerAjouts(b: Bibliotheque): boolean {
   if ((b.ajoutsVersion ?? 0) >= AJOUTS.version) return false;
@@ -31,7 +31,11 @@ function appliquerAjouts(b: Bibliotheque): boolean {
   for (const f of AJOUTS.ajouter) if (!ids.has(f.id)) b.fiches.push(structuredClone(f));
   for (const m of AJOUTS.modifier) {
     const f = b.fiches.find((x) => x.id === m.id);
-    if (f) Object.assign(f, structuredClone(m.champs), { modifieLe: new Date().toISOString() });
+    if (!f) continue;
+    if (m.champs) Object.assign(f, structuredClone(m.champs));
+    // mots-clés ajoutés à ceux de la fiche, sans retirer les autres
+    for (const mot of m.ajouterMotsCles ?? []) if (!f.motsCles.includes(mot)) f.motsCles.push(mot);
+    f.modifieLe = new Date().toISOString();
   }
   b.ajoutsVersion = AJOUTS.version;
   b.rev++;
