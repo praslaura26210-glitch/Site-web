@@ -75,13 +75,15 @@ export default {
     const url = new URL(request.url);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     definirEnv(env as unknown as Record<string, unknown>);
-    const coffre = env.COFFRE.get(env.COFFRE.idFromName('bibliotheque'));
+    // le lien vers le coffre est recréé à chaque appel : Cloudflare interdit de réutiliser
+    // celui d'une autre requête (deux requêtes simultanées se le volaient)
+    const coffre = () => env.COFFRE.get(env.COFFRE.idFromName('bibliotheque'));
     const stockage: Stockage = {
-      lireBibliotheque: () => coffre.lireBibliotheque(),
-      ecrireBibliotheque: (b) => coffre.ecrireBibliotheque(b),
-      lireImage: (id) => coffre.lireImage(id),
-      ecrireImage: (id, data, type) => coffre.ecrireImage(id, data, type),
-      supprimerImage: (id) => coffre.supprimerImage(id),
+      lireBibliotheque: () => coffre().lireBibliotheque(),
+      ecrireBibliotheque: (b) => coffre().ecrireBibliotheque(b),
+      lireImage: (id) => coffre().lireImage(id),
+      ecrireImage: (id, data, type) => coffre().ecrireImage(id, data, type),
+      supprimerImage: (id) => coffre().supprimerImage(id),
     };
     definirStockage(stockage);
     const reponse = await gerer(request);
