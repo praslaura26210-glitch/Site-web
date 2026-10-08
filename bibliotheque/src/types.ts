@@ -112,6 +112,8 @@ export interface Bibliotheque {
   departVersion?: number;
   /** Version de la bibliothèque claude.ai déjà reprise (depart/claude.json). */
   repriseClaude?: number;
+  /** Version des ajouts ponctuels déjà appliqués (depart/ajouts.json). */
+  ajoutsVersion?: number;
 }
 
 export const TYPES: TypeFiche[] = ['livre', 'article', 'projet', 'site', 'video'];

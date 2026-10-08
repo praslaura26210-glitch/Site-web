@@ -3,6 +3,7 @@ import { TYPES, STATUTS } from '../src/types';
 import { CATEGORIES_DEPART, FAMILLES_DEPART, SYNONYMES_DEPART } from '../src/vocabulaire';
 import depart from '../depart/depart.json';
 import claude from '../depart/claude.json';
+import ajouts from '../depart/ajouts.json';
 import { lireBibliotheque, ecrireBibliotheque, lireImage, ecrireImage, supprimerImage } from './stockage';
 import { cookieFin, cookieSession, estConnecte, motDePasseConfigure, verifierMotDePasse } from './session';
 import { chercherApercu, chercherIsbn, telechargerImage } from './recuperation';
@@ -16,6 +17,26 @@ const erreur = (message: string, status: number) => json({ erreur: message }, st
 type FicheDepart = Fiche & { depuis: number };
 /** Bibliothèque faite sur claude.ai : elle remplace une fois le contenu du site (photos dans public/depart-images). */
 const CLAUDE = claude as unknown as { version: number; fiches: Fiche[]; categories: Categorie[]; familles: Famille[]; synonymes: string[][] };
+
+/**
+ * Ajouts ponctuels, appliqués une seule fois sans toucher au reste :
+ * les fiches de `ajouter` arrivent si elles n'existent pas encore ;
+ * `modifier` ne change que les champs indiqués d'une fiche existante.
+ */
+const AJOUTS = ajouts as unknown as { version: number; ajouter: Fiche[]; modifier: { id: string; champs: Partial<Fiche> }[] };
+
+function appliquerAjouts(b: Bibliotheque): boolean {
+  if ((b.ajoutsVersion ?? 0) >= AJOUTS.version) return false;
+  const ids = new Set(b.fiches.map((f) => f.id));
+  for (const f of AJOUTS.ajouter) if (!ids.has(f.id)) b.fiches.push(structuredClone(f));
+  for (const m of AJOUTS.modifier) {
+    const f = b.fiches.find((x) => x.id === m.id);
+    if (f) Object.assign(f, structuredClone(m.champs), { modifieLe: new Date().toISOString() });
+  }
+  b.ajoutsVersion = AJOUTS.version;
+  b.rev++;
+  return true;
+}
 
 const DEPART = depart as unknown as { version: number; fiches: FicheDepart[]; categories?: Categorie[]; images: Record<string, string> };
 
@@ -62,6 +83,7 @@ async function charger(): Promise<Bibliotheque> {
       familles: structuredClone(CLAUDE.familles), synonymes: structuredClone(CLAUDE.synonymes),
       departVersion: DEPART.version, repriseClaude: CLAUDE.version,
     };
+    appliquerAjouts(neuve);
     await ecrireBibliotheque(neuve);
     return neuve;
   }
@@ -77,6 +99,7 @@ async function charger(): Promise<Bibliotheque> {
     await ecrireBibliotheque(b);
     return b;
   }
+  if (appliquerAjouts(b)) await ecrireBibliotheque(b);
   // bibliothèques créées avant l'ajout des catégories
   b.categories ??= structuredClone(DEPART.categories ?? CATEGORIES_DEPART);
   for (const f of b.fiches) f.categories ??= [];
@@ -297,6 +320,7 @@ export async function gerer(req: Request): Promise<Response> {
         synonymes: Array.isArray(corps.synonymes) ? corps.synonymes.map(textes).filter((l: string[]) => l.length > 1) : SYNONYMES_DEPART,
         departVersion: DEPART.version,
         repriseClaude: CLAUDE.version,
+        ajoutsVersion: AJOUTS.version,
       };
       await ecrireBibliotheque(b);
       return json(b);

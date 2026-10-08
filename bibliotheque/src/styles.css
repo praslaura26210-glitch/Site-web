@@ -1164,4 +1164,4 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 @media (max-width: 700px) { .rangees .section-tete h2 { font-size: 17px; } }
 
 /* nom de l'application sous le dessin d'ouverture */
-.ouverture-nom { margin: 0; text-align: center; font: 500 34px/1 var(--titre); letter-spacing: .06em; color: var(--encre); }
+.ouverture-nom { margin: 0; text-align: center; font: 300 32px/1 var(--texte); letter-spacing: .03em; color: var(--terracotta); }
