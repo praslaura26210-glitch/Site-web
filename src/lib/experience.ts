@@ -3,7 +3,7 @@ import { dict, type Lang } from '@/i18n';
 import type { XPDonnees, XPDessin } from '@/experience/outils';
 import { couverture } from '@/components/home/ProjetsGrille';
 import { PDF_HREF } from '@/components/chrome/liens';
-import { getProjets, type Projet } from './content';
+import { getProjet, getProjets, type Projet } from './content';
 import { media } from './media';
 import { CREDITS, MISES, type Bloc } from './sequences';
 
@@ -18,6 +18,23 @@ const refsDe = (b: Bloc): string[] => {
     case 'composition': return b.rangs.flat().map((x) => x.r);
     default: return [];
   }
+};
+
+/** Nature d'une pièce du projet, d'après son type et sa légende ; l'ordre de NATURES est celui du feuilletage. */
+export const NATURES = ['croquis', 'maquette', 'site', 'plan', 'coupe', 'axo', 'detail', 'materiaux', 'experimentation', 'rendu', 'autre'] as const;
+const nature = (legende: string, type: string, nom: string) => {
+  const l = legende.toLowerCase();
+  if (type === 'croquis' || /croquis|à la main/.test(l)) return 'croquis';
+  if (/maquette/.test(l)) return 'maquette';
+  if (/^experimentation/.test(nom) || /expérimentation|taille de la pierre/.test(l)) return 'experimentation';
+  if (/plan masse/.test(l)) return 'site';
+  if (/matériaux/.test(l)) return 'materiaux';
+  if (/détail|assemblage|garde-corps|limon/.test(l)) return 'detail';
+  if (/axonom/.test(l)) return 'axo';
+  if (/coupe|façade|vue de face/.test(l)) return 'coupe';
+  if (/plan/.test(l)) return 'plan';
+  if (type === 'rendu' || /perspective/.test(l)) return 'rendu';
+  return 'autre';
 };
 
 /** Les une ou deux premières phrases du texte de présentation. */
@@ -36,6 +53,7 @@ export function donneesExperience(lang: Lang): XPDonnees {
     const vus = new Set<string>();
     const cr = CREDITS[p.slug] || { defaut: '' };
     const mise = MISES[p.slug];
+    const pFr = lang === 'fr' ? p : getProjet(p.slug, 'fr'); // la nature se lit sur la légende française
     const refs = [...(mise ? [mise.ouverture] : []), ...(mise?.blocs || []).flatMap(refsDe)];
     for (const r of refs) {
       if (vus.has(r)) continue;
@@ -45,6 +63,7 @@ export function donneesExperience(lang: Lang): XPDonnees {
       dessins.push({
         id: ancreDessin(r), slug: p.slug, projet: p.titre, legende: m.legende, thumb: m.srcSmall || m.src, w: m.w, h: m.h, href: `/${lang}/projets/${p.slug}/#${ancreDessin(r)}`,
         preview: vect ? undefined : m.src, svg: m.svg, full: m.full, credit: cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined), dessin: m.kind === 'plan' || !!m.scan,
+        nature: nature(media(pFr, r).legende, p.images.find((i) => i.nom === r.replace(/^\w:/, ''))?.type || (m.kind === 'plan' ? 'plan' : ''), r.replace(/^\w:/, '')),
       });
     }
   }

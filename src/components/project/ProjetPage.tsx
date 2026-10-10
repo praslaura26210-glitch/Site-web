@@ -179,6 +179,9 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         </div>
       </section>
 
+      {/* feuilleter le projet : construit dans le navigateur (experience/feuilleter.ts) */}
+      <section className="wrap xp-fe" data-feuilleter aria-label={t.xp.feuilleter} />
+
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
 
       <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next} id="suite" data-chapitre={t.projet.next}>

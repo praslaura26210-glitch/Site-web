@@ -145,10 +145,6 @@
     "Toutes les images du projet"
    ],
    [
-    "L",
-    "Loupe sur les dessins (page projet)"
-   ],
-   [
     "Échap",
     "Fermer"
    ],
@@ -182,9 +178,6 @@
   "terrHorsCarte": "Sans commune précise",
   "terrSource": "Fond : contours IGN/INSEE (france-geojson), Rhône : Natural Earth.",
   "terrCarte": "Carte des lieux de mes projets, stages et études",
-  "loupe": "Loupe",
-  "loupeAide": "Survolez un dessin pour le lire de près · molette pour grossir · touche L pour fermer",
-  "loupeAideTactile": "Posez le doigt sur un dessin et déplacez-le pour le lire de près",
   "rdeEyebrow": "Mon rapport d'études",
   "rdePage": "p.",
   "rdeProjet": "Dans mes projets",
@@ -196,6 +189,55 @@
   "rdeFigure": "Cette image illustre la partie",
   "carteTitre": "Mes coordonnées dans votre téléphone",
   "carteTexte": "Scannez ce code avec l'appareil photo de votre téléphone : ma fiche contact s'ouvre, prête à être enregistrée.",
-  "carteLien": "Télécharger ma fiche contact (.vcf)"
+  "carteLien": "Télécharger ma fiche contact (.vcf)",
+  "feuilleter": "Feuilleter le projet",
+  "feuilleterPieces": "{n} pièces",
+  "feuilleterAide": "Glissez le long de la ligne pour feuilleter · cliquez l'image pour l'ouvrir en grand",
+  "natures": {
+   "croquis": [
+    "croquis",
+    "croquis"
+   ],
+   "maquette": [
+    "maquette",
+    "maquettes"
+   ],
+   "site": [
+    "plan masse",
+    "plans masse"
+   ],
+   "plan": [
+    "plan",
+    "plans"
+   ],
+   "coupe": [
+    "coupe ou façade",
+    "coupes et façades"
+   ],
+   "axo": [
+    "axonométrie",
+    "axonométries"
+   ],
+   "detail": [
+    "détail",
+    "détails"
+   ],
+   "materiaux": [
+    "planche de matériaux",
+    "planches de matériaux"
+   ],
+   "experimentation": [
+    "expérimentation",
+    "expérimentations"
+   ],
+   "rendu": [
+    "perspective",
+    "perspectives et rendus"
+   ],
+   "autre": [
+    "autre pièce",
+    "autres pièces"
+   ]
+  }
  }
 }

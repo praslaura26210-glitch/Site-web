@@ -145,10 +145,6 @@
     "All images of the project"
    ],
    [
-    "L",
-    "Magnifier on drawings (project page)"
-   ],
-   [
     "Esc",
     "Close"
    ],
@@ -182,9 +178,6 @@
   "terrHorsCarte": "No precise town",
   "terrSource": "Base map: IGN/INSEE outlines (france-geojson), Rhône: Natural Earth.",
   "terrCarte": "Map of the places of my projects, internships and studies",
-  "loupe": "Magnifier",
-  "loupeAide": "Hover over a drawing to read it up close · scroll to magnify · press L to close",
-  "loupeAideTactile": "Place your finger on a drawing and move it to read it up close",
   "rdeEyebrow": "My study report",
   "rdePage": "p.",
   "rdeProjet": "In my projects",
@@ -196,6 +189,55 @@
   "rdeFigure": "This image illustrates the section",
   "carteTitre": "My details on your phone",
   "carteTexte": "Scan this code with your phone's camera: my contact card opens, ready to be saved.",
-  "carteLien": "Download my contact card (.vcf)"
+  "carteLien": "Download my contact card (.vcf)",
+  "feuilleter": "Leaf through the project",
+  "feuilleterPieces": "{n} pieces",
+  "feuilleterAide": "Slide along the line to leaf through · click the image to open it full screen",
+  "natures": {
+   "croquis": [
+    "sketch",
+    "sketches"
+   ],
+   "maquette": [
+    "model",
+    "models"
+   ],
+   "site": [
+    "site plan",
+    "site plans"
+   ],
+   "plan": [
+    "plan",
+    "plans"
+   ],
+   "coupe": [
+    "section or elevation",
+    "sections and elevations"
+   ],
+   "axo": [
+    "axonometric",
+    "axonometrics"
+   ],
+   "detail": [
+    "detail",
+    "details"
+   ],
+   "materiaux": [
+    "materials board",
+    "materials boards"
+   ],
+   "experimentation": [
+    "experiment",
+    "experiments"
+   ],
+   "rendu": [
+    "perspective",
+    "perspectives and renderings"
+   ],
+   "autre": [
+    "other piece",
+    "other pieces"
+   ]
+  }
  }
 }

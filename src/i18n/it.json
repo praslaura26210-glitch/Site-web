@@ -145,10 +145,6 @@
     "Tutte le immagini del progetto"
    ],
    [
-    "L",
-    "Lente sui disegni (pagina progetto)"
-   ],
-   [
     "Esc",
     "Chiudi"
    ],
@@ -182,9 +178,6 @@
   "terrHorsCarte": "Senza comune preciso",
   "terrSource": "Base: confini IGN/INSEE (france-geojson), Rodano: Natural Earth.",
   "terrCarte": "Mappa dei luoghi dei miei progetti, tirocini e studi",
-  "loupe": "Lente",
-  "loupeAide": "Passa sopra un disegno per leggerlo da vicino · rotella per ingrandire · tasto L per chiudere",
-  "loupeAideTactile": "Appoggia il dito su un disegno e spostalo per leggerlo da vicino",
   "rdeEyebrow": "La mia tesina",
   "rdePage": "p.",
   "rdeProjet": "Nei miei progetti",
@@ -196,6 +189,55 @@
   "rdeFigure": "Questa immagine illustra la parte",
   "carteTitre": "I miei recapiti nel vostro telefono",
   "carteTexte": "Inquadrate questo codice con la fotocamera del telefono: si apre la mia scheda contatto, pronta da salvare.",
-  "carteLien": "Scarica la mia scheda contatto (.vcf)"
+  "carteLien": "Scarica la mia scheda contatto (.vcf)",
+  "feuilleter": "Sfoglia il progetto",
+  "feuilleterPieces": "{n} elementi",
+  "feuilleterAide": "Scorri lungo la linea per sfogliare · clicca l'immagine per aprirla in grande",
+  "natures": {
+   "croquis": [
+    "schizzo",
+    "schizzi"
+   ],
+   "maquette": [
+    "plastico",
+    "plastici"
+   ],
+   "site": [
+    "planimetria",
+    "planimetrie"
+   ],
+   "plan": [
+    "pianta",
+    "piante"
+   ],
+   "coupe": [
+    "sezione o prospetto",
+    "sezioni e prospetti"
+   ],
+   "axo": [
+    "assonometria",
+    "assonometrie"
+   ],
+   "detail": [
+    "dettaglio",
+    "dettagli"
+   ],
+   "materiaux": [
+    "tavola dei materiali",
+    "tavole dei materiali"
+   ],
+   "experimentation": [
+    "sperimentazione",
+    "sperimentazioni"
+   ],
+   "rendu": [
+    "prospettiva",
+    "prospettive e render"
+   ],
+   "autre": [
+    "altro elemento",
+    "altri elementi"
+   ]
+  }
  }
 }

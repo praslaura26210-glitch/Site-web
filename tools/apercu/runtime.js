@@ -235,6 +235,7 @@
     finPage(); finPage = XP.xpPage(ctx, main);
     apparitions();
     if (/^\/(fr|en|it)\/$/.test(p)) ouverture();
+    else delete html.dataset.intro; // arrivée directe sur une autre page : pas d'ouverture, rien ne doit masquer la page
   };
 
   document.addEventListener('click', (e) => {

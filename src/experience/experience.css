@@ -428,6 +428,76 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img, .xp-frise-img img
   .xp-terr-depnoms text { font-size: 16px; }
 }
 
+/* ---------- page « Pour une agence » ---------- */
+.xp-pour-tete { display: grid; gap: 14px; justify-items: start; padding-bottom: clamp(32px, 6vh, 64px); margin-bottom: clamp(32px, 6vh, 64px); border-bottom: 1px solid var(--encre); }
+.xp-pour-tete strong { font-weight: 400; color: var(--accent-f); }
+.xp-pour-mot { max-width: 46ch; font-size: clamp(1.1rem, 1.6vw, 1.4rem); line-height: 1.55; padding-left: 20px; border-left: 1px solid var(--accent); margin-top: 10px; }
+.xp-pour-liens { display: flex; flex-wrap: wrap; gap: 14px 32px; margin-top: 10px; }
+.xp-pour-exemple { margin-bottom: 28px; padding: 12px 16px; border: 1px dashed var(--accent); font-size: .82rem; color: var(--accent-f); }
+
+/* ---------- écouter Laura présenter le projet ---------- */
+.xp-ecoute { margin-top: 26px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: center; column-gap: 14px; row-gap: 10px; width: min(100%, 420px); padding: 0; border: 0; background: none; cursor: pointer; text-align: left; color: var(--encre); }
+.xp-ecoute-icone { grid-row: span 2; width: 42px; height: 42px; border: 1px solid var(--encre); border-radius: 50%; position: relative; transition: background .15s, color .15s; }
+.xp-ecoute-icone::before { content: ''; position: absolute; left: 16px; top: 13px; border-style: solid; border-width: 8px 0 8px 12px; border-color: transparent transparent transparent currentColor; }
+.xp-ecoute[data-lit] .xp-ecoute-icone::before { left: 14px; top: 14px; width: 4px; height: 14px; border: 0; border-left: 4px solid currentColor; border-right: 4px solid currentColor; box-sizing: content-box; width: 4px; }
+.xp-ecoute:hover .xp-ecoute-icone { background: var(--encre); color: var(--fond); }
+.xp-ecoute-t { font-size: .66rem; letter-spacing: .18em; text-transform: uppercase; }
+.xp-ecoute-temps { font-size: .66rem; color: var(--gris); font-variant-numeric: tabular-nums; }
+.xp-ecoute-barre { grid-column: 2 / 4; height: 1px; background: var(--filet); overflow: hidden; }
+.xp-ecoute-barre i { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* =====================================================================
+   Accueil : la carte du territoire
+   ===================================================================== */
+.xp-terr { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: clamp(28px, 5vw, 80px); align-items: start; padding-top: clamp(64px, 12vh, 140px); }
+.xp-terr-texte { display: grid; gap: 22px; align-content: start; position: sticky; top: calc(var(--header-h) + 24px); }
+.xp-terr-phrase { font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.35; letter-spacing: -0.01em; max-width: 22ch; }
+.xp-terr-legende { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.xp-terr-legende button { display: inline-flex; align-items: center; gap: 9px; border: 0; background: none; padding: 4px 0; cursor: pointer; font-size: .64rem; letter-spacing: .18em; text-transform: uppercase; color: var(--encre); transition: opacity .15s; }
+.xp-terr-legende button[aria-pressed='false'] { opacity: .35; }
+.xp-terr-sym { display: inline-block; width: 11px; height: 11px; }
+.xp-terr-sym.xp-terr-p { border-radius: 50%; background: var(--accent); }
+.xp-terr-sym.xp-terr-s { border-radius: 50%; border: 1.5px solid var(--accent-f); }
+.xp-terr-sym.xp-terr-f { border: 1.5px solid var(--encre); }
+.xp-terr-info { min-height: 150px; border-top: 1px solid var(--encre); padding-top: 16px; }
+.xp-terr-aide { color: var(--gris); font-size: .86rem; }
+.xp-terr-lieuNom { font-size: 1.3rem; margin-bottom: 10px; }
+.xp-terr-info ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.xp-terr-info li { display: grid; gap: 2px; }
+.xp-terr-type { font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); }
+.xp-terr-lien { text-decoration: none; border-bottom: 1px solid currentColor; justify-self: start; }
+.xp-terr-lien:hover { color: var(--accent-f); }
+.xp-terr-sous { font-size: .78rem; color: var(--gris); }
+.xp-terr-hors { font-size: .74rem; color: var(--gris); }
+.xp-terr-carte { margin: 0; }
+.xp-terr-carte svg { width: 100%; height: auto; display: block; overflow: hidden; }
+.xp-terr-deps path { fill: none; stroke: var(--filet); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.xp-terr-rhone { fill: none; stroke: #9AAAB4; stroke-width: 2.2; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.xp-terr-depnoms text { font: 400 13px var(--sans); letter-spacing: .3em; text-transform: uppercase; fill: #C9C0B6; text-anchor: middle; }
+.xp-terr-cercles circle { fill: none; stroke: var(--gris); stroke-width: 1; stroke-dasharray: 3 5; opacity: .45; vector-effect: non-scaling-stroke; }
+.xp-terr-cercles text { font: 400 11px var(--sans); fill: var(--gris); letter-spacing: .1em; }
+.xp-terr-lieu { cursor: pointer; outline: none; transition: opacity .15s; }
+.xp-terr-cible { fill: transparent; }
+.xp-terr-lieu .xp-terr-p { fill: var(--accent); }
+.xp-terr-lieu .xp-terr-s { fill: var(--fond); stroke: var(--accent-f); stroke-width: 2; }
+.xp-terr-lieu .xp-terr-f { fill: var(--fond); stroke: var(--encre); stroke-width: 2; }
+.xp-terr-maison path { fill: none; stroke: var(--encre); stroke-width: 6; stroke-linecap: round; }
+.xp-terr-nom { font: 400 14px var(--sans); fill: var(--encre); paint-order: stroke; stroke: var(--fond); stroke-width: 5px; stroke-linejoin: round; }
+.xp-terr-lieu:hover .xp-terr-nom, .xp-terr-lieu:focus-visible .xp-terr-nom, .xp-terr-lieu[data-actif] .xp-terr-nom { fill: var(--accent-f); }
+.xp-terr-lieu[data-actif] .xp-terr-cible, .xp-terr-lieu:focus-visible .xp-terr-cible { fill: color-mix(in srgb, var(--accent) 12%, transparent); }
+.xp-terr-lieu[data-eteint] { opacity: .12; pointer-events: none; }
+.xp-terr[data-masque-p] .xp-terr-lieu .xp-terr-p, .xp-terr[data-masque-s] .xp-terr-lieu .xp-terr-s, .xp-terr[data-masque-f] .xp-terr-lieu .xp-terr-f { opacity: .15; }
+.xp-terr-echelle path, .xp-terr-nord path { fill: none; stroke: var(--encre); stroke-width: 1.2; }
+.xp-terr-nord path { fill: var(--encre); }
+.xp-terr-echelle text, .xp-terr-nord text { font: 400 11px var(--sans); fill: var(--encre); letter-spacing: .1em; }
+.xp-terr-source { margin-top: 8px; font-size: .62rem; color: var(--gris); }
+@media (max-width: 860px) {
+  .xp-terr { grid-template-columns: 1fr; }
+  .xp-terr-texte { position: static; }
+  .xp-terr-nom { font-size: 18px; }
+  .xp-terr-depnoms text { font-size: 16px; }
+}
+
 /* ---------- loupe (page projet) ---------- */
 .xp-loupe-btn { position: fixed; z-index: 45; right: clamp(16px, 2vw, 28px); bottom: 18px; display: inline-flex; align-items: center; gap: 9px; padding: 10px 16px; border: 1px solid var(--encre); border-radius: 22px; background: rgba(254, 254, 252, .94); backdrop-filter: blur(6px); font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; transition: background .15s, color .15s; }
 .xp-loupe-btn:hover, .xp-loupe-btn[aria-pressed='true'] { background: var(--encre); color: var(--fond); }
@@ -490,3 +560,29 @@ ul[data-notes] .xp-ref-note { display: grid; gap: 8px; animation: xp-ouvre .25s 
 .xp-vcard-txt { display: grid; gap: 10px; justify-items: start; font-size: .84rem; line-height: 1.55; color: var(--gris); }
 .xp-vcard-txt .eyebrow { color: var(--encre); }
 @media (hover: none) and (max-width: 700px) { .xp-vcard-qr { display: none; } .xp-vcard { grid-template-columns: 1fr; } }
+
+/* =====================================================================
+   Page projet : feuilleter le projet
+   ===================================================================== */
+.xp-fe:empty { display: none; }
+.xp-fe { display: grid; gap: 14px; margin-block: clamp(40px, 8vh, 96px); }
+.xp-fe-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 14px; border-bottom: 1px solid var(--encre); }
+.xp-fe-compte { display: flex; flex-wrap: wrap; gap: 4px 0; font-size: .74rem; color: var(--gris); }
+.xp-fe-compte span + span::before { content: '·'; margin: 0 9px; color: var(--filet); }
+.xp-fe-total { color: var(--encre); }
+.xp-fe-cadre { display: block; width: 100%; height: min(56svh, 560px); padding: 0; border: 0; background: var(--fond); cursor: zoom-in; overflow: hidden; }
+.xp-fe-cadre img { display: block; width: 100%; height: 100%; max-width: none; object-fit: contain; -webkit-user-drag: none; user-select: none; }
+.xp-fe-cadre[data-dessin] img { mix-blend-mode: multiply; }
+.xp-fe-legende { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; justify-content: center; font-size: .78rem; color: var(--gris); min-height: 1.4em; }
+.xp-fe-legende b { font-weight: 400; color: var(--encre); }
+.xp-fe-legende span:last-child { font-variant-numeric: tabular-nums; color: var(--accent-f); }
+.xp-fe-piste { position: relative; display: flex; gap: 6px; height: 54px; padding-top: 22px; cursor: ew-resize; touch-action: none; outline: none; }
+.xp-fe-piste:focus-visible { box-shadow: 0 0 0 1px var(--accent-f); }
+.xp-fe-seg { position: relative; display: flex; gap: 2px; align-items: stretch; border-top: 1px solid var(--encre); padding-top: 6px; min-width: 0; }
+.xp-fe-seg b { flex: 1; background: var(--filet); transition: background .15s; }
+.xp-fe-piste:hover .xp-fe-seg b { background: color-mix(in srgb, var(--gris) 45%, var(--filet)); }
+.xp-fe-segNom { position: absolute; left: 0; top: -20px; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.xp-fe-poignee { position: absolute; top: 14px; bottom: 0; width: 2px; margin-left: -1px; background: var(--accent-f); pointer-events: none; transition: left .08s linear; }
+.xp-fe-poignee::before { content: ''; position: absolute; top: -4px; left: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-f); }
+.xp-fe-aide { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); text-align: center; }
+@media (max-width: 700px) { .xp-fe-cadre { height: 46svh; } .xp-fe-segNom { display: none; } }
