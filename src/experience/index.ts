@@ -1,9 +1,9 @@
-import { xpCarnet, xpDejaVus, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge } from './anim';
-import { xpAccrochage } from './accrochage';
+import { xpCarnet, xpDejaVus, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpRapport, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpExplorer } from './explorer';
 import { xpFiches } from './fiches';
 import { xpLightboxPage } from './lightbox';
+import { xpLoupe } from './loupe';
 import { xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
 import { xpImageDuLien } from './transition';
 import { xpVisite } from './visite';
@@ -91,7 +91,7 @@ export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.enteteCache;
   const f = [
     xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpVues(root), xpFiches(ctx, root),
-    xpCarnet(ctx, root), xpImagesDouces(root), xpDejaVus(ctx, root), xpAccrochage(ctx, root), xpEcoute(root),
+    xpCarnet(ctx, root), xpImagesDouces(root), xpDejaVus(ctx, root), xpEcoute(root), xpTerritoire(root), xpLoupe(ctx, root), xpRapport(root),
   ];
   return () => f.forEach((x) => x());
 }

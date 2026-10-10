@@ -29,14 +29,19 @@ export default async function References({ params }: { params: Promise<{ lang: s
   const items = (d.visibles as string[]).map((id) => d.items.find((x: any) => x.id === id)).filter(Boolean).map((x: any) => ({
     id: x.id, titre: x.titre, auteur: x.auteur, lieu: x.lieu, annee: x.annee, credit: x.credit, w: x.w, h: x.h,
     info: !x.auteur ? l.visite : undefined,
+    note: x.rde ? { texte: x.rde[lang] || x.rde.fr, page: x.rde.page, partie: x.rde.partie ? x.rde.partie[lang] || x.rde.partie.fr : undefined } : undefined,
   }));
   return (
     <article className={`wrap ${styles.page}`}>
       <header className={styles.refHead}>
         <h1 className={styles.h1}>{t.meta.referencesTitle}</h1>
         <p className={styles.refIntro}>{l.intro}</p>
+        <div className="xp-ref-notesBarre">
+          <p className="xp-ref-notesIntro">{t.xp.rdeRefIntro}</p>
+          <button type="button" className="xp-ref-notesBtn" data-notes-btn aria-pressed="false" data-ouvrir={t.xp.rdeNotes} data-fermer={t.xp.rdeNotesFermer}>{t.xp.rdeNotes}</button>
+        </div>
       </header>
-      <Inspirations items={items} labels={{ fermer: l.fermer, ouvrir: l.ouvrir, auteur: l.auteur, lieu: l.lieu, annee: l.annee }} />
+      <Inspirations items={items} labels={{ fermer: l.fermer, ouvrir: l.ouvrir, auteur: l.auteur, lieu: l.lieu, annee: l.annee, dansRapport: t.xp.rdeDansRapport, figure: t.xp.rdeFigure, page: t.xp.rdePage }} />
     </article>
   );
 }

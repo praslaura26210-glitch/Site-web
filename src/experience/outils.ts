@@ -7,7 +7,7 @@ export type XPTextes = {
   visite: string; visiteFin: string; visiteFinTexte: string; voirProjet: string; quitter: string; glisser: string;
   precedent: string; suivant: string; planche: string; retour: string;
   vueLabel: string; sommaire: string; planches: string; frise: string;
-  chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string; resultats: string; carnet: string; carnetAide: string; dejaVu: string; accrochage: string; toutVoir: string; ecouter: string; ecouterPause: string;
+  chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string; resultats: string; carnet: string; carnetAide: string; dejaVu: string; ecouter: string; ecouterPause: string; loupe: string; loupeAide: string; loupeAideTactile: string;
   zoomIn: string; zoomOut: string; zoomReset: string;
 };
 export type XPImage = { src: string; srcSmall?: string; w: number; h: number; pos?: string };

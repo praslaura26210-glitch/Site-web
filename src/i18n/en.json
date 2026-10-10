@@ -145,6 +145,10 @@
     "All images of the project"
    ],
    [
+    "L",
+    "Magnifier on drawings (project page)"
+   ],
+   [
     "Esc",
     "Close"
    ],
@@ -159,17 +163,39 @@
   "carnet": "Sketchbook",
   "carnetAide": "Drag to browse · click to open",
   "dejaVu": "Already viewed",
-  "accrochage": "Pin-up wall",
-  "accrochageTitre": "The six projects on one table",
-  "accrochageAide": "Drag to move · scroll or pinch to zoom · click a sheet to open it",
-  "toutVoir": "See all",
-  "accrochageLien": "See the pin-up wall",
-  "accrochageSansJs": "The pin-up wall needs JavaScript. See the list of projects",
   "pour": "For",
   "pourIntro": "A selection prepared for",
   "pourEcrire": "Write to me",
   "pourExemple": "Sample page: each practice gets its own address, with its own note and the projects in the order that matters to it.",
   "ecouter": "Listen to Laura present the project",
-  "ecouterPause": "Pause"
+  "ecouterPause": "Pause",
+  "terrTitre": "A territory",
+  "terrPhrase": "My projects, internships and studies, around my home: it all fits within {n} km.",
+  "terrAide": "Hover over or select a place to see what I did there.",
+  "terrProjets": "Projects",
+  "terrStages": "Internships",
+  "terrEtudes": "Studies",
+  "terrMaison": "Home",
+  "terrProjet": "Project",
+  "terrStage": "Internship",
+  "terrEtude": "Studies",
+  "terrHorsCarte": "No precise town",
+  "terrSource": "Base map: IGN/INSEE outlines (france-geojson), Rhône: Natural Earth.",
+  "terrCarte": "Map of the places of my projects, internships and studies",
+  "loupe": "Magnifier",
+  "loupeAide": "Hover over a drawing to read it up close · scroll to magnify · press L to close",
+  "loupeAideTactile": "Place your finger on a drawing and move it to read it up close",
+  "rdeEyebrow": "My study report",
+  "rdePage": "p.",
+  "rdeProjet": "In my projects",
+  "rdeTraduction": "Translated from French.",
+  "rdeNotes": "Read my notes",
+  "rdeNotesFermer": "Hide my notes",
+  "rdeRefIntro": "These references come from my study report. My notes repeat what I wrote about them (translated from French).",
+  "rdeDansRapport": "In my study report",
+  "rdeFigure": "This image illustrates the section",
+  "carteTitre": "My details on your phone",
+  "carteTexte": "Scan this code with your phone's camera: my contact card opens, ready to be saved.",
+  "carteLien": "Download my contact card (.vcf)"
  }
 }

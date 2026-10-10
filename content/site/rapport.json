@@ -1,0 +1,90 @@
+{
+ "_source": "Citations exactes du rapport d'études (L'architecture comme expérience sensible, ENSA Grenoble, 2025-2026). Les versions en et it sont des traductions.",
+ "titre": "L'architecture comme expérience sensible",
+ "sousTitre": {
+  "fr": "Espace, matière et site dans la perception du lieu",
+  "en": "Space, material and site in the perception of place",
+  "it": "Spazio, materia e sito nella percezione del luogo"
+ },
+ "cadre": {
+  "fr": "Rapport d'études, ENSA Grenoble, 2025-2026. Enseignement dirigé par Cécile Léonardi, sous la direction d'Étienne Randier Fraile.",
+  "en": "Study report, ENSA Grenoble, 2025-2026. Course led by Cécile Léonardi, supervised by Étienne Randier Fraile.",
+  "it": "Tesina, ENSA Grenoble, 2025-2026. Corso diretto da Cécile Léonardi, sotto la supervisione di Étienne Randier Fraile."
+ },
+ "idees": [
+  {
+   "cle": "sens",
+   "page": 24,
+   "titre": {
+    "fr": "Les sens",
+    "en": "The senses",
+    "it": "I sensi"
+   },
+   "citation": {
+    "fr": "Il me semble important de ne pas isoler les sens comme des catégories indépendantes, mais de comprendre leur association. L'architecture est multisensorielle parce que ces perceptions se croisent et fabriquent une expérience globale.",
+    "en": "It seems important to me not to isolate the senses as separate categories, but to understand how they combine. Architecture is multisensory because these perceptions cross and build a whole experience.",
+    "it": "Mi sembra importante non isolare i sensi come categorie indipendenti, ma capire come si associano. L'architettura è multisensoriale perché queste percezioni si incrociano e costruiscono un'esperienza globale."
+   }
+  },
+  {
+   "cle": "matiere",
+   "page": 40,
+   "titre": {
+    "fr": "La matière",
+    "en": "Material",
+    "it": "La materia"
+   },
+   "projet": "le-passage-des-artistes",
+   "citation": {
+    "fr": "Les expérimentations obligent à regarder autrement ce que l'on dessine, en rendant visibles les contraintes du matériau, mais aussi ses possibilités.",
+    "en": "Experiments force us to look differently at what we draw, by making visible the constraints of the material, but also its possibilities.",
+    "it": "Le sperimentazioni obbligano a guardare in modo diverso ciò che si disegna, rendendo visibili i vincoli del materiale, ma anche le sue possibilità."
+   },
+   "lien": {
+    "fr": "Studio « Construire en pierre massive »",
+    "en": "“Building in solid stone” studio",
+    "it": "Studio « Costruire in pietra massiccia »"
+   }
+  },
+  {
+   "cle": "site",
+   "page": 54,
+   "titre": {
+    "fr": "Le site",
+    "en": "The site",
+    "it": "Il sito"
+   },
+   "projet": "la-ruche",
+   "citation": {
+    "fr": "Ce projet m'a permis de comprendre que le site pouvait devenir un appui pour concevoir, et non seulement une contrainte à résoudre.",
+    "en": "This project helped me understand that the site could become a support for design, and not only a constraint to solve.",
+    "it": "Questo progetto mi ha fatto capire che il sito poteva diventare un appoggio per progettare, e non solo un vincolo da risolvere."
+   },
+   "lien": {
+    "fr": "Une école sur une pente, à Proveysieux",
+    "en": "A school on a slope, in Proveysieux",
+    "it": "Una scuola in pendio, a Proveysieux"
+   }
+  },
+  {
+   "cle": "existant",
+   "page": 57,
+   "titre": {
+    "fr": "L'existant",
+    "en": "What exists",
+    "it": "L'esistente"
+   },
+   "projet": "entre-deux-regards",
+   "citation": {
+    "fr": "Je pense que réhabiliter plutôt que démolir est une manière de construire pour l'avenir. […] Le rôle de l'architecte n'est pas seulement d'ajouter quelque chose, mais de comprendre ce qui mérite d'être conservé, transformé, révélé ou prolongé.",
+    "en": "I believe that rehabilitating rather than demolishing is a way of building for the future. […] The architect's role is not only to add something, but to understand what deserves to be kept, transformed, revealed or extended.",
+    "it": "Penso che riabilitare invece di demolire sia un modo di costruire per il futuro. […] Il ruolo dell'architetto non è solo aggiungere qualcosa, ma capire ciò che merita di essere conservato, trasformato, rivelato o prolungato."
+   },
+   "lien": {
+    "fr": "Une réhabilitation patrimoniale",
+    "en": "A heritage rehabilitation",
+    "it": "Una riabilitazione del patrimonio"
+   }
+  }
+ ]
+}

@@ -145,6 +145,10 @@
     "Toutes les images du projet"
    ],
    [
+    "L",
+    "Loupe sur les dessins (page projet)"
+   ],
+   [
     "Échap",
     "Fermer"
    ],
@@ -159,17 +163,39 @@
   "carnet": "Carnet de dessins",
   "carnetAide": "Glisser pour parcourir · cliquer pour ouvrir",
   "dejaVu": "Déjà consulté",
-  "accrochage": "Accrochage",
-  "accrochageTitre": "Les six projets sur une même table",
-  "accrochageAide": "Glisser pour se déplacer · molette ou pincement pour zoomer · cliquer une planche pour l'ouvrir",
-  "toutVoir": "Tout voir",
-  "accrochageLien": "Voir l'accrochage",
-  "accrochageSansJs": "L'accrochage demande JavaScript. Voir la liste des projets",
   "pour": "Pour",
   "pourIntro": "Une sélection préparée pour",
   "pourEcrire": "M'écrire",
   "pourExemple": "Page d'exemple : chaque agence reçoit sa propre adresse, avec son mot et ses projets dans l'ordre qui la concerne.",
   "ecouter": "Écouter Laura présenter le projet",
-  "ecouterPause": "Mettre en pause"
+  "ecouterPause": "Mettre en pause",
+  "terrTitre": "Un territoire",
+  "terrPhrase": "Mes projets, mes stages et mes études, autour de chez moi : tout tient dans un rayon de {n} km.",
+  "terrAide": "Survolez ou sélectionnez un lieu pour voir ce que j'y ai fait.",
+  "terrProjets": "Projets",
+  "terrStages": "Stages",
+  "terrEtudes": "Études",
+  "terrMaison": "Chez moi",
+  "terrProjet": "Projet",
+  "terrStage": "Stage",
+  "terrEtude": "Études",
+  "terrHorsCarte": "Sans commune précise",
+  "terrSource": "Fond : contours IGN/INSEE (france-geojson), Rhône : Natural Earth.",
+  "terrCarte": "Carte des lieux de mes projets, stages et études",
+  "loupe": "Loupe",
+  "loupeAide": "Survolez un dessin pour le lire de près · molette pour grossir · touche L pour fermer",
+  "loupeAideTactile": "Posez le doigt sur un dessin et déplacez-le pour le lire de près",
+  "rdeEyebrow": "Mon rapport d'études",
+  "rdePage": "p.",
+  "rdeProjet": "Dans mes projets",
+  "rdeTraduction": "",
+  "rdeNotes": "Lire mes notes",
+  "rdeNotesFermer": "Masquer mes notes",
+  "rdeRefIntro": "Ces références viennent de mon rapport d'études. Mes notes reprennent ce que j'en ai écrit.",
+  "rdeDansRapport": "Dans mon rapport d'études",
+  "rdeFigure": "Cette image illustre la partie",
+  "carteTitre": "Mes coordonnées dans votre téléphone",
+  "carteTexte": "Scannez ce code avec l'appareil photo de votre téléphone : ma fiche contact s'ouvre, prête à être enregistrée.",
+  "carteLien": "Télécharger ma fiche contact (.vcf)"
  }
 }

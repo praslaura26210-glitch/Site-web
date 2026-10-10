@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import QRCode from 'qrcode';
 import { dict, type Lang } from '@/i18n';
 import { getCV } from '@/lib/content';
 import { meta } from '@/lib/seo';
@@ -21,6 +24,9 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
   const cv = getCV();
   const tel = String(cv.telephone);
   const telHref = `+33${tel.replace(/\s/g, '').replace(/^0/, '')}`;
+  // fiche contact (vCard, écrite par scripts/sync-content.mjs) : en QR code à scanner, et à télécharger
+  const vcf = fs.readFileSync(path.join(process.cwd(), 'public', 'laura-pras.vcf'), 'utf8');
+  const qr = await QRCode.toString(vcf, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#2B211C', light: '#0000' } });
   return (
     <article className={`wrap ${styles.page} ${styles.contact}`}>
       <header className={styles.cHead}>
@@ -66,6 +72,14 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
             <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
           </dl>
           <Reseaux cv={cv} className={styles.icones} ecrire={C.ecrire} email={false} />
+          <div className="xp-vcard">
+            <div className="xp-vcard-qr" role="img" aria-label={t.xp.carteTitre} dangerouslySetInnerHTML={{ __html: qr }} />
+            <div className="xp-vcard-txt">
+              <p className="eyebrow">{t.xp.carteTitre}</p>
+              <p>{t.xp.carteTexte}</p>
+              <a href="/laura-pras.vcf" download="laura-pras.vcf" className="lien">{t.xp.carteLien}</a>
+            </div>
+          </div>
         </aside>
       </div>
     </article>

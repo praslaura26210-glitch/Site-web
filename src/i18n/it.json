@@ -145,6 +145,10 @@
     "Tutte le immagini del progetto"
    ],
    [
+    "L",
+    "Lente sui disegni (pagina progetto)"
+   ],
+   [
     "Esc",
     "Chiudi"
    ],
@@ -159,17 +163,39 @@
   "carnet": "Taccuino di disegni",
   "carnetAide": "Trascina per sfogliare · clicca per aprire",
   "dejaVu": "Già visto",
-  "accrochage": "Parete",
-  "accrochageTitre": "I sei progetti su un unico tavolo",
-  "accrochageAide": "Trascina per spostarti · rotella o pizzico per ingrandire · clicca una tavola per aprirla",
-  "toutVoir": "Vedi tutto",
-  "accrochageLien": "Vedi la parete",
-  "accrochageSansJs": "La parete richiede JavaScript. Vedi l'elenco dei progetti",
   "pour": "Per",
   "pourIntro": "Una selezione preparata per",
   "pourEcrire": "Scrivimi",
   "pourExemple": "Pagina di esempio: ogni studio riceve il proprio indirizzo, con il suo messaggio e i progetti nell'ordine che lo riguarda.",
   "ecouter": "Ascolta Laura presentare il progetto",
-  "ecouterPause": "Pausa"
+  "ecouterPause": "Pausa",
+  "terrTitre": "Un territorio",
+  "terrPhrase": "I miei progetti, tirocini e studi, intorno a casa mia: tutto sta in un raggio di {n} km.",
+  "terrAide": "Passa sopra o seleziona un luogo per vedere cosa ci ho fatto.",
+  "terrProjets": "Progetti",
+  "terrStages": "Tirocini",
+  "terrEtudes": "Studi",
+  "terrMaison": "Casa",
+  "terrProjet": "Progetto",
+  "terrStage": "Tirocinio",
+  "terrEtude": "Studi",
+  "terrHorsCarte": "Senza comune preciso",
+  "terrSource": "Base: confini IGN/INSEE (france-geojson), Rodano: Natural Earth.",
+  "terrCarte": "Mappa dei luoghi dei miei progetti, tirocini e studi",
+  "loupe": "Lente",
+  "loupeAide": "Passa sopra un disegno per leggerlo da vicino · rotella per ingrandire · tasto L per chiudere",
+  "loupeAideTactile": "Appoggia il dito su un disegno e spostalo per leggerlo da vicino",
+  "rdeEyebrow": "La mia tesina",
+  "rdePage": "p.",
+  "rdeProjet": "Nei miei progetti",
+  "rdeTraduction": "Tradotto dal francese.",
+  "rdeNotes": "Leggi le mie note",
+  "rdeNotesFermer": "Nascondi le mie note",
+  "rdeRefIntro": "Questi riferimenti vengono dalla mia tesina. Le mie note riprendono ciò che ne ho scritto (tradotto dal francese).",
+  "rdeDansRapport": "Nella mia tesina",
+  "rdeFigure": "Questa immagine illustra la parte",
+  "carteTitre": "I miei recapiti nel vostro telefono",
+  "carteTexte": "Inquadrate questo codice con la fotocamera del telefono: si apre la mia scheda contatto, pronta da salvare.",
+  "carteLien": "Scarica la mia scheda contatto (.vcf)"
  }
 }

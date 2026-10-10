@@ -46,4 +46,12 @@ n += copyDir(path.join(src, 'site', 'inspirations'), path.join(dst, 'site', 'ins
 n += copyDir(path.join(src, 'intro'), path.join(dst, 'intro'));
 n += copyDir(path.join(src, 'logo', 'cabane'), path.join(dst, 'logo'));
 fs.copyFileSync(path.join(src, 'logo', 'cabane', 'favicon.svg'), path.join(root, 'public', 'favicon.svg'));
+// fiche contact (vCard) : à scanner ou à télécharger depuis la page Contact
+{
+  const cv = JSON.parse(fs.readFileSync(path.join(src, 'site', 'cv.json'), 'utf8'));
+  const tel = cv.telephone.replace(/\s+/g, '').replace(/^0/, '+33');
+  const lignes = ['BEGIN:VCARD', 'VERSION:3.0', 'N:Pras;Laura;;;', `FN:${cv.nom}`, "TITLE:Étudiante en architecture\\, master AECC\\, ENSA Grenoble", `EMAIL;TYPE=INTERNET:${cv.email}`, `TEL;TYPE=CELL:${tel}`, 'END:VCARD'];
+  fs.writeFileSync(path.join(root, 'public', 'laura-pras.vcf'), lignes.join('\r\n') + '\r\n');
+  n++;
+}
 console.log(`médias synchronisés : ${n} fichiers`);

@@ -41,7 +41,14 @@
    "en": "We slept in this hamlet linked to the Resistance, restored from ruins. “Timber boxes are inserted into the old masonry, keeping the presence of the original buildings without erasing their history.”",
    "it": "Abbiamo dormito in questa borgata legata alla Resistenza, restaurata a partire dalle rovine. «Scatole di legno si inseriscono nelle vecchie murature, mantenendo la presenza degli edifici originari senza cancellarne la storia.»",
    "w": 298,
-   "h": 199
+   "h": 199,
+   "rde": {
+    "page": 58,
+    "type": "texte",
+    "fr": "Ce que j'ai trouvé intéressant, c'est que le projet compose avec les ruines au lieu de les faire disparaître. Des boîtes en bois viennent s'insérer dans les anciennes maçonneries, ce qui permet de conserver la présence des bâtiments d'origine sans effacer leur histoire.",
+    "en": "What I found interesting is that the project works with the ruins instead of making them disappear. Timber boxes are inserted into the old masonry, which keeps the presence of the original buildings without erasing their history.",
+    "it": "Quello che ho trovato interessante è che il progetto dialoga con le rovine invece di farle sparire. Delle scatole in legno si inseriscono nelle antiche murature, conservando la presenza degli edifici originari senza cancellarne la storia."
+   }
   },
   {
    "id": "arvieux",
@@ -55,7 +62,14 @@
    "en": "“The barn's boards were surveyed and catalogued to be reused. They are not seen as waste, but as elements able to guide the project.”",
    "it": "«Le tavole del fienile sono state rilevate e catalogate per essere riutilizzate. Non sono considerate rifiuti, ma elementi capaci di orientare il progetto.»",
    "w": 298,
-   "h": 199
+   "h": 199,
+   "rde": {
+    "page": 58,
+    "type": "texte",
+    "fr": "Les planches de la grange ont été relevées et répertoriées afin d'être réutilisées. Elles ne sont donc pas considérées comme des déchets, mais comme des éléments capables d'orienter le projet.",
+    "en": "The barn's boards were surveyed and catalogued so they could be reused. They are not seen as waste, but as elements able to guide the project.",
+    "it": "Le tavole del fienile sono state rilevate e catalogate per essere riutilizzate. Non sono quindi considerate rifiuti, ma elementi capaci di orientare il progetto."
+   }
   },
   {
    "id": "spazio-espositivo",
@@ -69,7 +83,19 @@
    "en": "“Building on a site means working with what already exists.” Architecture can adapt to its setting rather than impose itself, revealing or transforming what is there.",
    "it": "«Costruire in un sito significa comporre con ciò che esiste già.» L'architettura può adattarsi al contesto invece di imporsi, rivelando o trasformando ciò che è presente.",
    "w": 420,
-   "h": 595
+   "h": 595,
+   "rde": {
+    "page": 47,
+    "type": "figure",
+    "partie": {
+     "fr": "Dialoguer avec le site",
+     "en": "In dialogue with the site",
+     "it": "Dialogare con il sito"
+    },
+    "fr": "L'architecture peut alors s'adapter au milieu plutôt que s'y imposer, en révélant ou en transformant certains éléments présents.",
+    "en": "Architecture can then adapt to its setting rather than impose itself on it, by revealing or transforming some of the elements already there.",
+    "it": "L'architettura può allora adattarsi all'ambiente invece di imporvisi, rivelando o trasformando alcuni elementi presenti."
+   }
   },
   {
    "id": "teshima",
@@ -153,7 +179,14 @@
    "en": "A timber canopy on posts and a rammed-earth wall. “Children can touch the wall, lean on it, look at its texture and even scratch it.” Material becomes a way to discover and learn.",
    "it": "Una copertura in legno su pilastri e un muro in terra cruda. «I bambini possono toccare il muro, appoggiarsi, osservarne la texture e persino grattarlo.» La materia diventa un supporto di scoperta e apprendimento.",
    "w": 375,
-   "h": 282
+   "h": 282,
+   "rde": {
+    "page": 42,
+    "type": "texte",
+    "fr": "Les enfants peuvent toucher le mur, s'appuyer dessus, observer sa texture et même le gratter. […] La matière devient ici un support d'imagination, de découverte et d'apprentissage.",
+    "en": "Children can touch the wall, lean on it, look at its texture and even scratch it. […] Here, material becomes a medium for imagination, discovery and learning.",
+    "it": "I bambini possono toccare il muro, appoggiarsi, osservarne la texture e perfino grattarlo. […] Qui la materia diventa un supporto di immaginazione, scoperta e apprendimento."
+   }
   },
   {
    "id": "prototype",
@@ -181,7 +214,19 @@
    "en": "An adobe wall, in a rehabilitation. “It is material that gives the project a concrete presence, that lets it leave the paper and become a space one moves through and feels.”",
    "it": "Un muro in adobe, in un recupero. «È la materia a dare al progetto una presenza concreta, a permettergli di lasciare la carta e diventare uno spazio attraversato e sentito.»",
    "w": 420,
-   "h": 595
+   "h": 595,
+   "rde": {
+    "page": 27,
+    "type": "figure",
+    "partie": {
+     "fr": "La matière dans la perception de l'espace",
+     "en": "Material in the perception of space",
+     "it": "La materia nella percezione dello spazio"
+    },
+    "fr": "[…] c'est la matière qui lui donne une présence concrète, qui permet au projet de quitter le papier pour devenir un espace traversé et ressenti.",
+    "en": "[…] it is material that gives it a concrete presence, that allows the project to leave the paper and become a space one crosses and feels.",
+    "it": "[…] è la materia a darle una presenza concreta, a permettere al progetto di lasciare la carta per diventare uno spazio attraversato e sentito."
+   }
   },
   {
    "id": "tt-pavilion",

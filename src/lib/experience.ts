@@ -59,7 +59,6 @@ export function donneesExperience(lang: Lang): XPDonnees {
     pages: [
       { label: t.nav.home, href: `/${lang}/` },
       { label: t.nav.projets, href: `/${lang}/projets/` },
-      { label: t.xp.accrochage, href: `/${lang}/accrochage/` },
       { label: t.nav.apropos, href: `/${lang}/a-propos/` },
       { label: t.nav.references, href: `/${lang}/references/` },
       { label: t.nav.contact, href: `/${lang}/contact/` },

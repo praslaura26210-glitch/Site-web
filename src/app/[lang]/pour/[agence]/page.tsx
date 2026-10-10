@@ -50,7 +50,6 @@ export default async function Pour({ params }: Params) {
         {mot && <p className="xp-pour-mot">{mot}</p>}
         <p className="xp-pour-liens">
           <Link href={`/${lang}/contact/`} className="lien">{t.xp.pourEcrire}</Link>
-          <Link href={`/${lang}/accrochage/`} className="lien">{t.xp.accrochageLien}</Link>
           <Portfolio t={t} />
         </p>
       </header>

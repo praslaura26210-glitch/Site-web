@@ -151,3 +151,65 @@ export function xpEcoute(root: HTMLElement) {
   });
   return () => sons.forEach((s) => { s.pause(); s.src = ''; });
 }
+
+/** Accueil, carte du territoire : choisir un lieu montre ce que Laura y a fait ; la légende filtre projets, stages, études. */
+export function xpTerritoire(root: HTMLElement) {
+  const box = root.querySelector<HTMLElement>('[data-territoire]');
+  if (!box) return () => {};
+  const info = box.querySelector<HTMLElement>('[data-terr-info]')!;
+  const lieux = [...box.querySelectorAll<SVGGElement>('.xp-terr-lieu')];
+  const masques = new Set<string>();
+  const montre = (g: SVGGElement) => {
+    const f = box.querySelector<HTMLElement>(`[data-terr-fiche="${g.dataset.lieu}"]`);
+    if (!f) return;
+    info.replaceChildren(...[...f.children].map((c) => c.cloneNode(true)));
+    lieux.forEach((l) => l.toggleAttribute('data-actif', l === g));
+  };
+  lieux.forEach((g) => {
+    g.addEventListener('pointerenter', () => montre(g));
+    g.addEventListener('focus', () => montre(g));
+    g.addEventListener('click', () => montre(g));
+    g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); montre(g); (info.querySelector('a') as HTMLElement | null)?.focus(); } });
+  });
+  box.querySelectorAll<HTMLButtonElement>('[data-terr-filtre]').forEach((b) => b.addEventListener('click', () => {
+    const k = b.dataset.terrFiltre!;
+    if (masques.has(k)) masques.delete(k); else masques.add(k);
+    b.setAttribute('aria-pressed', String(!masques.has(k)));
+    box.toggleAttribute(`data-masque-${k}`, masques.has(k));
+    lieux.forEach((g) => {
+      const ty = (g.dataset.types || '').split(' ');
+      const visible = ty.includes('m') || ty.some((x) => !masques.has(x));
+      g.toggleAttribute('data-eteint', !visible);
+    });
+  }));
+  return () => {};
+}
+
+/** À propos, rapport d'études : quatre idées, une à la fois (onglets, flèches du clavier, glissé du doigt). */
+export function xpRapport(root: HTMLElement) {
+  const box = root.querySelector<HTMLElement>('[data-rde]');
+  if (!box) return () => {};
+  box.dataset.js = '';
+  const tabs = [...box.querySelectorAll<HTMLButtonElement>('[data-rde-tab]')];
+  const pans = [...box.querySelectorAll<HTMLElement>('[data-rde-panneau]')];
+  let cur = 0;
+  const va = (k: number, focus = false) => {
+    cur = (k + tabs.length) % tabs.length;
+    tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(j === cur)); t.tabIndex = j === cur ? 0 : -1; });
+    pans.forEach((p, j) => p.toggleAttribute('data-on', j === cur));
+    if (focus) tabs[cur].focus();
+  };
+  tabs.forEach((t, j) => {
+    t.addEventListener('click', () => va(j));
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); va(cur + 1, true); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); va(cur - 1, true); }
+    });
+  });
+  const zone = box.querySelector<HTMLElement>('.xp-rde-panneaux')!;
+  let x0: number | null = null;
+  zone.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') x0 = e.clientX; });
+  zone.addEventListener('pointerup', (e) => { if (x0 == null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) va(cur + (dx < 0 ? 1 : -1)); });
+  va(0);
+  return () => {};
+}
