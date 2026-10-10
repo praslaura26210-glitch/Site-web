@@ -53,7 +53,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <h2 className="eyebrow">{t.xp.carnet}</h2>
           <p className="eyebrow xp-carnet-legende" data-carnet-legende data-defaut={t.xp.carnetAide}>{t.xp.carnetAide}</p>
         </div>
-        <div className="xp-carnet-fenetre"><div className="xp-carnet-piste" data-carnet-piste /></div>
+        <div className="xp-carnet-fenetre" tabIndex={0} aria-label={t.xp.carnetAide}><div className="xp-carnet-piste" data-carnet-piste /></div>
+        <div className="wrap xp-carnet-bas" aria-hidden="true"><span className="xp-carnet-jauge"><i data-carnet-jauge /></span></div>
       </section>
     </>
   );

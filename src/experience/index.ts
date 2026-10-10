@@ -1,4 +1,4 @@
-import { xpAimants, xpCarnet, xpCascades, xpCompteurs, xpEntete, xpFilets, xpInclinaison, xpLogoPied, xpTitres, xpTrame, xpVers, xpVoiles } from './anim';
+import { xpCarnet, xpDejaVus, xpEntete, xpImagesDouces, xpPrecharge } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpExplorer } from './explorer';
 import { xpFiches } from './fiches';
@@ -27,10 +27,9 @@ export function xpRaccourcis(ctx: XPContexte) {
 /** Une fois pour toutes : raccourcis, boutons [data-xp], trait de chargement entre deux pages. */
 export function xpDemarrer(ctx: XPContexte) {
   const actions = {
-    explorer: () => xpExplorer(ctx, { visite: () => xpVisite(ctx), raccourcis: () => xpRaccourcis(ctx), trame: () => xpTrame() }),
+    explorer: () => xpExplorer(ctx, { visite: () => xpVisite(ctx), raccourcis: () => xpRaccourcis(ctx) }),
     visite: () => xpVisite(ctx),
     raccourcis: () => xpRaccourcis(ctx),
-    trame: () => xpTrame(),
   };
   const clic = (e: MouseEvent) => {
     const b = (e.target as Element).closest<HTMLElement>('[data-xp]');
@@ -69,7 +68,6 @@ export function xpDemarrer(ctx: XPContexte) {
     if (e.key === 'k' || e.key === 'K' || e.key === '/') actions.explorer();
     else if (e.key === 'v' || e.key === 'V') actions.visite();
     else if (e.key === '?') actions.raccourcis();
-    else if (e.key === 't' || e.key === 'T') xpTrame();
     else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && (e.target === document.body || e.target === document.documentElement)) {
       // page projet : ← → pour le projet précédent ou suivant
       const a = document.querySelector<HTMLAnchorElement>(e.key === 'ArrowRight' ? '[data-projet-suivant]' : '[data-projet-precedent]');
@@ -82,7 +80,7 @@ export function xpDemarrer(ctx: XPContexte) {
   document.addEventListener('click', clic);
   document.addEventListener('click', lien, true);
   addEventListener('keydown', touche);
-  const autres = [xpEntete(), xpAimants()];
+  const autres = [xpEntete(), xpPrecharge(ctx)];
   return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
@@ -92,7 +90,7 @@ export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.enteteCache;
   const f = [
     xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpVues(root), xpFiches(ctx, root),
-    xpTitres(root), xpVoiles(root), xpFilets(root), xpVers(root), xpInclinaison(root), xpCarnet(ctx, root), xpLogoPied(), xpCascades(root), xpCompteurs(root),
+    xpCarnet(ctx, root), xpImagesDouces(root), xpDejaVus(ctx, root),
   ];
   return () => f.forEach((x) => x());
 }

@@ -214,7 +214,9 @@
 
   /* ---------- routeur ---------- */
   const existe = (p) => !!tpl(`data-r="${p}"`);
-  const va = (p, { ancre, pousse = true } = {}) => {
+  const va = (p, { ancre, pousse = true, y = 0 } = {}) => {
+    // on note où l'on en était sur la page qu'on quitte, pour y revenir avec le bouton Retour
+    if (route && pousse) { try { history.replaceState({ p: route, y: scrollY }, ''); } catch (e) { /* idem */ } }
     if (!p.endsWith('/')) p += '/';
     if (!existe(p)) p = `/${lang || 'fr'}/`;
     const l = p.slice(1, 3);
@@ -227,7 +229,7 @@
     route = p;
     majEnTete(p);
     if (pousse) { try { history.pushState({ p }, '', '#' + p.slice(1).replace(/\/$/, '')); } catch (e) { /* cadre sans historique */ } }
-    if (ancre && document.getElementById(ancre)) document.getElementById(ancre).scrollIntoView(); else scrollTo(0, 0);
+    if (ancre && document.getElementById(ancre)) document.getElementById(ancre).scrollIntoView(); else scrollTo(0, y);
     defile();
     visionneuses(); comparateurs(); index(); formulaire();
     finPage(); finPage = XP.xpPage(ctx, main);
@@ -242,7 +244,7 @@
     const [p, ancre] = a.getAttribute('href').slice(1).split('#');
     va(p, { ancre });
   });
-  addEventListener('popstate', (e) => { const p = e.state?.p; if (p) va(p, { pousse: false }); });
+  addEventListener('popstate', (e) => { const p = e.state?.p; if (p) va(p, { pousse: false, y: e.state.y || 0 }); });
 
   XP.xpDemarrer(ctx);
   const depart = (() => { const h = location.hash.slice(1).replace(/\./g, '/'); return h ? '/' + h.replace(/^\/+/, '') : '/fr/'; })();

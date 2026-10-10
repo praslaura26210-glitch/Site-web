@@ -145,10 +145,6 @@
     "Tutte le immagini del progetto"
    ],
    [
-    "T",
-    "Mostra la griglia di composizione"
-   ],
-   [
     "Esc",
     "Chiudi"
    ],
@@ -162,6 +158,6 @@
   "resultats": "risultati",
   "carnet": "Taccuino di disegni",
   "carnetAide": "Trascina per sfogliare · clicca per aprire",
-  "trame": "Griglia di composizione"
+  "dejaVu": "Già visto"
  }
 }

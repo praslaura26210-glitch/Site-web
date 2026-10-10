@@ -136,7 +136,7 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
   };
 
   return (
-    <article className={styles.projet}>
+    <article className={styles.projet} data-projet={p.slug}>
       <header className={styles.ouv} data-format={paysage ? 'paysage' : 'portrait'}>
         <div className={styles.ouvTxt}>
           <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>

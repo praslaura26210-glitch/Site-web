@@ -145,10 +145,6 @@
     "Toutes les images du projet"
    ],
    [
-    "T",
-    "Afficher la trame de composition"
-   ],
-   [
     "Échap",
     "Fermer"
    ],
@@ -162,6 +158,6 @@
   "resultats": "résultats",
   "carnet": "Carnet de dessins",
   "carnetAide": "Glisser pour parcourir · cliquer pour ouvrir",
-  "trame": "Trame de composition"
+  "dejaVu": "Déjà consulté"
  }
 }

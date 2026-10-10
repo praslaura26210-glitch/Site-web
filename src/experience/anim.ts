@@ -1,151 +1,14 @@
-import { xpCalme, xpEl, type XPContexte } from './outils';
+import { xpEl, type XPContexte } from './outils';
 
-/* Animations de la page : tout ce qui apparaît en entrant à l'écran.
-   Règle : le contenu reste lisible sans JavaScript ; on ne cache que ce qui est sous la ligne de flottaison. */
+/*
+ * Mouvements de la page. Règle : un mouvement n'existe que s'il répond à une question du visiteur.
+ *   « Où suis-je ? » (orientation) · « Qu'est-ce qui a réagi ? » (retour d'action)
+ *   « D'où vient ce que je vois ? » (continuité) · « Qu'est-ce que je peux faire ici ? » (indice)
+ * Rien de décoratif, rien qui retienne le contenu : le texte et les images sont lisibles tout de suite.
+ * Durées courtes (de 150 à 450 ms ; seule la photo qui devient couverture prend un peu plus).
+ */
 
-/** Observe une liste d'éléments ; data-vu quand ils entrent à l'écran. */
-function xpQuandVisible(els: Element[], marge = '0px 0px -10% 0px') {
-  const io = new IntersectionObserver((es) => es.forEach((e) => {
-    if (!e.isIntersecting) return;
-    (e.target as HTMLElement).dataset.vu = '';
-    io.unobserve(e.target);
-  }), { rootMargin: marge });
-  els.forEach((e) => io.observe(e));
-  return () => io.disconnect();
-}
-
-/** Attend la fin de l'ouverture (porte de la cabane) avant de lancer f. */
-function xpApresOuverture(f: () => void) {
-  const html = document.documentElement;
-  if (!html.dataset.intro) { f(); return () => {}; }
-  const mo = new MutationObserver(() => { if (!html.dataset.intro) { mo.disconnect(); f(); } });
-  mo.observe(html, { attributes: true, attributeFilter: ['data-intro'] });
-  return () => mo.disconnect();
-}
-
-/** Titres : chaque mot monte de derrière un cache, l'un après l'autre. */
-export function xpTitres(root: HTMLElement) {
-  if (xpCalme()) return () => {};
-  const titres = [...root.querySelectorAll<HTMLElement>('h1, [class*="__inter"] h2, [class*="__livretT"], [class*="__suivantT"], [class*="__refHead"] h1')]
-    .filter((h) => !h.dataset.mots && !h.closest('dialog'));
-  titres.forEach((h) => {
-    let k = 0;
-    const decoupe = (n: Node): Node[] => {
-      if (n.nodeType === 3) {
-        return (n.textContent || '').split(/(\s+)/).filter(Boolean).map((m) => {
-          if (/^\s+$/.test(m)) return document.createTextNode(m);
-          const s = xpEl('span', { class: 'xp-mot' }, [xpEl('span', { text: m })]);
-          s.style.setProperty('--i', String(k++));
-          return s;
-        });
-      }
-      if (n.nodeType === 1 && (n as Element).tagName !== 'BR') {
-        const c = n as HTMLElement;
-        const enfants = [...c.childNodes];
-        c.replaceChildren(...enfants.flatMap(decoupe));
-      }
-      return [n];
-    };
-    const enfants = [...h.childNodes];
-    h.replaceChildren(...enfants.flatMap(decoupe));
-    h.dataset.mots = '';
-  });
-  const nettoie: (() => void)[] = [];
-  nettoie.push(xpApresOuverture(() => nettoie.push(xpQuandVisible(titres, '0px 0px -4% 0px'))));
-  return () => nettoie.forEach((f) => f());
-}
-
-/** Images : elles se découvrent de bas en haut, comme une feuille qu'on soulève, avec un léger recul. */
-export function xpVoiles(root: HTMLElement) {
-  if (xpCalme()) return () => {};
-  const imgs = [...root.querySelectorAll<HTMLElement>('figure img, [class*="__carteImg"] img, [class*="__tuile"] img, .xp-frise-img img, [class*="__portrait"] img')]
-    .filter((i) => !i.closest('[class*="__apercu"], [class*="__visScene"], [class*="__cmpStage"], dialog') && i.getBoundingClientRect().top > innerHeight * 0.85);
-  imgs.forEach((i) => { i.dataset.voile = ''; });
-  // on observe le cadre de l'image : une image découpée à zéro n'est jamais « visible » pour le navigateur
-  const io = new IntersectionObserver((es) => es.forEach((e) => {
-    if (!e.isIntersecting) return;
-    const i = imgs.find((x) => x.parentElement === e.target);
-    if (i) i.dataset.vu = '';
-    io.unobserve(e.target);
-  }), { rootMargin: '0px 0px -6% 0px' });
-  imgs.forEach((i) => i.parentElement && io.observe(i.parentElement));
-  return () => io.disconnect();
-}
-
-/** Filets : les traits de séparation se tracent de gauche à droite (un cache blanc qui se retire). */
-export function xpFilets(root: HTMLElement) {
-  if (xpCalme()) return () => {};
-  const sel = '[class*="__liste"] > li, [class*="__inter"], [class*="__head"], [class*="__suite"], [class*="__livret"], [class*="__refHead"], [class*="__coordList"] > div, [class*="__parcours"] li, [class*="__colonne"] li';
-  const els = [...root.querySelectorAll<HTMLElement>(sel)].filter((e) => e.getBoundingClientRect().top > innerHeight * 0.8);
-  const avec: HTMLElement[] = [];
-  els.forEach((e) => {
-    const cs = getComputedStyle(e);
-    const haut = parseFloat(cs.borderTopWidth) > 0, bas = parseFloat(cs.borderBottomWidth) > 0;
-    if (!haut && !bas) return;
-    if (cs.position === 'static') e.style.position = 'relative';
-    if (haut) e.append(xpEl('i', { class: 'xp-cache-filet', 'data-cote': 'haut', 'aria-hidden': 'true', style: `top:-${cs.borderTopWidth}; height:${cs.borderTopWidth}` }));
-    if (bas) e.append(xpEl('i', { class: 'xp-cache-filet', 'data-cote': 'bas', 'aria-hidden': 'true', style: `bottom:-${cs.borderBottomWidth}; height:${cs.borderBottomWidth}` }));
-    avec.push(e);
-  });
-  return xpQuandVisible(avec, '0px 0px -8% 0px');
-}
-
-/** Poème : les vers arrivent un par un, à la vitesse de la lecture. */
-export function xpVers(root: HTMLElement) {
-  if (xpCalme()) return () => {};
-  const strophes = [...root.querySelectorAll<HTMLElement>('[class*="__poeme"] p')].filter((p) => !p.dataset.vers);
-  let k = 0;
-  strophes.forEach((p) => {
-    const lignes = (p.textContent || '').split('\n').map((l) => l.trim()).filter(Boolean);
-    p.replaceChildren(...lignes.map((l) => { const s = xpEl('span', { class: 'xp-vers', text: l }); s.style.setProperty('--i', String(k++ % 6)); return s; }));
-    p.dataset.vers = '';
-  });
-  const vers = strophes.flatMap((p) => [...p.children]);
-  return xpQuandVisible(vers, '0px 0px -12% 0px');
-}
-
-/** Boutons ronds « aimantés » : ils suivent un peu le pointeur. */
-export function xpAimants() {
-  if (xpCalme() || !matchMedia('(hover: hover)').matches) return () => {};
-  const SEL = '.xp-lb-nav, .xp-vi-nav, .xp-fi-nav, .xp-frise-bas button, [class*="__visNav"], [class*="__envoyer"], [class*="__baseIcones"] a, .xp-explorer';
-  let cur: HTMLElement | null = null;
-  const bouge = (e: PointerEvent) => {
-    const el = (e.target as Element).closest<HTMLElement>(SEL);
-    if (cur && cur !== el) { cur.style.translate = ''; cur = null; }
-    if (!el || (el as HTMLButtonElement).disabled) return;
-    cur = el;
-    const r = el.getBoundingClientRect();
-    const dx = (e.clientX - (r.left + r.width / 2)) * 0.28, dy = (e.clientY - (r.top + r.height / 2)) * 0.28;
-    el.style.translate = `${Math.max(-8, Math.min(8, dx))}px ${Math.max(-8, Math.min(8, dy))}px`;
-  };
-  const sort = () => { if (cur) { cur.style.translate = ''; cur = null; } };
-  addEventListener('pointermove', bouge, { passive: true });
-  document.addEventListener('pointerleave', sort);
-  return () => { removeEventListener('pointermove', bouge); document.removeEventListener('pointerleave', sort); };
-}
-
-/** Références : la photo s'incline très légèrement sous le pointeur. */
-export function xpInclinaison(root: HTMLElement) {
-  if (xpCalme() || !matchMedia('(hover: hover)').matches) return () => {};
-  const tuiles = [...root.querySelectorAll<HTMLElement>('[data-fiche]')];
-  const off: (() => void)[] = [];
-  tuiles.forEach((t) => {
-    const img = t.querySelector<HTMLElement>('img');
-    if (!img) return;
-    const bouge = (e: PointerEvent) => {
-      const r = t.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-      img.style.transform = `perspective(900px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) scale(1.02)`;
-    };
-    const sort = () => { img.style.transform = ''; };
-    t.addEventListener('pointermove', bouge);
-    t.addEventListener('pointerleave', sort);
-    off.push(() => { t.removeEventListener('pointermove', bouge); t.removeEventListener('pointerleave', sort); });
-  });
-  return () => off.forEach((f) => f());
-}
-
-/** En-tête : s'efface quand on descend, revient dès qu'on remonte. Le logo se redessine au survol. */
+/** En-tête : il s'efface quand on descend (plus de place pour les images) et revient dès qu'on remonte. */
 export function xpEntete() {
   const html = document.documentElement;
   let y0 = scrollY;
@@ -156,132 +19,110 @@ export function xpEntete() {
     else if (y < y0 - 4 || y < 120) delete html.dataset.enteteCache;
     y0 = y;
   };
-  const survol = (e: PointerEvent) => {
-    const a = (e.target as Element).closest('a');
-    const svg = a?.querySelector('svg');
-    if (!svg || !a!.matches('[class*="__brand"], [class*="__baseBrand"], [class*="__baseNom"], footer a:first-child') || svg.classList.contains('logoDraw')) return;
-    svg.classList.add('logoDraw');
-    setTimeout(() => svg.classList.remove('logoDraw'), 2600);
-  };
   addEventListener('scroll', defile, { passive: true });
-  document.addEventListener('pointerover', survol);
-  return () => { removeEventListener('scroll', defile); document.removeEventListener('pointerover', survol); };
-}
-
-/** Le logo du pied de page se dessine quand il arrive à l'écran. */
-export function xpLogoPied() {
-  if (xpCalme()) return () => {};
-  const svg = document.querySelector<SVGElement>('.page > footer svg');
-  if (!svg) return () => {};
-  const io = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
-    svg.classList.remove('logoDraw'); void (svg as unknown as HTMLElement).getBoundingClientRect(); svg.classList.add('logoDraw');
-  }, { rootMargin: '0px 0px -10% 0px' });
-  io.observe(svg);
-  return () => io.disconnect();
-}
-
-/** Trame (touche T) : la grille de composition du site apparaît, comme un calque posé sur la planche. */
-export function xpTrame(force?: boolean) {
-  const ex = document.querySelector('.xp-trame');
-  if (ex && force !== true) { ex.classList.add('xp-trame-sort'); setTimeout(() => ex.remove(), 500); return; }
-  if (ex) return;
-  const cols = xpEl('div', { class: 'xp-trame-cols' });
-  for (let k = 0; k < 12; k++) cols.append(xpEl('i', {}, [xpEl('span', { text: String(k + 1).padStart(2, '0') })]));
-  const largeur = Math.min(innerWidth, 1280);
-  document.body.append(xpEl('div', { class: 'xp-trame', 'aria-hidden': 'true' }, [
-    xpEl('div', { class: 'xp-trame-in' }, [
-      xpEl('div', { class: 'xp-trame-cote' }, [xpEl('span', { text: `${largeur} px · 12 colonnes` })]),
-      cols,
-    ]),
-  ]));
+  return () => removeEventListener('scroll', defile);
 }
 
 /**
- * Carnet de dessins (accueil) : tous les dessins des projets défilent lentement sur une ligne.
- * On peut le saisir et le faire glisser ; un clic ouvre le dessin dans son projet.
+ * Préchargement : dès qu'on survole un projet (ou qu'on le sélectionne au clavier), sa grande image
+ * se charge. Au clic, la page s'ouvre sans attente et la photo reste nette pendant la transition.
+ */
+export function xpPrecharge(ctx: XPContexte) {
+  const fait = new Set<string>();
+  const vise = (e: Event) => {
+    const a = (e.target as Element).closest?.('a[href]');
+    if (!a) return;
+    const h = a.getAttribute('href') || '';
+    const p = ctx.D.projets.find((x) => h.endsWith(`/projets/${x.slug}/`) || h.endsWith(`/projets/${x.slug}`));
+    if (!p || fait.has(p.slug)) return;
+    fait.add(p.slug);
+    new Image().src = p.cover.src;
+  };
+  document.addEventListener('pointerover', vise, { passive: true });
+  document.addEventListener('focusin', vise);
+  return () => { document.removeEventListener('pointerover', vise); document.removeEventListener('focusin', vise); };
+}
+
+/** Images : celles qui ne sont pas encore arrivées apparaissent en fondu court au lieu de surgir par morceaux. */
+export function xpImagesDouces(root: HTMLElement) {
+  const imgs = [...root.querySelectorAll<HTMLImageElement>('figure img, [class*="__carteImg"] img, [class*="__tuile"] img, .xp-frise-img img')].filter((i) => !i.complete);
+  imgs.forEach((i) => {
+    i.dataset.attente = '';
+    const fin = () => { delete i.dataset.attente; };
+    i.addEventListener('load', fin, { once: true });
+    i.addEventListener('error', fin, { once: true });
+  });
+  return () => imgs.forEach((i) => delete i.dataset.attente);
+}
+
+/**
+ * Carnet de dessins (accueil) : tous les dessins des projets sur une ligne, que le visiteur fait défiler
+ * lui-même (glisser, molette, flèches). Rien ne bouge tout seul. Survol : légende ; clic : le dessin dans son projet.
  */
 export function xpCarnet(ctx: XPContexte, root: HTMLElement) {
   const box = root.querySelector<HTMLElement>('[data-carnet]');
   if (!box) return () => {};
   const piste = box.querySelector<HTMLElement>('[data-carnet-piste]')!;
+  const fenetre = box.querySelector<HTMLElement>('.xp-carnet-fenetre')!;
   const legende = box.querySelector<HTMLElement>('[data-carnet-legende]');
-  const dessins = ctx.D.dessins;
-  const ajoute = () => dessins.forEach((d) => {
-    const a = xpEl('a', { href: ctx.href(d.href), class: 'xp-carnet-item', draggable: 'false', 'aria-label': `${d.legende}, ${d.projet}` }, [
+  const jauge = box.querySelector<HTMLElement>('[data-carnet-jauge]');
+  if (!piste.children.length) ctx.D.dessins.forEach((d) => {
+    const a = xpEl('a', { href: ctx.href(d.href), class: 'xp-carnet-item', draggable: 'false', 'aria-label': `${d.legende}, ${d.projet}`, 'data-xp-libre': '' }, [
       xpEl('img', { src: d.thumb, alt: '', loading: 'lazy', draggable: 'false', width: Math.round(d.w), height: Math.round(d.h) }),
     ]);
-    a.addEventListener('pointerenter', () => { if (legende) legende.innerHTML = `<b>${d.legende}</b> · ${d.projet}`; });
+    const montre = () => { if (legende) legende.innerHTML = `<b>${d.legende}</b> · ${d.projet}`; };
+    a.addEventListener('pointerenter', montre);
+    a.addEventListener('focus', montre);
     a.addEventListener('click', (e) => { e.preventDefault(); if (!bouge) ctx.naviguer(d.href); });
     piste.append(a);
   });
-  ajoute(); ajoute(); // deux fois : la boucle est continue
-  let x = 0, v = xpCalme() ? 0 : -0.45, cible = v, raf = 0, lent = false;
-  let tire: number | null = null, x0 = 0, bouge = false, vit = 0, t0 = 0;
-  const demi = () => piste.scrollWidth / 2;
-  const pas = () => {
-    if (tire == null) {
-      cible = lent ? 0 : (xpCalme() ? 0 : -0.45);
-      v += (cible - v) * 0.05 + vit; vit *= 0.92;
-      x += v;
-    }
-    const w = demi();
-    if (w > 0) { if (x <= -w) x += w; if (x > 0) x -= w; }
-    piste.style.transform = `translate3d(${x}px,0,0)`;
-    raf = requestAnimationFrame(pas);
+  const maj = () => {
+    const max = fenetre.scrollWidth - fenetre.clientWidth;
+    if (jauge) jauge.style.transform = `scaleX(${max > 0 ? Math.max(0.06, fenetre.scrollLeft / max) : 1})`;
   };
-  raf = requestAnimationFrame(pas);
-  box.addEventListener('pointerenter', () => (lent = true));
-  box.addEventListener('pointerleave', () => { lent = false; if (legende) legende.textContent = legende.dataset.defaut || ''; });
-  box.addEventListener('pointerdown', (e) => { tire = e.clientX; x0 = x; bouge = false; t0 = e.clientX; box.setPointerCapture?.(e.pointerId); box.dataset.tire = ''; });
-  box.addEventListener('pointermove', (e) => {
-    if (tire == null) return;
-    const dx = e.clientX - tire;
-    if (Math.abs(dx) > 5) bouge = true;
-    vit = (e.clientX - t0) * 0.06; t0 = e.clientX;
-    x = x0 + dx;
+  fenetre.addEventListener('scroll', maj, { passive: true });
+  fenetre.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    const max = fenetre.scrollWidth - fenetre.clientWidth;
+    if ((e.deltaY > 0 && fenetre.scrollLeft < max - 1) || (e.deltaY < 0 && fenetre.scrollLeft > 1)) { e.preventDefault(); fenetre.scrollLeft += e.deltaY; }
+  }, { passive: false });
+  // glisser à la souris (au doigt, le défilement natif suffit)
+  let x0: number | null = null, s0 = 0, bouge = false;
+  fenetre.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; x0 = e.clientX; s0 = fenetre.scrollLeft; bouge = false; });
+  const glisse = (e: PointerEvent) => {
+    if (x0 == null) return;
+    const dx = e.clientX - x0;
+    if (Math.abs(dx) > 6) { bouge = true; box.dataset.tire = ''; }
+    fenetre.scrollLeft = s0 - dx;
+  };
+  const lache = () => { x0 = null; delete box.dataset.tire; setTimeout(() => (bouge = false), 0); };
+  addEventListener('pointermove', glisse);
+  addEventListener('pointerup', lache);
+  box.addEventListener('pointerleave', () => { if (legende) legende.textContent = legende.dataset.defaut || ''; });
+  fenetre.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    fenetre.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * fenetre.clientWidth * 0.6, behavior: 'smooth' });
   });
-  const lache = (e: PointerEvent) => {
-    if (tire == null) return;
-    tire = null; delete box.dataset.tire;
-    if (!bouge) { const a = document.elementsFromPoint(e.clientX, e.clientY).find((n) => n.classList?.contains('xp-carnet-item')) as HTMLAnchorElement | undefined; a?.click(); }
-    setTimeout(() => (bouge = false), 0);
-  };
-  box.addEventListener('pointerup', lache);
-  box.addEventListener('pointercancel', lache);
-  box.addEventListener('wheel', (e) => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); x -= e.deltaX; } }, { passive: false });
-  return () => cancelAnimationFrame(raf);
+  requestAnimationFrame(maj);
+  return () => { removeEventListener('pointermove', glisse); removeEventListener('pointerup', lache); };
 }
 
-/** Cascades : le texte d'ouverture d'une page arrive ligne après ligne (après la porte, sur l'accueil). */
-export function xpCascades(root: HTMLElement) {
-  if (xpCalme()) return () => {};
-  const blocs = [...root.querySelectorAll<HTMLElement>('[class*="__heroTxt"], [class*="__livretInfos"], [class*="__coordList"], [class*="__ouvTxt"]')].filter((b) => !b.dataset.cascade);
-  blocs.forEach((b) => { b.dataset.cascade = ''; [...b.children].forEach((c, k) => (c as HTMLElement).style.setProperty('--i', String(k))); });
-  const nettoie: (() => void)[] = [];
-  nettoie.push(xpApresOuverture(() => nettoie.push(xpQuandVisible(blocs, '0px 0px -5% 0px'))));
-  return () => nettoie.forEach((f) => f());
-}
-
-/** Compteurs : « 06 » se compte de 00 à 06 quand il arrive à l'écran. */
-export function xpCompteurs(root: HTMLElement) {
-  if (xpCalme()) return () => {};
-  const els = [...root.querySelectorAll<HTMLElement>('[class*="__projetsHead"] span.eyebrow')].filter((e) => /^\d+$/.test(e.textContent || ''));
-  const io = new IntersectionObserver((es) => es.forEach((e) => {
-    if (!e.isIntersecting) return;
-    io.unobserve(e.target);
-    const el = e.target as HTMLElement;
-    const fin = +(el.dataset.fin || el.textContent || 0);
-    el.dataset.fin = String(fin);
-    const t0 = performance.now();
-    const pas = (t: number) => {
-      const k = Math.min(1, (t - t0) / 900);
-      el.textContent = String(Math.round(fin * (1 - Math.pow(1 - k, 3)))).padStart(2, '0');
-      if (k < 1) requestAnimationFrame(pas);
-    };
-    requestAnimationFrame(pas);
-  }));
-  els.forEach((e) => io.observe(e));
-  return () => io.disconnect();
+const CLE_VUS = 'lp-projets-vus';
+/** Projets déjà ouverts : un petit point à côté de leur titre dans les listes, pour savoir où l'on en est. */
+export function xpDejaVus(ctx: XPContexte, root: HTMLElement) {
+  let vus: string[] = [];
+  try { vus = JSON.parse(localStorage.getItem(CLE_VUS) || '[]'); } catch { /* stockage indisponible */ }
+  const ici = root.querySelector<HTMLElement>('[data-projet]')?.dataset.projet;
+  if (ici && !vus.includes(ici)) {
+    vus.push(ici);
+    try { localStorage.setItem(CLE_VUS, JSON.stringify(vus)); } catch { /* idem */ }
+  }
+  root.querySelectorAll<HTMLAnchorElement>('a[href*="/projets/"]').forEach((a) => {
+    const slug = (a.getAttribute('href') || '').match(/\/projets\/([^/#]+)/)?.[1];
+    const titre = a.querySelector('[class*="__lT"], [class*="__carteT"], .xp-frise-t');
+    if (!slug || !titre || !vus.includes(slug) || slug === ici || titre.querySelector('.xp-vu')) return;
+    titre.append(xpEl('span', { class: 'xp-vu', title: ctx.D.t.dejaVu }, [xpEl('span', { class: 'sr-only', text: ctx.D.t.dejaVu })]));
+  });
+  return () => {};
 }

@@ -127,7 +127,7 @@ function xpEnvol(img: HTMLImageElement | null | undefined, e: XPEntree, fin: () 
   void voile.offsetWidth;
   voile.dataset.on = '';
   Object.assign(c.style, { left: `${(W - w) / 2}px`, top: `${76 + (H - h) / 2}px`, width: `${w}px`, height: `${h}px`, objectPosition: '50% 50%' });
-  setTimeout(() => { fin(); img.style.visibility = ''; setTimeout(() => voile.remove(), 450); }, 620);
+  setTimeout(() => { fin(); img.style.visibility = ''; setTimeout(() => voile.remove(), 300); }, 400);
 }
 
 /** Ouvre la visionneuse plein écran sur l'image i de la page ; ← → pour parcourir toutes les images. */

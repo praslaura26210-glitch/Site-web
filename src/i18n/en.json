@@ -145,10 +145,6 @@
     "All images of the project"
    ],
    [
-    "T",
-    "Show the layout grid"
-   ],
-   [
     "Esc",
     "Close"
    ],
@@ -162,6 +158,6 @@
   "resultats": "results",
   "carnet": "Sketchbook",
   "carnetAide": "Drag to browse · click to open",
-  "trame": "Layout grid"
+  "dejaVu": "Already viewed"
  }
 }
