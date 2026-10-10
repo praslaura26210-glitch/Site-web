@@ -158,6 +158,18 @@
   "resultats": "risultati",
   "carnet": "Taccuino di disegni",
   "carnetAide": "Trascina per sfogliare · clicca per aprire",
-  "dejaVu": "Già visto"
+  "dejaVu": "Già visto",
+  "accrochage": "Parete",
+  "accrochageTitre": "I sei progetti su un unico tavolo",
+  "accrochageAide": "Trascina per spostarti · rotella o pizzico per ingrandire · clicca una tavola per aprirla",
+  "toutVoir": "Vedi tutto",
+  "accrochageLien": "Vedi la parete",
+  "accrochageSansJs": "La parete richiede JavaScript. Vedi l'elenco dei progetti",
+  "pour": "Per",
+  "pourIntro": "Una selezione preparata per",
+  "pourEcrire": "Scrivimi",
+  "pourExemple": "Pagina di esempio: ogni studio riceve il proprio indirizzo, con il suo messaggio e i progetti nell'ordine che lo riguarda.",
+  "ecouter": "Ascolta Laura presentare il progetto",
+  "ecouterPause": "Pausa"
  }
 }

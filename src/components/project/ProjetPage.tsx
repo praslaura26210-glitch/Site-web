@@ -1,9 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import Link from 'next/link';
 import type { Dict, Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import { ancreDessin } from '@/lib/experience';
+import { v } from '@/lib/ver';
 import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
@@ -28,6 +31,9 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
   const cr = CREDITS[p.slug] || { defaut: '' };
   const credit = (r: string) => cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined);
   const cov = M(mise.ouverture);
+  // voix de Laura (facultative) : content/projets/<slug>/audio/presentation.mp3
+  const voixFichier = ['presentation.mp3', 'presentation.m4a'].find((f) => fs.existsSync(path.join(process.cwd(), 'content/projets', p.slug, 'audio', f)));
+  const voix = voixFichier ? v(`/media/${p.slug}/audio/${voixFichier}`) : null;
   const paysage = cov.w > cov.h;
   let inter = 0;
 
@@ -160,7 +166,17 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
             {p.lieu && <li>{t.projet.lieu} : {p.lieu}</li>}
           </ul>
         </div>
-        <div className={`${styles.livretTexte} rv`}>{p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}</div>
+        <div className={`${styles.livretTexte} rv`}>
+          {p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}
+          {voix && (
+            <button type="button" className="xp-ecoute" data-ecoute={voix} data-pause={t.xp.ecouterPause}>
+              <span className="xp-ecoute-icone" aria-hidden="true" />
+              <span className="xp-ecoute-t">{t.xp.ecouter}</span>
+              <span className="xp-ecoute-temps" aria-hidden="true" />
+              <span className="xp-ecoute-barre" aria-hidden="true"><i /></span>
+            </button>
+          )}
+        </div>
       </section>
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>

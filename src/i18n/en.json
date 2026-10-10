@@ -158,6 +158,18 @@
   "resultats": "results",
   "carnet": "Sketchbook",
   "carnetAide": "Drag to browse · click to open",
-  "dejaVu": "Already viewed"
+  "dejaVu": "Already viewed",
+  "accrochage": "Pin-up wall",
+  "accrochageTitre": "The six projects on one table",
+  "accrochageAide": "Drag to move · scroll or pinch to zoom · click a sheet to open it",
+  "toutVoir": "See all",
+  "accrochageLien": "See the pin-up wall",
+  "accrochageSansJs": "The pin-up wall needs JavaScript. See the list of projects",
+  "pour": "For",
+  "pourIntro": "A selection prepared for",
+  "pourEcrire": "Write to me",
+  "pourExemple": "Sample page: each practice gets its own address, with its own note and the projects in the order that matters to it.",
+  "ecouter": "Listen to Laura present the project",
+  "ecouterPause": "Pause"
  }
 }

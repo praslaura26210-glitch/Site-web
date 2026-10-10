@@ -31,6 +31,8 @@ for (const slug of fs.readdirSync(path.join(src, 'projets'))) {
   const p = path.join(src, 'projets', slug);
   n += copyDir(path.join(p, 'images'), path.join(dst, slug, 'images'));
   n += copyDir(path.join(p, 'plans'), path.join(dst, slug, 'plans'));
+  // voix de Laura qui présente le projet (facultatif) : audio/presentation.mp3
+  n += copyDir(path.join(p, 'audio'), path.join(dst, slug, 'audio'), (f) => /\.(mp3|m4a)$/i.test(f));
   // données publiques du projet (maquette 3D, croquis vectorisés) ; pas les fiches ni les textes
   for (const f of fs.readdirSync(p)) {
     if (!f.endsWith('.json') || f === 'data.json' || f.startsWith('textes.')) continue;

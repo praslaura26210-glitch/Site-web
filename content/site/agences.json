@@ -1,0 +1,20 @@
+{
+ "_mode_d_emploi": "Une entrée par agence. slug : la fin de l'adresse (…/fr/pour/slug/). nom : le nom de l'agence. mot : deux ou trois lignes écrites pour elle (fr, et en ou it si besoin). ordre : les projets dans l'ordre voulu (les absents suivent dans l'ordre habituel). L'entrée « exemple » montre le rendu ; elle peut rester, personne n'y a accès sans l'adresse.",
+ "agences": [
+  {
+   "slug": "exemple",
+   "nom": "Agence exemple",
+   "exemple": true,
+   "mot": {
+    "fr": "Exemple : ici, deux ou trois lignes que j'écris pour l'agence, sur ce qui m'attire dans son travail et ce que je pourrais y apporter.",
+    "en": "Example: here, two or three lines I write for the practice, about what draws me to its work and what I could bring.",
+    "it": "Esempio: qui, due o tre righe che scrivo per lo studio, su ciò che mi attira nel suo lavoro e su ciò che potrei portare."
+   },
+   "ordre": [
+    "entre-deux-regards",
+    "le-passage-des-artistes",
+    "la-ruche"
+   ]
+  }
+ ]
+}

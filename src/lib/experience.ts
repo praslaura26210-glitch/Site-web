@@ -5,7 +5,7 @@ import { couverture } from '@/components/home/ProjetsGrille';
 import { PDF_HREF } from '@/components/chrome/liens';
 import { getProjets, type Projet } from './content';
 import { media } from './media';
-import { MISES, type Bloc } from './sequences';
+import { CREDITS, MISES, type Bloc } from './sequences';
 
 /** Identifiant d'ancre d'une image de projet (repris par Planche et Visionneuse). */
 export const ancreDessin = (ref: string) => `d-${ref.replace(/^\w:/, '')}`;
@@ -34,11 +34,18 @@ export function donneesExperience(lang: Lang): XPDonnees {
   const dessins: XPDessin[] = [];
   for (const p of projets) {
     const vus = new Set<string>();
-    for (const b of MISES[p.slug]?.blocs || []) for (const r of refsDe(b)) {
+    const cr = CREDITS[p.slug] || { defaut: '' };
+    const mise = MISES[p.slug];
+    const refs = [...(mise ? [mise.ouverture] : []), ...(mise?.blocs || []).flatMap(refsDe)];
+    for (const r of refs) {
       if (vus.has(r)) continue;
       vus.add(r);
       const m = media(p, r);
-      dessins.push({ id: ancreDessin(r), slug: p.slug, projet: p.titre, legende: m.legende, thumb: m.srcSmall || m.src, w: m.w, h: m.h, href: `/${lang}/projets/${p.slug}/#${ancreDessin(r)}` });
+      const vect = m.kind === 'plan' && m.src === m.svg;
+      dessins.push({
+        id: ancreDessin(r), slug: p.slug, projet: p.titre, legende: m.legende, thumb: m.srcSmall || m.src, w: m.w, h: m.h, href: `/${lang}/projets/${p.slug}/#${ancreDessin(r)}`,
+        preview: vect ? undefined : m.src, svg: m.svg, full: m.full, credit: cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined), dessin: m.kind === 'plan' || !!m.scan,
+      });
     }
   }
   return {
@@ -52,6 +59,7 @@ export function donneesExperience(lang: Lang): XPDonnees {
     pages: [
       { label: t.nav.home, href: `/${lang}/` },
       { label: t.nav.projets, href: `/${lang}/projets/` },
+      { label: t.xp.accrochage, href: `/${lang}/accrochage/` },
       { label: t.nav.apropos, href: `/${lang}/a-propos/` },
       { label: t.nav.references, href: `/${lang}/references/` },
       { label: t.nav.contact, href: `/${lang}/contact/` },

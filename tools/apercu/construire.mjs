@@ -66,7 +66,7 @@ for (const m of styles.matchAll(/\.((\w+)-module__[A-Za-z0-9-]+?__([A-Za-z0-9]+)
 const textes = Object.fromEntries(LANGS.map((l) => [l, JSON.parse(fs.readFileSync(path.join(root, 'src/i18n', `${l}.json`), 'utf8'))]));
 /* couche « expérience » : les modules TypeScript de src/experience, transpilés et réunis dans XP */
 const ts = requireLocal('typescript');
-const MODULES = ['outils', 'transition', 'anim', 'lightbox', 'explorer', 'visite', 'chapitres', 'vues', 'fiches', 'index'];
+const MODULES = ['outils', 'transition', 'anim', 'lightbox', 'accrochage', 'explorer', 'visite', 'chapitres', 'vues', 'fiches', 'index'];
 const xp = MODULES.map((m) => ts.transpileModule(fs.readFileSync(path.join(root, 'src/experience', `${m}.ts`), 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext } }).outputText
   .replace(/^import[^;]*;$/gm, '').replace(/^export \{\};?$/gm, '').replace(/^export (?=(async )?function|const|let|class)/gm, '')).join('\n');
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');

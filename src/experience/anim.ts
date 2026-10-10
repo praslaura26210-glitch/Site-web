@@ -66,7 +66,7 @@ export function xpCarnet(ctx: XPContexte, root: HTMLElement) {
   const fenetre = box.querySelector<HTMLElement>('.xp-carnet-fenetre')!;
   const legende = box.querySelector<HTMLElement>('[data-carnet-legende]');
   const jauge = box.querySelector<HTMLElement>('[data-carnet-jauge]');
-  if (!piste.children.length) ctx.D.dessins.forEach((d) => {
+  if (!piste.children.length) ctx.D.dessins.filter((d) => d.dessin).forEach((d) => {
     const a = xpEl('a', { href: ctx.href(d.href), class: 'xp-carnet-item', draggable: 'false', 'aria-label': `${d.legende}, ${d.projet}`, 'data-xp-libre': '' }, [
       xpEl('img', { src: d.thumb, alt: '', loading: 'lazy', draggable: 'false', width: Math.round(d.w), height: Math.round(d.h) }),
     ]);
@@ -125,4 +125,29 @@ export function xpDejaVus(ctx: XPContexte, root: HTMLElement) {
     titre.append(xpEl('span', { class: 'xp-vu', title: ctx.D.t.dejaVu }, [xpEl('span', { class: 'sr-only', text: ctx.D.t.dejaVu })]));
   });
   return () => {};
+}
+
+/** Écouter : la voix de Laura qui présente le projet. Rien ne se lance tout seul ; un clic pour lire, un clic pour arrêter. */
+export function xpEcoute(root: HTMLElement) {
+  const boutons = [...root.querySelectorAll<HTMLButtonElement>('[data-ecoute]')];
+  const sons: HTMLAudioElement[] = [];
+  boutons.forEach((b) => {
+    const son = new Audio();
+    son.preload = 'metadata';
+    son.src = b.dataset.ecoute!;
+    sons.push(son);
+    const t = b.querySelector<HTMLElement>('.xp-ecoute-t')!, temps = b.querySelector<HTMLElement>('.xp-ecoute-temps')!, barre = b.querySelector<HTMLElement>('.xp-ecoute-barre i')!;
+    const libelle = t.textContent || '';
+    const mmss = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+    son.addEventListener('loadedmetadata', () => (temps.textContent = mmss(son.duration)));
+    son.addEventListener('timeupdate', () => {
+      barre.style.transform = `scaleX(${son.duration ? son.currentTime / son.duration : 0})`;
+      if (son.duration) temps.textContent = `${mmss(son.currentTime)} / ${mmss(son.duration)}`;
+    });
+    const etat = () => { const lit = !son.paused; b.toggleAttribute('data-lit', lit); t.textContent = lit ? b.dataset.pause || libelle : libelle; b.setAttribute('aria-pressed', String(lit)); };
+    son.addEventListener('play', etat); son.addEventListener('pause', etat);
+    son.addEventListener('ended', () => { son.currentTime = 0; etat(); });
+    b.addEventListener('click', () => (son.paused ? son.play() : son.pause()));
+  });
+  return () => sons.forEach((s) => { s.pause(); s.src = ''; });
 }

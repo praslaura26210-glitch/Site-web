@@ -38,7 +38,8 @@ export default async function Projets({ params }: { params: Promise<{ lang: stri
           {vues.map(([k, label]) => (
             <button key={k} type="button" data-vue-btn={k} aria-pressed={k === 'sommaire'}>{ICONES[k]}{label}</button>
           ))}
-          <button type="button" data-xp="visite" style={{ marginLeft: 'auto', color: 'var(--accent-f)' }}>{t.xp.visite} <span aria-hidden="true">→</span></button>
+          <a href={`/${lang}/accrochage/`} className="xp-vues-lien" style={{ marginLeft: 'auto' }}>{t.xp.accrochage} <span aria-hidden="true">→</span></a>
+          <button type="button" data-xp="visite" style={{ color: 'var(--accent-f)' }}>{t.xp.visite} <span aria-hidden="true">→</span></button>
         </div>
         <div data-vue-panneau="sommaire"><ProjetsIndex lignes={lignes} lang={lang} voir={t.home.voir} /></div>
         <div data-vue-panneau="planches"><ProjetsGrille projets={projets} lang={lang} headingLevel={2} /></div>

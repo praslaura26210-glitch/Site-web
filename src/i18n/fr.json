@@ -158,6 +158,18 @@
   "resultats": "résultats",
   "carnet": "Carnet de dessins",
   "carnetAide": "Glisser pour parcourir · cliquer pour ouvrir",
-  "dejaVu": "Déjà consulté"
+  "dejaVu": "Déjà consulté",
+  "accrochage": "Accrochage",
+  "accrochageTitre": "Les six projets sur une même table",
+  "accrochageAide": "Glisser pour se déplacer · molette ou pincement pour zoomer · cliquer une planche pour l'ouvrir",
+  "toutVoir": "Tout voir",
+  "accrochageLien": "Voir l'accrochage",
+  "accrochageSansJs": "L'accrochage demande JavaScript. Voir la liste des projets",
+  "pour": "Pour",
+  "pourIntro": "Une sélection préparée pour",
+  "pourEcrire": "M'écrire",
+  "pourExemple": "Page d'exemple : chaque agence reçoit sa propre adresse, avec son mot et ses projets dans l'ordre qui la concerne.",
+  "ecouter": "Écouter Laura présenter le projet",
+  "ecouterPause": "Mettre en pause"
  }
 }
