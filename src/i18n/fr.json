@@ -97,5 +97,64 @@
   "telephone": "Téléphone",
   "facultatif": "facultatif",
   "coordonnees": "Coordonnées"
+ },
+ "xp": {
+  "explorer": "Explorer",
+  "rechercher": "Chercher un projet, un dessin, une page…",
+  "pages": "Pages",
+  "projets": "Projets",
+  "dessins": "Dessins",
+  "aucun": "Rien ne correspond à cette recherche.",
+  "fermer": "Fermer",
+  "visite": "Visite guidée",
+  "visiteFin": "Fin de la visite",
+  "visiteFinTexte": "Six projets, du pavillon en bois à l'escalier suspendu. Pour aller plus loin :",
+  "voirProjet": "Voir le projet",
+  "quitter": "Quitter",
+  "glisser": "Glisser ou utiliser les flèches",
+  "precedent": "Précédent",
+  "suivant": "Suivant",
+  "planche": "Toutes les images",
+  "retour": "Revenir à l'image",
+  "vueLabel": "Affichage des projets",
+  "sommaire": "Sommaire",
+  "planches": "Planches",
+  "frise": "Frise",
+  "chapitres": "Dans ce projet",
+  "presentation": "Présentation",
+  "raccourcis": "Raccourcis clavier",
+  "touches": [
+   [
+    "K",
+    "Ouvrir l'explorateur"
+   ],
+   [
+    "V",
+    "Lancer la visite guidée"
+   ],
+   [
+    "← →",
+    "Image, projet ou diapositive suivants"
+   ],
+   [
+    "+  −",
+    "Zoomer, dézoomer"
+   ],
+   [
+    "G",
+    "Toutes les images du projet"
+   ],
+   [
+    "Échap",
+    "Fermer"
+   ],
+   [
+    "?",
+    "Afficher cette aide"
+   ]
+  ],
+  "copier": "Copier",
+  "copie": "Copié",
+  "resultats": "résultats"
  }
 }

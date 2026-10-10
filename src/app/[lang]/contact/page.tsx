@@ -61,7 +61,7 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
         <aside className={styles.coord}>
           <p className="eyebrow">{C.coordonnees}</p>
           <dl className={styles.coordList}>
-            <div><dt>{C.email}</dt><dd><a href={`mailto:${cv.email}`}>{cv.email}</a></dd></div>
+            <div><dt>{C.email}</dt><dd><a href={`mailto:${cv.email}`} data-copier-texte>{cv.email}</a><button type="button" className="xp-copier" data-copier={cv.email}><span className="xp-copier-t">{t.xp.copier}</span><span className="xp-copie">{t.xp.copie} ✓</span></button></dd></div>
             <div><dt>{C.tel}</dt><dd><a href={`tel:${telHref}`}>{tel}</a></dd></div>
             <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
           </dl>

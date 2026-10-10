@@ -14,6 +14,7 @@ const BASE = process.env.APERCU_BASE || 'http://localhost:4321';
 const sortie = process.argv[2] || path.join(root, 'apercu.html');
 const require = createRequire(process.env.PLAYWRIGHT_FROM || import.meta.url);
 const { chromium } = require('playwright');
+const requireLocal = createRequire(import.meta.url);
 
 const LANGS = ['fr', 'en', 'it'];
 const routes = [];
@@ -45,11 +46,12 @@ for (const r of routes) {
     header: document.querySelector('body > header').outerHTML,
     footer: document.querySelector('.page > footer').outerHTML,
     ouverture: document.querySelector('[class*="__ouverture"]').outerHTML,
+    donnees: document.getElementById('lp-donnees')?.textContent || '{}',
   }));
   d.css.forEach((h) => css.add(h));
   pages.push({ r, titre: d.titre, main: relatif(d.main) });
   const l = r.slice(1, 3);
-  if (r === `/${l}/`) chrome[l] = { header: relatif(d.header), footer: relatif(d.footer), ouverture: relatif(d.ouverture) };
+  if (r === `/${l}/`) chrome[l] = { header: relatif(d.header), footer: relatif(d.footer), ouverture: relatif(d.ouverture), donnees: relatif(d.donnees) };
 }
 await b.close();
 
@@ -62,6 +64,11 @@ styles = styles.replace(/url\(\/fonts\/([^)]+)\)/g, (_, f) => police(f)).replace
 const classes = {};
 for (const m of styles.matchAll(/\.((\w+)-module__[A-Za-z0-9-]+?__([A-Za-z0-9]+))/g)) classes[`${m[2]}.${m[3]}`] = m[1];
 const textes = Object.fromEntries(LANGS.map((l) => [l, JSON.parse(fs.readFileSync(path.join(root, 'src/i18n', `${l}.json`), 'utf8'))]));
+/* couche « expérience » : les modules TypeScript de src/experience, transpilés et réunis dans XP */
+const ts = requireLocal('typescript');
+const MODULES = ['outils', 'lightbox', 'explorer', 'visite', 'chapitres', 'vues', 'fiches', 'index'];
+const xp = MODULES.map((m) => ts.transpileModule(fs.readFileSync(path.join(root, 'src/experience', `${m}.ts`), 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext } }).outputText
+  .replace(/^import[^;]*;$/gm, '').replace(/^export \{\};?$/gm, '').replace(/^export (?=(async )?function|const|let|class)/gm, '')).join('\n');
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
 const attr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
@@ -73,11 +80,12 @@ const html = `<title>Portfolio Laura Pras</title>
 <div class="${classes['home.ouverture']}"></div>
 <header></header>
 <div class="page"><main id="contenu"></main><footer></footer></div>
+${LANGS.map((l) => `<script type="application/json" id="lp-donnees-${l}">${chrome[l].donnees.replace(/<\//g, '<\\/')}</script>`).join('\n')}
 ${LANGS.map((l) => `<template data-h="${l}">${chrome[l].header}</template><template data-f="${l}">${chrome[l].footer}</template><template data-o="${l}">${chrome[l].ouverture}</template>`).join('\n')}
 ${pages.map((p) => `<template data-r="${p.r}" data-titre="${attr(p.titre)}">${p.main}</template>`).join('\n')}
 <script type="application/json" id="apercu-classes">${json(classes)}</script>
 <script type="application/json" id="apercu-textes">${json(textes)}</script>
-<script>${fs.readFileSync(path.join(root, 'tools/apercu/runtime.js'), 'utf8')}</script>
+<script>const XP = (() => {\n${xp}\nreturn { xpDemarrer, xpPage };\n})();\n${fs.readFileSync(path.join(root, 'tools/apercu/runtime.js'), 'utf8')}</script>
 `;
 fs.writeFileSync(sortie, html);
 

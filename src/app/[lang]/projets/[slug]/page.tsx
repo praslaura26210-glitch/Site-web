@@ -25,6 +25,8 @@ export default async function Page({ params }: Params) {
   if (!(ORDRE as readonly string[]).includes(slug)) notFound();
   const t = dict(lang);
   const p = getProjet(slug, lang);
-  const next = getProjet(ORDRE[(ORDRE.indexOf(slug as (typeof ORDRE)[number]) + 1) % ORDRE.length], lang);
-  return <ProjetPage p={p} t={t} lang={lang} mise={MISES[slug]} next={next} total={ORDRE.length} />;
+  const i = ORDRE.indexOf(slug as (typeof ORDRE)[number]);
+  const next = getProjet(ORDRE[(i + 1) % ORDRE.length], lang);
+  const prev = getProjet(ORDRE[(i - 1 + ORDRE.length) % ORDRE.length], lang);
+  return <ProjetPage p={p} t={t} lang={lang} mise={MISES[slug]} next={next} prev={prev} total={ORDRE.length} />;
 }

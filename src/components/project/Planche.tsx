@@ -1,26 +1,18 @@
-'use client';
-import { useEffect, useRef, useState } from 'react';
 import type { Media } from '@/lib/media';
-import PlanViewer from './PlanViewer';
 import styles from './project.module.css';
 
 export type Labels = { agrandir: string; fermer: string; hint: string; zoomIn: string; zoomOut: string; reset: string };
 
-/** Une image ou un plan de la page projet. Un clic l'ouvre en grand, avec zoom (le plan reste vectoriel). */
-export default function Planche({ m, sizes, labels, className, caption = true, eager = false, credit, pos }: { m: Media; sizes: string; labels: Labels; className?: string; caption?: boolean; eager?: boolean; credit?: string; pos?: string }) {
-  const [open, setOpen] = useState(false);
-  const dlg = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    dlg.current?.showModal();
-    document.documentElement.style.overflow = 'hidden';
-    return () => { document.documentElement.style.overflow = ''; };
-  }, [open]);
-
+/**
+ * Une image ou un plan de la page projet. Un clic ouvre la visionneuse plein écran
+ * (experience/lightbox.ts) : zoom, et toutes les images du projet à parcourir.
+ */
+export default function Planche({ m, sizes, labels, className, caption = true, eager = false, credit, pos, ancre }: { m: Media; sizes: string; labels: Labels; className?: string; caption?: boolean; eager?: boolean; credit?: string; pos?: string; ancre?: string }) {
   const vectoriel = m.kind === 'plan' && m.src === m.svg;
+  const zoom = { id: ancre, legende: m.legende, svg: m.svg, preview: vectoriel ? undefined : m.src, full: m.full, ratio: m.w / m.h, credit, thumb: m.srcSmall || m.src };
   return (
-    <figure className={`${styles.fig} ${m.kind === 'plan' || m.scan ? styles.dessin : ''} ${className || ''} rv`}>
-      <button type="button" className={styles.figBtn} onClick={() => setOpen(true)} aria-label={`${labels.agrandir} : ${m.legende}`} data-cursor="zoom" data-zoom={JSON.stringify({ svg: m.svg, preview: vectoriel ? undefined : m.src, full: m.full, ratio: m.w / m.h, credit })}>
+    <figure id={ancre} className={`${styles.fig} ${m.kind === 'plan' || m.scan ? styles.dessin : ''} ${className || ''} rv`}>
+      <button type="button" className={styles.figBtn} aria-label={`${labels.agrandir} : ${m.legende}`} data-zoom={JSON.stringify(zoom)}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={m.srcSmall || m.src}
@@ -35,17 +27,6 @@ export default function Planche({ m, sizes, labels, className, caption = true, e
         />
       </button>
       {caption && <figcaption className={styles.cap}>{m.legende}</figcaption>}
-      {open && (
-        <dialog ref={dlg} className={styles.lightbox} onClose={() => setOpen(false)} aria-label={m.legende}>
-          <button type="button" className={styles.lbFermer} onClick={() => dlg.current?.close()} aria-label={labels.fermer} autoFocus>✕</button>
-          <PlanViewer
-            className={styles.lbViewer}
-            plans={[{ id: m.src, label: m.legende, svg: m.svg, preview: vectoriel ? undefined : m.src, full: m.full, ratio: m.w / m.h }]}
-            labels={{ hint: labels.hint, zoomIn: labels.zoomIn, zoomOut: labels.zoomOut, reset: labels.reset }}
-          />
-          {credit && <p className={styles.lbCredit}>{credit}</p>}
-        </dialog>
-      )}
     </figure>
   );
 }

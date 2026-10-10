@@ -1,4 +1,5 @@
 import '../globals.css';
+import '@/experience/experience.css';
 import type { Viewport } from 'next';
 import { LANGS, dict, type Lang } from '@/i18n';
 import { getCV } from '@/lib/content';
@@ -6,6 +7,8 @@ import Header from '@/components/chrome/Header';
 import Footer from '@/components/chrome/Footer';
 import Apparitions from '@/components/chrome/Apparitions';
 import Ouverture from '@/components/home/Ouverture';
+import Experience from '@/components/chrome/Experience';
+import { donneesExperience } from '@/lib/experience';
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -39,6 +42,8 @@ export default async function RootLayout({ children, params }: { children: React
           <Footer lang={lang} t={t} cv={cv} />
         </div>
         <Apparitions />
+        <script type="application/json" id="lp-donnees" dangerouslySetInnerHTML={{ __html: JSON.stringify(donneesExperience(lang)).replace(/</g, '\\u003c') }} />
+        <Experience />
       </body>
     </html>
   );

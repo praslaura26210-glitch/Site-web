@@ -31,6 +31,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <p className={styles.approche}>{t.home.approach}</p>
           <p className={styles.liens}>
             <a className="lien" href="#projets">{t.home.cta}</a>
+            <button type="button" className="lien xp-lienVisite" data-xp="visite">{t.xp.visite} <span aria-hidden="true">→</span></button>
             <Portfolio t={t} />
           </p>
         </div>

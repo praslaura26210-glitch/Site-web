@@ -89,6 +89,11 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
             ))}
           </ul>
         </nav>
+        <button type="button" className="xp-explorer" data-xp="explorer" title={`${t.xp.explorer} (K)`} aria-label={t.xp.explorer}>
+          <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.2"><circle cx="8.5" cy="8.5" r="6" /><path d="m13 13 5 5" /></svg>
+          <span className="xp-explorer-t">{t.xp.explorer}</span>
+          <kbd aria-hidden="true">K</kbd>
+        </button>
         <Langues lang={lang} path={path} label={t.nav.langue} />
       </div>
     </header>

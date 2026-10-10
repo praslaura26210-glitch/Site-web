@@ -97,5 +97,64 @@
   "telephone": "Telefono",
   "facultatif": "facoltativo",
   "coordonnees": "Recapiti"
+ },
+ "xp": {
+  "explorer": "Esplora",
+  "rechercher": "Cerca un progetto, un disegno, una pagina…",
+  "pages": "Pagine",
+  "projets": "Progetti",
+  "dessins": "Disegni",
+  "aucun": "Nessun risultato per questa ricerca.",
+  "fermer": "Chiudi",
+  "visite": "Visita guidata",
+  "visiteFin": "Fine della visita",
+  "visiteFinTexte": "Sei progetti, dal padiglione in legno alla scala sospesa. Per andare oltre:",
+  "voirProjet": "Vedi il progetto",
+  "quitter": "Esci",
+  "glisser": "Trascina o usa le frecce",
+  "precedent": "Precedente",
+  "suivant": "Successivo",
+  "planche": "Tutte le immagini",
+  "retour": "Torna all'immagine",
+  "vueLabel": "Visualizzazione dei progetti",
+  "sommaire": "Indice",
+  "planches": "Tavole",
+  "frise": "Cronologia",
+  "chapitres": "In questo progetto",
+  "presentation": "Presentazione",
+  "raccourcis": "Scorciatoie da tastiera",
+  "touches": [
+   [
+    "K",
+    "Apri l'esploratore"
+   ],
+   [
+    "V",
+    "Avvia la visita guidata"
+   ],
+   [
+    "← →",
+    "Immagine, progetto o diapositiva successivi"
+   ],
+   [
+    "+  −",
+    "Ingrandisci, riduci"
+   ],
+   [
+    "G",
+    "Tutte le immagini del progetto"
+   ],
+   [
+    "Esc",
+    "Chiudi"
+   ],
+   [
+    "?",
+    "Mostra questo aiuto"
+   ]
+  ],
+  "copier": "Copia",
+  "copie": "Copiato",
+  "resultats": "risultati"
  }
 }

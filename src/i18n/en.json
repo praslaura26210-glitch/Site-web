@@ -97,5 +97,64 @@
   "telephone": "Phone",
   "facultatif": "optional",
   "coordonnees": "Details"
+ },
+ "xp": {
+  "explorer": "Explore",
+  "rechercher": "Search a project, a drawing, a page…",
+  "pages": "Pages",
+  "projets": "Projects",
+  "dessins": "Drawings",
+  "aucun": "Nothing matches this search.",
+  "fermer": "Close",
+  "visite": "Guided tour",
+  "visiteFin": "End of the tour",
+  "visiteFinTexte": "Six projects, from the timber pavilion to the suspended staircase. To go further:",
+  "voirProjet": "See the project",
+  "quitter": "Leave",
+  "glisser": "Drag or use the arrows",
+  "precedent": "Previous",
+  "suivant": "Next",
+  "planche": "All images",
+  "retour": "Back to the image",
+  "vueLabel": "Project display",
+  "sommaire": "Index",
+  "planches": "Plates",
+  "frise": "Timeline",
+  "chapitres": "In this project",
+  "presentation": "Overview",
+  "raccourcis": "Keyboard shortcuts",
+  "touches": [
+   [
+    "K",
+    "Open the explorer"
+   ],
+   [
+    "V",
+    "Start the guided tour"
+   ],
+   [
+    "← →",
+    "Next image, project or slide"
+   ],
+   [
+    "+  −",
+    "Zoom in, zoom out"
+   ],
+   [
+    "G",
+    "All images of the project"
+   ],
+   [
+    "Esc",
+    "Close"
+   ],
+   [
+    "?",
+    "Show this help"
+   ]
+  ],
+  "copier": "Copy",
+  "copie": "Copied",
+  "resultats": "results"
  }
 }

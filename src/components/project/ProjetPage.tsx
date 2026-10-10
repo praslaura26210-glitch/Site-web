@@ -3,6 +3,7 @@ import type { Dict, Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
+import { ancreDessin } from '@/lib/experience';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Visionneuse from './Visionneuse';
@@ -18,7 +19,7 @@ const PALETTE: Record<string, { en: string; it: string }> = {
 };
 
 /** Page projet : ouverture (titre et grande image), présentation, puis les blocs choisis pour ce projet. */
-export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; total: number }) {
+export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; prev: Projet; total: number }) {
   const L: Labels = { agrandir: t.projet.agrandir, fermer: t.projet.fermer, hint: t.projet.zoomHint, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, reset: t.projet.zoomReset };
   const VL = { ...L, precedent: t.projet.precedent, suivant: t.projet.suivant };
   const cache = new Map<string, Media>();
@@ -62,14 +63,14 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
       case 'inter':
         inter++;
         return (
-          <header key={k} className={`${styles.inter} rv`}>
+          <header key={k} className={`${styles.inter} rv`} id={`chapitre-${inter}`} data-chapitre={b.titre[lang]}>
             <span className={styles.interN}>{String(inter).padStart(2, '0')}</span>
             <h2>{b.titre[lang]}</h2>
             {b.note && <p>{b.note[lang]}</p>}
           </header>
         );
       case 'grand':
-        return <div key={k} className={styles.grand}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} /></div>;
+        return <div key={k} className={styles.grand}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div>;
       case 'rang':
         // chaque image prend une largeur proportionnelle à son format : toutes ont la même hauteur
         return (
@@ -78,7 +79,7 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
               const m = M(r);
               return (
                 <div key={r} className={styles.rangItem} style={{ flexGrow: m.w / m.h }}>
-                  <Planche m={m} sizes={`(max-width: 900px) 100vw, ${Math.round(100 / b.r.length)}vw`} labels={L} credit={credit(r)} />
+                  <Planche m={m} sizes={`(max-width: 900px) 100vw, ${Math.round(100 / b.r.length)}vw`} labels={L} credit={credit(r)} ancre={ancreDessin(r)} />
                 </div>
               );
             })}
@@ -93,12 +94,12 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
               {b.titre && <h2 className={styles.texteT}>{b.titre[lang]}</h2>}
               {txt}
             </div>
-            {b.r && <div className={styles.imageCol}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 55vw" labels={L} credit={credit(b.r)} /></div>}
+            {b.r && <div className={styles.imageCol}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 55vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div>}
           </section>
         );
       }
       case 'visionneuse':
-        return <Visionneuse key={k} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
+        return <Visionneuse key={k} ids={b.r.map(ancreDessin)} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
       case 'composition':
         return (
           <div key={k} className={styles.compo}>
@@ -106,7 +107,7 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
               <div key={j} className={styles.compoRang}>
                 {rang.map((it) => (
                   <div key={it.r} className={styles.compoItem} style={{ gridColumn: `${it.col[0]} / span ${it.col[1]}`, marginTop: it.mt ? `${it.mt}vh` : undefined }}>
-                    <Planche m={M(it.r)} sizes={`(max-width: 900px) 100vw, ${Math.round((it.col[1] / 12) * 100)}vw`} labels={L} credit={credit(it.r)} />
+                    <Planche m={M(it.r)} sizes={`(max-width: 900px) 100vw, ${Math.round((it.col[1] / 12) * 100)}vw`} labels={L} credit={credit(it.r)} ancre={ancreDessin(it.r)} />
                   </div>
                 ))}
               </div>
@@ -148,7 +149,7 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
       </header>
 
       {/* présentation, comme dans le portfolio : numéro, titre, programme, cadre, année, lieu, puis le texte */}
-      <section className={`wrap ${styles.presentation}`}>
+      <section className={`wrap ${styles.presentation}`} id="presentation" data-chapitre={t.xp.presentation}>
         <div className={`${styles.livret} rv`}>
           <h2 className={styles.livretT}><span>{String(p.ordre).padStart(2, '0')}</span>{p.titre}</h2>
           <ul className={styles.livretInfos}>
@@ -163,8 +164,9 @@ export default function ProjetPage({ p, t, lang, mise, next, total }: { p: Proje
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
 
-      <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next}>
-        <Link href={`/${lang}/projets/${next.slug}/`} className={styles.suivant}>
+      <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next} id="suite" data-chapitre={t.projet.next}>
+        <Link href={`/${lang}/projets/${prev.slug}/`} data-projet-precedent hidden tabIndex={-1}>{prev.titre}</Link>
+        <Link href={`/${lang}/projets/${next.slug}/`} className={styles.suivant} data-projet-suivant>
           <span className="eyebrow">{t.projet.next}</span>
           <span className={styles.suivantT}>{next.titre} <span aria-hidden="true">→</span></span>
         </Link>
