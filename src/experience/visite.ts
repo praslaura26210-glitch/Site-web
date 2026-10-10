@@ -89,6 +89,7 @@ export function xpVisite(ctx: XPContexte, depart = 0) {
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp') va(-1);
     else if (e.key === 'Home') montre(0);
     else if (e.key === 'End') montre(n - 1);
+    else if (/^[1-9]$/.test(e.key) && +e.key <= P.length) montre(+e.key - 1);
     else if (e.key === 'Enter' && cur < P.length && (e.target as Element).tagName !== 'A' && (e.target as Element).tagName !== 'BUTTON') { d.close(); ctx.naviguer(P[cur].href); }
     else return;
     e.preventDefault();

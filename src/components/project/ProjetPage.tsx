@@ -4,6 +4,7 @@ import type { Projet } from '@/lib/content';
 import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import { ancreDessin } from '@/lib/experience';
+import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Visionneuse from './Visionneuse';
@@ -144,7 +145,7 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         </div>
         <figure className={styles.ouvImg}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes={paysage ? '100vw' : '(max-width: 900px) 100vw, 50vw'} alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} />
+          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes={paysage ? '100vw' : '(max-width: 900px) 100vw, 50vw'} alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
         </figure>
       </header>
 
@@ -169,6 +170,8 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         <Link href={`/${lang}/projets/${next.slug}/`} className={styles.suivant} data-projet-suivant>
           <span className="eyebrow">{t.projet.next}</span>
           <span className={styles.suivantT}>{next.titre} <span aria-hidden="true">→</span></span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <span className="xp-suivant-img" aria-hidden="true"><img src={couverture(next).img.srcSmall} alt="" loading="lazy" style={couverture(next).pos ? { objectPosition: couverture(next).pos } : undefined} /></span>
         </Link>
       </nav>
     </article>

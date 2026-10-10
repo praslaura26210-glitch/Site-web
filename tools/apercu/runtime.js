@@ -20,7 +20,13 @@
     D: null,
     href: (h) => '#' + h,
     ancre: () => ancreCourante,
-    naviguer: (h) => { const [p, a] = h.split('#'); va(p, { ancre: a }); },
+    lien: (a) => { const h = a.getAttribute('href') || ''; return h.startsWith('#/') ? h.slice(1) : null; },
+    naviguer: (h, image) => {
+      const [p, a] = h.split('#');
+      const norm = p.endsWith('/') ? p : p + '/';
+      if (norm === route) { va(p, { ancre: a }); return; }
+      XP.xpTransition(() => va(p, { ancre: a }), image);
+    },
   };
 
   const el = (tag, attrs = {}, kids = []) => {

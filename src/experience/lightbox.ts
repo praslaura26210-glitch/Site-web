@@ -90,7 +90,18 @@ function xpLecteur(scene: HTMLElement, onScale: (s: number) => void) {
     charger(e: XPEntree) {
       p = e; svgCharge = false; hd = false; img = null;
       canvas.replaceChildren();
-      if (e.preview) { img = xpEl('img', { src: e.preview, alt: '', draggable: 'false' }); canvas.append(img); } else chargeSvg();
+      if (e.preview) {
+        // d'abord la vignette déjà chargée dans la page, puis la grande image dès qu'elle arrive
+        const grande = e.preview;
+        img = xpEl('img', { src: e.thumb && e.thumb !== grande ? e.thumb : grande, alt: '', draggable: 'false' });
+        canvas.append(img);
+        if (img.getAttribute('src') !== grande) {
+          const pre = new Image();
+          const cible = img;
+          pre.onload = () => { if (cible === img && !hd) cible.src = grande; };
+          pre.src = grande;
+        }
+      } else chargeSvg();
       fit();
     },
     fit,
@@ -100,11 +111,31 @@ function xpLecteur(scene: HTMLElement, onScale: (s: number) => void) {
   };
 }
 
+/** L'image quitte sa place dans la page et grandit jusqu'à sa taille dans la visionneuse. */
+function xpEnvol(img: HTMLImageElement | null | undefined, e: XPEntree, fin: () => void) {
+  if (!img || xpCalme() || !img.getBoundingClientRect().width) { fin(); return; }
+  if (e.preview) new Image().src = e.preview;
+  const r = img.getBoundingClientRect();
+  const H = innerHeight - 76 - 70, W = innerWidth;
+  const w = Math.min(W, H * e.ratio), h = w / e.ratio;
+  const voile = xpEl('div', { class: 'xp-envol', 'aria-hidden': 'true' });
+  const c = xpEl('img', { src: img.currentSrc || img.src, alt: '', class: 'xp-envol-img' });
+  Object.assign(c.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`, objectPosition: getComputedStyle(img).objectPosition });
+  voile.append(c);
+  document.body.append(voile);
+  img.style.visibility = 'hidden';
+  void voile.offsetWidth;
+  voile.dataset.on = '';
+  Object.assign(c.style, { left: `${(W - w) / 2}px`, top: `${76 + (H - h) / 2}px`, width: `${w}px`, height: `${h}px`, objectPosition: '50% 50%' });
+  setTimeout(() => { fin(); img.style.visibility = ''; setTimeout(() => voile.remove(), 450); }, 620);
+}
+
 /** Ouvre la visionneuse plein écran sur l'image i de la page ; ← → pour parcourir toutes les images. */
-export function xpOuvrirLightbox(ctx: XPContexte, root: ParentNode, i: number) {
+export function xpOuvrirLightbox(ctx: XPContexte, root: ParentNode, i: number, depuis?: HTMLImageElement | null) {
   const T = ctx.D.t;
   const liste = xpEntrees(root).map((x) => x.e);
   if (!liste.length) return;
+  if (depuis !== undefined) { const k = Math.max(0, Math.min(liste.length - 1, i)); xpEnvol(depuis, liste[k], () => xpOuvrirLightbox(ctx, root, i)); return; }
   const n = liste.length;
   let cur = Math.max(0, Math.min(n - 1, i));
 
@@ -207,13 +238,13 @@ export function xpLightboxPage(ctx: XPContexte, root: HTMLElement) {
     if (!b || !root.contains(b)) return;
     ev.preventDefault();
     const i = xpEntrees(root).findIndex((x) => x.el === b);
-    xpOuvrirLightbox(ctx, root, i);
+    xpOuvrirLightbox(ctx, root, i, b.querySelector('img'));
   };
   // une visionneuse (composant React ou script de l'aperçu) demande l'agrandissement de son image k
   const zoom = (ev: Event) => {
     const { el, k } = (ev as CustomEvent<{ el: Element; k: number }>).detail;
     const i = xpEntrees(root).findIndex((x) => x.el === el && x.k === k);
-    if (i >= 0) xpOuvrirLightbox(ctx, root, i);
+    if (i >= 0) xpOuvrirLightbox(ctx, root, i, el.querySelector<HTMLImageElement>('[class*="__visScene"] img'));
   };
   // arrivée sur un dessin précis (#d-…), depuis l'explorateur ou un lien
   let t = 0;

@@ -47,6 +47,14 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
         <ProjetsIndex lignes={lignes} lang={lang} voir={t.home.voir} />
       </section>
+
+      <section className="xp-carnet" data-carnet aria-label={t.xp.carnet}>
+        <div className="wrap xp-carnet-tete">
+          <h2 className="eyebrow">{t.xp.carnet}</h2>
+          <p className="eyebrow xp-carnet-legende" data-carnet-legende data-defaut={t.xp.carnetAide}>{t.xp.carnetAide}</p>
+        </div>
+        <div className="xp-carnet-fenetre"><div className="xp-carnet-piste" data-carnet-piste /></div>
+      </section>
     </>
   );
 }

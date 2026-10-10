@@ -1,8 +1,10 @@
+import { xpAimants, xpCarnet, xpCascades, xpCompteurs, xpEntete, xpFilets, xpInclinaison, xpLogoPied, xpTitres, xpTrame, xpVers, xpVoiles } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpExplorer } from './explorer';
 import { xpFiches } from './fiches';
 import { xpLightboxPage } from './lightbox';
 import { xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
+import { xpImageDuLien } from './transition';
 import { xpVisite } from './visite';
 import { xpVues } from './vues';
 
@@ -25,9 +27,10 @@ export function xpRaccourcis(ctx: XPContexte) {
 /** Une fois pour toutes : raccourcis, boutons [data-xp], trait de chargement entre deux pages. */
 export function xpDemarrer(ctx: XPContexte) {
   const actions = {
-    explorer: () => xpExplorer(ctx, { visite: () => xpVisite(ctx), raccourcis: () => xpRaccourcis(ctx) }),
+    explorer: () => xpExplorer(ctx, { visite: () => xpVisite(ctx), raccourcis: () => xpRaccourcis(ctx), trame: () => xpTrame() }),
     visite: () => xpVisite(ctx),
     raccourcis: () => xpRaccourcis(ctx),
+    trame: () => xpTrame(),
   };
   const clic = (e: MouseEvent) => {
     const b = (e.target as Element).closest<HTMLElement>('[data-xp]');
@@ -48,18 +51,25 @@ export function xpDemarrer(ctx: XPContexte) {
       });
       return;
     }
-    // trait de chargement quand on part vers une autre page du site
+  };
+  // liens internes : navigation avec transition (rideau, et photo du projet qui devient sa couverture)
+  const lien = (e: MouseEvent) => {
     const a = (e.target as Element).closest<HTMLAnchorElement>('a[href]');
-    if (a && !e.defaultPrevented && !e.metaKey && !e.ctrlKey && !a.target) {
-      const h = a.getAttribute('href')!;
-      if ((h.startsWith('/') || h.startsWith('#/')) && !/\.(pdf|svg|webp)$/.test(h)) document.documentElement.dataset.charge = '';
-    }
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target || a.hasAttribute('download')) return;
+    if (a.closest('dialog') || a.hasAttribute('data-xp-libre')) return;
+    const cible = ctx.lien(a);
+    if (!cible) return;
+    e.preventDefault();
+    e.stopPropagation();
+    document.documentElement.dataset.charge = '';
+    ctx.naviguer(cible, xpImageDuLien(a));
   };
   const touche = (e: KeyboardEvent) => {
     if (xpSaisie(e) || e.metaKey || e.ctrlKey || e.altKey || document.querySelector('dialog[open]')) return;
     if (e.key === 'k' || e.key === 'K' || e.key === '/') actions.explorer();
     else if (e.key === 'v' || e.key === 'V') actions.visite();
     else if (e.key === '?') actions.raccourcis();
+    else if (e.key === 't' || e.key === 'T') xpTrame();
     else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && (e.target === document.body || e.target === document.documentElement)) {
       // page projet : ← → pour le projet précédent ou suivant
       const a = document.querySelector<HTMLAnchorElement>(e.key === 'ArrowRight' ? '[data-projet-suivant]' : '[data-projet-precedent]');
@@ -70,13 +80,19 @@ export function xpDemarrer(ctx: XPContexte) {
     e.preventDefault();
   };
   document.addEventListener('click', clic);
+  document.addEventListener('click', lien, true);
   addEventListener('keydown', touche);
-  return () => { document.removeEventListener('click', clic); removeEventListener('keydown', touche); };
+  const autres = [xpEntete(), xpAimants()];
+  return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
 /** À chaque page affichée : visionneuse, chapitres, vues, fiches. Retourne le nettoyage. */
 export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.charge;
-  const f = [xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpVues(root), xpFiches(ctx, root)];
+  delete document.documentElement.dataset.enteteCache;
+  const f = [
+    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpVues(root), xpFiches(ctx, root),
+    xpTitres(root), xpVoiles(root), xpFilets(root), xpVers(root), xpInclinaison(root), xpCarnet(ctx, root), xpLogoPied(), xpCascades(root), xpCompteurs(root),
+  ];
   return () => f.forEach((x) => x());
 }

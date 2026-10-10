@@ -7,7 +7,7 @@ export type XPTextes = {
   visite: string; visiteFin: string; visiteFinTexte: string; voirProjet: string; quitter: string; glisser: string;
   precedent: string; suivant: string; planche: string; retour: string;
   vueLabel: string; sommaire: string; planches: string; frise: string;
-  chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string; resultats: string;
+  chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string; resultats: string; carnet: string; carnetAide: string; trame: string;
   zoomIn: string; zoomOut: string; zoomReset: string;
 };
 export type XPImage = { src: string; srcSmall?: string; w: number; h: number; pos?: string };
@@ -18,7 +18,9 @@ export type XPDonnees = { lang: string; t: XPTextes; projets: XPProjet[]; dessin
 export type XPContexte = {
   D: XPDonnees;
   /** navigation interne (routeur de Next, ou routeur de l'aperçu) */
-  naviguer: (href: string) => void;
+  naviguer: (href: string, image?: HTMLElement | null) => void;
+  /** pour un lien cliqué : l'adresse interne à suivre sans recharger, ou null pour laisser faire le navigateur */
+  lien: (a: HTMLAnchorElement) => string | null;
   /** valeur à mettre dans un attribut href pour une adresse interne */
   href: (href: string) => string;
   /** ancre demandée (#d-…), sans le dièse */

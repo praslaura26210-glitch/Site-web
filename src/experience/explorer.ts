@@ -3,7 +3,7 @@ import { xpDialogue, xpEl, xpNorm, type XPContexte } from './outils';
 type Res = { type: 'page' | 'projet' | 'dessin' | 'action'; label: string; sous?: string; href?: string; thumb?: string; n?: string; action?: () => void };
 
 /** Explorateur : tout le site dans une seule fenêtre de recherche (pages, projets, dessins). */
-export function xpExplorer(ctx: XPContexte, actions: { visite: () => void; raccourcis: () => void }) {
+export function xpExplorer(ctx: XPContexte, actions: { visite: () => void; raccourcis: () => void; trame: () => void }) {
   if (document.querySelector('dialog.xp-ex')) return;
   const T = ctx.D.t;
   const champ = xpEl('input', { type: 'search', class: 'xp-ex-champ', placeholder: T.rechercher, 'aria-label': T.rechercher, autocomplete: 'off', spellcheck: 'false', id: 'xp-ex-champ' });
@@ -24,6 +24,7 @@ export function xpExplorer(ctx: XPContexte, actions: { visite: () => void; racco
   const actionsRes: Res[] = [
     { type: 'action', label: T.visite, sous: 'V', action: () => { d.close(); actions.visite(); } },
     { type: 'action', label: T.raccourcis, sous: '?', action: () => { d.close(); actions.raccourcis(); } },
+    { type: 'action', label: T.trame, sous: 'T', action: () => { d.close(); actions.trame(); } },
   ];
   const projets: Res[] = ctx.D.projets.map((p) => ({ type: 'projet', label: p.titre, sous: [p.programme, p.annee].filter(Boolean).join(' · '), href: p.href, thumb: p.cover.srcSmall || p.cover.src, n: String(p.n).padStart(2, '0') }));
   const dessins: Res[] = ctx.D.dessins.map((x) => ({ type: 'dessin', label: x.legende, sous: x.projet, href: x.href, thumb: x.thumb }));
@@ -66,7 +67,7 @@ export function xpExplorer(ctx: XPContexte, actions: { visite: () => void; racco
       if (!rs.length) continue;
       total += rs.length;
       const ul = xpEl('div', { class: cls, role: 'listbox', 'aria-label': titre });
-      rs.forEach((r) => { const el = ligne(r); items.push({ r, el }); ul.append(el); });
+      rs.forEach((r, j) => { const el = ligne(r); el.style.setProperty('--i', String(Math.min(j, 14))); items.push({ r, el }); ul.append(el); });
       corps.append(xpEl('section', { class: 'xp-ex-groupe' }, [xpEl('h2', { class: 'eyebrow', text: `${titre} · ${rs.length}` }), ul]));
     }
     if (!total) corps.append(xpEl('p', { class: 'xp-ex-vide', text: T.aucun }));

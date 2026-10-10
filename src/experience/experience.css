@@ -289,3 +289,125 @@ kbd { font-family: var(--sans); }
 @media (max-width: 900px) { .xp-explorer { position: relative; z-index: 2; } .xp-explorer-t, .xp-explorer kbd { display: none; } }
 .xp-lienVisite { border: 0; background-color: transparent; cursor: pointer; font-family: inherit; padding-inline: 0; color: var(--accent-f); }
 @media (max-width: 700px) { .xp-ex-champ { font-size: 1.15rem; } }
+
+/* =====================================================================
+   V9 : mouvements. Une seule courbe pour tout le site : lente au départ, posée à l'arrivée.
+   ===================================================================== */
+:root { --xp-courbe: cubic-bezier(.7, 0, .2, 1); --xp-sortie: cubic-bezier(.16, 1, .3, 1); }
+
+/* ---------- passage d'une page à l'autre : la nouvelle page monte comme une feuille de calque ---------- */
+html[data-vt] .xp-entree { animation: none; }
+::view-transition-old(root) { animation: xp-vt-recule .95s var(--xp-courbe) both; }
+::view-transition-new(root) { animation: xp-vt-monte .95s var(--xp-courbe) both; }
+@keyframes xp-vt-recule { to { transform: translateY(-5%) scale(.97); opacity: .25; filter: blur(2px); } }
+@keyframes xp-vt-monte { from { clip-path: inset(100% 0 0 0); transform: translateY(9%); } to { clip-path: inset(0); transform: none; } }
+body > header { view-transition-name: xp-entete; }
+::view-transition-group(xp-entete) { z-index: 5; animation: none; }
+::view-transition-old(xp-entete) { display: none; }
+::view-transition-new(xp-entete) { animation: none; }
+/* la photo du projet cliqué devient la couverture du projet */
+html[data-vt='cover'] [data-xp-cover]:not([data-xp-ancien]) { view-transition-name: xp-cover; }
+::view-transition-group(xp-cover) { z-index: 4; animation-duration: 1.05s; animation-timing-function: var(--xp-courbe); }
+::view-transition-old(xp-cover), ::view-transition-new(xp-cover) { width: 100%; height: 100%; object-fit: cover; }
+/* une seule photo qui se déplace : l'ancienne s'efface tout de suite, la nouvelle reste pleine */
+::view-transition-old(xp-cover) { animation: none; opacity: 0; }
+::view-transition-new(xp-cover) { animation: none; }
+html[data-vt='cover']::view-transition-new(root) { animation-duration: 1.05s; }
+
+/* ---------- titres : les mots montent de derrière un cache ---------- */
+.xp-mot { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+.xp-mot > span { display: inline-block; transform: translateY(105%); transition: transform 1.1s var(--xp-sortie); transition-delay: calc(var(--i, 0) * 70ms + 80ms); }
+[data-vu] .xp-mot > span { transform: none; }
+
+/* ---------- images : elles se découvrent de bas en haut, avec un léger recul ---------- */
+img[data-voile] { clip-path: inset(100% 0 0 0); transform: scale(1.12); transition: clip-path 1.25s var(--xp-courbe), transform 1.6s var(--xp-sortie) !important; }
+img[data-voile][data-vu] { clip-path: inset(0); transform: none; }
+
+/* ---------- filets : ils se tracent de gauche à droite ---------- */
+.xp-cache-filet { position: absolute; left: 0; right: 0; background: var(--fond); transform-origin: 100% 50%; transition: transform 1.3s var(--xp-courbe); pointer-events: none; z-index: 1; }
+[data-vu] > .xp-cache-filet { transform: scaleX(0); }
+
+/* ---------- poème : un vers après l'autre ---------- */
+.xp-vers { display: block; opacity: 0; transform: translateY(.7em); filter: blur(3px); transition: opacity 1s ease, transform 1.1s var(--xp-sortie), filter 1s ease; transition-delay: calc(var(--i, 0) * 90ms); }
+.xp-vers[data-vu] { opacity: 1; transform: none; filter: none; }
+
+/* ---------- en-tête : il s'efface quand on descend, revient quand on remonte ---------- */
+html body > header[class] { transition: background-color .5s var(--ease), box-shadow .5s var(--ease), opacity .35s var(--ease), translate .7s var(--xp-sortie); }
+html[data-entete-cache] body > header[class] { translate: 0 -100%; }
+
+/* ---------- visionneuse : l'image s'envole depuis la page ---------- */
+.xp-envol { position: fixed; inset: 0; z-index: 300; pointer-events: none; background: rgba(254, 254, 252, 0); transition: background .6s ease; }
+.xp-envol[data-on] { background: rgba(254, 254, 252, .97); }
+.xp-envol-img { position: fixed; object-fit: cover; mix-blend-mode: multiply; transition: left .62s var(--xp-courbe), top .62s var(--xp-courbe), width .62s var(--xp-courbe), height .62s var(--xp-courbe), object-position .62s var(--xp-courbe); }
+
+/* une petite marque « agrandir » sur les images qu'on peut ouvrir */
+[data-zoom] { position: relative; }
+[data-zoom]::after { content: '+'; position: absolute; right: 12px; top: 12px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 300 1.15rem/1 var(--sans); color: var(--encre); background: rgba(254, 254, 252, .92); border: 1px solid var(--filet); opacity: 0; transform: scale(.6) rotate(-90deg); transition: opacity .35s, transform .55s var(--xp-sortie); pointer-events: none; }
+[data-zoom]:hover::after, [data-zoom]:focus-visible::after { opacity: 1; transform: none; }
+@media (hover: none) { [data-zoom]::after { display: none; } }
+
+/* ---------- projet suivant : sa photo apparaît à côté du titre ---------- */
+[class*='project-module'][class*='__suivant'] { position: relative; }
+.xp-suivant-img { position: absolute; left: calc(100% + 32px); top: 50%; width: 112px; aspect-ratio: 4 / 5; translate: 0 -50%; overflow: hidden; clip-path: inset(100% 0 0 0); transition: clip-path .8s var(--xp-courbe); pointer-events: none; }
+.xp-suivant-img img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.2); transition: transform 1.2s var(--xp-sortie); }
+a:hover > .xp-suivant-img, a:focus-visible > .xp-suivant-img { clip-path: inset(0); }
+a:hover > .xp-suivant-img img { transform: none; }
+@media (max-width: 760px) { .xp-suivant-img { display: none; } }
+
+/* ---------- sommaire de l'accueil : la nouvelle photo se lève par-dessus l'ancienne ---------- */
+[class*='home-module'][class*='__apercu'] img { opacity: 1; clip-path: inset(100% 0 0 0); transform: scale(1.08); z-index: 0; transition: clip-path 0s .9s, transform 0s .9s; }
+[class*='home-module'][class*='__apercu'] img[data-on] { clip-path: inset(0); transform: none; z-index: 1; transition: clip-path .9s var(--xp-courbe), transform 1.4s var(--xp-sortie); }
+
+/* ---------- carnet de dessins (accueil) ---------- */
+.xp-carnet { padding-block: clamp(64px, 12vh, 140px) 0; overflow: hidden; }
+.xp-carnet-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; flex-wrap: wrap; padding-bottom: 22px; border-bottom: 1px solid var(--filet); margin-bottom: clamp(24px, 4vh, 40px); }
+.xp-carnet-legende { color: var(--gris); min-height: 1.2em; }
+.xp-carnet-legende b { font-weight: 400; color: var(--encre); }
+.xp-carnet-fenetre { cursor: grab; touch-action: pan-y; user-select: none; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.xp-carnet[data-tire] .xp-carnet-fenetre { cursor: grabbing; }
+.xp-carnet-piste { display: flex; gap: clamp(22px, 3vw, 44px); width: max-content; will-change: transform; padding-block: 10px; }
+.xp-carnet-item { flex: 0 0 auto; height: clamp(150px, 24vh, 240px); display: block; }
+.xp-carnet-item img { height: 100%; width: auto; max-width: none; mix-blend-mode: multiply; transition: opacity .5s ease, transform .7s var(--xp-sortie), filter .5s ease; -webkit-user-drag: none; }
+.xp-carnet-fenetre:hover .xp-carnet-item img { opacity: .4; filter: grayscale(1); }
+.xp-carnet-fenetre .xp-carnet-item:hover img, .xp-carnet-item:focus-visible img { opacity: 1; filter: none; transform: translateY(-8px); }
+
+/* ---------- références : la photo s'incline sous le pointeur ---------- */
+[data-fiche] img { transition: transform .6s var(--xp-sortie), filter .6s !important; will-change: transform; }
+
+/* ---------- explorateur : les résultats arrivent en cascade ---------- */
+.xp-ex-res { animation: xp-entree .55s var(--xp-sortie) backwards; animation-delay: calc(var(--i, 0) * 28ms); }
+
+/* ---------- trame de composition (touche T) ---------- */
+.xp-trame { position: fixed; inset: 0; z-index: 150; pointer-events: none; animation: xp-ouvre .4s ease both; }
+.xp-trame-sort { opacity: 0; transition: opacity .45s ease; }
+.xp-trame-in { position: relative; height: 100%; max-width: var(--max); margin: 0 auto; padding-inline: var(--gut); }
+.xp-trame-cols { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(12px, 1.8vw, 24px); height: 100%; }
+.xp-trame-cols i { background: color-mix(in srgb, var(--accent) 7%, transparent); border-inline: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); transform-origin: 50% 0; animation: xp-trame-col .9s var(--xp-courbe) both; animation-delay: calc(var(--k, 0) * 40ms); position: relative; }
+.xp-trame-cols i:nth-child(1) { --k: 0 } .xp-trame-cols i:nth-child(2) { --k: 1 } .xp-trame-cols i:nth-child(3) { --k: 2 } .xp-trame-cols i:nth-child(4) { --k: 3 } .xp-trame-cols i:nth-child(5) { --k: 4 } .xp-trame-cols i:nth-child(6) { --k: 5 } .xp-trame-cols i:nth-child(7) { --k: 6 } .xp-trame-cols i:nth-child(8) { --k: 7 } .xp-trame-cols i:nth-child(9) { --k: 8 } .xp-trame-cols i:nth-child(10) { --k: 9 } .xp-trame-cols i:nth-child(11) { --k: 10 } .xp-trame-cols i:nth-child(12) { --k: 11 }
+.xp-trame-cols span { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-size: .55rem; letter-spacing: .14em; color: var(--accent-f); font-variant-numeric: tabular-nums; }
+@keyframes xp-trame-col { from { transform: scaleY(0); } }
+.xp-trame-cote { position: absolute; left: var(--gut); right: var(--gut); top: calc(var(--header-h) + 8px); height: 14px; border-inline: 1px solid var(--accent-f); display: grid; place-items: center; z-index: 1; }
+.xp-trame-cote::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--accent-f); }
+.xp-trame-cote span { position: relative; background: var(--fond); padding: 0 10px; font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-f); }
+@media (max-width: 700px) { .xp-trame-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); } .xp-trame-cols i:nth-child(n + 5) { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .xp-mot > span, .xp-vers { transform: none; opacity: 1; filter: none; }
+  img[data-voile] { clip-path: none; transform: none; }
+  .xp-cache-filet { display: none; }
+}
+
+/* ---------- cascades : le texte d'ouverture arrive ligne après ligne ---------- */
+[data-cascade] > * { opacity: 0; transform: translateY(16px); transition: opacity .9s ease, transform 1.1s var(--xp-sortie); transition-delay: calc(var(--i, 0) * 110ms + 250ms); }
+[data-cascade][data-vu] > * { opacity: 1; transform: none; }
+/* le titre a déjà son propre mouvement (mot à mot) */
+[data-cascade] > h1 { opacity: 1; transform: none; }
+
+/* ---------- images : un léger rapprochement au survol, dans leur cadre ---------- */
+[data-zoom] { overflow: hidden; }
+[data-zoom] img { transition: transform 1.2s var(--xp-sortie); }
+[data-zoom]:hover img { transform: scale(1.03) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cascade] > * { opacity: 1; transform: none; }
+}

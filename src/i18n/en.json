@@ -145,6 +145,10 @@
     "All images of the project"
    ],
    [
+    "T",
+    "Show the layout grid"
+   ],
+   [
     "Esc",
     "Close"
    ],
@@ -155,6 +159,9 @@
   ],
   "copier": "Copy",
   "copie": "Copied",
-  "resultats": "results"
+  "resultats": "results",
+  "carnet": "Sketchbook",
+  "carnetAide": "Drag to browse · click to open",
+  "trame": "Layout grid"
  }
 }
