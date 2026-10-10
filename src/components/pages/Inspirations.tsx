@@ -11,10 +11,10 @@ export default function Inspirations({ items, labels }: { items: Inspiration[]; 
   useEffect(() => { if (cur) dlg.current?.showModal(); }, [cur]);
   return (
     <>
-      <ul className={styles.refGrille}>
+      <ul className={styles.refGrille} data-labels={JSON.stringify(labels)}>
         {items.map((x) => (
           <li key={x.id} className="rv">
-            <button type="button" className={styles.tuile} onClick={() => setCur(x)} aria-label={`${labels.ouvrir} : ${x.titre}`}>
+            <button type="button" className={styles.tuile} onClick={() => setCur(x)} aria-label={`${labels.ouvrir} : ${x.titre}`} data-fiche={JSON.stringify(x)}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/media/site/inspirations/${x.id}.webp`} alt="" width={x.w} height={x.h} loading="lazy" />
               <span className={styles.tuileT}>{x.titre}</span>

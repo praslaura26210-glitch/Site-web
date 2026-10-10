@@ -31,7 +31,7 @@ export default function Visionneuse({ items, labels, credit, aside }: { items: M
 
   const vectoriel = m.kind === 'plan' && m.src === m.svg;
   return (
-    <div className={`${styles.vis} rv`} data-aside={aside ? '' : undefined}>
+    <div className={`${styles.vis} rv`} data-aside={aside ? '' : undefined} data-items={JSON.stringify(items.map((x) => ({ src: x.src, svg: x.svg, full: x.full, w: x.w, h: x.h, legende: x.legende, dessin: x.kind === 'plan' || !!x.scan, vect: x.kind === 'plan' && x.src === x.svg })))} data-credit={credit}>
       <div
         className={styles.visScene}
         tabIndex={0}

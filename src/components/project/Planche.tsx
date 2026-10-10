@@ -20,7 +20,7 @@ export default function Planche({ m, sizes, labels, className, caption = true, e
   const vectoriel = m.kind === 'plan' && m.src === m.svg;
   return (
     <figure className={`${styles.fig} ${m.kind === 'plan' || m.scan ? styles.dessin : ''} ${className || ''} rv`}>
-      <button type="button" className={styles.figBtn} onClick={() => setOpen(true)} aria-label={`${labels.agrandir} : ${m.legende}`} data-cursor="zoom">
+      <button type="button" className={styles.figBtn} onClick={() => setOpen(true)} aria-label={`${labels.agrandir} : ${m.legende}`} data-cursor="zoom" data-zoom={JSON.stringify({ svg: m.svg, preview: vectoriel ? undefined : m.src, full: m.full, ratio: m.w / m.h, credit })}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={m.srcSmall || m.src}
