@@ -8,7 +8,7 @@ import { xpCalme } from './outils';
  */
 
 /** Le verre commence à fondre, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
-const XP_OUV_DEGEL = 2400, XP_OUV_FIN = 3600;
+const XP_OUV_DEGEL = 3600, XP_OUV_FIN = 4800;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 

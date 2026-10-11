@@ -304,7 +304,7 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
    Ouverture de l'accueil : les axes de la cabane traversent l'écran et s'effacent aussitôt (experience/ouverture.ts)
    ===================================================================== */
 .xp-ouv-axes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: filter 1.3s var(--ease), opacity 1.3s var(--ease); }
-.xp-ouv-axes line { stroke: var(--encre); stroke-width: 1; stroke-opacity: .9; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: xp-ouv-axe .28s cubic-bezier(.3, .6, .3, 1) forwards, xp-ouv-efface .28s cubic-bezier(.6, 0, .6, 1) forwards; animation-delay: calc(.05s + var(--i) * .09s), calc(.33s + var(--i) * .09s); }
+.xp-ouv-axes line { stroke: var(--encre); stroke-width: 1; stroke-opacity: .9; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: xp-ouv-axe .5s cubic-bezier(.3, .6, .3, 1) forwards, xp-ouv-efface .5s cubic-bezier(.6, 0, .6, 1) forwards; animation-delay: calc(.1s + var(--i) * .18s), calc(.6s + var(--i) * .18s); }
 @keyframes xp-ouv-axe { to { stroke-dashoffset: 0; } }
 /* chaque axe s'efface aussitôt tracé, dans le sens où il a été tracé : il ne reste que la cabane */
 @keyframes xp-ouv-efface { from { stroke-dashoffset: 0; } to { stroke-dashoffset: calc(-1 * var(--len)); } }
