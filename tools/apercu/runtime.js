@@ -96,9 +96,11 @@
 
   /* ---------- ouverture : les axes dessinent la cabane, puis tout devient flou (src/experience/ouverture.ts) ---------- */
   let finOuverture = () => {};
+  let ouvertureVue = false; // une fois par visite : en revenant sur l'accueil, pas d'ouverture
   const ouverture = () => {
     finOuverture();
-    if (calme) return;
+    if (calme || ouvertureVue) return;
+    ouvertureVue = true;
     const vieux = document.querySelector('.' + c('home.ouverture'));
     const o = tpl(`data-o="${lang}"`).content.firstElementChild.cloneNode(true);
     vieux.replaceWith(o);

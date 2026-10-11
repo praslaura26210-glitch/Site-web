@@ -18,20 +18,11 @@
 .ouverture[data-actif] .ouvLogo { visibility: hidden; }
 /* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
 .ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -90px -140px; background: radial-gradient(closest-side, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0)); }
-.ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .5s var(--ease) forwards; }
-.ouvNom { margin-top: 36px; font-size: clamp(1rem, 1.6vw, 1.2rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; color: var(--encre); animation-delay: 1.9s; margin-right: -.42em; }
-.ouvSous { margin-top: 12px; font-size: .74rem; font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-delay: 2s; margin-right: -.5em; }
-@keyframes nom { to { opacity: 1; transform: none; } }
-.ouvSkip { filter: blur(12px); opacity: 0; transform: scale(1.03); }
-.ouvLogoBox { width: min(52vw, 250px); }
-.ouvLogo { width: 100%; height: auto; color: var(--encre); }
-/* pendant que les axes passent, la cabane s'encre trait après trait, la porte en dernier */
-.ouvLogo path { animation-duration: .45s !important; animation-delay: calc(.55s + var(--i) * .18s) !important; }
-.ouvLogo path[data-porte] { animation-duration: .5s !important; animation-delay: 1.8s !important; }
-.ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .5s var(--ease) forwards; }
-.ouvNom { margin-top: 36px; font-size: clamp(.9rem, 1.4vw, 1.05rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; animation-delay: 2.3s; margin-right: -.42em; }
-.ouvSous { margin-top: 10px; font-size: .62rem; letter-spacing: .5em; text-transform: uppercase; color: var(--gris); animation-delay: 2.45s; margin-right: -.5em; }
-@keyframes nom { to { opacity: 1; transform: none; } }
+/* le nom s'écrit de gauche à droite, comme à la main, puis « portfolio » */
+.ouvNom, .ouvSous { clip-path: inset(-.2em 100% -.2em 0); animation: ecrit .75s cubic-bezier(.45, .05, .55, 1) forwards; }
+.ouvNom { margin-top: 38px; font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 400; letter-spacing: .38em; text-transform: uppercase; color: var(--encre); animation-delay: 1.85s; margin-right: -.38em; }
+.ouvSous { margin-top: 14px; font-size: clamp(.8rem, 1.1vw, .95rem); font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-duration: .55s; animation-delay: 2.5s; margin-right: -.5em; }
+@keyframes ecrit { to { clip-path: inset(-.2em 0 -.2em 0); } }
 .ouvSkip { position: absolute; right: var(--gut); bottom: 28px; z-index: 1; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); transition: opacity .5s; }
 
 /* ---------- présentation (en deux parties, comme une planche) ---------- */

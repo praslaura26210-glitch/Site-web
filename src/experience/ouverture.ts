@@ -10,7 +10,7 @@ import { xpCalme } from './outils';
  */
 
 /** Le verre commence à fondre, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
-const XP_OUV_DEGEL = 3400, XP_OUV_FIN = 4600;
+const XP_OUV_DEGEL = 3600, XP_OUV_FIN = 4800;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
@@ -47,6 +47,8 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
   if (xpCalme()) { fin(); return () => {}; }
   el.removeAttribute('data-out');
   el.removeAttribute('data-degel');
+  // une fois par visite : en revenant sur l'accueil, on arrive directement sur la page
+  try { sessionStorage.setItem('lp-intro', '1'); } catch { /* stockage indisponible : l'ouverture se rejouera */ }
   el.setAttribute('data-actif', '');
   // les axes, calculés pour cet écran ; le logo du calque ne sert qu'à les placer (il est masqué)
   el.querySelector('.xp-ouv-axes')?.remove();

@@ -70,7 +70,7 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`} data-open={open || undefined}>
-      {/* lien classique (rechargement) : l'ouverture se rejoue à chaque retour à l'accueil par le logo */}
+      {/* retour à l'accueil sans rechargement : l'ouverture ne se rejoue pas */}
       <a href={`/${lang}/`} className={styles.brand} aria-label={`Laura Pras, ${t.nav.home}`}>
         <Logo className={styles.brandLogo} poids={1.7} label="" />
         <span className={styles.brandName}>Laura Pras</span>

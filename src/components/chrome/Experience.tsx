@@ -20,11 +20,11 @@ export default function Experience() {
         D,
         href: (h) => h,
         ancre: () => decodeURIComponent(location.hash.slice(1)),
-        // l'accueil se recharge (l'ouverture se rejoue) ; une autre langue aussi (autres données)
+        // une autre langue se recharge (autres données) ; l'accueil, non : l'ouverture ne se rejoue pas
         lien: (a) => {
           const h = a.getAttribute('href') || '';
           if (!h.startsWith('/') || h.startsWith('//') || /\.\w+$/.test(h.split('#')[0])) return null;
-          if (!h.startsWith(`/${D.lang}/`) || /^\/\w\w\/?$/.test(h.split('#')[0])) return null;
+          if (!h.startsWith(`/${D.lang}/`)) return null;
           if (h.startsWith('#') || (h.split('#')[0] === location.pathname && h.includes('#'))) return null;
           return h;
         },
