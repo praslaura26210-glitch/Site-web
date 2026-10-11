@@ -57,9 +57,7 @@ strong, b { font-weight: 500; }
 .logoDraw path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trait .55s cubic-bezier(.6, .05, .3, 1) forwards; animation-delay: calc(.35s + var(--i) * .3s); }
 @keyframes trait { to { stroke-dashoffset: 0; } }
 
-/* pendant l'ouverture, le contenu attend */
-html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 10s forwards; }
-@keyframes secours { to { opacity: 1; } }
+/* pendant l'ouverture, la page est déjà là, derrière le verre dépoli (components/home/Ouverture.tsx) */
 .page, body > header { transition: opacity .35s var(--ease); }
 
 @media (prefers-reduced-motion: reduce) {

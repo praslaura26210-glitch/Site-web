@@ -301,14 +301,13 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 @media (max-width: 700px) { .xp-fe-cadre { height: 46svh; } .xp-fe-segNom { display: none; } }
 
 /* =====================================================================
-   Ouverture de l'accueil : les axes de la cabane traversent l'écran (experience/ouverture.ts)
+   Ouverture de l'accueil : les axes de la cabane traversent l'écran et s'effacent aussitôt (experience/ouverture.ts)
    ===================================================================== */
 .xp-ouv-axes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: filter 1.3s var(--ease), opacity 1.3s var(--ease); }
-.xp-ouv-axes line { stroke: var(--encre); stroke-width: 1; stroke-opacity: .9; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: xp-ouv-axe .34s cubic-bezier(.3, .6, .3, 1) .1s forwards, xp-ouv-efface .55s cubic-bezier(.6, 0, .4, 1) 1.75s forwards; animation-delay: calc(.1s + var(--i) * .13s), calc(1.75s + var(--i) * .07s); }
+.xp-ouv-axes line { stroke: var(--encre); stroke-width: 1; stroke-opacity: .9; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: xp-ouv-axe .28s cubic-bezier(.3, .6, .3, 1) forwards, xp-ouv-efface .28s cubic-bezier(.6, 0, .6, 1) forwards; animation-delay: calc(.05s + var(--i) * .09s), calc(.33s + var(--i) * .09s); }
 @keyframes xp-ouv-axe { to { stroke-dashoffset: 0; } }
-/* une fois la cabane dessinée, les axes repartent : chaque ligne s'efface dans le sens où elle a été tracée */
+/* chaque axe s'efface aussitôt tracé, dans le sens où il a été tracé : il ne reste que la cabane */
 @keyframes xp-ouv-efface { from { stroke-dashoffset: 0; } to { stroke-dashoffset: calc(-1 * var(--len)); } }
-[data-flou] > .xp-ouv-axes { filter: blur(10px); opacity: 0; }
 
 /* ---------- contact : ma fiche contact, à scanner (ou à toucher sur téléphone) ---------- */
 .xp-vcard { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; align-items: center; margin-top: 30px; text-decoration: none; }
