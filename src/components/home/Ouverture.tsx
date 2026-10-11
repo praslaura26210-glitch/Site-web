@@ -19,7 +19,7 @@ export default function Ouverture({ skip, portfolio }: { skip: string; portfolio
     <div ref={ref} className={styles.ouverture} aria-hidden="true">
       <div className={styles.ouvIn}>
         <div className={styles.ouvLogoBox}>
-          <Logo className={styles.ouvLogo} draw poids={1.3} label="" />
+          <Logo className={styles.ouvLogo} draw poids={1} label="" />
         </div>
         <p className={styles.ouvNom}>Laura Pras</p>
         <p className={styles.ouvSous}>{portfolio}</p>

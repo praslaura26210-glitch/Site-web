@@ -1,9 +1,9 @@
 import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
-import { xpFiches } from './fiches';
+import { xpAnime } from './anime';
 import { xpLightboxPage } from './lightbox';
 import { xpFeuilleter } from './feuilleter';
-import { xpCalme, xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
+import { xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
 import { xpImageDuLien } from './transition';
 
 /** Aide : les raccourcis clavier du site. */
@@ -34,19 +34,12 @@ export function xpDemarrer(ctx: XPContexte) {
       if (a) { e.preventDefault(); a(); }
       return;
     }
-    // ancre dans la page (sommaire des projets) : on y descend en douceur, sans changer l'adresse
-    const ancre = (e.target as Element).closest<HTMLAnchorElement>('a[data-ancre]');
-    const cibleAncre = ancre && document.getElementById(decodeURIComponent(ancre.getAttribute('href')!.slice(1)));
-    if (cibleAncre) {
-      e.preventDefault();
-      cibleAncre.scrollIntoView({ behavior: xpCalme() ? 'auto' : 'smooth', block: 'start' });
-      return;
-    }
     // copier une adresse
     const c = (e.target as Element).closest<HTMLElement>('[data-copier]');
     if (c) {
       e.preventDefault();
-      const fini = () => { c.dataset.copie = ''; setTimeout(() => delete c.dataset.copie, 1800); };
+      const msg = c.querySelector<HTMLElement>('[data-copie-msg]');
+      const fini = () => { c.dataset.copie = ''; if (msg) msg.textContent = ctx.D.t.copie; setTimeout(() => { delete c.dataset.copie; if (msg) msg.textContent = ''; }, 1800); };
       navigator.clipboard?.writeText(c.dataset.copier!).then(fini, () => {
         const r = document.createRange(); const s = getSelection();
         const cible = c.parentElement?.querySelector('[data-copier-texte]') || c;
@@ -86,12 +79,12 @@ export function xpDemarrer(ctx: XPContexte) {
   return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
-/** À chaque page affichée : visionneuse, chapitres, fiches des références, carte, feuilletage. Retourne le nettoyage. */
+/** À chaque page affichée : visionneuse, chapitres, « ce qui m'anime », carte, feuilletage. Retourne le nettoyage. */
 export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.charge;
   delete document.documentElement.dataset.enteteCache;
   const f = [
-    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpFiches(ctx, root),
+    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpAnime(root),
     xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpFeuilleter(ctx, root),
   ];
   return () => f.forEach((x) => x());

@@ -5,7 +5,7 @@ import { getCV, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
 import { CV_HREF } from '@/components/chrome/liens';
-import Inspirations from '@/components/pages/Inspirations';
+import Anime from '@/components/pages/Anime';
 import styles from '@/components/pages/pages.module.css';
 import { PARCOURS } from '@/lib/parcours';
 
@@ -18,6 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 /** Niveaux des logiciels (sur 5, notés par Laura dans son CV), du plus haut au plus bas. */
 const NIVEAUX = [5, 4, 3, 2] as const;
+/** Années de la frise du parcours. */
+const ANS = [...new Set(PARCOURS.map((e) => Math.floor(e.cle)))].sort((a, b) => a - b);
 
 export default async function APropos({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -31,8 +33,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     fr: {
       statut: "Étudiante en master AECC à l'École nationale supérieure d'architecture de Grenoble.",
       avant: "Avant l'école d'architecture, j'ai été dessinatrice en bâtiment. Je dessine sur Archicad comme à la main, je monte des dossiers de permis de construire, je dessine des escaliers et du mobilier. J'ai travaillé en agence d'architecture, en architecture intérieure et sur un chantier.",
-      master: 'Le master', lettres: ['Architecture', 'Environnement', 'Cultures', 'Constructives'],
-      anime: "Ce qui m'anime", animeIntro: 'Quelques projets qui m’ont marquée. Cliquez sur une image pour en savoir plus.',
+      master: 'Master AECC', parcours: 'Parcours', s1: 'Stage', f1: 'Formation',
+      anime: "Ce qui m'anime", animeIntro: 'Quelques projets qui m’ont marquée. Cliquez sur une image pour l’ouvrir.',
       mots: [['Le territoire', "une architecture liée au lieu qui l'accueille"], ['La matière', 'la pierre, le bois, la terre, ce qu’ils permettent'], ['Les sens', "le toucher, l'odeur, la lumière"], ["L'existant", "le dialogue avec ce qui est là, jusqu'aux ruines"]],
       stages: 'Stages', formations: 'Formations',
       outils: 'Outils', niveaux: { 5: 'Maîtrise', 4: 'Utilisation régulière', 3: 'Bonnes bases', 2: 'Notions' } as Record<number, string>, main: 'À la main',
@@ -44,8 +46,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     en: {
       statut: "Master's student (AECC) at the École nationale supérieure d'architecture de Grenoble.",
       avant: 'Before architecture school, I worked as a building draughtswoman. I draw in Archicad as well as by hand, I put together building permit applications, and I design staircases and furniture. I have worked in an architecture practice, in interior architecture and on a building site.',
-      master: 'The master’s', lettres: ['Architecture', 'Environnement', 'Cultures', 'Constructives'],
-      anime: 'What drives me', animeIntro: 'A few projects that left their mark on me. Click an image to find out more.',
+      master: 'AECC master’s', parcours: 'Background', s1: 'Internship', f1: 'Education',
+      anime: 'What drives me', animeIntro: 'A few projects that left their mark on me. Click an image to open it.',
       mots: [['Territory', 'architecture tied to the place that receives it'], ['Material', 'stone, timber, earth, and what they make possible'], ['The senses', 'touch, smell, light'], ['What exists', 'a dialogue with what is already there, down to ruins']],
       stages: 'Internships', formations: 'Education',
       outils: 'Tools', niveaux: { 5: 'Expert', 4: 'Regular use', 3: 'Good grounding', 2: 'Basics' } as Record<number, string>, main: 'By hand',
@@ -57,8 +59,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     it: {
       statut: "Studentessa del master AECC all'École nationale supérieure d'architecture de Grenoble.",
       avant: "Prima della scuola di architettura sono stata disegnatrice edile. Disegno con Archicad e a mano, preparo pratiche per il permesso di costruire, progetto scale e arredi. Ho lavorato in uno studio di architettura, nell'architettura d'interni e in cantiere.",
-      master: 'Il master', lettres: ['Architecture', 'Environnement', 'Cultures', 'Constructives'],
-      anime: 'Ciò che mi anima', animeIntro: 'Alcuni progetti che mi hanno segnata. Clicca su un’immagine per saperne di più.',
+      master: 'Master AECC', parcours: 'Percorso', s1: 'Tirocinio', f1: 'Formazione',
+      anime: 'Ciò che mi anima', animeIntro: 'Alcuni progetti che mi hanno segnata. Clicca su un’immagine per aprirla.',
       mots: [['Il territorio', "un'architettura legata al luogo che la accoglie"], ['La materia', 'la pietra, il legno, la terra, e ciò che permettono'], ['I sensi', "il tatto, l'odore, la luce"], ["L'esistente", 'il dialogo con ciò che c’è già, fino alle rovine']],
       stages: 'Tirocini', formations: 'Formazione',
       outils: 'Strumenti', niveaux: { 5: 'Padronanza', 4: 'Uso regolare', 3: 'Buone basi', 2: 'Nozioni' } as Record<number, string>, main: 'A mano',
@@ -92,36 +94,35 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       </header>
 
       <section className={styles.aMaster} aria-labelledby="master">
-        <h2 id="master" className="eyebrow">{L.master} AECC</h2>
-        <ol className={styles.aSigle}>
-          {L.lettres.map((m, i) => (
-            <li key={i} className="rv"><span className={styles.aLettre} aria-hidden="true">{'AECC'[i]}</span><span className={styles.aMot}>{m}</span></li>
-          ))}
-        </ol>
+        <div>
+          <p className="eyebrow">{L.master}</p>
+          <h2 id="master" className={styles.aMasterT}>Architecture, Environnement et Cultures Constructives</h2>
+        </div>
         <p className={`${styles.aMasterX} rv`}>{cv.master_aecc_texte[lang]}</p>
       </section>
 
-      <section className={styles.aParcours} aria-label={`${L.stages}, ${L.formations}`}>
-        <div className={styles.aBloc}>
-          <h2 className={styles.aH2}>{L.stages}</h2>
-          <ol className={styles.aStages}>
-            {PARCOURS.filter((e) => e.type === 's').map((e) => (
-              <li key={e.cle} className="rv">
-                <span className={styles.pDate}>{e.date[lang]}</span>
-                <span className={styles.pTitre}>{e.titre[lang]}</span>
-                <span className={styles.pLieu}>{e.lieu}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div className={styles.aBloc}>
-          <h2 className={styles.aH2}>{L.formations}</h2>
-          <ol className={styles.aFormations}>
-            {PARCOURS.filter((e) => e.type === 'f').map((e) => (
-              <li key={e.cle} className="rv">
-                <span className={styles.pDate}>{e.date[lang]}</span>
-                <span className={styles.pTitre}>{e.titre[lang]}</span>
-                <span className={styles.pLieu}>{e.lieu}</span>
+      <section className={styles.aParcours} aria-labelledby="parcours">
+        <h2 id="parcours" className={styles.aH2}>{L.parcours}</h2>
+        {/* une frise par année : les stages sur une ligne, les formations sur l'autre */}
+        <div className={styles.frise}>
+          <p className={styles.friseLigne} data-type="s" aria-hidden="true">{L.stages}</p>
+          <p className={styles.friseLigne} data-type="f" aria-hidden="true">{L.formations}</p>
+          <ol className={styles.friseAns}>
+            {ANS.map((an) => (
+              <li key={an} className={`${styles.friseAn} rv`}>
+                <span className={styles.friseAnN}>{an}</span>
+                {(['s', 'f'] as const).map((type) => (
+                  <ul key={type} className={styles.friseCase} data-type={type}>
+                    {PARCOURS.filter((e) => e.type === type && Math.floor(e.cle) === an).sort((x, y) => x.cle - y.cle).map((e) => (
+                      <li key={e.cle}>
+                        <span className={styles.friseType}>{type === 's' ? L.s1 : L.f1}</span>
+                        <span className={styles.pTitre}>{e.titre[lang]}</span>
+                        <span className={styles.pLieu}>{e.lieu}</span>
+                        <span className={styles.pDate}>{e.date[lang]}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ))}
               </li>
             ))}
           </ol>
@@ -155,7 +156,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
           </ul>
         </div>
         <p className={styles.aAnimeIntro}>{L.animeIntro}</p>
-        <Inspirations items={refs} labels={L.fiche} />
+        <Anime items={refs} labels={L.fiche} />
       </section>
 
       <section className={styles.audela} aria-labelledby="audela">

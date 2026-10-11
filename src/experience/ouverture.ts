@@ -1,27 +1,27 @@
 import { xpCalme } from './outils';
 
 /*
- * Ouverture de l'accueil, sur fond blanc. Chaque trait de la cabane est prolongé en un long axe
- * qui traverse tout l'écran, comme les lignes de construction d'un dessin ; le logo s'encre par-dessus,
- * le nom apparaît, puis tout devient flou et s'efface : on voit la page en transparence, qui devient nette.
+ * Ouverture de l'accueil, sur fond blanc. Les cinq traits de la cabane sont d'abord tracés très vite
+ * en longs axes qui traversent l'écran, comme les lignes de construction d'un dessin ; la cabane
+ * s'encre dedans, la porte en dernier, puis le nom. Ensuite tout devient flou et s'efface :
+ * on voit la page en transparence, qui devient nette.
  * Partagé par le site (components/home/Ouverture.tsx) et l'aperçu (tools/apercu/runtime.js).
  */
 
 /** Moment où tout devient flou, puis fin de l'ouverture (ms) : à accorder avec experience.css. */
-const XP_OUV_FLOU = 2200, XP_OUV_FIN = 3300;
+const XP_OUV_FLOU = 4300, XP_OUV_FIN = 6000;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
-/** Les segments des traits du logo, en coordonnées de l'écran (les plus courts, trop petits pour un axe, sont ignorés). */
+/** Les segments des traits du logo, en coordonnées de l'écran (la porte n'a pas d'axe). */
 function xpOuvSegments(svg: SVGSVGElement) {
   const r = svg.getBoundingClientRect();
   const s = r.width / XP_OUV_BOITE.w;
   const segs: [number, number, number, number][] = [];
-  svg.querySelectorAll('path').forEach((p) => {
+  svg.querySelectorAll('path:not([data-porte])').forEach((p) => {
     const n = (p.getAttribute('d') || '').match(/-?\d+(\.\d+)?/g)?.map(Number) || [];
     for (let i = 0; i + 3 < n.length; i += 2) {
       const [x1, y1, x2, y2] = n.slice(i, i + 4);
-      if (Math.hypot(x2 - x1, y2 - y1) < 10) continue;
       segs.push([r.left + (x1 - XP_OUV_BOITE.x) * s, r.top + (y1 - XP_OUV_BOITE.y) * s, r.left + (x2 - XP_OUV_BOITE.x) * s, r.top + (y2 - XP_OUV_BOITE.y) * s]);
     }
   });

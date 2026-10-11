@@ -4,7 +4,6 @@ import QRCode from 'qrcode';
 import { dict, type Lang } from '@/i18n';
 import { getCV } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import { tr } from '@/lib/tr';
 import Reseaux from '@/components/pages/Reseaux';
 import styles from '@/components/pages/pages.module.css';
 
@@ -22,7 +21,6 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
   const C = t.contact;
-  const obligatoire = tr(lang, { fr: 'Champs obligatoires', en: 'Required fields', it: 'Campi obbligatori' });
   const cv = getCV();
   const tel = String(cv.telephone);
   const telHref = `+33${tel.replace(/\s/g, '').replace(/^0/, '')}`;
@@ -61,7 +59,6 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
             <textarea name="message" rows={6} required />
           </label>
           <div className={styles.formBas}>
-            <p className={styles.formNote}><i className={styles.requis} aria-hidden="true">*</i> {obligatoire}</p>
             <button type="submit" className={styles.envoyer}>
               {C.envoyer}
               <svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.1" /></svg>
@@ -72,7 +69,11 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
         <aside className={styles.coord}>
           <p className="eyebrow">{C.coordonnees}</p>
           <dl className={styles.coordList}>
-            <div><dt>{C.email}</dt><dd><a href={`mailto:${cv.email}`} data-copier-texte>{cv.email}</a><button type="button" className="xp-copier" data-copier={cv.email}><span className="xp-copier-t">{t.xp.copier}</span><span className="xp-copie">{t.xp.copie} ✓</span></button></dd></div>
+            <div><dt>{C.email}</dt><dd><a href={`mailto:${cv.email}`} data-copier-texte>{cv.email}</a><button type="button" className="xp-copier" data-copier={cv.email} aria-label={t.xp.copier} title={t.xp.copier}>
+              <svg className="xp-copier-t" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.1"><rect x="5.5" y="5.5" width="8" height="8" rx="1" /><path d="M10.5 3.5v-1a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h1" /></svg>
+              <svg className="xp-copie" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.3"><path d="m3 8.5 3 3 7-7" /></svg>
+              <span className="sr-only" aria-live="polite" data-copie-msg="">{''}</span>
+            </button></dd></div>
             <div><dt>{C.tel}</dt><dd><a href={`tel:${telHref}`}>{tel}</a></dd></div>
             <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
           </dl>
