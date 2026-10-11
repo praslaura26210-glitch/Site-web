@@ -14,12 +14,8 @@
 .ouverture[data-degel] .ouvIn, .ouverture[data-degel] .ouvSkip { filter: blur(12px); opacity: 0; transform: scale(1.03); }
 .ouvLogoBox { width: min(52vw, 250px); }
 .ouvLogo { width: 100%; height: auto; color: var(--encre); overflow: visible; }
-/* chaque trait apparaît à la fin du tracé de son axe, à la même place : quand l'axe s'efface, il reste */
-.ouvLogo path { opacity: 0; animation: ouvTrait 0s forwards; animation-delay: calc(.72s + var(--i) * .35s); }
-@keyframes ouvTrait { to { opacity: 1; } }
-/* la porte, dessinée à la main à la fin */
-.ouvLogo path[data-porte] { opacity: 1; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ouvPorte .55s cubic-bezier(.45, .05, .35, 1) 2.3s forwards; }
-@keyframes ouvPorte { to { stroke-dashoffset: 0; } }
+/* pendant l'animation, le logo n'est qu'un repère : ce sont les axes (experience/ouverture.ts) qui le dessinent */
+.ouverture[data-actif] .ouvLogo { visibility: hidden; }
 /* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
 .ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -90px -140px; background: radial-gradient(closest-side, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0)); }
 .ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .5s var(--ease) forwards; }

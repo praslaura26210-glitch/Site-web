@@ -303,12 +303,10 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 /* =====================================================================
    Ouverture de l'accueil : chaque trait de la cabane naît d'un long axe (experience/ouverture.ts)
    ===================================================================== */
-.xp-ouv-axes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: filter 1.3s var(--ease), opacity 1.3s var(--ease); }
-.xp-ouv-axes line { stroke: var(--encre); stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: xp-ouv-axe .55s cubic-bezier(.45, .05, .35, 1) forwards, xp-ouv-fond .6s ease forwards; animation-delay: calc(.15s + var(--i) * .35s), calc(.78s + var(--i) * .35s); }
-/* l'axe se trace comme à la main, d'un bord à l'autre de l'écran */
-@keyframes xp-ouv-axe { to { stroke-dashoffset: 0; } }
-/* puis il s'efface : il ne reste que le morceau qui fait le logo */
-@keyframes xp-ouv-fond { to { opacity: 0; } }
+.xp-ouv-axes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: filter .9s var(--ease), opacity .9s var(--ease); }
+/* une seule ligne par trait (animée par experience/ouverture.ts) : l'axe, puis le trait du logo qui en reste */
+.xp-ouv-axes line, .xp-ouv-axes polyline { fill: none; stroke: var(--encre); stroke-width: 1.3px; stroke-linecap: round; stroke-linejoin: round; }
+[data-degel] > .xp-ouv-axes { filter: blur(12px); opacity: 0; }
 
 /* ---------- contact : ma fiche contact, à scanner (ou à toucher sur téléphone) ---------- */
 .xp-vcard { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; align-items: center; margin-top: 30px; text-decoration: none; }

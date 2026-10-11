@@ -2,9 +2,9 @@ import { xpCalme } from './outils';
 
 /*
  * Ouverture de l'accueil : la page est déjà là, derrière un verre dépoli. Par-dessus, comme on dessine
- * à la main, chaque trait de la cabane est d'abord tracé en long axe qui traverse l'écran ; puis l'axe
- * s'efface et n'en reste que le morceau qui fait le logo, exactement à sa place. On voit ainsi comment
- * le logo a été construit. La porte vient en dernier, puis le nom ; ensuite le verre fond et la page s'ouvre.
+ * à la main, chaque trait de la cabane est tracé en long axe qui traverse l'écran ; puis cette même ligne
+ * se raccourcit par ses deux bouts jusqu'à n'être plus que le trait du logo. Une seule ligne par trait :
+ * jamais de double trait. La porte vient en dernier, puis le nom ; ensuite le verre fond et la page s'ouvre.
  * Partagé par le site (components/home/Ouverture.tsx) et l'aperçu (tools/apercu/runtime.js).
  */
 
@@ -13,19 +13,18 @@ const XP_OUV_DEGEL = 4600, XP_OUV_FIN = 5800;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
-/** Les segments des traits du logo, en coordonnées de l'écran (la porte n'a pas d'axe). */
-function xpOuvSegments(svg: SVGSVGElement) {
+/** Les traits du logo en coordonnées de l'écran : les cinq droites, et la porte à part. */
+function xpOuvTraits(svg: SVGSVGElement) {
   const r = svg.getBoundingClientRect();
   const s = r.width / XP_OUV_BOITE.w;
-  const segs: { xy: [number, number, number, number]; i: number; epaisseur: number }[] = [];
-  svg.querySelectorAll('path').forEach((p, i) => {
-    if (p.hasAttribute('data-porte')) return;
-    const [x1, y1, x2, y2] = (p.getAttribute('d') || '').match(/-?\d+(\.\d+)?/g)?.map(Number) || [];
-    // l'axe a exactement l'épaisseur du trait du logo, pour qu'ils se confondent
-    const epaisseur = Number(p.getAttribute('stroke-width') || 1) * s;
-    segs.push({ xy: [r.left + (x1 - XP_OUV_BOITE.x) * s, r.top + (y1 - XP_OUV_BOITE.y) * s, r.left + (x2 - XP_OUV_BOITE.x) * s, r.top + (y2 - XP_OUV_BOITE.y) * s], i, epaisseur });
+  const ecran = (n: number[]) => n.map((v, k) => (k % 2 ? r.top + (v - XP_OUV_BOITE.y) * s : r.left + (v - XP_OUV_BOITE.x) * s));
+  const droites: number[][] = [];
+  let porte: number[] = [];
+  svg.querySelectorAll('path').forEach((p) => {
+    const n = ecran((p.getAttribute('d') || '').match(/-?\d+(\.\d+)?/g)?.map(Number) || []);
+    if (p.hasAttribute('data-porte')) porte = n; else droites.push(n);
   });
-  return segs;
+  return { droites, porte };
 }
 
 /** La droite qui porte un segment, coupée aux bords de l'écran (méthode de Liang-Barsky). */
@@ -48,9 +47,10 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
   el.removeAttribute('data-out');
   el.removeAttribute('data-degel');
   el.setAttribute('data-actif', '');
-  // les axes, calculés pour cet écran
+  // les axes, calculés pour cet écran ; le logo du calque ne sert qu'à les placer (il est masqué)
   el.querySelector('.xp-ouv-axes')?.remove();
   const logo = el.querySelector<SVGSVGElement>('svg');
+  const anims: Animation[] = [];
   if (logo) {
     const W = innerWidth, H = innerHeight;
     const NS = 'http://www.w3.org/2000/svg';
@@ -58,19 +58,40 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
     axes.setAttribute('class', 'xp-ouv-axes');
     axes.setAttribute('viewBox', `0 0 ${W} ${H}`);
     axes.setAttribute('aria-hidden', 'true');
-    xpOuvSegments(logo).forEach(({ xy: seg, i, epaisseur }) => {
+    const main = 'cubic-bezier(.45, .05, .35, 1)';
+    const { droites, porte } = xpOuvTraits(logo);
+    droites.forEach((seg, i) => {
       const [a, b, c, d] = xpOuvAxe(seg, W, H);
-      const l = document.createElementNS(NS, 'line');
       // l'axe part du bord le plus éloigné du logo, pour qu'on le voie traverser l'écran
       const inverse = Math.hypot(seg[0] - a, seg[1] - b) < Math.hypot(seg[2] - c, seg[3] - d);
       const [xa, ya, xb, yb] = inverse ? [c, d, a, b] : [a, b, c, d];
+      const len = Math.hypot(xb - xa, yb - ya);
+      // où commence et finit le trait du logo, le long de l'axe
+      const t1 = Math.hypot(seg[0] - xa, seg[1] - ya), t2 = Math.hypot(seg[2] - xa, seg[3] - ya);
+      const debut = Math.min(t1, t2), fin = Math.max(t1, t2);
+      const l = document.createElementNS(NS, 'line');
       l.setAttribute('x1', xa.toFixed(1)); l.setAttribute('y1', ya.toFixed(1));
       l.setAttribute('x2', xb.toFixed(1)); l.setAttribute('y2', yb.toFixed(1));
-      l.style.setProperty('--len', Math.hypot(xb - xa, yb - ya).toFixed(0));
-      l.style.setProperty('--i', String(i));
-      l.style.strokeWidth = `${epaisseur.toFixed(2)}px`;
+      l.style.strokeDasharray = `0 ${len}`;
       axes.append(l);
+      // tracé d'un bord à l'autre, un temps, puis la ligne se raccourcit jusqu'au trait du logo
+      const trace = 550, pause = 120, retrait = 650, T = trace + pause + retrait;
+      anims.push(l.animate([
+        { strokeDasharray: `0 ${len}`, strokeDashoffset: '0', easing: main },
+        { strokeDasharray: `${len} ${len}`, strokeDashoffset: '0', offset: trace / T },
+        { strokeDasharray: `${len} ${len}`, strokeDashoffset: '0', offset: (trace + pause) / T, easing: main },
+        { strokeDasharray: `${fin - debut} ${len}`, strokeDashoffset: `${-debut}` },
+      ], { duration: T, delay: 150 + i * 350, fill: 'forwards' }));
     });
+    if (porte.length) {
+      const p = document.createElementNS(NS, 'polyline');
+      p.setAttribute('points', porte.map((v) => v.toFixed(1)).join(' '));
+      let lp = 0;
+      for (let k = 2; k < porte.length; k += 2) lp += Math.hypot(porte[k] - porte[k - 2], porte[k + 1] - porte[k - 1]);
+      p.style.strokeDasharray = `0 ${lp}`;
+      axes.append(p);
+      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 550, delay: 150 + droites.length * 350 + 500, easing: main, fill: 'forwards' }));
+    }
     el.prepend(axes);
   }
   let fini = false;
@@ -90,5 +111,5 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
   const touche = (e: KeyboardEvent) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') passe(); };
   addEventListener('keydown', touche);
   el.addEventListener('click', passe);
-  return () => { t.forEach(clearTimeout); removeEventListener('keydown', touche); el.removeEventListener('click', passe); };
+  return () => { t.forEach(clearTimeout); anims.forEach((x) => x.cancel()); removeEventListener('keydown', touche); el.removeEventListener('click', passe); };
 }
