@@ -18,12 +18,12 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# les références sont désormais dans « À propos »
+# les références sont désormais sur l'accueil, sous les projets
 [[redirects]]
   from = "/:lang/references/*"
-  to = "/:lang/a-propos/#references"
+  to = "/:lang/#references"
   status = 301
 [[redirects]]
   from = "/:lang/references"
-  to = "/:lang/a-propos/#references"
+  to = "/:lang/#references"
   status = 301

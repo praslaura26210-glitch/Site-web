@@ -25,13 +25,13 @@
 .champ:focus-within span { color: var(--encre); }
 .champLarge { grid-column: 1 / -1; }
 .formBas { grid-column: 1 / -1; display: flex; justify-content: flex-end; align-items: center; gap: 18px; flex-wrap: wrap; }
-.envoyer { display: inline-flex; align-items: center; gap: 12px; background: none; border: 0; padding: 6px 0; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--encre); cursor: pointer; transition: color .3s, gap .35s var(--ease); }
-.envoyer:hover { color: var(--accent-f); gap: 18px; }
+.envoyer { display: inline-flex; align-items: center; background: none; border: 1px solid var(--encre); border-radius: 2px; padding: 12px 28px; font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--encre); cursor: pointer; transition: background-color .3s, color .3s; }
+.envoyer:hover, .envoyer:focus-visible { background: var(--encre); color: var(--fond); }
 .coord { display: grid; gap: 18px; padding-top: 2px; }
 .coordList { margin: 0; display: grid; border-top: 1px solid var(--filet); }
 .coordList div { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid var(--filet); }
-.coordList dt { font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); }
-.coordList dd { margin: 0; font-size: .92rem; overflow-wrap: anywhere; }
+.coordList dt { font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); }
+.coordList dd { margin: 0; font-size: 1.02rem; overflow-wrap: anywhere; }
 .coordList a { text-decoration: none; }
 .coordList a:hover { color: var(--accent-f); }
 .icones { list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; }
@@ -74,23 +74,15 @@
 .pTitre { font-size: 1rem; font-weight: 400; line-height: 1.35; }
 .pLieu { font-size: .8rem; color: var(--gris); }
 
-/* outils : le nom bien lisible, le niveau en cinq cases */
+/* outils : comme un tableau, le nom à gauche, le niveau en cinq points à droite */
 .outils { display: grid; gap: 28px; }
-.logiciels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 0 clamp(20px, 3vw, 48px); }
-.logiciels li { display: grid; gap: 12px; padding: 18px 0; border-top: 1px solid var(--encre); }
-.logNom { font-size: 1.1rem; font-weight: 400; }
-.niveau { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 150px; }
-.niveau i { height: 5px; background: var(--filet); }
+.logiciels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(32px, 6vw, 110px); border-top: 1px solid var(--encre); }
+.logiciels li { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--filet); }
+.logNom { font-size: 1rem; }
+.niveau { display: flex; gap: 6px; }
+.niveau i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--accent); }
 .niveau i[data-plein] { background: var(--accent); }
 
-/* ce qui m'anime : quelques mots, puis des projets qui m'ont marquée */
-.aAnime { scroll-margin-top: calc(var(--header-h) + 24px); }
-.aAnimeTete { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 24px clamp(28px, 5vw, 96px); align-items: start; }
-.aMots { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 36px; }
-.aMots li { display: grid; gap: 4px; padding-top: 12px; border-top: 1px solid var(--filet); }
-.aMots b { font-weight: 400; }
-.aMots span { font-size: .88rem; line-height: 1.6; color: var(--gris); }
-.aAnimeIntro { margin: clamp(40px, 7vh, 72px) 0 24px; font-size: .9rem; color: var(--gris); }
 
 .audela { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px); align-items: end; }
 .audelaPhoto { grid-column: 1 / span 5; margin: 0; }
@@ -98,18 +90,16 @@
 .audelaTxt { grid-column: 7 / span 6; }
 .audelaTxt p { margin-top: 22px; max-width: 56ch; }
 .audelaPlanche { grid-column: 2 / span 10; margin: clamp(24px, 6vh, 64px) 0 0; }
-.aFin { display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: baseline; padding-bottom: 12px; }
 
 @media (max-width: 900px) {
   .head, .deux, .legal, .form { grid-template-columns: 1fr; }
-  .aTete, .aAnimeTete { grid-template-columns: 1fr; }
+  .aTete { grid-template-columns: 1fr; }
   .aPortrait { max-width: 320px; }
   .aMaster { grid-template-columns: 1fr; }
   .deuxCol { grid-template-columns: 1fr; }
   .col li { grid-template-columns: 1fr; }
   .pDate { grid-row: auto; }
-  .logiciels { grid-template-columns: 1fr 1fr; }
-  .aMots { grid-template-columns: 1fr; }
+  .logiciels { grid-template-columns: 1fr; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
   .cGrille { grid-template-columns: 1fr; }
   .coordList { grid-template-columns: 1fr; justify-content: start; }

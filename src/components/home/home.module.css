@@ -13,6 +13,21 @@
 .ouvIn { position: relative; display: grid; justify-items: center; transition: filter .9s var(--ease), opacity .9s var(--ease), transform 1.1s var(--ease); }
 .ouverture[data-degel] .ouvIn, .ouverture[data-degel] .ouvSkip { filter: blur(12px); opacity: 0; transform: scale(1.03); }
 .ouvLogoBox { width: min(52vw, 250px); }
+.ouvLogo { width: 100%; height: auto; color: var(--encre); overflow: visible; }
+/* chaque trait apparaît à la fin du tracé de son axe, à la même place : quand l'axe s'efface, il reste */
+.ouvLogo path { opacity: 0; animation: ouvTrait 0s forwards; animation-delay: calc(.72s + var(--i) * .35s); }
+@keyframes ouvTrait { to { opacity: 1; } }
+/* la porte, dessinée à la main à la fin */
+.ouvLogo path[data-porte] { opacity: 1; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ouvPorte .55s cubic-bezier(.45, .05, .35, 1) 2.3s forwards; }
+@keyframes ouvPorte { to { stroke-dashoffset: 0; } }
+/* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
+.ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -90px -140px; background: radial-gradient(closest-side, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0)); }
+.ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .5s var(--ease) forwards; }
+.ouvNom { margin-top: 36px; font-size: clamp(1rem, 1.6vw, 1.2rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; color: var(--encre); animation-delay: 2.9s; margin-right: -.42em; }
+.ouvSous { margin-top: 12px; font-size: .74rem; font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-delay: 3.05s; margin-right: -.5em; }
+@keyframes nom { to { opacity: 1; transform: none; } }
+.ouvSkip { filter: blur(12px); opacity: 0; transform: scale(1.03); }
+.ouvLogoBox { width: min(52vw, 250px); }
 .ouvLogo { width: 100%; height: auto; color: var(--encre); }
 /* pendant que les axes passent, la cabane s'encre trait après trait, la porte en dernier */
 .ouvLogo path { animation-duration: .45s !important; animation-delay: calc(.55s + var(--i) * .18s) !important; }
@@ -59,6 +74,10 @@
 .liste li[data-on] .lT { color: var(--encre); }
 .liste li[data-on] .lN { color: var(--accent); }
 .liste li[data-on] a { padding-left: 10px; }
+
+/* ---------- ce qui m'anime (sous les projets) ---------- */
+.anime { padding-top: clamp(80px, 14vh, 150px); scroll-margin-top: var(--header-h); }
+.animeIntro { margin: 18px 0 24px; font-size: .9rem; color: var(--gris); }
 
 /* ---------- grille (page Projets) ---------- */
 .grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(40px, 6vh, 72px) clamp(18px, 2.4vw, 36px); }

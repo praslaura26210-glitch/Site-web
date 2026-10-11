@@ -1,11 +1,7 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { dict, type Lang } from '@/i18n';
 import { getCV, getProjet } from '@/lib/content';
 import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
-import { CV_HREF } from '@/components/chrome/liens';
-import Anime from '@/components/pages/Anime';
 import styles from '@/components/pages/pages.module.css';
 import { PARCOURS } from '@/lib/parcours';
 
@@ -30,46 +26,31 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       statut: "Étudiante en master AECC à l'École nationale supérieure d'architecture de Grenoble.",
       avant: "Avant l'école d'architecture, j'ai été dessinatrice en bâtiment. Je dessine sur Archicad comme à la main, je monte des dossiers de permis de construire, je dessine des escaliers et du mobilier. J'ai travaillé en agence d'architecture, en architecture intérieure et sur un chantier.",
       master: 'Master AECC', parcours: 'Parcours',
-      anime: "Ce qui m'anime", animeIntro: 'Quelques projets qui m’ont marquée. Cliquez sur une image pour l’ouvrir.',
-      mots: [['Le territoire', "une architecture liée au lieu qui l'accueille"], ['La matière', 'la pierre, le bois, la terre, ce qu’ils permettent'], ['Les sens', "le toucher, l'odeur, la lumière"], ["L'existant", "le dialogue avec ce qui est là, jusqu'aux ruines"]],
       stages: 'Stages', formations: 'Formations',
       outils: 'Outils', sur5: 'sur 5',
-      audela: 'Au-delà des projets', cv: 'Télécharger mon CV',
-      fiche: { fermer: 'Fermer', ouvrir: 'Voir la fiche', auteur: 'Conception', lieu: 'Lieu', annee: 'Année', visite: "Vu lors des visites de l'ENSA Grenoble" },
+      audela: 'Au-delà des projets',
       texteAudela: audela.texte,
     },
     en: {
       statut: "Master's student (AECC) at the École nationale supérieure d'architecture de Grenoble.",
       avant: 'Before architecture school, I worked as a building draughtswoman. I draw in Archicad as well as by hand, I put together building permit applications, and I design staircases and furniture. I have worked in an architecture practice, in interior architecture and on a building site.',
       master: 'AECC master’s', parcours: 'Background',
-      anime: 'What drives me', animeIntro: 'A few projects that left their mark on me. Click an image to open it.',
-      mots: [['Territory', 'architecture tied to the place that receives it'], ['Material', 'stone, timber, earth, and what they make possible'], ['The senses', 'touch, smell, light'], ['What exists', 'a dialogue with what is already there, down to ruins']],
       stages: 'Internships', formations: 'Education',
       outils: 'Tools', sur5: 'out of 5',
-      audela: 'Beyond the projects', cv: 'Download my CV',
-      fiche: { fermer: 'Close', ouvrir: 'Open', auteur: 'Design', lieu: 'Place', annee: 'Year', visite: 'Seen on ENSA Grenoble study visits' },
+      audela: 'Beyond the projects',
       texteAudela: 'I like to spend my free time exploring different creative practices, such as drawing, painting and crafts like mosaic, scrapbooking and knitting. I particularly enjoy working with my hands, restoring old furniture or making new pieces. I am not a great photographer, but I like taking the time to photograph the places around me. It helps me look more closely at the architecture, the light and the details that make up a place.',
     },
     it: {
       statut: "Studentessa del master AECC all'École nationale supérieure d'architecture de Grenoble.",
       avant: "Prima della scuola di architettura sono stata disegnatrice edile. Disegno con Archicad e a mano, preparo pratiche per il permesso di costruire, progetto scale e arredi. Ho lavorato in uno studio di architettura, nell'architettura d'interni e in cantiere.",
       master: 'Master AECC', parcours: 'Percorso',
-      anime: 'Ciò che mi anima', animeIntro: 'Alcuni progetti che mi hanno segnata. Clicca su un’immagine per aprirla.',
-      mots: [['Il territorio', "un'architettura legata al luogo che la accoglie"], ['La materia', 'la pietra, il legno, la terra, e ciò che permettono'], ['I sensi', "il tatto, l'odore, la luce"], ["L'esistente", 'il dialogo con ciò che c’è già, fino alle rovine']],
       stages: 'Tirocini', formations: 'Formazione',
       outils: 'Strumenti', sur5: 'su 5',
-      audela: 'Oltre i progetti', cv: 'Scarica il mio CV',
-      fiche: { fermer: 'Chiudi', ouvrir: 'Apri la scheda', auteur: 'Progetto', lieu: 'Luogo', annee: 'Anno', visite: "Visto durante le visite dell'ENSA di Grenoble" },
+      audela: 'Oltre i progetti',
       texteAudela: "Mi piace dedicare il tempo libero a diverse pratiche creative, come il disegno, la pittura o attività manuali come il mosaico, lo scrapbooking e la maglia. Amo soprattutto lavorare con le mani, restaurare vecchi mobili o creare nuovi pezzi. Non sono una grande fotografa, ma mi piace prendermi il tempo di fotografare i luoghi che mi circondano: mi aiuta a osservare meglio l'architettura, la luce e i dettagli che compongono un luogo.",
     },
   });
 
-  // références (choisies par Laura dans content/site/inspirations.json)
-  const R = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'content/site/inspirations.json'), 'utf8'));
-  const refs = (R.visibles as string[]).map((id) => R.items.find((x: { id: string }) => x.id === id)).filter(Boolean).map((x: Record<string, string> & { w: number; h: number }) => ({
-    id: x.id, titre: x.titre, auteur: x.auteur, lieu: x.lieu, annee: x.annee, credit: x.credit, w: x.w, h: x.h,
-    info: !x.auteur ? L.fiche.visite : undefined, texte: x[lang] || x.fr,
-  }));
   const logiciels = Object.entries(cv.logiciels_sur_5 as Record<string, number>);
 
   return (
@@ -85,17 +66,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
           <p className={styles.aAvant}>{L.avant}</p>
         </div>
       </header>
-
-      <section id="references" className={styles.aAnime} aria-labelledby="anime">
-        <div className={styles.aAnimeTete}>
-          <h2 id="anime" className={styles.aH2}>{L.anime}</h2>
-          <ul className={styles.aMots}>
-            {L.mots.map(([m, x]) => <li key={m} className="rv"><b>{m}</b><span>{x}</span></li>)}
-          </ul>
-        </div>
-        <p className={styles.aAnimeIntro}>{L.animeIntro}</p>
-        <Anime items={refs} labels={L.fiche} />
-      </section>
 
       <section className={styles.aMaster} aria-labelledby="master">
         <div>
@@ -129,7 +99,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         <h2 id="outils" className={styles.aH2}>{L.outils}</h2>
         <ul className={styles.logiciels}>
           {logiciels.map(([k, v]) => (
-            <li key={k} className="rv">
+            <li key={k}>
               <span className={styles.logNom}>{k}</span>
               <span className={styles.niveau} role="img" aria-label={`${v} ${L.sur5}`}>
                 {[1, 2, 3, 4, 5].map((n) => <i key={n} data-plein={n <= v || undefined} />)}
@@ -154,12 +124,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </figure>
       </section>
 
-      <p className={styles.aFin}>
-        <a href={CV_HREF} download className="lien lienPdf">
-          {L.cv} <span className="lienPdfInfo">· {t.footer.cvSize}</span>
-          <svg viewBox="0 0 12 14" width="10" height="12" aria-hidden="true"><path d="M6 1v9M2 6.5 6 10.5l4-4M1 13h10" fill="none" stroke="currentColor" strokeWidth="1.1" /></svg>
-        </a>
-      </p>
     </article>
   );
 }

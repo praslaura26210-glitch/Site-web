@@ -1,14 +1,15 @@
 import { xpCalme } from './outils';
 
 /*
- * Ouverture de l'accueil : la page est déjà là, derrière un verre dépoli. Par-dessus, les cinq traits
- * de la cabane passent très vite en longs axes noirs qui traversent l'écran et s'effacent aussitôt ;
- * il ne reste que la cabane, la porte en dernier, puis le nom. Ensuite le verre fond et la page s'ouvre.
+ * Ouverture de l'accueil : la page est déjà là, derrière un verre dépoli. Par-dessus, comme on dessine
+ * à la main, chaque trait de la cabane est d'abord tracé en long axe qui traverse l'écran ; puis l'axe
+ * s'efface et n'en reste que le morceau qui fait le logo, exactement à sa place. On voit ainsi comment
+ * le logo a été construit. La porte vient en dernier, puis le nom ; ensuite le verre fond et la page s'ouvre.
  * Partagé par le site (components/home/Ouverture.tsx) et l'aperçu (tools/apercu/runtime.js).
  */
 
 /** Le verre commence à fondre, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
-const XP_OUV_DEGEL = 3600, XP_OUV_FIN = 4800;
+const XP_OUV_DEGEL = 4600, XP_OUV_FIN = 5800;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
@@ -16,13 +17,13 @@ const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 function xpOuvSegments(svg: SVGSVGElement) {
   const r = svg.getBoundingClientRect();
   const s = r.width / XP_OUV_BOITE.w;
-  const segs: [number, number, number, number][] = [];
-  svg.querySelectorAll('path:not([data-porte])').forEach((p) => {
-    const n = (p.getAttribute('d') || '').match(/-?\d+(\.\d+)?/g)?.map(Number) || [];
-    for (let i = 0; i + 3 < n.length; i += 2) {
-      const [x1, y1, x2, y2] = n.slice(i, i + 4);
-      segs.push([r.left + (x1 - XP_OUV_BOITE.x) * s, r.top + (y1 - XP_OUV_BOITE.y) * s, r.left + (x2 - XP_OUV_BOITE.x) * s, r.top + (y2 - XP_OUV_BOITE.y) * s]);
-    }
+  const segs: { xy: [number, number, number, number]; i: number; epaisseur: number }[] = [];
+  svg.querySelectorAll('path').forEach((p, i) => {
+    if (p.hasAttribute('data-porte')) return;
+    const [x1, y1, x2, y2] = (p.getAttribute('d') || '').match(/-?\d+(\.\d+)?/g)?.map(Number) || [];
+    // l'axe a exactement l'épaisseur du trait du logo, pour qu'ils se confondent
+    const epaisseur = Number(p.getAttribute('stroke-width') || 1) * s;
+    segs.push({ xy: [r.left + (x1 - XP_OUV_BOITE.x) * s, r.top + (y1 - XP_OUV_BOITE.y) * s, r.left + (x2 - XP_OUV_BOITE.x) * s, r.top + (y2 - XP_OUV_BOITE.y) * s], i, epaisseur });
   });
   return segs;
 }
@@ -57,7 +58,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
     axes.setAttribute('class', 'xp-ouv-axes');
     axes.setAttribute('viewBox', `0 0 ${W} ${H}`);
     axes.setAttribute('aria-hidden', 'true');
-    xpOuvSegments(logo).forEach((seg, i) => {
+    xpOuvSegments(logo).forEach(({ xy: seg, i, epaisseur }) => {
       const [a, b, c, d] = xpOuvAxe(seg, W, H);
       const l = document.createElementNS(NS, 'line');
       // l'axe part du bord le plus éloigné du logo, pour qu'on le voie traverser l'écran
@@ -67,6 +68,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       l.setAttribute('x2', xb.toFixed(1)); l.setAttribute('y2', yb.toFixed(1));
       l.style.setProperty('--len', Math.hypot(xb - xa, yb - ya).toFixed(0));
       l.style.setProperty('--i', String(i));
+      l.style.strokeWidth = `${epaisseur.toFixed(2)}px`;
       axes.append(l);
     });
     el.prepend(axes);

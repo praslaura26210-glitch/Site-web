@@ -59,10 +59,7 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
             <textarea name="message" rows={6} required />
           </label>
           <div className={styles.formBas}>
-            <button type="submit" className={styles.envoyer}>
-              {C.envoyer}
-              <svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.1" /></svg>
-            </button>
+            <button type="submit" className={styles.envoyer}>{C.envoyer}</button>
           </div>
         </form>
 
