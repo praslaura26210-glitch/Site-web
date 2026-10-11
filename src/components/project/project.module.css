@@ -131,7 +131,7 @@
 
 /* ---------- agrandissement : l'image seule, sans cadre ; le © en bas ---------- */
 .lightbox { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--encre); }
-.lightbox::backdrop { background: rgba(254, 254, 252, .95); backdrop-filter: blur(6px); }
+.lightbox::backdrop { background: rgba(255, 255, 255, .95); backdrop-filter: blur(6px); }
 .lbFermer { position: absolute; top: 18px; right: var(--gut); z-index: 3; width: 44px; height: 44px; border-radius: 50%; border: 0; background: transparent; font-size: 1.1rem; cursor: pointer; }
 .lbFermer:hover { color: var(--accent-f); }
 .lbCredit { position: absolute; left: 0; right: 0; bottom: 16px; text-align: center; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); pointer-events: none; }

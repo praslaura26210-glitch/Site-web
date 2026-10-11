@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 import { dict, type Lang } from '@/i18n';
 import { getCV } from '@/lib/content';
 import { meta } from '@/lib/seo';
+import { tr } from '@/lib/tr';
 import Reseaux from '@/components/pages/Reseaux';
 import styles from '@/components/pages/pages.module.css';
 
@@ -21,10 +22,11 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
   const C = t.contact;
+  const obligatoire = tr(lang, { fr: 'Champs obligatoires', en: 'Required fields', it: 'Campi obbligatori' });
   const cv = getCV();
   const tel = String(cv.telephone);
   const telHref = `+33${tel.replace(/\s/g, '').replace(/^0/, '')}`;
-  // fiche contact (vCard, écrite par scripts/sync-content.mjs) : en QR code à scanner, et à télécharger
+  // fiche contact (vCard, écrite par scripts/sync-content.mjs) : en QR code à scanner ; sur téléphone, un toucher l'enregistre
   const vcf = fs.readFileSync(path.join(process.cwd(), 'public', 'laura-pras.vcf'), 'utf8');
   const qr = await QRCode.toString(vcf, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#2B211C', light: '#0000' } });
   return (
@@ -39,15 +41,15 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
           <input type="hidden" name="langue" value={lang} />
           <p hidden><label>Ne pas remplir <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
           <label className={styles.champ}>
-            <span>{C.nom} *</span>
+            <span>{C.nom}<i className={styles.requis} aria-hidden="true">*</i></span>
             <input name="nom" type="text" autoComplete="family-name" required />
           </label>
           <label className={styles.champ}>
-            <span>{C.prenom} *</span>
+            <span>{C.prenom}<i className={styles.requis} aria-hidden="true">*</i></span>
             <input name="prenom" type="text" autoComplete="given-name" required />
           </label>
           <label className={styles.champ}>
-            <span>{C.email} *</span>
+            <span>{C.email}<i className={styles.requis} aria-hidden="true">*</i></span>
             <input name="email" type="email" autoComplete="email" required />
           </label>
           <label className={styles.champ}>
@@ -55,13 +57,16 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
             <input name="telephone" type="tel" autoComplete="tel" />
           </label>
           <label className={`${styles.champ} ${styles.champLarge}`}>
-            <span>{C.message} *</span>
-            <textarea name="message" rows={7} required />
+            <span>{C.message}<i className={styles.requis} aria-hidden="true">*</i></span>
+            <textarea name="message" rows={6} required />
           </label>
-          <button type="submit" className={styles.envoyer}>
-            {C.envoyer}
-            <svg viewBox="0 0 24 12" width="18" height="9" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.2" /></svg>
-          </button>
+          <div className={styles.formBas}>
+            <p className={styles.formNote}><i className={styles.requis} aria-hidden="true">*</i> {obligatoire}</p>
+            <button type="submit" className={styles.envoyer}>
+              {C.envoyer}
+              <svg viewBox="0 0 24 12" width="22" height="11" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.1" /></svg>
+            </button>
+          </div>
         </form>
 
         <aside className={styles.coord}>
@@ -72,14 +77,10 @@ export default async function Contact({ params }: { params: Promise<{ lang: stri
             <div><dt>{C.lieu}</dt><dd>{C.lieuV}</dd></div>
           </dl>
           <Reseaux cv={cv} className={styles.icones} ecrire={C.ecrire} email={false} />
-          <div className="xp-vcard">
-            <div className="xp-vcard-qr" role="img" aria-label={t.xp.carteTitre} dangerouslySetInnerHTML={{ __html: qr }} />
-            <div className="xp-vcard-txt">
-              <p className="eyebrow">{t.xp.carteTitre}</p>
-              <p>{t.xp.carteTexte}</p>
-              <a href="/laura-pras.vcf" download="laura-pras.vcf" className="lien">{t.xp.carteLien}</a>
-            </div>
-          </div>
+          <a className="xp-vcard" href="/laura-pras.vcf" download="laura-pras.vcf" data-xp-libre="">
+            <span className="xp-vcard-qr" role="img" aria-label={t.xp.carteTitre} dangerouslySetInnerHTML={{ __html: qr }} />
+            <span className="eyebrow xp-vcard-t">{t.xp.carteTitre}</span>
+          </a>
         </aside>
       </div>
     </article>

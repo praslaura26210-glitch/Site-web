@@ -1,12 +1,12 @@
 import { xpCalme, xpDialogue, xpEl, xpFleche, xpGlisse, xpSaisie, type XPContexte } from './outils';
 
-type Ref = { id: string; titre: string; auteur: string; lieu: string; annee: string; credit: string; info?: string; w: number; h: number; img: string; note?: { texte: string; page: number; partie?: string } };
+type Ref = { id: string; titre: string; auteur: string; lieu: string; annee: string; credit: string; info?: string; w: number; h: number; img: string; texte?: string };
 
 /** Références : un clic ouvre la fiche ; on passe d'une référence à l'autre sans la refermer (← →, glissé). */
 export function xpFiches(ctx: XPContexte, root: HTMLElement) {
   const ul = root.querySelector<HTMLElement>('[data-refs]');
   if (!ul) return () => {};
-  const L = JSON.parse(ul.dataset.refs!) as { fermer: string; auteur: string; lieu: string; annee: string; dansRapport?: string; figure?: string; page?: string };
+  const L = JSON.parse(ul.dataset.refs!) as { fermer: string; auteur: string; lieu: string; annee: string };
   const tuiles = [...ul.querySelectorAll<HTMLElement>('[data-fiche]')];
   const refs = tuiles.map((b) => JSON.parse(b.dataset.fiche!) as Ref);
 
@@ -32,12 +32,8 @@ export function xpFiches(ctx: XPContexte, root: HTMLElement) {
       fig.replaceChildren(xpEl('img', { src: r.img, alt: r.titre, width: r.w, height: r.h }));
       txt.replaceChildren(...[
         xpEl('h2', { class: 'xp-fi-titre', text: r.titre }),
+        r.texte ? xpEl('p', { class: 'xp-fi-texte', text: r.texte }) : null,
         xpEl('dl', { class: 'xp-fi-dl' }, [ligne(L.auteur, r.auteur), ligne(L.lieu, r.lieu), ligne(L.annee, r.annee), ligne(' ', r.info)]),
-        r.note ? xpEl('blockquote', { class: 'xp-fi-note' }, [
-          r.note.partie ? xpEl('span', { class: 'xp-ref-notePartie', text: `${L.figure} « ${r.note.partie} »` }) : null,
-          xpEl('p', { text: `« ${r.note.texte} »` }),
-          xpEl('footer', { text: `${L.dansRapport}, ${L.page} ${r.note.page}` }),
-        ]) : null,
         xpEl('p', { class: 'xp-fi-credit', text: r.credit }),
       ].filter((x): x is NonNullable<typeof x> => !!x));
       compte.innerHTML = `${String(cur + 1).padStart(2, '0')}<span> / ${String(n).padStart(2, '0')}</span>`;
@@ -63,13 +59,5 @@ export function xpFiches(ctx: XPContexte, root: HTMLElement) {
     ouvre(tuiles.indexOf(b));
   };
   ul.addEventListener('click', clic);
-  const btn = root.querySelector<HTMLButtonElement>('[data-notes-btn]');
-  const notes = () => {
-    const o = !ul.hasAttribute('data-notes');
-    ul.toggleAttribute('data-notes', o);
-    btn!.setAttribute('aria-pressed', String(o));
-    btn!.textContent = o ? btn!.dataset.fermer! : btn!.dataset.ouvrir!;
-  };
-  btn?.addEventListener('click', notes);
-  return () => { ul.removeEventListener('click', clic); btn?.removeEventListener('click', notes); };
+  return () => ul.removeEventListener('click', clic);
 }

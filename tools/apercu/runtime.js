@@ -94,29 +94,16 @@
   const defile = () => document.querySelector('body > header')?.classList.toggle(c('chrome.scrolled'), scrollY > 24);
   addEventListener('scroll', defile, { passive: true });
 
-  /* ---------- ouverture : la cabane se dessine, puis la porte s'ouvre ---------- */
-  const PORTE = { x: (70 - 12) / 98, y: (94 - 16) / 112 };
-  const OUVRE = 2150, FIN = 2650;
-  let minuteurs = [];
+  /* ---------- ouverture : les axes dessinent la cabane, puis tout devient flou (src/experience/ouverture.ts) ---------- */
+  let finOuverture = () => {};
   const ouverture = () => {
+    finOuverture();
     if (calme) return;
-    minuteurs.forEach(clearTimeout);
     const vieux = document.querySelector('.' + c('home.ouverture'));
     const o = tpl(`data-o="${lang}"`).content.firstElementChild.cloneNode(true);
     vieux.replaceWith(o);
     html.dataset.intro = 'on';
-    o.setAttribute('data-actif', '');
-    const r = $('home.ouvLogoBox', o).getBoundingClientRect();
-    o.style.setProperty('--px', `${r.left + r.width * PORTE.x}px`);
-    o.style.setProperty('--py', `${r.top + r.height * PORTE.y}px`);
-    const montre = () => { delete html.dataset.intro; };
-    const cache = () => o.setAttribute('data-out', '');
-    minuteurs = [setTimeout(montre, OUVRE), setTimeout(cache, FIN)];
-    const passe = () => { montre(); cache(); removeEventListener('keydown', touche); };
-    const touche = (e) => (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') && passe();
-    addEventListener('keydown', touche);
-    o.addEventListener('click', passe);
-    minuteurs.push(setTimeout(() => removeEventListener('keydown', touche), FIN));
+    finOuverture = XP.xpOuverture(o, () => {});
   };
 
   /* ---------- apparition douce des éléments « rv » ---------- */

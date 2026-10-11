@@ -1,13 +1,10 @@
-import { xpCarnet, xpDejaVus, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpRapport, xpTerritoire } from './anim';
+import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
-import { xpExplorer } from './explorer';
 import { xpFiches } from './fiches';
 import { xpLightboxPage } from './lightbox';
 import { xpFeuilleter } from './feuilleter';
-import { xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
+import { xpCalme, xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
 import { xpImageDuLien } from './transition';
-import { xpVisite } from './visite';
-import { xpVues } from './vues';
 
 /** Aide : les raccourcis clavier du site. */
 export function xpRaccourcis(ctx: XPContexte) {
@@ -25,11 +22,9 @@ export function xpRaccourcis(ctx: XPContexte) {
   fermer.focus();
 }
 
-/** Une fois pour toutes : raccourcis, boutons [data-xp], trait de chargement entre deux pages. */
+/** Une fois pour toutes : raccourcis, copie d'adresse, navigation avec transition entre deux pages. */
 export function xpDemarrer(ctx: XPContexte) {
   const actions = {
-    explorer: () => xpExplorer(ctx, { visite: () => xpVisite(ctx), raccourcis: () => xpRaccourcis(ctx) }),
-    visite: () => xpVisite(ctx),
     raccourcis: () => xpRaccourcis(ctx),
   };
   const clic = (e: MouseEvent) => {
@@ -37,6 +32,14 @@ export function xpDemarrer(ctx: XPContexte) {
     if (b) {
       const a = actions[b.dataset.xp as keyof typeof actions];
       if (a) { e.preventDefault(); a(); }
+      return;
+    }
+    // ancre dans la page (sommaire des projets) : on y descend en douceur, sans changer l'adresse
+    const ancre = (e.target as Element).closest<HTMLAnchorElement>('a[data-ancre]');
+    const cibleAncre = ancre && document.getElementById(decodeURIComponent(ancre.getAttribute('href')!.slice(1)));
+    if (cibleAncre) {
+      e.preventDefault();
+      cibleAncre.scrollIntoView({ behavior: xpCalme() ? 'auto' : 'smooth', block: 'start' });
       return;
     }
     // copier une adresse
@@ -66,9 +69,7 @@ export function xpDemarrer(ctx: XPContexte) {
   };
   const touche = (e: KeyboardEvent) => {
     if (xpSaisie(e) || e.metaKey || e.ctrlKey || e.altKey || document.querySelector('dialog[open]')) return;
-    if (e.key === 'k' || e.key === 'K' || e.key === '/') actions.explorer();
-    else if (e.key === 'v' || e.key === 'V') actions.visite();
-    else if (e.key === '?') actions.raccourcis();
+    if (e.key === '?') actions.raccourcis();
     else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && (e.target === document.body || e.target === document.documentElement)) {
       // page projet : ← → pour le projet précédent ou suivant
       const a = document.querySelector<HTMLAnchorElement>(e.key === 'ArrowRight' ? '[data-projet-suivant]' : '[data-projet-precedent]');
@@ -85,13 +86,13 @@ export function xpDemarrer(ctx: XPContexte) {
   return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
-/** À chaque page affichée : visionneuse, chapitres, vues, fiches. Retourne le nettoyage. */
+/** À chaque page affichée : visionneuse, chapitres, fiches des références, carte, feuilletage. Retourne le nettoyage. */
 export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.charge;
   delete document.documentElement.dataset.enteteCache;
   const f = [
-    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpVues(root), xpFiches(ctx, root),
-    xpCarnet(ctx, root), xpImagesDouces(root), xpDejaVus(ctx, root), xpEcoute(root), xpTerritoire(root), xpFeuilleter(ctx, root), xpRapport(root),
+    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpFiches(ctx, root),
+    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpFeuilleter(ctx, root),
   ];
   return () => f.forEach((x) => x());
 }

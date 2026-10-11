@@ -3,11 +3,9 @@
 // Aucun import entre fichiers autre que des noms : l'aperçu les concatène dans une seule portée.
 
 export type XPTextes = {
-  explorer: string; rechercher: string; pages: string; projets: string; dessins: string; aucun: string; fermer: string;
-  visite: string; visiteFin: string; visiteFinTexte: string; voirProjet: string; quitter: string; glisser: string;
-  precedent: string; suivant: string; planche: string; retour: string;
-  vueLabel: string; sommaire: string; planches: string; frise: string;
-  chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string; resultats: string; carnet: string; carnetAide: string; dejaVu: string; ecouter: string; ecouterPause: string; feuilleter: string; feuilleterPieces: string; feuilleterAide: string; natures: Record<string, string[]>;
+  fermer: string; precedent: string; suivant: string; planche: string; retour: string; glisser: string;
+  chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string;
+  ecouter: string; ecouterPause: string; feuilleter: string; feuilleterPieces: string; feuilleterAide: string; natures: Record<string, string[]>;
   zoomIn: string; zoomOut: string; zoomReset: string;
 };
 export type XPImage = { src: string; srcSmall?: string; w: number; h: number; pos?: string };
@@ -17,8 +15,7 @@ export type XPDessin = { id: string; slug: string; projet: string; legende: stri
   preview?: string; svg?: string; full?: string; credit?: string; dessin?: boolean;
   /** nature de la pièce (croquis, maquette, plan, coupe…), déduite de sa légende et de son type */
   nature?: string };
-export type XPPage = { label: string; href: string };
-export type XPDonnees = { lang: string; t: XPTextes; projets: XPProjet[]; dessins: XPDessin[]; pages: XPPage[]; portfolio: string };
+export type XPDonnees = { lang: string; t: XPTextes; projets: XPProjet[]; dessins: XPDessin[] };
 export type XPContexte = {
   D: XPDonnees;
   /** navigation interne (routeur de Next, ou routeur de l'aperçu) */

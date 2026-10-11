@@ -15,7 +15,7 @@ export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
 }
 
-export const viewport: Viewport = { themeColor: '#FEFEFC', width: 'device-width', initialScale: 1 };
+export const viewport: Viewport = { themeColor: '#FFFFFF', width: 'device-width', initialScale: 1 };
 
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };

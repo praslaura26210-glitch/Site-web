@@ -5,15 +5,15 @@ import { couverture } from '@/components/home/ProjetsGrille';
 import ProjetsIndex from '@/components/home/ProjetsIndex';
 import Couloir from '@/components/home/Couloir';
 import Portfolio from '@/components/home/Portfolio';
-import Territoire from '@/components/home/Territoire';
 import styles from '@/components/home/home.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
-  return meta(lang, '/', `Laura Pras · ${t.home.approach.split(',')[0]}`, t.meta.siteDescription);
+  return meta(lang, '/', `Laura Pras · ${t.home.statut}`, t.meta.siteDescription);
 }
 
+/** Accueil : le nom, une ligne, le portfolio à télécharger, le dessin ; puis la liste des projets. */
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
@@ -26,15 +26,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     <>
       <section className={styles.hero} aria-labelledby="nom">
         <div className={styles.heroTxt}>
-          <p className="eyebrow">{t.home.portfolio}</p>
           <h1 id="nom" className={styles.nom}>Laura<br />Pras</h1>
-          <p className={`eyebrow ${styles.statut}`}>{t.home.statut}</p>
-          <p className={styles.approche}>{t.home.approach}</p>
-          <p className={styles.liens}>
-            <a className="lien" href="#projets">{t.home.cta}</a>
-            <button type="button" className="lien xp-lienVisite" data-xp="visite">{t.xp.visite} <span aria-hidden="true">→</span></button>
-            <Portfolio t={t} />
-          </p>
+          <p className={styles.statut}>{t.home.statut}</p>
+          <p className={styles.liens}><Portfolio t={t} /></p>
         </div>
         <div className={styles.heroDessin}>
           <Couloir legende={t.home.dessinLegende} ouvrir={t.home.ouvrir} fermer={t.projet.fermer} />
@@ -47,17 +41,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <span className="eyebrow">{String(projets.length).padStart(2, '0')}</span>
         </div>
         <ProjetsIndex lignes={lignes} lang={lang} voir={t.home.voir} />
-      </section>
-
-      <Territoire projets={projets} t={t} lang={lang} />
-
-      <section className="xp-carnet" data-carnet aria-label={t.xp.carnet}>
-        <div className="wrap xp-carnet-tete">
-          <h2 className="eyebrow">{t.xp.carnet}</h2>
-          <p className="eyebrow xp-carnet-legende" data-carnet-legende data-defaut={t.xp.carnetAide}>{t.xp.carnetAide}</p>
-        </div>
-        <div className="xp-carnet-fenetre" tabIndex={0} aria-label={t.xp.carnetAide}><div className="xp-carnet-piste" data-carnet-piste /></div>
-        <div className="wrap xp-carnet-bas" aria-hidden="true"><span className="xp-carnet-jauge"><i data-carnet-jauge /></span></div>
       </section>
     </>
   );

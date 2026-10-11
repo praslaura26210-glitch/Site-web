@@ -18,7 +18,7 @@ const commune = (lieu: string | null | undefined, noms: string[]) => {
 };
 
 /**
- * Accueil : la carte des lieux de Laura. Chaque projet, stage ou école est placé dans sa commune,
+ * Page Projets : la carte des lieux de Laura. Chaque projet, stage ou école est placé dans sa commune,
  * avec des cercles de distance autour de chez elle. Interactions : experience/anim.ts (xpTerritoire).
  */
 export default function Territoire({ projets, t, lang }: { projets: Projet[]; t: Dict; lang: Lang }) {
