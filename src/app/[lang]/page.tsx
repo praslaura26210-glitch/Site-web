@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/', `Laura Pras · ${t.home.statut}`, t.meta.siteDescription);
 }
 
-/** Accueil : le couloir en grand, et en bas de l'écran le nom, une ligne, le portfolio et une flèche ; puis les projets et ce qui anime Laura. */
+/** Accueil : le dessin au centre, le nom, une ligne, le portfolio, et un repère pour descendre ; puis les projets et ce qui anime Laura. */
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
@@ -32,21 +32,18 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   });
   return (
     <>
-      {/* le couloir en grand : il suit la souris en 3D, et l'on y entre en descendant (experience/anim.ts, xpCouloir) */}
-      <section className={styles.hero} aria-labelledby="nom" data-couloir>
-        <div className={styles.heroScene}>
-          <div className={styles.heroDessin} data-couloir-dessin>
-            <Couloir legende={t.home.dessinLegende} ouvrir={t.home.ouvrir} fermer={t.projet.fermer} />
-          </div>
+      <section className={styles.hero} aria-labelledby="nom">
+        <div className={styles.heroDessin}>
+          <Couloir legende={t.home.dessinLegende} ouvrir={t.home.ouvrir} fermer={t.projet.fermer} />
         </div>
-        <div className={styles.heroBas} data-couloir-texte>
-          <h1 id="nom" className={styles.nom}>Laura Pras</h1>
-          <p className={styles.statut}>{t.home.statut}</p>
-          <p className={styles.liens}><Portfolio t={t} /></p>
-          <a href="#projets" className={styles.descendre} data-ancre="" aria-label={t.home.scroll}>
-            <svg viewBox="0 0 16 26" width="14" height="22" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1"><path d="M8 1v23M2 18l6 6 6-6" /></svg>
-          </a>
-        </div>
+        <h1 id="nom" className={styles.nom}>Laura Pras</h1>
+        <p className={styles.statut}>{t.home.statut}</p>
+        <p className={styles.liens}><Portfolio t={t} /></p>
+        {/* pour descendre : un fil vertical le long duquel un trait glisse, comme un repère qu'on suit */}
+        <a href="#projets" className={styles.descendre} data-ancre="">
+          <span className={styles.descendreT}>{t.home.projetsTitre}</span>
+          <span className={styles.descendreFil} aria-hidden="true" />
+        </a>
       </section>
 
       <section id="projets" className={`wrap ${styles.projets}`} aria-labelledby="titre-projets">

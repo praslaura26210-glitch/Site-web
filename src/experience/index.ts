@@ -1,4 +1,4 @@
-import { xpCouloir, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
+import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpAnime } from './anime';
 import { xpLightboxPage } from './lightbox';
@@ -34,7 +34,7 @@ export function xpDemarrer(ctx: XPContexte) {
       if (a) { e.preventDefault(); a(); }
       return;
     }
-    // ancre dans la page (flèche de l'accueil) : on y descend en douceur, sans changer l'adresse
+    // ancre dans la page (repère « Projets » de l'accueil) : on y descend en douceur, sans changer l'adresse
     const ancre = (e.target as Element).closest<HTMLAnchorElement>('a[data-ancre]');
     const cibleAncre = ancre && document.getElementById(decodeURIComponent((ancre.getAttribute('href') || '').slice(1)));
     if (cibleAncre) {
@@ -93,7 +93,7 @@ export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.enteteCache;
   const f = [
     xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpAnime(root),
-    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpFeuilleter(ctx, root), xpCouloir(root),
+    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpFeuilleter(ctx, root),
   ];
   return () => f.forEach((x) => x());
 }

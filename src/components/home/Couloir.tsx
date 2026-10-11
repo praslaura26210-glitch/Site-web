@@ -9,7 +9,7 @@ export default function Couloir({ legende, ouvrir }: { legende: string; ouvrir: 
       <img
         src="/media/site/dessin-couverture-2000.webp"
         srcSet="/media/site/dessin-couverture-1000.webp 1000w, /media/site/dessin-couverture-2000.webp 2000w"
-        sizes="(max-width: 600px) 100vw, 800px"
+        sizes="(max-width: 600px) 100vw, 520px"
         alt={legende}
         width={1398}
         height={1328}

@@ -12,32 +12,32 @@
 .ouverture[data-degel] { background-color: rgba(255, 255, 255, 0); -webkit-backdrop-filter: blur(0) saturate(1); backdrop-filter: blur(0) saturate(1); pointer-events: none; }
 .ouvIn { position: relative; display: grid; justify-items: center; transition: filter .9s var(--ease), opacity .9s var(--ease), transform 1.1s var(--ease); }
 .ouverture[data-degel] .ouvIn, .ouverture[data-degel] .ouvSkip { filter: blur(12px); opacity: 0; transform: scale(1.03); }
-.ouvLogoBox { width: min(52vw, 250px); }
+.ouvLogoBox { width: min(50vw, 230px); }
 .ouvLogo { width: 100%; height: auto; color: var(--encre); overflow: visible; }
 /* pendant l'animation, le logo n'est qu'un repère : ce sont les axes (experience/ouverture.ts) qui le dessinent */
 .ouverture[data-actif] .ouvLogo { visibility: hidden; }
 /* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
 .ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -110px -170px; background: radial-gradient(closest-side, rgba(255, 255, 255, .92) 55%, rgba(255, 255, 255, 0)); }
-/* le nom s'écrit de gauche à droite, comme à la main, puis « portfolio » */
-.ouvNom, .ouvSous { clip-path: inset(-.2em 100% -.2em 0); animation: ecrit .75s cubic-bezier(.45, .05, .55, 1) forwards; }
-.ouvNom { margin-top: clamp(48px, 8vh, 72px); font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 400; letter-spacing: .38em; text-transform: uppercase; color: var(--encre); animation-delay: 2.1s; margin-right: -.38em; }
-.ouvSous { margin-top: 14px; font-size: clamp(.8rem, 1.1vw, .95rem); font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-duration: .55s; animation-delay: 2.75s; margin-right: -.5em; }
-@keyframes ecrit { to { clip-path: inset(-.2em 0 -.2em 0); } }
+/* le nom : à peu près la largeur du logo, à bonne distance ; les lettres arrivent une à une, puis « portfolio » */
+.ouvNom { margin-top: clamp(34px, 5vh, 46px); font-size: clamp(1.05rem, 1.5vw, 1.3rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; color: var(--encre); margin-right: -.42em; }
+.ouvSous { margin-top: 12px; font-size: clamp(.66rem, .8vw, .74rem); font-weight: 400; letter-spacing: .62em; text-transform: uppercase; color: var(--gris); margin-right: -.62em; }
+.ouvNom span, .ouvSous span { display: inline-block; opacity: 0; filter: blur(4px); transform: translateY(.25em); animation: lettre .45s cubic-bezier(.2, .7, .3, 1) forwards; animation-delay: calc(1.45s + var(--k) * 45ms); }
+@keyframes lettre { to { opacity: 1; filter: blur(0); transform: none; } }
 .ouvSkip { position: absolute; right: var(--gut); bottom: 28px; z-index: 1; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); transition: opacity .5s; }
 
 /* ---------- présentation (en deux parties, comme une planche) ---------- */
-/* le premier écran : le couloir en grand, le nom en bas, une flèche pour descendre */
-.hero { --bas: 232px; position: relative; height: 100svh; min-height: 560px; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; justify-items: center; padding: var(--header-h) var(--gut) 0; overflow: hidden; }
-.heroScene { position: relative; width: 100%; height: 100%; display: grid; place-items: center; perspective: 1100px; }
-.heroDessin { width: min(100%, max(240px, (100svh - var(--header-h) - var(--bas)) * 1.053)); transform-origin: 43% 52%; will-change: transform; }
-.heroBas { display: grid; justify-items: center; text-align: center; padding: 14px 0 22px; background: linear-gradient(rgba(255, 255, 255, 0), var(--fond) 30%); will-change: opacity; }
-.nom { font-size: clamp(1.9rem, 3vw, 2.6rem); line-height: 1.05; letter-spacing: -0.02em; }
-.statut { margin: 10px 0 16px; font-size: clamp(.95rem, 1.1vw, 1.05rem); line-height: 1.5; color: var(--gris); }
+/* le premier écran : tout au centre, dans une colonne étroite ; un repère en bas pour descendre */
+.hero { position: relative; min-height: 100svh; display: grid; align-content: center; justify-items: center; text-align: center; max-width: 760px; margin: 0 auto; padding: calc(var(--header-h) + 8px) var(--gut) 104px; }
+.heroDessin { width: min(100%, 520px, max(240px, (100svh - var(--header-h) - 330px) * 1.053)); }
+.nom { margin-top: clamp(20px, 3.5vh, 34px); font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; letter-spacing: -0.02em; }
+.statut { margin: 12px 0 22px; font-size: clamp(.95rem, 1.1vw, 1.05rem); line-height: 1.5; color: var(--gris); }
 .liens { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 36px; }
-/* la flèche : elle se balance doucement pour dire qu'on peut descendre */
-.descendre { display: grid; place-items: center; width: 44px; height: 44px; margin-top: 10px; color: var(--encre); animation: balance 2.4s ease-in-out infinite; }
-.descendre:hover { color: var(--accent-f); }
-@keyframes balance { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+.descendre { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: grid; justify-items: center; gap: 10px; text-decoration: none; color: var(--gris); transition: color .3s; }
+.descendre:hover { color: var(--encre); }
+.descendreT { font-size: .58rem; letter-spacing: .3em; text-transform: uppercase; margin-right: -.3em; }
+.descendreFil { position: relative; width: 1px; height: 46px; background: var(--filet); overflow: hidden; }
+.descendreFil::after { content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 18px; background: var(--encre); animation: fil 2.2s cubic-bezier(.6, 0, .3, 1) infinite; }
+@keyframes fil { 0% { transform: translateY(-18px); } 70%, 100% { transform: translateY(46px); } }
 .couloir { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; }
 .couloir img { width: 100%; height: auto; mix-blend-mode: multiply; }
 /* le dessin en grand : l'image seule, le © en bas */

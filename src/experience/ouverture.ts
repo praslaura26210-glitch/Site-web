@@ -10,7 +10,7 @@ import { xpCalme } from './outils';
  */
 
 /** Le verre commence à fondre, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
-const XP_OUV_DEGEL = 3900, XP_OUV_FIN = 5100;
+const XP_OUV_DEGEL = 3300, XP_OUV_FIN = 4500;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
@@ -80,7 +80,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       const point = (t: number) => [xa + ux * t, ya + uy * t];
       // le geste de la main : il démarre doucement, file au milieu, ralentit en arrivant (la plume suit une sinusoïde) ;
       // chaque morceau prend le relais du précédent, au moment où la plume l'atteint
-      const trace = 520, depart = 120 + i * 260, efface = depart + trace + 60;
+      const trace = 300, depart = 100 + i * 150, efface = depart + trace + 40;
       const quand = (f: number) => Math.acos(1 - 2 * Math.min(1, Math.max(0, f))) / Math.PI; // part du geste écoulée quand la plume est à f
       ([[0, debut, true], [debut, fin, false], [fin, len, true]] as [number, number, boolean][]).forEach(([d0, d1, bout]) => {
         const lg = d1 - d0;
@@ -95,7 +95,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
         const images = [0, 0.2, 0.4, 0.6, 0.8, 1].map((k) => ({ strokeDasharray: `${k * lg} ${lg}`, offset: Math.min(1, Math.max(0, (quand((d0 + k * lg) / len) - u0) / du)) }));
         anims.push(l.animate(images, { duration: Math.max(1, du * trace), delay: depart + u0 * trace, fill: 'forwards' }));
         // les deux bouts de l'axe deviennent transparents, lentement ; le morceau du milieu reste : c'est le trait du logo
-        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, delay: efface, easing: 'ease-in-out', fill: 'forwards' }));
+        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, delay: efface, easing: 'ease-in-out', fill: 'forwards' }));
       });
     });
     if (porte.length) {
@@ -105,7 +105,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       for (let k = 2; k < porte.length; k += 2) lp += Math.hypot(porte[k] - porte[k - 2], porte[k + 1] - porte[k - 1]);
       p.style.strokeDasharray = `0 ${lp}`;
       g.append(p);
-      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 420, delay: 120 + droites.length * 260 + 300, easing: main, fill: 'forwards' }));
+      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 320, delay: 100 + droites.length * 150 + 200, easing: main, fill: 'forwards' }));
     }
     el.prepend(axes);
   }
