@@ -2,9 +2,10 @@ import { xpCalme } from './outils';
 
 /*
  * Ouverture de l'accueil : la page est déjà là, derrière un verre dépoli. Par-dessus, comme on dessine
- * à la main, chaque trait de la cabane est tracé en long axe qui traverse l'écran ; puis cette même ligne
- * se raccourcit par ses deux bouts jusqu'à n'être plus que le trait du logo. Une seule ligne par trait :
- * jamais de double trait. La porte vient en dernier, puis le nom ; ensuite le verre fond et la page s'ouvre.
+ * à la main, chaque trait de la cabane est tracé en long axe qui traverse l'écran ; puis les deux bouts
+ * de l'axe s'effacent et il reste le trait du logo. L'axe est fait de trois morceaux mis bout à bout
+ * (avant le logo, le trait du logo, après) : rien ne se superpose, donc jamais de double trait.
+ * La porte vient en dernier, puis le nom ; ensuite le verre fond et la page s'ouvre.
  * Partagé par le site (components/home/Ouverture.tsx) et l'aperçu (tools/apercu/runtime.js).
  */
 
@@ -69,19 +70,23 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       // où commence et finit le trait du logo, le long de l'axe
       const t1 = Math.hypot(seg[0] - xa, seg[1] - ya), t2 = Math.hypot(seg[2] - xa, seg[3] - ya);
       const debut = Math.min(t1, t2), fin = Math.max(t1, t2);
-      const l = document.createElementNS(NS, 'line');
-      l.setAttribute('x1', xa.toFixed(1)); l.setAttribute('y1', ya.toFixed(1));
-      l.setAttribute('x2', xb.toFixed(1)); l.setAttribute('y2', yb.toFixed(1));
-      l.style.strokeDasharray = `0 ${len}`;
-      axes.append(l);
-      // tracé d'un bord à l'autre, un temps, puis la ligne se raccourcit jusqu'au trait du logo
-      const trace = 550, pause = 120, retrait = 650, T = trace + pause + retrait;
-      anims.push(l.animate([
-        { strokeDasharray: `0 ${len}`, strokeDashoffset: '0', easing: main },
-        { strokeDasharray: `${len} ${len}`, strokeDashoffset: '0', offset: trace / T },
-        { strokeDasharray: `${len} ${len}`, strokeDashoffset: '0', offset: (trace + pause) / T, easing: main },
-        { strokeDasharray: `${fin - debut} ${len}`, strokeDashoffset: `${-debut}` },
-      ], { duration: T, delay: 150 + i * 350, fill: 'forwards' }));
+      const ux = (xb - xa) / len, uy = (yb - ya) / len;
+      const point = (t: number) => [xa + ux * t, ya + uy * t];
+      // le tracé avance à vitesse constante d'un bord à l'autre ; chaque morceau prend le relais du précédent
+      const trace = 650, depart = 150 + i * 350, efface = depart + trace + 150;
+      ([[0, debut, true], [debut, fin, false], [fin, len, true]] as [number, number, boolean][]).forEach(([t0, t1, bout]) => {
+        const lg = t1 - t0;
+        if (lg < 0.5) return;
+        const [x1, y1] = point(t0), [x2, y2] = point(t1);
+        const l = document.createElementNS(NS, 'line');
+        l.setAttribute('x1', x1.toFixed(2)); l.setAttribute('y1', y1.toFixed(2));
+        l.setAttribute('x2', x2.toFixed(2)); l.setAttribute('y2', y2.toFixed(2));
+        l.style.strokeDasharray = `0 ${lg}`;
+        axes.append(l);
+        anims.push(l.animate([{ strokeDasharray: `0 ${lg}` }, { strokeDasharray: `${lg} ${lg}` }], { duration: (trace * lg) / len, delay: depart + (trace * t0) / len, fill: 'forwards' }));
+        // les deux bouts de l'axe s'effacent ; le morceau du milieu reste : c'est le trait du logo
+        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 650, delay: efface, easing: 'ease', fill: 'forwards' }));
+      });
     });
     if (porte.length) {
       const p = document.createElementNS(NS, 'polyline');
