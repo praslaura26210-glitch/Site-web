@@ -70,8 +70,8 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`} data-open={open || undefined}>
-      {/* retour à l'accueil sans rechargement : l'ouverture ne se rejoue pas */}
-      <a href={`/${lang}/`} className={styles.brand} aria-label={`Laura Pras, ${t.nav.home}`}>
+      {/* le logo ramène à l'accueil et rejoue l'ouverture (rechargement voulu) */}
+      <a href={`/${lang}/?ouverture`} data-xp-libre="" className={styles.brand} aria-label={`Laura Pras, ${t.nav.home}`}>
         <Logo className={styles.brandLogo} poids={1.7} label="" />
         <span className={styles.brandName}>Laura Pras</span>
       </a>

@@ -24,10 +24,10 @@ export default async function RootLayout({ children, params }: { children: React
   return (
     <html lang={lang}>
       <head>
-        {/* l'ouverture (logo qui se dessine) a lieu à la première arrivée sur l'accueil, une fois par visite */}
+        {/* l'ouverture (logo qui se dessine) : à la première arrivée sur l'accueil, et chaque fois qu'on clique sur le logo de l'en-tête */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(/^\\/(fr|en|it)\\/?$/.test(location.pathname)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/nointro/.test(location.search)&&!sessionStorage.getItem('lp-intro'))document.documentElement.dataset.intro='on'}catch(e){}`,
+            __html: `try{if(/^\\/(fr|en|it)\\/?$/.test(location.pathname)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/nointro/.test(location.search)&&(/[?&]ouverture/.test(location.search)||!sessionStorage.getItem('lp-intro')))document.documentElement.dataset.intro='on'}catch(e){}`,
           }}
         />
         <link rel="preload" href="/fonts/mont-400.woff2" as="font" type="font/woff2" crossOrigin="" />

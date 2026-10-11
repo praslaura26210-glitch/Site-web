@@ -206,6 +206,8 @@
   const va = (p, { ancre, pousse = true, y = 0 } = {}) => {
     // on note où l'on en était sur la page qu'on quitte, pour y revenir avec le bouton Retour
     if (route && pousse) { try { history.replaceState({ p: route, y: scrollY }, ''); } catch (e) { /* idem */ } }
+    // le logo de l'en-tête mène à l'accueil avec ?ouverture : l'ouverture se rejoue
+    if (p.includes('?ouverture')) { ouvertureVue = false; p = p.split('?')[0]; }
     if (!p.endsWith('/')) p += '/';
     if (!existe(p)) p = `/${lang || 'fr'}/`;
     const l = p.slice(1, 3);

@@ -112,3 +112,38 @@ export function xpTerritoire(root: HTMLElement) {
   }));
   return () => {};
 }
+
+/**
+ * Accueil : le dessin du couloir en 3D. Il s'incline doucement vers la souris (on le regarde de biais),
+ * et quand on descend, on avance dedans : il grandit vers son point de fuite pendant que le texte s'efface.
+ * Mouvements amortis (rAF) ; rien si l'on a demandé à réduire les animations.
+ */
+export function xpCouloir(root: HTMLElement) {
+  const box = root.querySelector<HTMLElement>('[data-couloir]');
+  const dessin = box?.querySelector<HTMLElement>('[data-couloir-dessin]');
+  const texte = box?.querySelector<HTMLElement>('[data-couloir-texte]');
+  if (!box || !dessin || matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
+  let rx = 0, ry = 0, vx = 0, vy = 0, entree = 0, ve = 0, raf = 0;
+  const vise = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
+    const r = box.getBoundingClientRect();
+    vy = ((e.clientX - r.left) / r.width - 0.5) * 22; // rotation autour de l'axe vertical, en degrés (± 11°)
+    vx = -((e.clientY - r.top) / r.height - 0.5) * 14;
+    boucle();
+  };
+  const quitte = () => { vx = 0; vy = 0; boucle(); };
+  const defile = () => { ve = Math.min(1, Math.max(0, scrollY / (box.offsetHeight * 0.9))); boucle(); };
+  const pas = () => {
+    raf = 0;
+    rx += (vx - rx) * 0.08; ry += (vy - ry) * 0.08; entree += (ve - entree) * 0.18;
+    dessin.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateZ(${(entree * 380).toFixed(1)}px)`;
+    if (texte) texte.style.opacity = String(Math.max(0, 1 - entree * 2.2));
+    if (Math.abs(vx - rx) + Math.abs(vy - ry) + Math.abs(ve - entree) > 0.01) boucle();
+  };
+  const boucle = () => { if (!raf) raf = requestAnimationFrame(pas); };
+  box.addEventListener('pointermove', vise);
+  box.addEventListener('pointerleave', quitte);
+  addEventListener('scroll', defile, { passive: true });
+  defile();
+  return () => { cancelAnimationFrame(raf); box.removeEventListener('pointermove', vise); box.removeEventListener('pointerleave', quitte); removeEventListener('scroll', defile); };
+}

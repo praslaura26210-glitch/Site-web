@@ -50,6 +50,8 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
   // une fois par visite : en revenant sur l'accueil, on arrive directement sur la page
   try { sessionStorage.setItem('lp-intro', '1'); } catch { /* stockage indisponible : l'ouverture se rejouera */ }
   el.setAttribute('data-actif', '');
+  // arrivée par le logo de l'en-tête (?ouverture) : on nettoie l'adresse
+  if (/[?&]ouverture/.test(location.search)) { try { history.replaceState(history.state, '', location.pathname + location.hash); } catch { /* idem */ } }
   // les axes, calculés pour cet écran ; le logo du calque ne sert qu'à les placer (il est masqué)
   el.querySelector('.xp-ouv-axes')?.remove();
   const logo = el.querySelector<SVGSVGElement>('svg');
@@ -61,10 +63,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
     axes.setAttribute('class', 'xp-ouv-axes');
     axes.setAttribute('viewBox', `0 0 ${W} ${H}`);
     axes.setAttribute('aria-hidden', 'true');
-    // le tremblé d'un trait tiré à la main : un très léger déplacement irrégulier le long des lignes
-    axes.innerHTML = `<defs><filter id="xp-ouv-main" filterUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="1.6"/></filter></defs>`;
     const g = document.createElementNS(NS, 'g');
-    g.setAttribute('filter', 'url(#xp-ouv-main)');
     axes.append(g);
     const main = 'cubic-bezier(.45, .05, .35, 1)';
     const { droites, porte } = xpOuvTraits(logo);
