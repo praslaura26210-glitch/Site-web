@@ -10,7 +10,7 @@ import { xpCalme } from './outils';
  */
 
 /** Le verre commence à fondre, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
-const XP_OUV_DEGEL = 4600, XP_OUV_FIN = 5800;
+const XP_OUV_DEGEL = 3400, XP_OUV_FIN = 4600;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
@@ -73,7 +73,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       const ux = (xb - xa) / len, uy = (yb - ya) / len;
       const point = (t: number) => [xa + ux * t, ya + uy * t];
       // le tracé avance à vitesse constante d'un bord à l'autre ; chaque morceau prend le relais du précédent
-      const trace = 650, depart = 150 + i * 350, efface = depart + trace + 150;
+      const trace = 420, depart = 120 + i * 230, efface = depart + trace + 80;
       ([[0, debut, true], [debut, fin, false], [fin, len, true]] as [number, number, boolean][]).forEach(([t0, t1, bout]) => {
         const lg = t1 - t0;
         if (lg < 0.5) return;
@@ -85,7 +85,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
         axes.append(l);
         anims.push(l.animate([{ strokeDasharray: `0 ${lg}` }, { strokeDasharray: `${lg} ${lg}` }], { duration: (trace * lg) / len, delay: depart + (trace * t0) / len, fill: 'forwards' }));
         // les deux bouts de l'axe s'effacent ; le morceau du milieu reste : c'est le trait du logo
-        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 650, delay: efface, easing: 'ease', fill: 'forwards' }));
+        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, delay: efface, easing: 'ease', fill: 'forwards' }));
       });
     });
     if (porte.length) {
@@ -95,7 +95,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       for (let k = 2; k < porte.length; k += 2) lp += Math.hypot(porte[k] - porte[k - 2], porte[k + 1] - porte[k - 1]);
       p.style.strokeDasharray = `0 ${lp}`;
       axes.append(p);
-      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 550, delay: 150 + droites.length * 350 + 500, easing: main, fill: 'forwards' }));
+      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 400, delay: 120 + droites.length * 230 + 230, easing: main, fill: 'forwards' }));
     }
     el.prepend(axes);
   }

@@ -19,8 +19,8 @@
 /* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
 .ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -90px -140px; background: radial-gradient(closest-side, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0)); }
 .ouvNom, .ouvSous { opacity: 0; transform: translateY(6px); animation: nom .5s var(--ease) forwards; }
-.ouvNom { margin-top: 36px; font-size: clamp(1rem, 1.6vw, 1.2rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; color: var(--encre); animation-delay: 2.9s; margin-right: -.42em; }
-.ouvSous { margin-top: 12px; font-size: .74rem; font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-delay: 3.05s; margin-right: -.5em; }
+.ouvNom { margin-top: 36px; font-size: clamp(1rem, 1.6vw, 1.2rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; color: var(--encre); animation-delay: 1.9s; margin-right: -.42em; }
+.ouvSous { margin-top: 12px; font-size: .74rem; font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-delay: 2s; margin-right: -.5em; }
 @keyframes nom { to { opacity: 1; transform: none; } }
 .ouvSkip { filter: blur(12px); opacity: 0; transform: scale(1.03); }
 .ouvLogoBox { width: min(52vw, 250px); }
