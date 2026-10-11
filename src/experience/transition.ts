@@ -29,9 +29,9 @@ export function xpTransition(maj: () => Promise<void> | void, image?: HTMLElemen
   vt.finished.finally(() => { anciens.forEach((e) => e.removeAttribute('data-xp-ancien')); enCours = false; delete html.dataset.vt; delete html.dataset.charge; });
 }
 
-/** La photo du lien cliqué, si le lien mène à une page projet et montre une photo. */
+/** La photo du lien cliqué, si le lien mène au haut d'une page projet et montre une photo. */
 export function xpImageDuLien(a: Element): HTMLElement | null {
-  if (!/\/projets\/[^/]+\/?(#.*)?$/.test(a.getAttribute('href') || '')) return null;
+  if (!/\/projets\/[^/]+\/?$/.test(a.getAttribute('href') || '')) return null;
   const visible = (i: Element | null) => (i && (i as HTMLElement).getBoundingClientRect().width > 0 ? (i as HTMLElement) : null);
   const dans = visible(a.querySelector('img'));
   if (dans) return dans;

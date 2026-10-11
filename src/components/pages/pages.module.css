@@ -62,36 +62,26 @@
 .aMasterT { margin-top: 14px; font-size: clamp(1.5rem, 2.4vw, 2.2rem); line-height: 1.12; max-width: 17ch; }
 .aMasterX { font-size: 1rem; line-height: 1.85; max-width: 60ch; }
 
-/* parcours : une frise par année, les stages sur une ligne, les formations sur l'autre */
-.aParcours { display: grid; gap: 30px; }
-.frise { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); grid-template-rows: auto auto auto; }
-.friseLigne { grid-column: 1; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; padding-top: 18px; }
-.friseLigne[data-type='s'] { grid-row: 2; color: var(--accent-f); border-bottom: 1px solid var(--filet); }
-.friseLigne[data-type='f'] { grid-row: 3; }
-.friseAns { grid-column: 2; grid-row: 1 / 4; list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-rows: subgrid; column-gap: clamp(14px, 1.8vw, 28px); background: linear-gradient(var(--encre), var(--encre)) 0 0 / 100% 1px no-repeat; }
-.friseAn { grid-row: 1 / 4; display: grid; grid-template-rows: subgrid; }
-.friseAnN { position: relative; padding: 18px 0 10px; font-size: clamp(1.5rem, 2.4vw, 2.2rem); font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
-.friseAnN::before { content: ''; position: absolute; left: 0; top: -5px; width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--encre); background: var(--fond); }
-.friseCase { list-style: none; margin: 0; padding: 18px 0 24px; display: grid; gap: 18px; align-content: start; }
-.friseCase[data-type='s'] { border-bottom: 1px solid var(--filet); }
-.friseCase li { display: grid; gap: 3px; }
-.friseCase li::before { content: ''; width: 18px; height: 2px; margin-bottom: 8px; background: var(--encre); }
-.friseCase[data-type='s'] li::before { background: var(--accent); }
-.friseCase .pTitre { font-size: .9rem; }
-.friseCase .pDate { margin-top: 3px; font-size: .58rem; }
-.friseCase[data-type='s'] .pDate { color: var(--accent-f); }
-.friseType { display: none; }
-.pDate { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
+/* parcours : formations et stages, deux colonnes bien séparées */
+.parcours { display: grid; gap: 32px; }
+.deuxCol { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px clamp(32px, 6vw, 110px); }
+.col ol { list-style: none; margin: 0; padding: 0; }
+.colT { font-size: .66rem; font-weight: 400; letter-spacing: .24em; text-transform: uppercase; padding-bottom: 14px; border-bottom: 2px solid var(--encre); }
+.col[data-type='s'] .colT { color: var(--accent-f); border-color: var(--accent); }
+.col li { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 2px 20px; padding: 18px 0; border-bottom: 1px solid var(--filet); }
+.pDate { grid-row: span 2; font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); padding-top: 4px; }
+.col[data-type='s'] .pDate { color: var(--accent-f); }
 .pTitre { font-size: 1rem; font-weight: 400; line-height: 1.35; }
 .pLieu { font-size: .8rem; color: var(--gris); }
 
-/* outils : rangés par niveau, en toutes lettres */
-.aOutils { display: grid; gap: 26px; }
-.aNiveaux { margin: 0; border-top: 1px solid var(--encre); }
-.aNiveaux > div { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 8px 24px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--filet); }
-.aNiveaux dt { font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); }
-.aNiveaux dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 30px; }
-.aNiveaux dd span { font-size: clamp(1.1rem, 1.7vw, 1.45rem); font-weight: 300; line-height: 1.3; }
+/* outils : le nom bien lisible, le niveau en cinq cases */
+.outils { display: grid; gap: 28px; }
+.logiciels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 0 clamp(20px, 3vw, 48px); }
+.logiciels li { display: grid; gap: 12px; padding: 18px 0; border-top: 1px solid var(--encre); }
+.logNom { font-size: 1.1rem; font-weight: 400; }
+.niveau { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 150px; }
+.niveau i { height: 5px; background: var(--filet); }
+.niveau i[data-plein] { background: var(--accent); }
 
 /* ce qui m'anime : quelques mots, puis des projets qui m'ont marquée */
 .aAnime { scroll-margin-top: calc(var(--header-h) + 24px); }
@@ -115,20 +105,10 @@
   .aTete, .aAnimeTete { grid-template-columns: 1fr; }
   .aPortrait { max-width: 320px; }
   .aMaster { grid-template-columns: 1fr; }
-  .frise { display: block; }
-  .friseLigne { display: none; }
-  .friseAns { display: grid; grid-auto-flow: row; grid-template-rows: none; grid-template-columns: minmax(0, 1fr); }
-  .friseAn { grid-row: auto; display: block; position: relative; padding: 0 0 26px 24px; border-left: 1px solid var(--encre); }
-  .friseAns { background: none; }
-  .friseAnN { display: block; padding: 0 0 6px; font-size: 1.5rem; }
-  .friseAnN::before { left: -29px; top: 8px; }
-  .friseCase { padding: 10px 0 0; gap: 14px; }
-  .friseCase[data-type='s'] { border-bottom: 0; }
-  .friseCase:empty { display: none; }
-  .friseCase li::before { display: none; }
-  .friseType { display: block; font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; }
-  .friseCase[data-type='s'] .friseType { color: var(--accent-f); }
-  .aNiveaux > div { grid-template-columns: 1fr; }
+  .deuxCol { grid-template-columns: 1fr; }
+  .col li { grid-template-columns: 1fr; }
+  .pDate { grid-row: auto; }
+  .logiciels { grid-template-columns: 1fr 1fr; }
   .aMots { grid-template-columns: 1fr; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
   .cGrille { grid-template-columns: 1fr; }

@@ -1,15 +1,15 @@
 import { xpCalme } from './outils';
 
 /*
- * Ouverture de l'accueil, sur fond blanc. Les cinq traits de la cabane sont d'abord tracés très vite
- * en longs axes qui traversent l'écran, comme les lignes de construction d'un dessin ; la cabane
- * s'encre dedans, la porte en dernier, puis le nom. Ensuite tout devient flou et s'efface :
- * on voit la page en transparence, qui devient nette.
+ * Ouverture de l'accueil, sur fond blanc. Les cinq traits de la cabane sont d'abord tracés très vite,
+ * en noir, en longs axes qui traversent l'écran, comme les lignes de construction d'un dessin ;
+ * la cabane s'encre dedans et les axes s'effacent, la porte vient en dernier, puis le nom.
+ * Ensuite le blanc devient un verre dépoli : on devine la page derrière, longtemps, puis il fond.
  * Partagé par le site (components/home/Ouverture.tsx) et l'aperçu (tools/apercu/runtime.js).
  */
 
-/** Moment où tout devient flou, puis fin de l'ouverture (ms) : à accorder avec experience.css. */
-const XP_OUV_FLOU = 4300, XP_OUV_FIN = 6000;
+/** Le blanc devient verre dépoli, puis le verre fond, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
+const XP_OUV_FLOU = 3300, XP_OUV_DEGEL = 5100, XP_OUV_FIN = 7800;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
@@ -47,6 +47,7 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
   if (xpCalme()) { fin(); return () => {}; }
   el.removeAttribute('data-out');
   el.removeAttribute('data-flou');
+  el.removeAttribute('data-degel');
   el.setAttribute('data-actif', '');
   // les axes, calculés pour cet écran
   el.querySelector('.xp-ouv-axes')?.remove();
@@ -73,21 +74,21 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
     el.prepend(axes);
   }
   let fini = false;
-  const flou = () => {
+  const t: ReturnType<typeof setTimeout>[] = [];
+  // le blanc devient verre dépoli : la page est là, derrière, floue
+  const flou = (degel: number, out: number) => {
     if (fini) return;
     fini = true;
     el.setAttribute('data-flou', '');
-    // la page apparaît floue sous le calque, puis devient nette
-    html.dataset.intro = 'flou';
-    requestAnimationFrame(() => requestAnimationFrame(() => { delete html.dataset.intro; fin(); }));
+    delete html.dataset.intro;
+    fin();
+    t.push(setTimeout(() => el.setAttribute('data-degel', ''), degel), setTimeout(() => el.setAttribute('data-out', ''), out));
   };
-  const cache = () => el.setAttribute('data-out', '');
-  const t = [setTimeout(flou, XP_OUV_FLOU), setTimeout(cache, XP_OUV_FIN)];
+  t.push(setTimeout(() => flou(XP_OUV_DEGEL - XP_OUV_FLOU, XP_OUV_FIN - XP_OUV_FLOU), XP_OUV_FLOU));
+  // un clic ou une touche abrège : le verre fond tout de suite
   const passe = () => {
-    if (fini) return;
-    t.forEach(clearTimeout);
-    flou();
-    t.push(setTimeout(cache, XP_OUV_FIN - XP_OUV_FLOU));
+    if (!fini) { t.forEach(clearTimeout); flou(60, 1600); return; }
+    el.setAttribute('data-degel', '');
   };
   const touche = (e: KeyboardEvent) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') passe(); };
   addEventListener('keydown', touche);

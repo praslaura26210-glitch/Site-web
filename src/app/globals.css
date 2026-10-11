@@ -58,13 +58,9 @@ strong, b { font-weight: 500; }
 @keyframes trait { to { stroke-dashoffset: 0; } }
 
 /* pendant l'ouverture, le contenu attend */
-html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 8s forwards; }
+html[data-intro] .page, html[data-intro] body > header { opacity: 0; animation: secours 0s 10s forwards; }
 @keyframes secours { to { opacity: 1; } }
-/* fin de l'ouverture : la page apparaît floue sous le calque qui s'efface, puis devient nette */
-html[data-intro='flou'] .page, html[data-intro='flou'] body > header { opacity: 1; animation: none; }
-html[data-intro='flou'] .page { filter: blur(12px); transition: none; }
 .page, body > header { transition: opacity .35s var(--ease); }
-.page { transition: opacity .35s var(--ease), filter 1.7s var(--ease); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }

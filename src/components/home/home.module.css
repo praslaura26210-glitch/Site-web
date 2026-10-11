@@ -5,13 +5,14 @@
 .ouverture {
   position: fixed; inset: 0; z-index: 80; place-items: center; overflow: hidden; cursor: pointer;
   background: var(--fond); color: var(--encre);
-  animation: ouvSecours 0s 8s forwards;
-  transition: background-color 1.5s var(--ease);
+  animation: ouvSecours 0s 10s forwards;
+  transition: background-color 1.2s var(--ease), backdrop-filter 1.2s var(--ease), -webkit-backdrop-filter 1.2s var(--ease);
 }
 @keyframes ouvSecours { to { visibility: hidden; } }
-/* l'effacement : le blanc devient transparent, le dessin et le nom se brouillent */
-.ouverture[data-flou] { background-color: rgba(255, 255, 255, 0); pointer-events: none; }
-.ouvIn { position: relative; display: grid; justify-items: center; transition: filter 1.3s var(--ease), opacity 1.3s var(--ease), transform 1.5s var(--ease); }
+/* le blanc devient verre dépoli (on devine la page derrière), puis le verre fond lentement */
+.ouverture[data-flou] { background-color: rgba(255, 255, 255, .55); -webkit-backdrop-filter: blur(22px) saturate(1.1); backdrop-filter: blur(22px) saturate(1.1); }
+.ouverture[data-degel] { background-color: rgba(255, 255, 255, 0); -webkit-backdrop-filter: blur(0) saturate(1); backdrop-filter: blur(0) saturate(1); pointer-events: none; transition-duration: 2.6s; }
+.ouvIn { position: relative; display: grid; justify-items: center; transition: filter 1.6s var(--ease), opacity 1.6s var(--ease), transform 1.8s var(--ease); }
 .ouverture[data-flou] .ouvIn, .ouverture[data-flou] .ouvSkip { filter: blur(14px); opacity: 0; transform: scale(1.03); }
 .ouvLogoBox { width: min(52vw, 250px); }
 .ouvLogo { width: 100%; height: auto; color: var(--encre); }
@@ -91,31 +92,30 @@
   .carteImg { aspect-ratio: 4 / 3; }
 }
 
-/* ---------- page Projets : comme un magazine ---------- */
-.magazine { display: grid; gap: clamp(96px, 16vh, 180px); }
-.mArticle { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(18px, 2.4vw, 40px); row-gap: 18px; align-items: start; scroll-margin-top: calc(var(--header-h) + 16px); }
-.mCouv { grid-column: 1 / span 7; display: block; overflow: hidden; aspect-ratio: 4 / 5; max-height: calc(100svh - var(--header-h) - 60px); background: var(--fond-2); }
-.mCouv img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-.mCouv:hover img { transform: scale(1.03); }
-.mTexte { grid-column: 9 / span 4; display: grid; gap: 16px; justify-items: start; align-self: center; }
-.mArticle[data-sens='g'] .mCouv { grid-column: 6 / span 7; grid-row: 1; }
-.mArticle[data-sens='g'] .mTexte { grid-column: 1 / span 4; grid-row: 1; }
-.mTitre { font-size: clamp(1.7rem, 2.8vw, 2.6rem); line-height: 1.05; }
-.mTitre a { text-decoration: none; transition: color .3s; }
-.mTitre a:hover { color: var(--accent-f); }
-.mMeta { font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); line-height: 1.7; }
-.mResume { font-size: .98rem; line-height: 1.75; max-width: 42ch; }
-.mSeconde { margin: clamp(12px, 4vh, 40px) 0 0; width: 100%; display: grid; gap: 8px; }
-.mSeconde img { width: 100%; height: auto; max-height: 34svh; object-fit: contain; object-position: left bottom; }
-.mSeconde[data-dessin] img { mix-blend-mode: multiply; }
-.mSeconde figcaption { font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
-.mTerr { margin-top: clamp(96px, 16vh, 180px); }
+/* ---------- page Projets : chaque projet en planche ---------- */
+.planches { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(88px, 14vh, 150px); }
+.plTete { display: flex; justify-content: space-between; align-items: baseline; gap: 10px 24px; flex-wrap: wrap; padding-bottom: 16px; }
+.plTitre { font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.05; }
+.plTitre a { text-decoration: none; transition: color .3s; }
+.plTitre a:hover { color: var(--accent-f); }
+.plMeta { font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
+/* les images à la même hauteur : chacune grandit selon son format (largeur / hauteur) */
+.plImgs { display: flex; gap: clamp(8px, 1vw, 14px); align-items: flex-start; }
+.plImg { position: relative; flex-basis: 0; min-width: 0; display: block; overflow: hidden; background: var(--fond); }
+.plImg img { width: 100%; height: auto; transition: transform 1s var(--ease); }
+.plImg[data-dessin] { outline: 1px solid var(--filet); outline-offset: -1px; }
+.plImg[data-dessin] img { mix-blend-mode: multiply; }
+.plImg:hover img { transform: scale(1.03); }
+.plLeg { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 10px; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--encre); background: linear-gradient(transparent, rgba(255, 255, 255, .92) 45%); opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s var(--ease); }
+.plImg:hover .plLeg, .plImg:focus-visible .plLeg { opacity: 1; transform: none; }
+.plBas { display: flex; justify-content: space-between; align-items: baseline; gap: 14px 40px; flex-wrap: wrap; padding-top: 20px; }
+.plResume { max-width: 64ch; font-size: .98rem; line-height: 1.75; }
 
 @media (max-width: 900px) {
-  .mArticle, .mArticle[data-sens='g'] { grid-template-columns: 1fr; }
-  .mArticle .mCouv, .mArticle[data-sens='g'] .mCouv, .mArticle .mTexte, .mArticle[data-sens='g'] .mTexte { grid-column: 1; grid-row: auto; }
-  .mCouv { aspect-ratio: 4 / 3; max-height: none; }
-  .mTexte { padding-top: 6px; gap: 12px; }
-  .mSeconde { display: none; }
+  /* sur téléphone, les images défilent sur le côté */
+  .plImgs { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * var(--gut)); padding-inline: var(--gut); scroll-padding-inline: var(--gut); }
+  .plImgs::-webkit-scrollbar { display: none; }
+  .plImg { flex: none !important; height: 240px; scroll-snap-align: start; }
+  .plImg img { height: 100%; width: auto; max-width: none; }
+  .plLeg { display: none; }
 }
-.mTerr > :global(.xp-terr) { padding-inline: 0; }
