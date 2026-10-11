@@ -10,7 +10,7 @@ import { xpCalme } from './outils';
  */
 
 /** Le verre commence à fondre, puis fin de l'ouverture (ms) : à accorder avec home.module.css. */
-const XP_OUV_DEGEL = 3600, XP_OUV_FIN = 4800;
+const XP_OUV_DEGEL = 3900, XP_OUV_FIN = 5100;
 /** Boîte du logo (viewBox de components/chrome/Logo.tsx). */
 const XP_OUV_BOITE = { x: 12, y: 16, w: 98 };
 
@@ -61,6 +61,11 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
     axes.setAttribute('class', 'xp-ouv-axes');
     axes.setAttribute('viewBox', `0 0 ${W} ${H}`);
     axes.setAttribute('aria-hidden', 'true');
+    // le tremblé d'un trait tiré à la main : un très léger déplacement irrégulier le long des lignes
+    axes.innerHTML = `<defs><filter id="xp-ouv-main" filterUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="1.6"/></filter></defs>`;
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('filter', 'url(#xp-ouv-main)');
+    axes.append(g);
     const main = 'cubic-bezier(.45, .05, .35, 1)';
     const { droites, porte } = xpOuvTraits(logo);
     droites.forEach((seg, i) => {
@@ -74,20 +79,24 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       const debut = Math.min(t1, t2), fin = Math.max(t1, t2);
       const ux = (xb - xa) / len, uy = (yb - ya) / len;
       const point = (t: number) => [xa + ux * t, ya + uy * t];
-      // le tracé avance à vitesse constante d'un bord à l'autre ; chaque morceau prend le relais du précédent
-      const trace = 420, depart = 120 + i * 230, efface = depart + trace + 80;
-      ([[0, debut, true], [debut, fin, false], [fin, len, true]] as [number, number, boolean][]).forEach(([t0, t1, bout]) => {
-        const lg = t1 - t0;
+      // le geste de la main : il démarre doucement, file au milieu, ralentit en arrivant (la plume suit une sinusoïde) ;
+      // chaque morceau prend le relais du précédent, au moment où la plume l'atteint
+      const trace = 520, depart = 120 + i * 260, efface = depart + trace + 60;
+      const quand = (f: number) => Math.acos(1 - 2 * Math.min(1, Math.max(0, f))) / Math.PI; // part du geste écoulée quand la plume est à f
+      ([[0, debut, true], [debut, fin, false], [fin, len, true]] as [number, number, boolean][]).forEach(([d0, d1, bout]) => {
+        const lg = d1 - d0;
         if (lg < 0.5) return;
-        const [x1, y1] = point(t0), [x2, y2] = point(t1);
+        const [x1, y1] = point(d0), [x2, y2] = point(d1);
         const l = document.createElementNS(NS, 'line');
         l.setAttribute('x1', x1.toFixed(2)); l.setAttribute('y1', y1.toFixed(2));
         l.setAttribute('x2', x2.toFixed(2)); l.setAttribute('y2', y2.toFixed(2));
         l.style.strokeDasharray = `0 ${lg}`;
-        axes.append(l);
-        anims.push(l.animate([{ strokeDasharray: `0 ${lg}` }, { strokeDasharray: `${lg} ${lg}` }], { duration: (trace * lg) / len, delay: depart + (trace * t0) / len, fill: 'forwards' }));
-        // les deux bouts de l'axe s'effacent ; le morceau du milieu reste : c'est le trait du logo
-        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, delay: efface, easing: 'ease', fill: 'forwards' }));
+        g.append(l);
+        const u0 = quand(d0 / len), u1 = quand(d1 / len), du = Math.max(u1 - u0, 1e-3);
+        const images = [0, 0.2, 0.4, 0.6, 0.8, 1].map((k) => ({ strokeDasharray: `${k * lg} ${lg}`, offset: Math.min(1, Math.max(0, (quand((d0 + k * lg) / len) - u0) / du)) }));
+        anims.push(l.animate(images, { duration: Math.max(1, du * trace), delay: depart + u0 * trace, fill: 'forwards' }));
+        // les deux bouts de l'axe deviennent transparents, lentement ; le morceau du milieu reste : c'est le trait du logo
+        if (bout) anims.push(l.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, delay: efface, easing: 'ease-in-out', fill: 'forwards' }));
       });
     });
     if (porte.length) {
@@ -96,8 +105,8 @@ export function xpOuverture(el: HTMLElement, fin: () => void) {
       let lp = 0;
       for (let k = 2; k < porte.length; k += 2) lp += Math.hypot(porte[k] - porte[k - 2], porte[k + 1] - porte[k - 1]);
       p.style.strokeDasharray = `0 ${lp}`;
-      axes.append(p);
-      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 400, delay: 120 + droites.length * 230 + 230, easing: main, fill: 'forwards' }));
+      g.append(p);
+      anims.push(p.animate([{ strokeDasharray: `0 ${lp}` }, { strokeDasharray: `${lp} ${lp}` }], { duration: 420, delay: 120 + droites.length * 260 + 300, easing: main, fill: 'forwards' }));
     }
     el.prepend(axes);
   }

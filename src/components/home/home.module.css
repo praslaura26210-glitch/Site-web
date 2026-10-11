@@ -17,22 +17,22 @@
 /* pendant l'animation, le logo n'est qu'un repère : ce sont les axes (experience/ouverture.ts) qui le dessinent */
 .ouverture[data-actif] .ouvLogo { visibility: hidden; }
 /* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
-.ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -90px -140px; background: radial-gradient(closest-side, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0)); }
+.ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -110px -170px; background: radial-gradient(closest-side, rgba(255, 255, 255, .92) 55%, rgba(255, 255, 255, 0)); }
 /* le nom s'écrit de gauche à droite, comme à la main, puis « portfolio » */
 .ouvNom, .ouvSous { clip-path: inset(-.2em 100% -.2em 0); animation: ecrit .75s cubic-bezier(.45, .05, .55, 1) forwards; }
-.ouvNom { margin-top: 38px; font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 400; letter-spacing: .38em; text-transform: uppercase; color: var(--encre); animation-delay: 1.85s; margin-right: -.38em; }
-.ouvSous { margin-top: 14px; font-size: clamp(.8rem, 1.1vw, .95rem); font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-duration: .55s; animation-delay: 2.5s; margin-right: -.5em; }
+.ouvNom { margin-top: clamp(48px, 8vh, 72px); font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 400; letter-spacing: .38em; text-transform: uppercase; color: var(--encre); animation-delay: 2.1s; margin-right: -.38em; }
+.ouvSous { margin-top: 14px; font-size: clamp(.8rem, 1.1vw, .95rem); font-weight: 400; letter-spacing: .5em; text-transform: uppercase; color: var(--encre); animation-duration: .55s; animation-delay: 2.75s; margin-right: -.5em; }
 @keyframes ecrit { to { clip-path: inset(-.2em 0 -.2em 0); } }
 .ouvSkip { position: absolute; right: var(--gut); bottom: 28px; z-index: 1; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); transition: opacity .5s; }
 
 /* ---------- présentation (en deux parties, comme une planche) ---------- */
-.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); min-height: 100svh; padding-top: var(--header-h); }
-.heroTxt { align-self: end; padding: 0 var(--gut) clamp(40px, 9vh, 96px); max-width: 640px; }
-.nom { font-size: clamp(2.8rem, 5.6vw, 5.6rem); line-height: .98; letter-spacing: -0.03em; margin-top: 18px; }
-.statut { margin: 22px 0 34px; font-size: clamp(.98rem, 1.2vw, 1.12rem); line-height: 1.5; color: var(--gris); }
-.liens { display: flex; flex-wrap: wrap; gap: 14px 36px; }
-.heroDessin { height: calc(100svh - var(--header-h) - 24px); margin-right: var(--gut); display: grid; place-items: center; }
-.couloir { position: relative; display: block; width: min(100%, (100svh - var(--header-h) - 24px) * 1.053); padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; }
+/* tout tient dans un écran, au centre, sans prendre toute la largeur */
+.hero { display: grid; justify-items: center; text-align: center; max-width: 760px; margin: 0 auto; padding: calc(var(--header-h) + clamp(16px, 4vh, 48px)) var(--gut) clamp(48px, 9vh, 96px); }
+.heroDessin { width: min(100%, 520px, max(260px, (100svh - var(--header-h) - 290px) * 1.053)); }
+.nom { margin-top: clamp(22px, 4vh, 36px); font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; letter-spacing: -0.02em; }
+.statut { margin: 12px 0 22px; font-size: clamp(.95rem, 1.1vw, 1.05rem); line-height: 1.5; color: var(--gris); }
+.liens { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 36px; }
+.couloir { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; }
 .couloir img { width: 100%; height: auto; mix-blend-mode: multiply; }
 /* le dessin en grand : l'image seule, le © en bas */
 .grand { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; display: grid; place-items: center; }
@@ -78,10 +78,6 @@
 .carteP { margin-top: 6px; font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
 
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; min-height: 0; }
-  .heroTxt { order: 2; padding-top: 28px; padding-bottom: 8px; }
-  .heroDessin { order: 1; height: auto; margin: 12px var(--gut) 0; }
-  .couloir { width: 100%; }
   .index { grid-template-columns: 1fr; }
   .apercu { display: none; }
   .liste a { grid-template-columns: 76px minmax(0, 1fr); grid-template-areas: 'v t' 'v p'; padding: 14px 0; column-gap: 14px; }

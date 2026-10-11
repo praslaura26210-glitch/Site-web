@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/', `Laura Pras · ${t.home.statut}`, t.meta.siteDescription);
 }
 
-/** Accueil : le nom, une ligne, le portfolio à télécharger, le dessin ; puis les projets et ce qui anime Laura. */
+/** Accueil : le dessin au centre, le nom, une ligne, le portfolio à télécharger ; puis les projets et ce qui anime Laura. */
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
@@ -33,14 +33,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   return (
     <>
       <section className={styles.hero} aria-labelledby="nom">
-        <div className={styles.heroTxt}>
-          <h1 id="nom" className={styles.nom}>Laura<br />Pras</h1>
-          <p className={styles.statut}>{t.home.statut}</p>
-          <p className={styles.liens}><Portfolio t={t} /></p>
-        </div>
         <div className={styles.heroDessin}>
           <Couloir legende={t.home.dessinLegende} ouvrir={t.home.ouvrir} fermer={t.projet.fermer} />
         </div>
+        <h1 id="nom" className={styles.nom}>Laura Pras</h1>
+        <p className={styles.statut}>{t.home.statut}</p>
+        <p className={styles.liens}><Portfolio t={t} /></p>
       </section>
 
       <section id="projets" className={`wrap ${styles.projets}`} aria-labelledby="titre-projets">
