@@ -104,33 +104,6 @@ kbd { font-family: var(--sans); }
   .xp-ch-mobile .xp-ch-n { color: var(--accent-f); font-variant-numeric: tabular-nums; }
 }
 
-/* ---------- à propos, ce qui m'anime : les photos s'ouvrent sur place ---------- */
-.xp-an { list-style: none; margin: 0; padding: 0; display: flex; gap: 12px; height: clamp(360px, 52svh, 460px); }
-.xp-an > li { flex: 1 1 0; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 0px; transition: flex-grow .6s var(--ease), grid-template-columns .6s var(--ease); }
-.xp-an > li[data-on] { flex-grow: 6; grid-template-columns: minmax(0, 1fr) 300px; }
-.xp-an-btn { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: var(--fond-2); cursor: pointer; overflow: hidden; }
-.xp-an-btn img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.35); transition: filter .5s, transform 1s var(--ease); }
-.xp-an > li:not([data-on]) .xp-an-btn:hover img { filter: none; transform: scale(1.04); }
-.xp-an > li[data-on] .xp-an-btn { cursor: default; }
-.xp-an > li[data-on] .xp-an-btn img { filter: none; }
-.xp-an-txt { overflow: hidden; display: grid; gap: 14px; align-content: start; padding: 4px 0 0 26px; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s .3s; }
-.xp-an > li[data-on] .xp-an-txt { opacity: 1; visibility: visible; overflow-y: auto; transition: opacity .4s ease .3s; }
-.xp-an-titre { font-size: clamp(1.3rem, 1.9vw, 1.7rem); line-height: 1.15; }
-.xp-an-texte { font-size: .9rem; line-height: 1.7; }
-.xp-an-dl { margin: 0; border-top: 1px solid var(--filet); }
-.xp-an-dl div { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--filet); }
-.xp-an-dl dt { font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); padding-top: 3px; }
-.xp-an-dl dd { margin: 0; font-size: .84rem; }
-.xp-an-info, .xp-an-credit { font-size: .66rem; color: var(--gris); }
-@media (max-width: 900px) {
-  .xp-an { flex-direction: column; height: auto; gap: 10px; }
-  .xp-an > li, .xp-an > li[data-on] { display: block; }
-  .xp-an-btn { height: 96px; transition: height .5s var(--ease); }
-  .xp-an > li[data-on] .xp-an-btn { height: 260px; }
-  .xp-an-txt { display: none; padding: 16px 0 10px; }
-  .xp-an > li[data-on] .xp-an-txt { display: grid; }
-}
-
 /* ---------- raccourcis clavier ---------- */
 .xp-ra { width: min(460px, calc(100vw - 32px)); border: 0; padding: clamp(24px, 4vw, 40px); background: var(--fond); color: var(--encre); box-shadow: 0 30px 80px rgba(43, 33, 28, .18); }
 .xp-ra::backdrop { background: rgba(43, 33, 28, .3); backdrop-filter: blur(3px); }
@@ -315,46 +288,3 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-vcard:hover .xp-vcard-t { color: var(--accent-f); }
 @media (hover: none) and (max-width: 700px) { .xp-vcard-qr { display: none; } .xp-vcard { grid-template-columns: 1fr; } .xp-vcard-t { text-decoration: underline; text-underline-offset: 5px; } }
 
-/* =====================================================================
-   Page Projets : le livre d'un projet, qu'on feuillette (experience/livres.ts)
-   ===================================================================== */
-.xp-lv { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(255, 255, 255, .97); color: var(--encre); display: grid; grid-template-rows: minmax(0, 1fr) auto; }
-.xp-lv:not([open]) { display: none; }
-.xp-lv[open] { animation: xp-ouvre .3s ease both; }
-.xp-lv::backdrop { background: rgba(255, 255, 255, .6); backdrop-filter: blur(6px); }
-.xp-lv-scene { display: grid; place-items: center; min-height: 0; padding: 36px 24px 0; perspective: 2600px; }
-.xp-lv-livre { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: min(1120px, 92vw, (100svh - 150px) * 1.5); aspect-ratio: 3 / 2; transform-style: preserve-3d; box-shadow: 0 34px 60px -34px rgba(43, 33, 28, .5); cursor: pointer; user-select: none; touch-action: pan-y; }
-.xp-lv-livre[data-simple] { grid-template-columns: 1fr; width: min(92vw, (100svh - 150px) * .75); aspect-ratio: 3 / 4; }
-.xp-lv-livre[data-simple] .xp-lv-d { display: none; }
-.xp-lv-cote { position: relative; overflow: hidden; background: #FBFAF8; }
-/* l'ombre de la reliure, au milieu */
-.xp-lv-g::after, .xp-lv-d::after { content: ''; position: absolute; top: 0; bottom: 0; width: 46px; pointer-events: none; z-index: 1; }
-.xp-lv-g::after { right: 0; background: linear-gradient(to left, rgba(43, 33, 28, .12), transparent); }
-.xp-lv-d::after { left: 0; background: linear-gradient(to right, rgba(43, 33, 28, .14), transparent); }
-.xp-lv-livre[data-simple] .xp-lv-g::after { left: 0; right: auto; background: linear-gradient(to right, rgba(43, 33, 28, .12), transparent); }
-.xp-lv-page { position: absolute; inset: 0; margin: 0; }
-.xp-lv-texte { display: grid; align-content: center; gap: 16px; padding: 9% 11%; }
-.xp-lv-n { font-size: clamp(2.6rem, 5vw, 4.4rem); font-weight: 300; line-height: .9; color: var(--accent); }
-.xp-lv-titre { font-size: clamp(1.5rem, 2.6vw, 2.4rem); line-height: 1.08; }
-.xp-lv-meta { font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); line-height: 1.7; }
-.xp-lv-resume { font-size: clamp(.85rem, 1.1vw, 1rem); line-height: 1.75; max-width: 38ch; }
-.xp-lv-lien { justify-self: start; margin-top: 6px; }
-.xp-lv-image { display: grid; grid-template-rows: minmax(0, 1fr) auto; padding: 7% 7% 5%; }
-.xp-lv-image img { width: 100%; height: 100%; min-height: 0; object-fit: contain; pointer-events: none; }
-.xp-lv-dessin img { mix-blend-mode: multiply; }
-.xp-lv-image figcaption { display: flex; justify-content: space-between; gap: 12px; padding-top: 10px; font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
-.xp-lv-folio { color: var(--accent-f); }
-/* la feuille qui tourne autour de la reliure */
-.xp-lv-feuille { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2; transform-style: preserve-3d; }
-.xp-lv-feuille[data-cote='d'] { left: 50%; transform-origin: left center; }
-.xp-lv-feuille[data-cote='g'] { left: 0; transform-origin: right center; }
-.xp-lv-livre[data-simple] .xp-lv-feuille { width: 100%; left: 0; transform-origin: left center; }
-.xp-lv-recto, .xp-lv-verso { position: absolute; inset: 0; overflow: hidden; background: #FBFAF8; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 0 30px -12px rgba(43, 33, 28, .35); }
-.xp-lv-verso { transform: rotateY(180deg); }
-.xp-lv-bas { position: relative; display: flex; justify-content: center; align-items: center; gap: 18px; padding: 18px 24px 24px; }
-.xp-lv-nav { width: 44px; height: 44px; border: 1px solid var(--encre); border-radius: 50%; background: var(--fond); display: grid; place-items: center; cursor: pointer; }
-.xp-lv-nav:hover:not(:disabled) { background: var(--encre); color: var(--fond); }
-.xp-lv-nav:disabled { opacity: .2; cursor: default; }
-.xp-lv-compte { font-size: .78rem; letter-spacing: .12em; color: var(--accent-f); font-variant-numeric: tabular-nums; min-width: 5.5em; text-align: center; }
-.xp-lv-compte span { color: var(--gris); }
-.xp-lv-fermer { position: absolute; right: 24px; border: 0; background-color: transparent; cursor: pointer; font-family: inherit; }

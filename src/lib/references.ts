@@ -2,8 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Lang } from '@/i18n';
-import type { Reference } from '@/components/pages/Anime';
 import { tr } from './tr';
+
+export type Reference = { id: string; titre: string; auteur: string; lieu: string; annee: string; credit: string; info?: string; texte?: string; w: number; h: number };
 
 export function getReferences(lang: Lang): Reference[] {
   const R = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'content/site/inspirations.json'), 'utf8'));

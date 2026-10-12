@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/projets/', `${t.meta.projetsTitle} · Laura Pras`, t.meta.projetsDescription);
 }
 
-/** Projets : la bibliothèque ; chaque projet est un livre qu'on ouvre et qu'on feuillette. */
+/** Projets : une boîte en carton qui contient les projets, comme des magazines. */
 export default async function Projets({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
@@ -20,7 +20,7 @@ export default async function Projets({ params }: { params: Promise<{ lang: stri
       <header className={styles.pHead}>
         <h1 className={styles.h1}>{t.meta.projetsTitle}</h1>
       </header>
-      <Bibliotheque projets={projets} lang={lang} ouvrir={t.xp.ouvrirLivre} />
+      <Bibliotheque projets={projets} lang={lang} titre={`${t.meta.projetsTitle} ${projets.map((p) => p.annee).filter(Boolean).reduce((a, b) => Math.min(a!, b!))}–${projets.map((p) => p.annee).filter(Boolean).reduce((a, b) => Math.max(a!, b!))}`} />
     </div>
   );
 }

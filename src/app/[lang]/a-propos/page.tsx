@@ -4,6 +4,7 @@ import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
 import styles from '@/components/pages/pages.module.css';
 import { PARCOURS } from '@/lib/parcours';
+import { getReferences } from '@/lib/references';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -23,67 +24,55 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
   const planche = img('planche-dessins-photos-bricolage');
   const L = tr(lang, {
     fr: {
-      notes: ['Avant l’archi, j’étais dessinatrice en bâtiment.', 'Aujourd’hui : master AECC à l’ENSA Grenoble.', 'J’aime la matière, le territoire, ce qui est déjà là.', 'Archicad… et beaucoup de dessin à la main.'],
+      lignes: ['Avant l’archi, j’étais dessinatrice en bâtiment :', 'Archicad, permis de construire, escaliers, mobilier.', 'Aujourd’hui, je suis en master AECC à l’ENSA Grenoble.', 'Ce qui me retient : la matière, le territoire,', 'et ce qui est déjà là, jusqu’aux ruines.', 'Je dessine beaucoup à la main.', 'Je cherche un stage en agence.'],
+      niveaux: { 2: 'Notions', 3: 'Bonnes bases', 4: 'Utilisation régulière', 5: 'Maîtrise' } as Record<number, string>, references: 'Références',
       master: 'Master AECC', parcours: 'Parcours',
       stages: 'Stages', formations: 'Formations',
-      outils: 'Outils', sur5: 'sur 5',
+      outils: 'Outils',
       audela: 'Au-delà des projets',
       texteAudela: audela.texte,
     },
     en: {
-      notes: ['Before architecture, I was a building draughtswoman.', 'Now: AECC master’s at ENSA Grenoble.', 'I love material, territory, what is already there.', 'Archicad… and a lot of hand drawing.'],
+      lignes: ['Before architecture, I was a building draughtswoman:', 'Archicad, permit applications, staircases, furniture.', 'Now I’m doing the AECC master’s at ENSA Grenoble.', 'What holds me: material, territory,', 'and what is already there, down to ruins.', 'I draw a lot by hand.', 'I’m looking for an internship in a practice.'],
+      niveaux: { 2: 'Basics', 3: 'Good grounding', 4: 'Regular use', 5: 'Expert' } as Record<number, string>, references: 'References',
       master: 'AECC master’s', parcours: 'Background',
       stages: 'Internships', formations: 'Education',
-      outils: 'Tools', sur5: 'out of 5',
+      outils: 'Tools',
       audela: 'Beyond the projects',
       texteAudela: 'I like to spend my free time exploring different creative practices, such as drawing, painting and crafts like mosaic, scrapbooking and knitting. I particularly enjoy working with my hands, restoring old furniture or making new pieces. I am not a great photographer, but I like taking the time to photograph the places around me. It helps me look more closely at the architecture, the light and the details that make up a place.',
     },
     it: {
-      notes: ['Prima dell’architettura ero disegnatrice edile.', 'Oggi: master AECC all’ENSA di Grenoble.', 'Amo la materia, il territorio, ciò che c’è già.', 'Archicad… e tanto disegno a mano.'],
+      lignes: ['Prima dell’architettura ero disegnatrice edile:', 'Archicad, pratiche edilizie, scale, arredi.', 'Oggi frequento il master AECC all’ENSA di Grenoble.', 'Ciò che mi trattiene: la materia, il territorio,', 'e ciò che c’è già, fino alle rovine.', 'Disegno molto a mano.', 'Cerco un tirocinio in uno studio.'],
+      niveaux: { 2: 'Nozioni', 3: 'Buone basi', 4: 'Uso regolare', 5: 'Padronanza' } as Record<number, string>, references: 'Riferimenti',
       master: 'Master AECC', parcours: 'Percorso',
       stages: 'Tirocini', formations: 'Formazione',
-      outils: 'Strumenti', sur5: 'su 5',
+      outils: 'Strumenti',
       audela: 'Oltre i progetti',
       texteAudela: "Mi piace dedicare il tempo libero a diverse pratiche creative, come il disegno, la pittura o attività manuali come il mosaico, lo scrapbooking e la maglia. Amo soprattutto lavorare con le mani, restaurare vecchi mobili o creare nuovi pezzi. Non sono una grande fotografa, ma mi piace prendermi il tempo di fotografare i luoghi che mi circondano: mi aiuta a osservare meglio l'architettura, la luce e i dettagli che compongono un luogo.",
     },
   });
 
-  // la pellicule : des dessins et des maquettes des projets, puis les photos d'« au-delà des projets »
-  const vue = (slug: string, nom: string) => getProjet(slug, lang).images.find((i) => i.nom === nom)?.srcSmall;
-  const pellicule = [
-    '/media/site/dessin-couverture-1000.webp', vue('illusion-d-envol', 'maquette'), vue('le-passage-des-artistes', 'croquis-cour'), vue('la-ruche', 'maquette-3'),
-    photo.srcSmall, vue('illusion-d-envol', 'croquis-perspective'), vue('entre-deux-regards', 'maquette'), vue('le-passage-des-artistes', 'experimentation-1'),
-  ].filter((x): x is string => !!x);
+  const refs = getReferences(lang);
   const logiciels = Object.entries(cv.logiciels_sur_5 as Record<string, number>);
 
   return (
     <article className={`wrap ${styles.page} ${styles.apropos}`}>
-      <header className={styles.aTete}>
-        <figure className={styles.aPortrait}>
+      {/* qui je suis : une feuille écrite à la main, avec ma photo collée au milieu ; les lignes s'écrivent l'une après l'autre */}
+      <header className={styles.lettre}>
+        <h1 className={styles.lettreNom}>Laura Pras</h1>
+        <ul className={styles.lettreLignes}>
+          {L.lignes.slice(0, 3).map((n, i) => <li key={i} style={{ ['--l' as string]: i }}>{n}</li>)}
+        </ul>
+        <figure className={styles.lettrePhoto}>
+          <span className={styles.scotch} aria-hidden="true" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/media/site/portrait-2000.webp" alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
+          <img src="/media/site/portrait-1000.webp" alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
         </figure>
-        <div className={styles.aTeteTxt}>
-          <h1 className={styles.aNom}>Laura Pras</h1>
-          {/* qui je suis, écrit à la main : chaque ligne s'écrit à son tour */}
-          <ul className={styles.aMain}>
-            {L.notes.map((n, i) => <li key={i} style={{ ['--l' as string]: i }}>{n}</li>)}
-          </ul>
-          <svg className={styles.aFleche} viewBox="0 0 120 60" aria-hidden="true"><path d="M116 8C88 4 52 14 30 40M30 40l2-14M30 40l14-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </div>
+        <ul className={styles.lettreLignes}>
+          {L.lignes.slice(3).map((n, i) => <li key={i} style={{ ['--l' as string]: i + 3 }}>{n}</li>)}
+        </ul>
+        <p className={styles.lettreSigne} style={{ ['--l' as string]: L.lignes.length }}>Laura</p>
       </header>
-
-      {/* une pellicule qui défile : mes dessins, mes maquettes, ce que je photographie */}
-      <div className={styles.pellicule} aria-hidden="true">
-        <div className={styles.pelliculeBande}>
-          {[...pellicule, ...pellicule].map((f, i) => (
-            <span key={i} className={styles.pelliculeVue}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={f} alt="" loading="lazy" />
-            </span>
-          ))}
-        </div>
-      </div>
 
       <section className={styles.aMaster} aria-labelledby="master">
         <div>
@@ -113,15 +102,32 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </div>
       </section>
 
+      {/* outils : comme une ligne de cote, des notions à la maîtrise ; au-dessus de chaque cote, les logiciels */}
       <section className={styles.outils} aria-labelledby="outils">
         <h2 id="outils" className={styles.aH2}>{L.outils}</h2>
-        <ul className={styles.logiciels}>
-          {logiciels.map(([k, v]) => (
-            <li key={k}>
-              <span className={styles.logNom}>{k}</span>
-              <span className={styles.niveau} role="img" aria-label={`${v} ${L.sur5}`}>
-                {[1, 2, 3, 4, 5].map((n) => <i key={n} data-plein={n <= v || undefined} />)}
-              </span>
+        <div className={styles.cote}>
+          {[2, 3, 4, 5].map((n) => (
+            <div key={n} className={styles.coteCol} style={{ ['--n' as string]: n }}>
+              <ul className={styles.coteOutils}>
+                {logiciels.filter(([, v]) => v === n).map(([k]) => <li key={k} className="rv">{k}</li>)}
+              </ul>
+              <span className={styles.coteNiv}>{L.niveaux[n]}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* références : des projets qui m'ont marquée, en images ; le nom au survol */}
+      <section className={styles.refs} aria-labelledby="references-t" id="references">
+        <h2 id="references-t" className={styles.aH2}>{L.references}</h2>
+        <ul className={styles.refsGrille}>
+          {refs.map((x, i) => (
+            <li key={x.id} className="rv" style={{ ['--i' as string]: i }}>
+              <figure>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/media/site/inspirations/${x.id}.webp`} alt={x.titre} width={x.w} height={x.h} loading="lazy" />
+                <figcaption><b>{x.titre}</b>{[x.auteur, x.lieu].filter(Boolean).join(' · ')}</figcaption>
+              </figure>
             </li>
           ))}
         </ul>

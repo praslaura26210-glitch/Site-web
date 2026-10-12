@@ -47,27 +47,43 @@
 
 /* ---------- à propos ---------- */
 .apropos > * + * { margin-top: clamp(88px, 14vh, 160px); }
-.aTete { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 28px clamp(28px, 5vw, 80px); align-items: center; }
-.aPortrait { margin: 0; }
-.aPortrait img { width: 100%; height: auto; max-height: calc(100svh - var(--header-h) - 80px); object-fit: cover; object-position: 50% 20%; }
-.aTeteTxt { position: relative; display: grid; gap: 22px; }
-.aNom { font-size: clamp(2rem, 3.4vw, 3rem); font-weight: 300; line-height: 1; letter-spacing: -0.03em; }
-/* qui je suis, écrit à la main : une ligne après l'autre, comme sur une feuille */
-.aMain { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-family: var(--main); font-size: clamp(1.45rem, 2.1vw, 1.95rem); line-height: 1.25; color: var(--encre); transform: rotate(-2deg); transform-origin: left center; }
-.aMain li { clip-path: inset(-.3em 100% -.3em 0); animation: aEcrit 1.1s cubic-bezier(.45, .05, .55, 1) forwards; animation-delay: calc(.4s + var(--l) * .9s); }
-.aMain li:nth-child(even) { padding-left: 1.2em; }
-@keyframes aEcrit { to { clip-path: inset(-.3em 0 -.3em 0); } }
-.aFleche { position: absolute; left: -96px; bottom: -42px; width: 110px; color: var(--accent-f); opacity: 0; animation: aFleche .6s ease forwards; animation-delay: 4.2s; }
-@keyframes aFleche { to { opacity: 1; } }
-/* la pellicule : une bande de film qui défile doucement, en pleine largeur */
-.pellicule { margin-inline: calc(50% - 50vw); overflow: hidden; background: #221C18; padding: 22px 0; position: relative; }
-.pellicule::before, .pellicule::after { content: ''; position: absolute; left: 0; right: 0; height: 10px; background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(255, 255, 255, .82) 14px 26px); border-radius: 2px; }
-.pellicule::before { top: 6px; } .pellicule::after { bottom: 6px; }
-.pelliculeBande { display: flex; gap: 14px; width: max-content; animation: defile 70s linear infinite; }
-.pellicule:hover .pelliculeBande { animation-play-state: paused; }
-.pelliculeVue { flex: none; height: clamp(170px, 24vh, 250px); aspect-ratio: 4 / 3; background: #fff; overflow: hidden; }
-.pelliculeVue img { width: 100%; height: 100%; object-fit: cover; }
-@keyframes defile { to { transform: translateX(-50%); } }
+/* qui je suis : une feuille écrite à la main, la photo collée au milieu ; chaque ligne s'écrit après l'autre */
+.lettre { position: relative; width: min(100%, 760px); margin-inline: auto; padding: clamp(34px, 5vw, 64px) clamp(26px, 6vw, 76px) clamp(40px, 5vw, 60px); background: #fff; background-image: repeating-linear-gradient(180deg, transparent 0 calc(2.6rem - 1px), rgba(122, 111, 102, .13) calc(2.6rem - 1px) 2.6rem); background-position: 0 1.6rem; box-shadow: 0 1px 2px rgba(43, 33, 28, .08), 0 18px 50px -18px rgba(43, 33, 28, .28); transform: rotate(-.8deg); font-family: var(--main); color: var(--encre); }
+.lettre::after { content: ''; position: absolute; inset: 0 auto 0 clamp(16px, 4vw, 48px); width: 1px; background: rgba(164, 107, 87, .35); }
+.lettreNom { font-family: var(--main); font-weight: 400; font-size: clamp(2.6rem, 6vw, 3.8rem); letter-spacing: 0; line-height: 1; margin-bottom: .3em; }
+.lettreLignes { list-style: none; margin: 0; padding: 0; font-size: clamp(1.35rem, 2.6vw, 1.75rem); line-height: 2.6rem; }
+.lettreLignes li, .lettreSigne { clip-path: inset(-.4em 100% -.4em 0); animation: aEcrit 1s cubic-bezier(.45, .05, .55, 1) forwards; animation-delay: calc(.3s + var(--l) * .75s); }
+.lettreLignes li:nth-child(2) { padding-left: .8em; }
+@keyframes aEcrit { to { clip-path: inset(-.4em -.4em -.4em -.4em); } }
+.lettrePhoto { position: relative; width: min(64%, 330px); margin: 1.4rem auto 1.6rem; padding: 10px 10px 34px; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 14px 30px -12px rgba(43, 33, 28, .35); transform: rotate(2.4deg); }
+.lettrePhoto img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; }
+.scotch { position: absolute; z-index: 1; top: -14px; left: 50%; width: 110px; height: 30px; translate: -50% 0; rotate: -4deg; background: rgba(236, 228, 210, .78); box-shadow: 0 1px 2px rgba(43, 33, 28, .12); clip-path: polygon(0 8%, 4% 0, 9% 10%, 14% 0, 100% 0, 97% 50%, 100% 100%, 6% 100%, 2% 88%, 5% 50%); }
+.lettreSigne { margin: .6rem 0 0; text-align: right; font-size: clamp(1.9rem, 3.4vw, 2.4rem); color: var(--accent-f); }
+
+/* outils : une ligne de cote, des notions à la maîtrise ; plus l'outil est maîtrisé, plus il est écrit grand */
+.cote { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--encre); position: relative; }
+.coteCol { position: relative; display: grid; grid-template-rows: 1fr auto; padding: 0 12px; }
+/* traits de rappel et petits traits obliques, comme sur une cote d'architecte */
+.coteCol::before, .cote::before { content: ''; position: absolute; bottom: -9px; left: 0; width: 1px; height: 17px; background: var(--encre); }
+.coteCol::after, .cote::after { content: ''; position: absolute; bottom: -1px; left: -5px; width: 11px; height: 1px; background: var(--encre); rotate: -45deg; }
+.cote::before { left: auto; right: 0; }
+.cote::after { left: auto; right: -5px; }
+.coteOutils { list-style: none; margin: 0; padding: 0 0 18px; display: flex; flex-direction: column; justify-content: flex-end; gap: .1em; min-height: 11rem; font-size: calc(.9rem + (var(--n) - 2) * .42rem); line-height: 1.15; }
+.coteCol:last-child .coteOutils { color: var(--accent-f); }
+.coteNiv { position: absolute; top: calc(100% + 16px); left: 12px; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
+.outils { padding-bottom: 40px; }
+
+/* références : des tirages posés un peu de travers, la légende écrite dessous */
+.refs { display: grid; gap: 34px; }
+.refsGrille { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: clamp(22px, 4vw, 56px) clamp(18px, 3vw, 44px); }
+.refsGrille li { --r: -2deg; width: clamp(150px, calc(20% - 36px), 230px); }
+.refsGrille li:nth-child(2n) { --r: 1.8deg; margin-top: 34px; }
+.refsGrille li:nth-child(3n) { --r: -.6deg; }
+.refsGrille figure { margin: 0; padding: 8px 8px 0; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 12px 26px -12px rgba(43, 33, 28, .32); rotate: var(--r); transition: rotate .4s var(--ease), translate .4s var(--ease); }
+.refsGrille figure:hover { rotate: 0deg; translate: 0 -6px; }
+.refsGrille img { display: block; width: 100%; height: auto; }
+.refsGrille figcaption { padding: 8px 2px 10px; font-family: var(--main); font-size: 1.15rem; line-height: 1.1; color: var(--gris); }
+.refsGrille figcaption b { display: block; font-weight: 400; color: var(--encre); font-size: 1.3rem; }
 .aH2 { font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
 
 /* le master : son nom et ce qu'on y fait */
@@ -88,16 +104,6 @@
 .pTitre { font-size: 1rem; font-weight: 400; line-height: 1.35; }
 .pLieu { font-size: .8rem; color: var(--gris); }
 
-/* outils : comme un tableau, le nom à gauche, le niveau en cinq points à droite */
-.outils { display: grid; gap: 28px; }
-.logiciels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(32px, 6vw, 110px); border-top: 1px solid var(--encre); }
-.logiciels li { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--filet); }
-.logNom { font-size: 1rem; }
-.niveau { display: flex; gap: 6px; }
-.niveau i { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--accent); }
-.niveau i[data-plein] { background: var(--accent); }
-
-
 .audela { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px); align-items: end; }
 .audelaPhoto { grid-column: 1 / span 5; margin: 0; }
 .audelaPhoto img, .audelaPlanche img { width: 100%; height: auto; }
@@ -107,16 +113,28 @@
 
 @media (max-width: 900px) {
   .head, .deux, .legal, .form { grid-template-columns: 1fr; }
-  .aTete { grid-template-columns: 1fr; }
-  .aPortrait { max-width: 340px; }
-  .aFleche { display: none; }
-  .aMain { transform: none; }
   .aMaster { grid-template-columns: 1fr; }
   .deuxCol { grid-template-columns: 1fr; }
   .col li { grid-template-columns: 1fr; }
   .pDate { grid-row: auto; }
-  .logiciels { grid-template-columns: 1fr; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
+  .lettre { transform: none; }
+  .lettrePhoto { width: min(78%, 300px); }
+  /* la cote se lit de haut en bas sur téléphone */
+  .cote { grid-template-columns: 1fr; border-bottom: 0; border-left: 1px solid var(--encre); margin: 12px 0 0 6px; }
+  .coteCol { grid-template-rows: auto; padding: 14px 0 18px 22px; }
+  .coteCol::before, .cote::before { bottom: auto; top: 0; left: -9px; width: 17px; height: 1px; }
+  .cote::before { top: auto; bottom: 0; right: auto; }
+  .coteCol::after, .cote::after { bottom: auto; top: 0; left: -6px; }
+  .cote::after { top: auto; bottom: 0; right: auto; }
+  .coteNiv { position: static; order: -1; margin-bottom: 6px; }
+  .coteOutils { min-height: 0; padding: 0; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; gap: 4px 16px; }
+  .refsGrille li { width: calc(50% - 10px); }
+  .refsGrille li:nth-child(2n) { margin-top: 24px; }
   .cGrille { grid-template-columns: 1fr; }
   .coordList { grid-template-columns: 1fr; justify-content: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lettreLignes li, .lettreSigne { animation: none; clip-path: none; }
 }

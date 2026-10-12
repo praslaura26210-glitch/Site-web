@@ -18,26 +18,23 @@
 .ouverture[data-actif] .ouvLogo { visibility: hidden; }
 /* un halo blanc derrière le logo et le nom, pour qu'ils restent lisibles sur la page floue */
 .ouvIn::before { content: ''; position: absolute; z-index: -1; inset: -110px -170px; background: radial-gradient(closest-side, rgba(255, 255, 255, .92) 55%, rgba(255, 255, 255, 0)); }
-/* le nom : à peu près la largeur du logo, à bonne distance ; les lettres arrivent une à une, puis « portfolio » */
-.ouvNom { margin-top: clamp(34px, 5vh, 46px); font-size: clamp(1.05rem, 1.5vw, 1.3rem); font-weight: 400; letter-spacing: .42em; text-transform: uppercase; color: var(--encre); margin-right: -.42em; }
-.ouvSous { margin-top: 12px; font-size: clamp(.66rem, .8vw, .74rem); font-weight: 400; letter-spacing: .62em; text-transform: uppercase; color: var(--gris); margin-right: -.62em; }
-.ouvNom span, .ouvSous span { display: inline-block; opacity: 0; filter: blur(4px); transform: translateY(.25em); animation: lettre .45s cubic-bezier(.2, .7, .3, 1) forwards; animation-delay: calc(1.45s + var(--k) * 45ms); }
-@keyframes lettre { to { opacity: 1; filter: blur(0); transform: none; } }
+/* le nom sous le logo, de la même largeur ; chaque lettre se trace au trait fin, puis se remplit */
+.ouvEcrit { width: min(50vw, 230px); margin-top: clamp(26px, 4vh, 38px); overflow: visible; font-family: var(--sans); }
+.ouvNom { font-size: 17.5px; font-weight: 400; letter-spacing: .4em; }
+.ouvSous { font-size: 8.4px; font-weight: 400; letter-spacing: .62em; }
+.ouvNom tspan, .ouvSous tspan { fill: var(--encre); fill-opacity: 0; stroke: var(--encre); stroke-width: .45; stroke-dasharray: 60; stroke-dashoffset: 60; animation: lettreTrace .55s cubic-bezier(.45, .05, .55, 1) forwards, lettrePleine .35s ease forwards; animation-delay: calc(1.35s + var(--k) * 70ms), calc(1.75s + var(--k) * 70ms); }
+.ouvSous tspan { stroke-width: .3; animation-delay: calc(1.5s + var(--k) * 45ms), calc(1.8s + var(--k) * 45ms); }
+@keyframes lettreTrace { to { stroke-dashoffset: 0; } }
+@keyframes lettrePleine { to { fill-opacity: 1; stroke-opacity: 0; } }
 .ouvSkip { position: absolute; right: var(--gut); bottom: 28px; z-index: 1; background: none; border: 0; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); transition: opacity .5s; }
 
 /* ---------- présentation (en deux parties, comme une planche) ---------- */
-/* le premier écran : tout au centre, dans une colonne étroite ; un repère en bas pour descendre */
-.hero { position: relative; min-height: 100svh; display: grid; align-content: center; justify-items: center; text-align: center; max-width: 760px; margin: 0 auto; padding: calc(var(--header-h) + 8px) var(--gut) 104px; }
-.heroDessin { width: min(100%, 520px, max(240px, (100svh - var(--header-h) - 330px) * 1.053)); }
+/* le premier écran : tout au centre, dans une colonne étroite ; il laisse dépasser le haut des projets, pour qu'on sache qu'il y a une suite */
+.hero { position: relative; min-height: calc(100svh - 150px); display: grid; align-content: center; justify-items: center; text-align: center; max-width: 760px; margin: 0 auto; padding: calc(var(--header-h) + 8px) var(--gut) 28px; }
+.heroDessin { width: min(100%, 520px, max(240px, (100svh - var(--header-h) - 400px) * 1.053)); }
 .nom { margin-top: clamp(20px, 3.5vh, 34px); font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.05; letter-spacing: -0.02em; }
 .statut { margin: 12px 0 22px; font-size: clamp(.95rem, 1.1vw, 1.05rem); line-height: 1.5; color: var(--gris); }
 .liens { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 36px; }
-.descendre { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: grid; justify-items: center; gap: 10px; text-decoration: none; color: var(--gris); transition: color .3s; }
-.descendre:hover { color: var(--encre); }
-.descendreT { font-size: .58rem; letter-spacing: .3em; text-transform: uppercase; margin-right: -.3em; }
-.descendreFil { position: relative; width: 1px; height: 46px; background: var(--filet); overflow: hidden; }
-.descendreFil::after { content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 18px; background: var(--encre); animation: fil 2.2s cubic-bezier(.6, 0, .3, 1) infinite; }
-@keyframes fil { 0% { transform: translateY(-18px); } 70%, 100% { transform: translateY(46px); } }
 .couloir { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; overflow: hidden; }
 .couloir img { width: 100%; height: auto; mix-blend-mode: multiply; }
 /* le dessin en grand : l'image seule, le © en bas */
@@ -48,7 +45,7 @@
 .grandCredit { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
 
 /* ---------- index des projets ---------- */
-.projets { padding-top: clamp(40px, 7vh, 88px); scroll-margin-top: var(--header-h); }
+.projets { padding-top: 8px; scroll-margin-top: var(--header-h); }
 .projetsHead { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid var(--encre); }
 .index { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(28px, 4vw, 72px); align-items: start; margin-top: 28px; }
 .index .liste { order: 1; } .index .apercu { order: 2; }
@@ -67,10 +64,6 @@
 .liste li[data-on] .lT { color: var(--encre); }
 .liste li[data-on] .lN { color: var(--accent); }
 .liste li[data-on] a { padding-left: 10px; }
-
-/* ---------- ce qui m'anime (sous les projets) ---------- */
-.anime { padding-top: clamp(80px, 14vh, 150px); scroll-margin-top: var(--header-h); }
-.animeIntro { margin: 18px 0 24px; font-size: .9rem; color: var(--gris); }
 
 /* ---------- grille (page Projets) ---------- */
 .grille { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(40px, 6vh, 72px) clamp(18px, 2.4vw, 36px); }
@@ -98,24 +91,40 @@
   .carteImg { aspect-ratio: 4 / 3; }
 }
 
-/* ---------- page Projets : la bibliothèque (chaque projet est un livre, ouvert par experience/livres.ts) ---------- */
-.etagere { list-style: none; margin: 0; padding: 24px 0 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 84px clamp(40px, 5vw, 72px); }
-/* la planche de l'étagère sous chaque livre */
-.livreLi::after { content: ''; display: block; height: 9px; margin: 0 calc(-1 * clamp(20px, 2.5vw, 36px)); background: linear-gradient(#F2EDE6, #E1D9CE); box-shadow: 0 10px 16px -12px rgba(43, 33, 28, .45); }
-.livre { display: block; text-decoration: none; color: inherit; perspective: 1300px; outline-offset: 8px; }
-.livreObjet { position: relative; display: block; aspect-ratio: 3 / 4; margin-left: 22px; transform-style: preserve-3d; transform-origin: left center; transform: rotateY(10deg); transition: transform .6s var(--ease); }
-.livre:hover .livreObjet, .livre:focus-visible .livreObjet { transform: rotateY(30deg) translateY(-10px); }
-.livreCouv { position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; overflow: hidden; border-radius: 0 3px 3px 0; background: var(--teinte); box-shadow: 0 22px 34px -22px rgba(43, 33, 28, .55), inset 5px 0 7px -5px rgba(0, 0, 0, .3); }
-.livreCouv img { width: 100%; height: 100%; object-fit: cover; }
-.livreBandeau { display: grid; gap: 4px; padding: 14px 16px 16px; background: var(--teinte); color: var(--encreLivre); }
-.livreN { font-size: .58rem; letter-spacing: .22em; opacity: .7; }
-.livreT { font-size: clamp(.95rem, 1.2vw, 1.1rem); letter-spacing: .08em; text-transform: uppercase; line-height: 1.2; }
-.livreA { font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; opacity: .75; }
-/* la tranche : l'épaisseur du livre, avec le titre */
-.livreTranche { position: absolute; top: 0; bottom: 0; left: -22px; width: 22px; transform-origin: right center; transform: rotateY(-90deg); background: color-mix(in srgb, var(--teinte) 78%, #000); color: var(--encreLivre); display: grid; place-items: center; overflow: hidden; }
-.livreTranche span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap; opacity: .85; }
+/* ---------- page Projets : la boîte en carton et ses magazines ---------- */
+.boite { --kraft: #C9A47C; position: relative; max-width: 1080px; margin: 40px auto 30px; padding: 0 clamp(18px, 3vw, 44px); }
+/* le fond de la boîte : on le voit dépasser derrière les magazines */
+.boiteFond { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; border-radius: 3px 3px 0 0; background: linear-gradient(#B48D63, #A07A52); box-shadow: inset 0 14px 22px -10px rgba(43, 33, 28, .45); }
+.mags { position: relative; list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; align-items: flex-end; }
+.magLi { flex: 0 0 auto; width: clamp(150px, 19%, 210px); margin: 0 -2.2%; transform: translateY(var(--dy)) rotate(var(--r)); transform-origin: 50% 100%; transition: transform .55s var(--ease); }
+.magLi:hover, .magLi:focus-within { transform: translateY(calc(var(--dy) - 70px)) rotate(0deg); z-index: 20 !important; }
+.mag { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; background: #222; box-shadow: 0 16px 30px -14px rgba(43, 33, 28, .55), inset -2px 0 0 rgba(255, 255, 255, .25); text-decoration: none; color: #fff; }
+.mag img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* le titre en haut, comme le bandeau d'un magazine */
+.magTete { position: absolute; left: 0; right: 0; top: 0; display: grid; gap: 4px; padding: 12px 12px 34px; background: linear-gradient(rgba(20, 16, 13, .62), rgba(20, 16, 13, 0)); }
+.magN { font-size: .5rem; letter-spacing: .2em; opacity: .85; }
+.magT { font-size: clamp(.95rem, 1.45vw, 1.25rem); font-weight: 500; letter-spacing: .04em; line-height: 1.02; text-transform: uppercase; }
+.magPied { position: absolute; left: 12px; right: 12px; bottom: 10px; font-size: .5rem; letter-spacing: .16em; text-transform: uppercase; opacity: 0; transition: opacity .3s; }
+.magLi:hover .magPied, .magLi:focus-within .magPied { opacity: .9; }
+/* la face avant : carton kraft, logo tamponné, étiquette collée avec le dessin du couloir */
+.boiteFace { position: relative; z-index: 10; height: clamp(120px, 15vw, 170px); margin-top: -120px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 clamp(18px, 4vw, 56px); border-radius: 0 0 4px 4px; background:
+  repeating-linear-gradient(97deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 7px),
+  repeating-linear-gradient(3deg, rgba(0, 0, 0, .025) 0 1px, transparent 1px 5px),
+  linear-gradient(var(--kraft), #BC966D); box-shadow: 0 -2px 0 rgba(255, 255, 255, .35) inset, 0 24px 40px -24px rgba(43, 33, 28, .5); pointer-events: none; }
+.boiteLogo { width: clamp(46px, 6vw, 70px); height: auto; color: #4A3527; opacity: .75; mix-blend-mode: multiply; transform: rotate(-4deg); }
+.boiteEtiquette { display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; background: #FBF8F2; box-shadow: 0 2px 6px rgba(43, 33, 28, .25); transform: rotate(1.5deg); }
+.boiteEtiquette img { width: clamp(46px, 5vw, 64px); height: auto; mix-blend-mode: multiply; }
+.boiteEtiquette span { display: grid; gap: 2px; font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
+.boiteEtiquette b { font-size: .78rem; font-weight: 400; letter-spacing: .2em; color: var(--encre); }
 
-@media (max-width: 900px) {
-  .etagere { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px 34px; }
-  .livreBandeau { padding: 10px 12px 12px; }
+@media (max-width: 760px) {
+  /* sur téléphone, la boîte se parcourt de côté */
+  .boite { padding: 0; }
+  /* sur téléphone, deux rangs de magazines : le premier dépasse derrière le second */
+  .mags { flex-wrap: wrap; padding: 24px 4px 0; }
+  .magLi { width: 37%; margin: 0 -3.5% -26vw; }
+  .magLi:nth-child(n + 4) { margin-bottom: 0; }
+  .magT { font-size: .82rem; }
+  .boiteFace { margin-top: -96px; height: 110px; }
+  .boiteEtiquette span { font-size: .5rem; }
 }

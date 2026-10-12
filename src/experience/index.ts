@@ -1,7 +1,5 @@
 import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
-import { xpAnime } from './anime';
-import { xpLivres } from './livres';
 import { xpMateriaux } from './materiaux';
 import { xpLightboxPage } from './lightbox';
 import { xpDefile } from './defile';
@@ -89,12 +87,12 @@ export function xpDemarrer(ctx: XPContexte) {
   return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
-/** À chaque page affichée : visionneuse, chapitres, « ce qui m'anime », carte, feuilletage. Retourne le nettoyage. */
+/** À chaque page affichée : visionneuse, chapitres, carte, feuilletage. Retourne le nettoyage. */
 export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.charge;
   delete document.documentElement.dataset.enteteCache;
   const f = [
-    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpAnime(root), xpLivres(ctx, root), xpMateriaux(root),
+    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpMateriaux(root),
     xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root),
   ];
   return () => f.forEach((x) => x());
