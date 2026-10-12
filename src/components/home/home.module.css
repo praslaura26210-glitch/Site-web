@@ -91,40 +91,57 @@
   .carteImg { aspect-ratio: 4 / 3; }
 }
 
-/* ---------- page Projets : la boîte en carton et ses magazines ---------- */
-.boite { --kraft: #C9A47C; position: relative; max-width: 1080px; margin: 40px auto 30px; padding: 0 clamp(18px, 3vw, 44px); }
-/* le fond de la boîte : on le voit dépasser derrière les magazines */
-.boiteFond { position: absolute; left: 0; right: 0; bottom: 0; height: 74%; border-radius: 3px 3px 0 0; background: linear-gradient(#B48D63, #A07A52); box-shadow: inset 0 14px 22px -10px rgba(43, 33, 28, .45); }
-.mags { position: relative; list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; align-items: flex-end; }
-.magLi { flex: 0 0 auto; width: clamp(150px, 19%, 210px); margin: 0 -2.2%; transform: translateY(var(--dy)) rotate(var(--r)); transform-origin: 50% 100%; transition: transform .55s var(--ease); }
-.magLi:hover, .magLi:focus-within { transform: translateY(calc(var(--dy) - 70px)) rotate(0deg); z-index: 20 !important; }
-.mag { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; background: #222; box-shadow: 0 16px 30px -14px rgba(43, 33, 28, .55), inset -2px 0 0 rgba(255, 255, 255, .25); text-decoration: none; color: #fff; }
-.mag img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* le titre en haut, comme le bandeau d'un magazine */
-.magTete { position: absolute; left: 0; right: 0; top: 0; display: grid; gap: 4px; padding: 12px 12px 34px; background: linear-gradient(rgba(20, 16, 13, .62), rgba(20, 16, 13, 0)); }
-.magN { font-size: .5rem; letter-spacing: .2em; opacity: .85; }
-.magT { font-size: clamp(.95rem, 1.45vw, 1.25rem); font-weight: 500; letter-spacing: .04em; line-height: 1.02; text-transform: uppercase; }
-.magPied { position: absolute; left: 12px; right: 12px; bottom: 10px; font-size: .5rem; letter-spacing: .16em; text-transform: uppercase; opacity: 0; transition: opacity .3s; }
-.magLi:hover .magPied, .magLi:focus-within .magPied { opacity: .9; }
-/* la face avant : carton kraft, logo tamponné, étiquette collée avec le dessin du couloir */
-.boiteFace { position: relative; z-index: 10; height: clamp(120px, 15vw, 170px); margin-top: -120px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 clamp(18px, 4vw, 56px); border-radius: 0 0 4px 4px; background:
-  repeating-linear-gradient(97deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 7px),
-  repeating-linear-gradient(3deg, rgba(0, 0, 0, .025) 0 1px, transparent 1px 5px),
-  linear-gradient(var(--kraft), #BC966D); box-shadow: 0 -2px 0 rgba(255, 255, 255, .35) inset, 0 24px 40px -24px rgba(43, 33, 28, .5); pointer-events: none; }
-.boiteLogo { width: clamp(46px, 6vw, 70px); height: auto; color: #4A3527; opacity: .75; mix-blend-mode: multiply; transform: rotate(-4deg); }
-.boiteEtiquette { display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; background: #FBF8F2; box-shadow: 0 2px 6px rgba(43, 33, 28, .25); transform: rotate(1.5deg); }
-.boiteEtiquette img { width: clamp(46px, 5vw, 64px); height: auto; mix-blend-mode: multiply; }
-.boiteEtiquette span { display: grid; gap: 2px; font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
-.boiteEtiquette b { font-size: .78rem; font-weight: 400; letter-spacing: .2em; color: var(--encre); }
+/* ---------- page Projets : l'étui en carton et ses livres (vu de trois quarts) ---------- */
+.etuiScene { position: relative; display: grid; justify-items: center; padding: clamp(40px, 8vh, 90px) 0 10px; perspective: 1900px; perspective-origin: 50% 20%; }
+.etui { --H: 520px; --D: 380px; --ep: 5px; --kraft: #C9A47C; --kraft-f: #A9845C;
+  --carton: repeating-linear-gradient(97deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 7px), repeating-linear-gradient(3deg, rgba(0, 0, 0, .03) 0 1px, transparent 1px 5px);
+  position: relative; width: var(--W); height: var(--H); transform-style: preserve-3d; transform: rotateX(-11deg) rotateY(-34deg); }
+.etuiFace { position: absolute; display: block; pointer-events: none; }
+/* le fond, à l'intérieur, dans l'ombre */
+.etuiFond { inset: 0; transform: translateZ(calc(var(--D) / -2)); background: var(--carton), linear-gradient(#7E5E3F, #6A4D33); }
+.etuiBas { left: 0; top: calc((var(--H) - var(--D)) / 2); width: var(--W); height: var(--D); transform: translateY(calc(var(--H) / 2 - var(--ep))) rotateX(90deg); background: #8D6A47; }
+.etuiGauche { top: 0; left: calc((var(--W) - var(--D)) / 2); width: var(--D); height: var(--H); transform: translateX(calc(var(--W) / -2 + var(--ep))) rotateY(90deg); background: var(--carton), linear-gradient(90deg, #7A5B3D, #94714D); }
+.etuiHaut { left: 0; top: calc((var(--H) - var(--D)) / 2); width: var(--W); height: var(--D); transform: translateY(calc(var(--H) / -2)) rotateX(90deg); background: var(--carton), linear-gradient(180deg, #D8B993, #CDAA80); }
+/* le grand côté, avec le logo et le nom, et le petit bouton pression */
+.etuiDroite { top: 0; left: calc((var(--W) - var(--D)) / 2); width: var(--D); height: var(--H); transform: translateX(calc(var(--W) / 2)) rotateY(90deg); display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 0 13% 22%; background: var(--carton), linear-gradient(100deg, #C29C72, #CFAE86 40%, #C8A57B); color: var(--accent-f); }
+.etuiDroite::after { content: ''; position: absolute; left: 14px; top: 58%; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #E9D3A0, #A07D3E 70%); box-shadow: 0 1px 2px rgba(43, 33, 28, .45); }
+.etuiLogo { width: 92px; height: auto; color: var(--accent-f); opacity: .9; }
+.etuiNom { font-size: 2.2rem; font-weight: 300; line-height: 1; letter-spacing: -.01em; }
+.etuiSous { font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(142, 74, 48, .85); }
+/* le bord du carton, côté ouvert */
+.etuiBord { inset: 0; transform: translateZ(calc(var(--D) / 2)); border: var(--ep) solid #B48D63; box-shadow: inset 0 10px 18px -12px rgba(43, 33, 28, .5); }
+.etuiSol { top: calc((var(--H) - var(--D) * 2) / 2); left: calc((var(--W) - var(--D) * 2) / 2); width: calc(var(--D) * 2); height: calc(var(--D) * 2); transform: translateY(calc(var(--H) / 2 + 1px)) rotateX(90deg); background: radial-gradient(closest-side, rgba(43, 33, 28, .28), rgba(43, 33, 28, .1) 55%, transparent); }
+
+/* les livres, debout dans l'étui */
+.livres { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; transform-style: preserve-3d; }
+.livre { --d: calc(var(--D) - 16px); position: absolute; left: var(--x); bottom: var(--ep); width: var(--t); height: calc(var(--H) - var(--ep) * 2 - 12px - var(--dh)); transform-style: preserve-3d; transform: translateZ(var(--sort, 0px)); transition: transform .55s var(--ease), opacity .4s; }
+.livre:hover, .livre:focus-within { --sort: 54px; }
+.livre[data-sorti] { --sort: 420px; opacity: 0; transition: transform .6s cubic-bezier(.5, 0, .7, .4), opacity .35s .3s; }
+.livreFace { position: absolute; display: block; pointer-events: none; }
+.livreHaut { left: 0; top: 0; width: 100%; height: var(--d); transform-origin: 50% 0; transform: translateZ(calc(var(--d) / 2)) rotateX(-90deg); background: repeating-linear-gradient(90deg, #F6F1E8 0 1px, #E6DDCD 1px 2px); }
+.livreCoteG, .livreCoteD { top: 0; left: 0; width: var(--d); height: 100%; transform-origin: 0 50%; transform: translateZ(calc(var(--d) / 2)) rotateY(90deg); background: var(--couv); }
+.livreCoteD { left: 100%; }
+.livreDos { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 12px 0 14px; transform: translateZ(calc(var(--d) / 2)); background: var(--couv); color: var(--encre); text-decoration: none; box-shadow: inset 2px 0 3px -1px rgba(43, 33, 28, .25), inset -2px 0 3px -1px rgba(255, 255, 255, .4); }
+.livreDos:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.livreN { font-size: .56rem; letter-spacing: .08em; }
+.livreT { writing-mode: vertical-rl; transform: rotate(180deg); margin: auto 0; max-height: calc(100% - 50px); overflow: hidden; white-space: nowrap; font-size: .64rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; }
+.livre[data-dos='creme'] { --couv: #F4EEE4; }
+/* la reliure cousue, en fil de terre cuite */
+.livre[data-dos='creme'] .livreDos::before { content: ''; position: absolute; left: 22%; top: 7%; bottom: 7%; width: 26%; border-left: 1.5px solid var(--accent); background: repeating-linear-gradient(180deg, transparent 0 34px, var(--accent) 34px 35.5px); opacity: .9; }
+.livre[data-dos='creme'] .livreT { margin-left: 30%; }
+.livre[data-dos='kraft'] { --couv: #B58E66; }
+.livre[data-dos='kraft'] .livreDos { color: #3A2A1F; }
+.livre[data-dos='kraft'] .livreDos::after { content: ''; position: absolute; left: 0; right: 0; top: 18%; height: 9%; background: var(--accent); }
+.livre[data-dos='terre'] { --couv: #A86A52; }
+.livre[data-dos='terre'] .livreDos { color: #FBF3EA; }
+.etuiAide { margin-top: clamp(70px, 10vh, 110px); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gris); }
 
 @media (max-width: 760px) {
-  /* sur téléphone, la boîte se parcourt de côté */
-  .boite { padding: 0; }
-  /* sur téléphone, deux rangs de magazines : le premier dépasse derrière le second */
-  .mags { flex-wrap: wrap; padding: 24px 4px 0; }
-  .magLi { width: 37%; margin: 0 -3.5% -26vw; }
-  .magLi:nth-child(n + 4) { margin-bottom: 0; }
-  .magT { font-size: .82rem; }
-  .boiteFace { margin-top: -96px; height: 110px; }
-  .boiteEtiquette span { font-size: .5rem; }
+  .etuiScene { padding-top: 40px; perspective: 1300px; }
+  .etui { --H: 330px; --D: 230px; transform: rotateX(-10deg) rotateY(-30deg); scale: .8; translate: 26px 0; }
+  .etuiScene { padding-top: 10px; }
+  .etuiAide { margin-top: 60px; }
+  .etuiNom { font-size: 1.5rem; }
+  .etuiLogo { width: 62px; }
+  .livreT { font-size: .52rem; letter-spacing: .16em; }
 }

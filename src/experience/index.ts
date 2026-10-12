@@ -1,6 +1,7 @@
 import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpMateriaux } from './materiaux';
+import { xpLivres } from './livres';
 import { xpLightboxPage } from './lightbox';
 import { xpDefile } from './defile';
 import { xpCalme, xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
@@ -60,7 +61,7 @@ export function xpDemarrer(ctx: XPContexte) {
   const lien = (e: MouseEvent) => {
     const a = (e.target as Element).closest<HTMLAnchorElement>('a[href]');
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target || a.hasAttribute('download')) return;
-    if (a.closest('dialog') || a.hasAttribute('data-xp-libre')) return;
+    if (a.closest('dialog') || a.hasAttribute('data-xp-libre') || a.hasAttribute('data-livre')) return;
     const cible = ctx.lien(a);
     if (!cible) return;
     e.preventDefault();
@@ -87,13 +88,13 @@ export function xpDemarrer(ctx: XPContexte) {
   return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
-/** À chaque page affichée : visionneuse, chapitres, carte, feuilletage. Retourne le nettoyage. */
+/** À chaque page affichée : visionneuse, chapitres, carte, défilé, livres de l'étui. Retourne le nettoyage. */
 export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.charge;
   delete document.documentElement.dataset.enteteCache;
   const f = [
     xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpMateriaux(root),
-    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root),
+    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root), xpLivres(ctx, root),
   ];
   return () => f.forEach((x) => x());
 }

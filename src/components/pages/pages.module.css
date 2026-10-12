@@ -47,36 +47,40 @@
 
 /* ---------- à propos ---------- */
 .apropos > * + * { margin-top: clamp(88px, 14vh, 160px); }
-/* qui je suis : une feuille écrite à la main, la photo collée au milieu ; chaque ligne s'écrit après l'autre */
-.lettre { position: relative; width: min(100%, 760px); margin-inline: auto; padding: clamp(34px, 5vw, 64px) clamp(26px, 6vw, 76px) clamp(40px, 5vw, 60px); background: #fff; background-image: repeating-linear-gradient(180deg, transparent 0 calc(2.6rem - 1px), rgba(122, 111, 102, .13) calc(2.6rem - 1px) 2.6rem); background-position: 0 1.6rem; box-shadow: 0 1px 2px rgba(43, 33, 28, .08), 0 18px 50px -18px rgba(43, 33, 28, .28); transform: rotate(-.8deg); font-family: var(--main); color: var(--encre); }
-.lettre::after { content: ''; position: absolute; inset: 0 auto 0 clamp(16px, 4vw, 48px); width: 1px; background: rgba(164, 107, 87, .35); }
-.lettreNom { font-family: var(--main); font-weight: 400; font-size: clamp(2.6rem, 6vw, 3.8rem); letter-spacing: 0; line-height: 1; margin-bottom: .3em; }
-.lettreLignes { list-style: none; margin: 0; padding: 0; font-size: clamp(1.35rem, 2.6vw, 1.75rem); line-height: 2.6rem; }
-.lettreLignes li, .lettreSigne { clip-path: inset(-.4em 100% -.4em 0); animation: aEcrit 1s cubic-bezier(.45, .05, .55, 1) forwards; animation-delay: calc(.3s + var(--l) * .75s); }
-.lettreLignes li:nth-child(2) { padding-left: .8em; }
+/* qui je suis : une page écrite à la main ; la photo est collée au milieu, l'écriture passe autour et un peu par-dessus */
+.lettre { position: relative; width: min(100%, 820px); margin-inline: auto; padding: clamp(34px, 5vw, 60px) clamp(22px, 6vw, 64px) clamp(36px, 5vw, 54px); background: #fff; box-shadow: 0 1px 2px rgba(43, 33, 28, .08), 0 18px 50px -18px rgba(43, 33, 28, .28); transform: rotate(-.6deg); font-family: var(--main); color: var(--encre); }
+.lettreNom { font-family: var(--main); font-weight: 400; font-size: clamp(2.4rem, 5vw, 3.4rem); letter-spacing: 0; line-height: 1; margin-bottom: .35em; }
+.lettreLignes { --photo: 31%; --ligne: 2.7rem; position: relative; list-style: none; margin: 0; padding: 0; font-size: 1.68rem; line-height: var(--ligne); background: repeating-linear-gradient(180deg, transparent 0 calc(var(--ligne) - 1px), rgba(122, 111, 102, .16) calc(var(--ligne) - 1px) var(--ligne)); }
+.lettreLignes > li:not(.lettrePhoto), .lettreSigne { position: relative; z-index: 1; clip-path: inset(-.4em 100% -.4em 0); animation: aEcrit .9s cubic-bezier(.45, .05, .55, 1) forwards; animation-delay: calc(.3s + var(--l) * .5s); }
+/* les lignes qui passent à côté de la photo : un morceau à gauche, un à droite, qui mordent un peu sur elle */
+.lettreDeux { display: grid; grid-template-columns: minmax(0, 1fr) var(--photo) minmax(0, 1fr); column-gap: 10px; white-space: nowrap; }
+.lettreDeux > span:first-child { grid-column: 1; }
+.lettreDeux > span:last-child { grid-column: 3; margin-left: -14px; }
 @keyframes aEcrit { to { clip-path: inset(-.4em -.4em -.4em -.4em); } }
-.lettrePhoto { position: relative; width: min(64%, 330px); margin: 1.4rem auto 1.6rem; padding: 10px 10px 34px; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 14px 30px -12px rgba(43, 33, 28, .35); transform: rotate(2.4deg); }
-.lettrePhoto img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; }
-.scotch { position: absolute; z-index: 1; top: -14px; left: 50%; width: 110px; height: 30px; translate: -50% 0; rotate: -4deg; background: rgba(236, 228, 210, .78); box-shadow: 0 1px 2px rgba(43, 33, 28, .12); clip-path: polygon(0 8%, 4% 0, 9% 10%, 14% 0, 100% 0, 97% 50%, 100% 100%, 6% 100%, 2% 88%, 5% 50%); }
-.lettreSigne { margin: .6rem 0 0; text-align: right; font-size: clamp(1.9rem, 3.4vw, 2.4rem); color: var(--accent-f); }
+.lettrePhoto { position: absolute; z-index: 0; left: 50%; top: calc(var(--ligne) * 3 + .35rem); width: calc(var(--photo) + 26px); height: calc(var(--ligne) * 6 - .7rem); translate: -50% 0; rotate: 2.2deg; padding: 7px; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 14px 30px -12px rgba(43, 33, 28, .35); }
+.lettrePhoto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+.scotch { position: absolute; z-index: 1; top: -12px; left: 50%; width: 92px; height: 26px; translate: -50% 0; rotate: -5deg; background: rgba(236, 228, 210, .8); box-shadow: 0 1px 2px rgba(43, 33, 28, .12); clip-path: polygon(0 8%, 4% 0, 9% 10%, 14% 0, 100% 0, 97% 50%, 100% 100%, 6% 100%, 2% 88%, 5% 50%); }
+.lettreSigne { margin: .5rem 0 0; text-align: right; font-size: clamp(1.9rem, 3.4vw, 2.4rem); color: var(--accent-f); }
 
-/* outils : une ligne de cote, des notions à la maîtrise ; plus l'outil est maîtrisé, plus il est écrit grand */
-.cote { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--encre); position: relative; }
-.coteCol { position: relative; display: grid; grid-template-rows: 1fr auto; padding: 0 12px; }
-/* traits de rappel et petits traits obliques, comme sur une cote d'architecte */
-.coteCol::before, .cote::before { content: ''; position: absolute; bottom: -9px; left: 0; width: 1px; height: 17px; background: var(--encre); }
-.coteCol::after, .cote::after { content: ''; position: absolute; bottom: -1px; left: -5px; width: 11px; height: 1px; background: var(--encre); rotate: -45deg; }
-.cote::before { left: auto; right: 0; }
-.cote::after { left: auto; right: -5px; }
-.coteOutils { list-style: none; margin: 0; padding: 0 0 18px; display: flex; flex-direction: column; justify-content: flex-end; gap: .1em; min-height: 11rem; font-size: calc(.9rem + (var(--n) - 2) * .42rem); line-height: 1.15; }
-.coteCol:last-child .coteOutils { color: var(--accent-f); }
-.coteNiv { position: absolute; top: calc(100% + 16px); left: 12px; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
-.outils { padding-bottom: 40px; }
+/* outils : une ligne par logiciel ; la barre se remplit selon le niveau, le niveau est écrit à droite */
+.outils { display: grid; gap: 26px; }
+.niveaux { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(32px, 6vw, 110px); border-top: 1px solid var(--encre); }
+.niveaux li { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) 9.5rem; align-items: center; gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--filet); }
+.nivNom { font-size: 1rem; }
+.nivBarre { position: relative; height: 3px; background: var(--filet); }
+.nivBarre i { position: absolute; inset: 0 auto 0 0; width: calc(var(--n) / 5 * 100%); background: var(--accent); }
+.nivMot { font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); text-align: right; }
 
+/* références : une phrase pour dire d'où elles viennent, puis deux familles */
+.refs { display: grid; gap: 40px; }
+.refsTete { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px clamp(32px, 6vw, 110px); align-items: end; }
+.refsIntro { max-width: 54ch; font-size: 1rem; line-height: 1.75; }
+.refsGroupes { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
+.refsTheme { display: grid; gap: 26px; }
+.refsThemeT { padding-top: 12px; border-top: 1px solid var(--encre); font-size: .62rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-f); }
+.refsGrille { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(22px, 4vw, 56px) clamp(18px, 3vw, 44px); }
 /* références : des tirages posés un peu de travers, la légende écrite dessous */
-.refs { display: grid; gap: 34px; }
-.refsGrille { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: clamp(22px, 4vw, 56px) clamp(18px, 3vw, 44px); }
-.refsGrille li { --r: -2deg; width: clamp(150px, calc(20% - 36px), 230px); }
+.refsGrille li { --r: -2deg; width: clamp(130px, 12vw, 185px); }
 .refsGrille li:nth-child(2n) { --r: 1.8deg; margin-top: 34px; }
 .refsGrille li:nth-child(3n) { --r: -.6deg; }
 .refsGrille figure { margin: 0; padding: 8px 8px 0; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 12px 26px -12px rgba(43, 33, 28, .32); rotate: var(--r); transition: rotate .4s var(--ease), translate .4s var(--ease); }
@@ -119,16 +123,15 @@
   .pDate { grid-row: auto; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
   .lettre { transform: none; }
-  .lettrePhoto { width: min(78%, 300px); }
-  /* la cote se lit de haut en bas sur téléphone */
-  .cote { grid-template-columns: 1fr; border-bottom: 0; border-left: 1px solid var(--encre); margin: 12px 0 0 6px; }
-  .coteCol { grid-template-rows: auto; padding: 14px 0 18px 22px; }
-  .coteCol::before, .cote::before { bottom: auto; top: 0; left: -9px; width: 17px; height: 1px; }
-  .cote::before { top: auto; bottom: 0; right: auto; }
-  .coteCol::after, .cote::after { bottom: auto; top: 0; left: -6px; }
-  .cote::after { top: auto; bottom: 0; right: auto; }
-  .coteNiv { position: static; order: -1; margin-bottom: 6px; }
-  .coteOutils { min-height: 0; padding: 0; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; gap: 4px 16px; }
+  /* sur téléphone : les lignes reprennent toute la largeur, la photo s'intercale après la troisième */
+  .lettreLignes { display: flex; flex-direction: column; font-size: 1.3rem; }
+  .lettreLignes > li { order: calc(var(--l) * 2); }
+  .lettreDeux { display: block; white-space: normal; }
+  .lettreDeux > span:last-child { margin-left: 0; }
+  .lettreLignes > li.lettrePhoto { position: relative; order: 5; left: auto; top: auto; translate: none; width: min(70%, 260px); height: auto; aspect-ratio: 4 / 5; margin: 1.2rem auto 1.4rem; }
+  .niveaux { grid-template-columns: 1fr; }
+  .niveaux li { grid-template-columns: 6.5rem minmax(0, 1fr) 7.6rem; gap: 12px; }
+  .refsTete, .refsGroupes { grid-template-columns: 1fr; }
   .refsGrille li { width: calc(50% - 10px); }
   .refsGrille li:nth-child(2n) { margin-top: 24px; }
   .cGrille { grid-template-columns: 1fr; }

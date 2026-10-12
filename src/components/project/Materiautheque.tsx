@@ -12,23 +12,26 @@ export const PALETTE: Record<string, { en: string; it: string }> = {
   'Menuiseries aluminium': { en: 'Aluminium frames', it: 'Serramenti in alluminio' },
 };
 /** Le tissu n'est pas sur la planche de Laura : ajouté pour la table, son nom est à part. */
-const TISSU = { fr: 'Tissu, lin rose', en: 'Fabric, pink linen', it: 'Tessuto, lino rosa' };
+const TISSU = { fr: 'Tissu bouclette, blanc cassé', en: 'Off-white bouclé fabric', it: 'Tessuto bouclé, bianco sporco' };
+export const nomMateriau = (n: string, lang: Lang) => (!n ? TISSU[lang] : lang === 'fr' ? n : PALETTE[n]?.[lang] || n);
 
 /**
- * Les échantillons (content/site/materiaux), découpés dans la planche de Laura, plus un tissu :
- * position de départ sur la table (x, y en % ; largeur w en % de la table ; rotation r en degrés) ;
- * m : la même chose sur téléphone, où la table est en hauteur ;
+ * Les échantillons (content/site/materiaux), découpés dans la planche de Laura, plus un tissu bouclette.
+ * Ils se chevauchent comme sur une planche de tendance : les grands dessous, les petits par-dessus
+ * (l'ordre de la liste est l'ordre d'empilement).
+ * x, y : position de départ sur la table (en %) ; w : largeur en % de la table ; r : rotation en degrés ;
+ * m : la même chose sur téléphone (table en hauteur) ; livre : [x, y, w] sur la page du livre ;
  * ep : épaisseur en px ; bord : couleur de la tranche (sinon la matière elle-même, assombrie) ;
  * brille : reflet de la lumière sur la face (0 mat, 1 très brillant).
  */
-const ECHANTILLONS = [
-  { f: 'tissu', nom: '', w: 26, ratio: 320 / 380, x: 13, y: 33, r: -8, m: [5, 55, -6], ep: 1, brille: 0 },
-  { f: 'beton', nom: 'Béton ciré', w: 20, ratio: 210 / 300, x: 51, y: 52, r: 6, m: [52, 64, 6], ep: 10, brille: 0.3 },
-  { f: 'peinture-beige', nom: 'Peinture beige', w: 17, ratio: 1, x: 45, y: 17, r: 4, m: [42, 30, 4], ep: 2, bord: '#F7F2EA', brille: 0.08 },
-  { f: 'terrazzo', nom: 'Terrazzo rose', w: 16, ratio: 520 / 300, x: 30, y: 8, r: -5, m: [10, 16, -5], ep: 9, brille: 0.45 },
-  { f: 'peinture-rose', nom: 'Peinture rose', w: 10, ratio: 500 / 200, x: 58, y: 6, r: 9, m: [70, 8, 9], ep: 2, bord: '#F4EEE6', brille: 0.08 },
-  { f: 'bois', nom: 'Bois clair', w: 10, ratio: 520 / 190, x: 71, y: 20, r: -12, m: [76, 40, -10], ep: 6, brille: 0.15 },
-  { f: 'aluminium', nom: 'Menuiseries aluminium', w: 14, ratio: 370 / 310, x: 76, y: 60, r: 10, m: [30, 74, 10], ep: 14, brille: 0.6 },
+export const ECHANTILLONS: { f: string; nom: string; w: number; ratio: number; x: number; y: number; r: number; m: number[]; livre: number[]; ep: number; bord?: string; brille: number }[] = [
+  { f: 'peinture-beige', nom: 'Peinture beige', w: 30, ratio: 1, x: 12, y: 6, r: -3, m: [4, 4, -3], livre: [6, 16, 40], ep: 2, bord: '#F7F2EA', brille: 0.08 },
+  { f: 'beton', nom: 'Béton ciré', w: 26, ratio: 210 / 300, x: 54, y: 42, r: 4, m: [50, 50, 4], livre: [46, 54, 44], ep: 10, brille: 0.3 },
+  { f: 'moumoute', nom: '', w: 24, ratio: 380 / 440, x: 30, y: 50, r: -8, m: [6, 62, -8], livre: [8, 58, 40], ep: 6, brille: 0 },
+  { f: 'terrazzo', nom: 'Terrazzo rose', w: 13, ratio: 520 / 300, x: 35, y: 8, r: 6, m: [50, 8, 6], livre: [44, 12, 20], ep: 9, brille: 0.45 },
+  { f: 'peinture-rose', nom: 'Peinture rose', w: 8, ratio: 500 / 200, x: 68, y: 10, r: -10, m: [78, 14, -10], livre: [70, 14, 14], ep: 2, bord: '#F4EEE6', brille: 0.08 },
+  { f: 'bois', nom: 'Bois clair', w: 8, ratio: 520 / 190, x: 24, y: 30, r: 14, m: [36, 36, 14], livre: [34, 36, 13], ep: 6, brille: 0.15 },
+  { f: 'aluminium', nom: 'Menuiseries aluminium', w: 10, ratio: 370 / 310, x: 62, y: 56, r: 18, m: [62, 72, 18], livre: [62, 66, 18], ep: 14, brille: 0.6 },
 ];
 
 /**
@@ -43,7 +46,7 @@ export default function Materiautheque({ lang, credit }: { lang: Lang; credit?: 
     en: { titre: 'The materials, to handle', aide: 'Drag the table to move around it · click a sample to get closer · drag it to move it', ranger: 'Put them back', dessus: 'Top view', volume: '3D view', plus: 'Closer', moins: 'Further' },
     it: { titre: 'I materiali, da toccare', aide: 'Trascina il tavolo per girarci intorno · clicca un campione per avvicinarti · trascinalo per spostarlo', ranger: 'Rimetti a posto', dessus: 'Vista dall’alto', volume: 'Vista in volume', plus: 'Avvicinati', moins: 'Allontanati' },
   });
-  const nom = (n: string) => (!n ? TISSU[lang] : lang === 'fr' ? n : PALETTE[n]?.[lang] || n);
+  const nom = (n: string) => nomMateriau(n, lang);
   return (
     <section className={`${styles.mat} rv`} aria-labelledby="titre-materiaux">
       <div className={styles.matTete}>
