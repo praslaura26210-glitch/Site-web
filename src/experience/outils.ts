@@ -5,7 +5,7 @@
 export type XPTextes = {
   fermer: string; precedent: string; suivant: string; planche: string; retour: string; glisser: string;
   chapitres: string; presentation: string; raccourcis: string; touches: string[][]; copier: string; copie: string;
-  ecouter: string; ecouterPause: string; feuilleter: string; feuilleterPieces: string; feuilleterAide: string; natures: Record<string, string[]>;
+  ecouter: string; ecouterPause: string; voirTout: string; ouvrirLivre: string; feuilleter: string; feuilleterPieces: string; feuilleterAide: string; natures: Record<string, string[]>;
   zoomIn: string; zoomOut: string; zoomReset: string;
 };
 export type XPImage = { src: string; srcSmall?: string; w: number; h: number; pos?: string };

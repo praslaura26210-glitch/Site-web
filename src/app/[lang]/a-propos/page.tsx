@@ -23,8 +23,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
   const planche = img('planche-dessins-photos-bricolage');
   const L = tr(lang, {
     fr: {
-      statut: "Étudiante en master AECC à l'École nationale supérieure d'architecture de Grenoble.",
-      avant: "Avant l'école d'architecture, j'ai été dessinatrice en bâtiment. Je dessine sur Archicad comme à la main, je monte des dossiers de permis de construire, je dessine des escaliers et du mobilier. J'ai travaillé en agence d'architecture, en architecture intérieure et sur un chantier.",
+      notes: ['Avant l’archi, j’étais dessinatrice en bâtiment.', 'Aujourd’hui : master AECC à l’ENSA Grenoble.', 'J’aime la matière, le territoire, ce qui est déjà là.', 'Archicad… et beaucoup de dessin à la main.'],
       master: 'Master AECC', parcours: 'Parcours',
       stages: 'Stages', formations: 'Formations',
       outils: 'Outils', sur5: 'sur 5',
@@ -32,8 +31,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       texteAudela: audela.texte,
     },
     en: {
-      statut: "Master's student (AECC) at the École nationale supérieure d'architecture de Grenoble.",
-      avant: 'Before architecture school, I worked as a building draughtswoman. I draw in Archicad as well as by hand, I put together building permit applications, and I design staircases and furniture. I have worked in an architecture practice, in interior architecture and on a building site.',
+      notes: ['Before architecture, I was a building draughtswoman.', 'Now: AECC master’s at ENSA Grenoble.', 'I love material, territory, what is already there.', 'Archicad… and a lot of hand drawing.'],
       master: 'AECC master’s', parcours: 'Background',
       stages: 'Internships', formations: 'Education',
       outils: 'Tools', sur5: 'out of 5',
@@ -41,8 +39,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       texteAudela: 'I like to spend my free time exploring different creative practices, such as drawing, painting and crafts like mosaic, scrapbooking and knitting. I particularly enjoy working with my hands, restoring old furniture or making new pieces. I am not a great photographer, but I like taking the time to photograph the places around me. It helps me look more closely at the architecture, the light and the details that make up a place.',
     },
     it: {
-      statut: "Studentessa del master AECC all'École nationale supérieure d'architecture de Grenoble.",
-      avant: "Prima della scuola di architettura sono stata disegnatrice edile. Disegno con Archicad e a mano, preparo pratiche per il permesso di costruire, progetto scale e arredi. Ho lavorato in uno studio di architettura, nell'architettura d'interni e in cantiere.",
+      notes: ['Prima dell’architettura ero disegnatrice edile.', 'Oggi: master AECC all’ENSA di Grenoble.', 'Amo la materia, il territorio, ciò che c’è già.', 'Archicad… e tanto disegno a mano.'],
       master: 'Master AECC', parcours: 'Percorso',
       stages: 'Tirocini', formations: 'Formazione',
       outils: 'Strumenti', sur5: 'su 5',
@@ -51,6 +48,12 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     },
   });
 
+  // la pellicule : des dessins et des maquettes des projets, puis les photos d'« au-delà des projets »
+  const vue = (slug: string, nom: string) => getProjet(slug, lang).images.find((i) => i.nom === nom)?.srcSmall;
+  const pellicule = [
+    '/media/site/dessin-couverture-1000.webp', vue('illusion-d-envol', 'maquette'), vue('le-passage-des-artistes', 'croquis-cour'), vue('la-ruche', 'maquette-3'),
+    photo.srcSmall, vue('illusion-d-envol', 'croquis-perspective'), vue('entre-deux-regards', 'maquette'), vue('le-passage-des-artistes', 'experimentation-1'),
+  ].filter((x): x is string => !!x);
   const logiciels = Object.entries(cv.logiciels_sur_5 as Record<string, number>);
 
   return (
@@ -62,10 +65,25 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </figure>
         <div className={styles.aTeteTxt}>
           <h1 className={styles.aNom}>Laura Pras</h1>
-          <p className={styles.aStatut}>{L.statut}</p>
-          <p className={styles.aAvant}>{L.avant}</p>
+          {/* qui je suis, écrit à la main : chaque ligne s'écrit à son tour */}
+          <ul className={styles.aMain}>
+            {L.notes.map((n, i) => <li key={i} style={{ ['--l' as string]: i }}>{n}</li>)}
+          </ul>
+          <svg className={styles.aFleche} viewBox="0 0 120 60" aria-hidden="true"><path d="M116 8C88 4 52 14 30 40M30 40l2-14M30 40l14-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </div>
       </header>
+
+      {/* une pellicule qui défile : mes dessins, mes maquettes, ce que je photographie */}
+      <div className={styles.pellicule} aria-hidden="true">
+        <div className={styles.pelliculeBande}>
+          {[...pellicule, ...pellicule].map((f, i) => (
+            <span key={i} className={styles.pelliculeVue}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={f} alt="" loading="lazy" />
+            </span>
+          ))}
+        </div>
+      </div>
 
       <section className={styles.aMaster} aria-labelledby="master">
         <div>

@@ -200,6 +200,8 @@
     "other piece",
     "other pieces"
    ]
-  }
+  },
+  "voirTout": "See the whole project",
+  "ouvrirLivre": "Open the book"
  }
 }

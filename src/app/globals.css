@@ -2,6 +2,8 @@
 @font-face { font-family: 'Montserrat'; src: url('/fonts/mont-300.woff2') format('woff2'); font-weight: 300; font-display: swap; }
 @font-face { font-family: 'Montserrat'; src: url('/fonts/mont-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Montserrat'; src: url('/fonts/mont-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+/* écriture à la main (À propos) : Caveat, licence SIL OFL (public/fonts/caveat-OFL.txt) */
+@font-face { font-family: 'Caveat'; src: url('/fonts/caveat-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
 :root {
   --fond: #FFFFFF;      /* blanc */
@@ -17,6 +19,7 @@
   --police-plan: 'Montserrat', Arial, sans-serif;
 
   --sans: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --main: 'Caveat', 'Segoe Print', cursive;
   --gut: clamp(18px, 3.6vw, 64px);
   --max: 1280px;
   --ease: cubic-bezier(.22, .61, .2, 1);
