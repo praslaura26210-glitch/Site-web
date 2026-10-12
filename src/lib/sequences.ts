@@ -13,6 +13,8 @@ export type Bloc =
   | { t: 'rang'; r: string[] }
   /** un texte (poème, récit, expérimentation, chiffres, palette) avec, ou non, une image à côté */
   | { t: 'texte'; k: 'poeme' | 'recit' | 'experimentation' | 'chiffres' | 'palette'; titre?: L3; r?: string; cote?: 'g' | 'd'; colonnes?: boolean }
+  /** la table des matériaux : des échantillons qu'on déplace (Pilates Room) */
+  | { t: 'materiaux' }
   /** une visionneuse : un grand dessin à la fois, flèches pour passer au suivant */
   | { t: 'visionneuse'; titre: L3; r: string[]; k?: 'chiffres' }
   /**
@@ -137,6 +139,7 @@ export const MISES: Record<string, Mise> = {
       { t: 'rang', r: ['rendu-salle', 'rendu-vestiaire', 'rendu-coiffeuse'] },
       { t: 'inter', titre: T.plans },
       { t: 'visionneuse', titre: T.plans, r: ['p:plan-amenagement', 'p:plan-electricite'], k: 'chiffres' },
+      { t: 'materiaux' },
       { t: 'texte', k: 'palette', titre: T.matieres, r: 'planche-materiaux', cote: 'g' },
       { t: 'inter', titre: T.coupes },
       { t: 'visionneuse', titre: T.coupes, r: ['p:coupe-aa', 'p:coupe-bb', 'p:coupe-cc'] },

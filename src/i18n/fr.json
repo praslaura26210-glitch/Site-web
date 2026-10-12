@@ -152,9 +152,6 @@
   "terrSource": "Fond : contours IGN/INSEE (france-geojson), Rhône : Natural Earth.",
   "terrCarte": "Carte des lieux de mes projets, stages et études",
   "carteTitre": "Mes coordonnées dans votre téléphone",
-  "feuilleter": "Feuilleter le projet",
-  "feuilleterPieces": "{n} pièces",
-  "feuilleterAide": "Glissez le long de la ligne pour feuilleter · cliquez l'image pour l'ouvrir en grand",
   "natures": {
    "croquis": [
     "croquis",
@@ -202,6 +199,7 @@
    ]
   },
   "voirTout": "Voir le projet en entier",
-  "ouvrirLivre": "Ouvrir le livre"
+  "ouvrirLivre": "Ouvrir le livre",
+  "defile": "Le projet en images"
  }
 }

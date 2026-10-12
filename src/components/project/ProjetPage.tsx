@@ -10,17 +10,10 @@ import { v } from '@/lib/ver';
 import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
+import Materiautheque, { PALETTE } from './Materiautheque';
 import Visionneuse from './Visionneuse';
 import styles from './project.module.css';
 
-const PALETTE: Record<string, { en: string; it: string }> = {
-  'Peinture beige': { en: 'Beige paint', it: 'Pittura beige' },
-  'Peinture rose': { en: 'Pink paint', it: 'Pittura rosa' },
-  'Bois clair': { en: 'Light wood', it: 'Legno chiaro' },
-  'Béton ciré': { en: 'Polished concrete', it: 'Cemento spatolato' },
-  'Terrazzo rose': { en: 'Pink terrazzo', it: 'Terrazzo rosa' },
-  'Menuiseries aluminium': { en: 'Aluminium frames', it: 'Serramenti in alluminio' },
-};
 
 /** Page projet : ouverture (titre et grande image), présentation, puis les blocs choisis pour ce projet. */
 export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; prev: Projet; total: number }) {
@@ -105,6 +98,8 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
           </section>
         );
       }
+      case 'materiaux':
+        return <Materiautheque key={k} lang={lang} credit={cr.defaut || undefined} />;
       case 'visionneuse':
         return <Visionneuse key={k} ids={b.r.map(ancreDessin)} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
       case 'composition':
@@ -179,8 +174,8 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         </div>
       </section>
 
-      {/* feuilleter le projet : construit dans le navigateur (experience/feuilleter.ts) */}
-      <section className="wrap xp-fe" data-feuilleter aria-label={t.xp.feuilleter} />
+      {/* le projet en images, en défilé horizontal : construit dans le navigateur (experience/defile.ts) */}
+      <section className="xp-df" data-defile aria-label={t.xp.defile} />
 
       <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
 

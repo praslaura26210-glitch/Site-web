@@ -173,3 +173,23 @@
   .visBas { grid-template-columns: 1fr; gap: 8px; padding-top: 40px; }
   .visAside { grid-column: 1; grid-row: auto; margin-top: 28px; }
 }
+
+/* ---------- Pilates Room : la table des matériaux (experience/materiaux.ts) ---------- */
+.mat { margin-block: clamp(56px, 10vh, 120px); }
+.matTete { display: flex; justify-content: space-between; align-items: baseline; gap: 10px 30px; flex-wrap: wrap; margin-bottom: 18px; }
+.matAide { font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
+.matTable { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: radial-gradient(120% 90% at 30% 20%, #FBF8F4, #EFE8DF); box-shadow: inset 0 0 0 1px var(--filet); touch-action: none; user-select: none; }
+.matEch { position: absolute; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%); width: calc(var(--w) * 1%); padding: 0; border: 0; background: none; cursor: grab; transform: rotate(calc(var(--r) * 1deg)); transition: transform .35s var(--ease), filter .3s; filter: drop-shadow(0 6px 8px rgba(43, 33, 28, .22)); touch-action: none; }
+.matEch img { width: 100%; height: 100%; object-fit: fill; pointer-events: none; -webkit-user-drag: none; }
+.matEch:hover { filter: drop-shadow(0 12px 16px rgba(43, 33, 28, .28)); }
+.matEch[data-tenu] { cursor: grabbing; transition: transform .12s linear; filter: drop-shadow(0 24px 26px rgba(43, 33, 28, .32)); scale: 1.05; }
+.matEch[data-range] { transition: left .7s var(--ease), top .7s var(--ease), transform .7s var(--ease); }
+.matEtiquette { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 4px); white-space: nowrap; padding: 5px 9px; background: var(--fond); color: var(--encre); font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; box-shadow: 0 6px 16px -8px rgba(43, 33, 28, .4); opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none; }
+.matEch:hover .matEtiquette, .matEch:focus-visible .matEtiquette, .matEch[data-tenu] .matEtiquette { opacity: 1; transform: translate(-50%, 0); }
+.matBas { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 14px; }
+.matCredit { font-size: .6rem; color: var(--gris); }
+@media (max-width: 760px) {
+  .matTable { aspect-ratio: 4 / 5; }
+  .matEch { width: calc(var(--w) * 1.7%); }
+  .matEtiquette { font-size: .5rem; }
+}

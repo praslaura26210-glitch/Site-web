@@ -275,30 +275,29 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 }
 
 /* =====================================================================
-   Page projet : feuilleter le projet
+   Page projet : le projet en images, en défilé horizontal (experience/defile.ts)
    ===================================================================== */
-.xp-fe:empty { display: none; }
-.xp-fe { display: grid; gap: 14px; margin-block: clamp(40px, 8vh, 96px); }
-.xp-fe-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 14px; border-bottom: 1px solid var(--encre); }
-.xp-fe-compte { display: flex; flex-wrap: wrap; gap: 4px 0; font-size: .74rem; color: var(--gris); }
-.xp-fe-compte span + span::before { content: '·'; margin: 0 9px; color: var(--filet); }
-.xp-fe-total { color: var(--encre); }
-.xp-fe-cadre { display: block; width: 100%; height: min(56svh, 560px); padding: 0; border: 0; background: var(--fond); cursor: zoom-in; overflow: hidden; }
-.xp-fe-cadre img { display: block; width: 100%; height: 100%; max-width: none; object-fit: contain; -webkit-user-drag: none; user-select: none; }
-.xp-fe-cadre[data-dessin] img { mix-blend-mode: multiply; }
-.xp-fe-legende { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; justify-content: center; font-size: .78rem; color: var(--gris); min-height: 1.4em; }
-.xp-fe-legende b { font-weight: 400; color: var(--encre); }
-.xp-fe-legende span:last-child { font-variant-numeric: tabular-nums; color: var(--accent-f); }
-.xp-fe-piste { position: relative; display: flex; gap: 6px; height: 54px; padding-top: 22px; cursor: ew-resize; touch-action: none; outline: none; }
-.xp-fe-piste:focus-visible { box-shadow: 0 0 0 1px var(--accent-f); }
-.xp-fe-seg { position: relative; display: flex; gap: 2px; align-items: stretch; border-top: 1px solid var(--encre); padding-top: 6px; min-width: 0; }
-.xp-fe-seg b { flex: 1; background: var(--filet); transition: background .15s; }
-.xp-fe-piste:hover .xp-fe-seg b { background: color-mix(in srgb, var(--gris) 45%, var(--filet)); }
-.xp-fe-segNom { position: absolute; left: 0; top: -20px; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.xp-fe-poignee { position: absolute; top: 14px; bottom: 0; width: 2px; margin-left: -1px; background: var(--accent-f); pointer-events: none; transition: left .08s linear; }
-.xp-fe-poignee::before { content: ''; position: absolute; top: -4px; left: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-f); }
-.xp-fe-aide { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); text-align: center; }
-@media (max-width: 700px) { .xp-fe-cadre { height: 46svh; } .xp-fe-segNom { display: none; } }
+.xp-df:empty { display: none; }
+.xp-df { position: relative; margin-block: clamp(40px, 8vh, 96px); }
+.xp-df-scene { position: sticky; top: 0; height: 100svh; display: grid; grid-template-columns: minmax(0, 100%); grid-template-rows: auto minmax(0, 1fr); align-content: center; padding: calc(var(--header-h) + 8px) 0 28px; overflow: hidden; }
+.xp-df-tete { display: flex; align-items: baseline; gap: 18px; padding-bottom: 18px; }
+.xp-df-compte { font-size: .74rem; letter-spacing: .12em; color: var(--accent-f); font-variant-numeric: tabular-nums; }
+.xp-df-compte span { color: var(--gris); }
+.xp-df-jauge { flex: 1; height: 1px; background: var(--filet); overflow: hidden; }
+.xp-df-jauge i { display: block; height: 100%; background: var(--encre); transform-origin: 0 50%; transform: scaleX(.03); }
+.xp-df-piste { justify-self: start; display: flex; gap: clamp(18px, 2vw, 36px); width: max-content; height: 100%; padding-inline: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut))); will-change: transform; }
+.xp-df-vue { margin: 0; height: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; }
+.xp-df-img { height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; display: block; }
+.xp-df-img img { height: 100%; width: auto; max-width: none; transition: transform .8s var(--ease); }
+.xp-df-img:hover img { transform: scale(1.015); }
+.xp-df-dessin img { mix-blend-mode: multiply; }
+.xp-df-vue figcaption { display: flex; gap: 12px; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
+.xp-df-n { color: var(--accent-f); }
+/* sur téléphone (ou mouvements réduits) : la bande se parcourt au doigt */
+.xp-df[data-libre] .xp-df-scene { position: static; height: auto; padding-top: 0; }
+.xp-df[data-libre] .xp-df-piste { height: 52svh; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; width: auto; }
+.xp-df[data-libre] .xp-df-piste::-webkit-scrollbar { display: none; }
+.xp-df[data-libre] .xp-df-vue { scroll-snap-align: center; }
 
 /* =====================================================================
    Ouverture de l'accueil : chaque trait de la cabane naît d'un long axe (experience/ouverture.ts)

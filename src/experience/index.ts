@@ -2,8 +2,9 @@ import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from '.
 import { xpChapitres } from './chapitres';
 import { xpAnime } from './anime';
 import { xpLivres } from './livres';
+import { xpMateriaux } from './materiaux';
 import { xpLightboxPage } from './lightbox';
-import { xpFeuilleter } from './feuilleter';
+import { xpDefile } from './defile';
 import { xpCalme, xpDialogue, xpEl, xpSaisie, type XPContexte } from './outils';
 import { xpImageDuLien } from './transition';
 
@@ -93,8 +94,8 @@ export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.charge;
   delete document.documentElement.dataset.enteteCache;
   const f = [
-    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpAnime(root), xpLivres(ctx, root),
-    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpFeuilleter(ctx, root),
+    xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpAnime(root), xpLivres(ctx, root), xpMateriaux(root),
+    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root),
   ];
   return () => f.forEach((x) => x());
 }

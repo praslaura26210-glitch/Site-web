@@ -152,9 +152,6 @@
   "terrSource": "Base: confini IGN/INSEE (france-geojson), Rodano: Natural Earth.",
   "terrCarte": "Mappa dei luoghi dei miei progetti, tirocini e studi",
   "carteTitre": "I miei recapiti nel vostro telefono",
-  "feuilleter": "Sfoglia il progetto",
-  "feuilleterPieces": "{n} elementi",
-  "feuilleterAide": "Scorri lungo la linea per sfogliare · clicca l'immagine per aprirla in grande",
   "natures": {
    "croquis": [
     "schizzo",
@@ -202,6 +199,7 @@
    ]
   },
   "voirTout": "Vedi il progetto intero",
-  "ouvrirLivre": "Apri il libro"
+  "ouvrirLivre": "Apri il libro",
+  "defile": "Il progetto in immagini"
  }
 }
