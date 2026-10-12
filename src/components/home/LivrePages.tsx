@@ -3,12 +3,12 @@ import type { Projet } from '@/lib/content';
 import { media, type Media } from '@/lib/media';
 import { CHIFFRES, MISES, type Bloc } from '@/lib/sequences';
 import { tr } from '@/lib/tr';
-import { ECHANTILLONS, nomMateriau, PALETTE } from '@/components/project/Materiautheque';
+import { ECHANTILLONS, imageEchantillon, nomMateriau, PALETTE } from '@/components/project/Materiautheque';
 import { couverture } from './ProjetsGrille';
 
 /*
- * Les pages du livre de chaque projet (page Projets). Elles sont écrites ici, cachées dans la page,
- * et experience/livres.ts les met en livre quand on choisit un projet dans l'étui : on tourne les pages,
+ * Les pages du livre d'un projet (en haut de sa page). Elles sont écrites ici, cachées dans la page,
+ * et experience/livres.ts les relie en livre : les pages tournent quand on fait défiler la page,
  * et chaque page s'anime quand elle apparaît (les images entrent, les plans se dessinent,
  * l'existant glisse vers le projet, les matériaux flottent, les chiffres défilent).
  * Les classes sont globales (xp-lv-…) : leurs styles sont dans experience/experience.css.
@@ -29,9 +29,9 @@ function Fig({ m, cle }: { m: Media; cle?: string }) {
 
 export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
   const L = tr(lang, {
-    fr: { voir: 'Voir le projet en entier', glisser: 'Faites glisser le trait', matieres: 'Les matériaux', fin: 'Fin' },
-    en: { voir: 'See the whole project', glisser: 'Drag the line', matieres: 'The materials', fin: 'The end' },
-    it: { voir: 'Vedi tutto il progetto', glisser: 'Trascina la linea', matieres: 'I materiali', fin: 'Fine' },
+    fr: { voir: 'Le projet en détail', glisser: 'Faites glisser le trait', matieres: 'Les matériaux', fin: 'Fin' },
+    en: { voir: 'The project in detail', glisser: 'Drag the line', matieres: 'The materials', fin: 'The end' },
+    it: { voir: 'Il progetto nel dettaglio', glisser: 'Trascina la linea', matieres: 'I materiali', fin: 'Fine' },
   });
   const mise = MISES[p.slug];
   const M = (r: string) => media(p, r);
@@ -99,14 +99,14 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
         break;
       }
       case 'materiaux':
-        // les échantillons flottent sur la page ; on peut les attraper
+        // les échantillons tombent sur la page, se chevauchent et flottent un peu
         ajoute(cle, (
           <div className="xp-lv-p xp-lv-mat" data-lv-mat="">
             <h3>{L.matieres}</h3>
             {ECHANTILLONS.map((e, k) => (
-              <span key={e.f} className="xp-lv-ech" data-lv-ech="" style={{ ['--x' as string]: `${e.livre[0]}%`, ['--y' as string]: `${e.livre[1]}%`, ['--w' as string]: `${e.livre[2]}%`, ['--r' as string]: `${e.r}deg`, ['--k' as string]: k, aspectRatio: `1 / ${e.ratio}` }}>
+              <span key={e.f} className="xp-lv-ech" data-photo={e.photo ? '' : undefined} style={{ ['--x' as string]: `${e.livre[0]}%`, ['--y' as string]: `${e.livre[1]}%`, ['--w' as string]: `${e.livre[2]}%`, ['--r' as string]: `${e.r}deg`, ['--k' as string]: k, aspectRatio: `1 / ${e.ratio}` }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/media/site/materiaux/${e.f}.webp`} alt="" draggable={false} loading="lazy" />
+                <img src={imageEchantillon(e)} alt="" draggable={false} loading="lazy" />
                 <em>{nomMateriau(e.nom, lang)}</em>
               </span>
             ))}
@@ -141,24 +141,18 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
     <div className="xp-lv-p xp-lv-fin">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={img.srcSmall} alt="" loading="lazy" />
-      <a className="lien" href={`/${lang}/projets/${p.slug}/`} data-lv-voir="">{L.voir} →</a>
+      <button type="button" className="lien" data-lv-detail="">{L.voir} ↓</button>
     </div>
   ));
   return pages;
 }
 
-/** Les livres, cachés : un bloc par projet, une section par page. */
-export default function LivrePages({ projets, lang, t }: { projets: Projet[]; lang: Lang; t: Dict }) {
+/** Les pages du livre d'un projet, cachées (experience/livres.ts en fait un livre). */
+export default function LivrePages({ p, lang, t }: { p: Projet; lang: Lang; t: Dict }) {
+  const { img, pos } = couverture(p);
   return (
-    <div hidden data-livres="">
-      {projets.map((p) => {
-        const { img, pos } = couverture(p);
-        return (
-          <div key={p.slug} data-livre-pages={p.slug} data-titre={p.titre} data-n={p.numero} data-couv={img.srcSmall} data-couv-pos={pos || ''} data-annee={p.annee || ''}>
-            {pagesDuLivre(p, lang, t).map((x) => <section key={x.cle} data-rubrique={x.rubrique || ''}>{x.el}</section>)}
-          </div>
-        );
-      })}
+    <div hidden data-livre-pages={p.slug} data-titre={p.titre} data-n={p.numero} data-couv={img.srcSmall} data-couv-pos={pos || ''} data-annee={p.annee || ''}>
+      {pagesDuLivre(p, lang, t).map((x) => <section key={x.cle} data-rubrique={x.rubrique || ''}>{x.el}</section>)}
     </div>
   );
 }

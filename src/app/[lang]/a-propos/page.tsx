@@ -4,7 +4,6 @@ import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
 import styles from '@/components/pages/pages.module.css';
 import { PARCOURS } from '@/lib/parcours';
-import { getReferences } from '@/lib/references';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -13,6 +12,14 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/a-propos/', `${t.meta.aproposTitle} · Laura Pras`, cv.presentation[lang].slice(0, 155), '/media/site/portrait-2000.webp');
 }
 
+
+/** La bande du photomaton : ma photo, puis des morceaux de ce que je fais à côté (dessins, bricolage, photos). */
+const PHOTOS = [
+  { src: '/media/site/portrait-1000.webp', pos: '50% 22%', zoom: 0 },
+  { src: '/media/au-dela-des-projets/images/planche-dessins-photos-bricolage-1000.webp', pos: '18% 30%', zoom: 2.4 },
+  { src: '/media/au-dela-des-projets/images/photo-1000.webp', pos: '50% 60%', zoom: 0 },
+  { src: '/media/au-dela-des-projets/images/planche-dessins-photos-bricolage-1000.webp', pos: '70% 82%', zoom: 2.6 },
+];
 
 export default async function APropos({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -24,25 +31,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
   const planche = img('planche-dessins-photos-bricolage');
   const L = tr(lang, {
     fr: {
-      lignes: [
-        'Avant l’architecture, j’ai été dessinatrice en bâtiment.',
-        'Archicad, permis de construire, plans d’escalier, mobilier :',
-        'j’ai appris le métier en agence et sur les chantiers.',
-        ['Aujourd’hui, je suis', 'en master AECC'],
-        ['à l’ENSA Grenoble,', 'où l’on part'],
-        ['des matériaux et', 'des ressources'],
-        ['du territoire.', 'Mon rapport d’études'],
-        ['portait sur', 'l’expérience sensible :'],
-        ['ce qu’on touche,', 'ce qu’on sent'],
-        'en traversant un lieu.',
-        'J’aime partir de ce qui est déjà là :',
-        'le terrain, l’existant, jusqu’aux ruines.',
-        'Je dessine beaucoup à la main.',
-        'Je cherche un stage en agence.',
-      ] as (string | string[])[],
-      refsIntro: 'Des projets étudiés dans mon rapport d’études sur l’expérience sensible (2025-2026), autour des deux questions qui me retiennent :',
-      themes: { existant: 'Composer avec l’existant', matiere: 'La matière' } as Record<string, string>,
-      niveaux: { 2: 'Notions', 3: 'Bonnes bases', 4: 'Utilisation régulière', 5: 'Maîtrise' } as Record<number, string>, references: 'Références',
+      statut: 'Étudiante en master AECC · ENSA Grenoble', stage: 'Je cherche un stage en agence d’architecture.',
+      niveaux: { 2: 'Notions', 3: 'Bonnes bases', 4: 'Utilisation régulière', 5: 'Maîtrise' } as Record<number, string>,
       master: 'Master AECC', parcours: 'Parcours',
       stages: 'Stages', formations: 'Formations',
       outils: 'Outils',
@@ -50,25 +40,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       texteAudela: audela.texte,
     },
     en: {
-      lignes: [
-        'Before architecture, I worked as a building draughtswoman.',
-        'Archicad, planning applications, staircases, furniture:',
-        'I learned the trade in practices and on building sites.',
-        ['Today I’m doing', 'the AECC master’s'],
-        ['at ENSA Grenoble,', 'where projects start'],
-        ['from materials and', 'the resources'],
-        ['of the territory.', 'My study report'],
-        ['was about', 'sensory experience:'],
-        ['what you touch,', 'what you smell'],
-        'as you move through a place.',
-        'I like to start from what is already there:',
-        'the land, the existing building, even ruins.',
-        'I draw a lot by hand.',
-        'I’m looking for an internship in a practice.',
-      ] as (string | string[])[],
-      refsIntro: 'Projects studied in my report on sensory experience (2025-2026), around the two questions that hold me:',
-      themes: { existant: 'Working with what exists', matiere: 'Material' } as Record<string, string>,
-      niveaux: { 2: 'Basics', 3: 'Good grounding', 4: 'Regular use', 5: 'Expert' } as Record<number, string>, references: 'References',
+      statut: 'AECC master’s student · ENSA Grenoble', stage: 'I’m looking for an internship in an architecture practice.',
+      niveaux: { 2: 'Basics', 3: 'Good grounding', 4: 'Regular use', 5: 'Expert' } as Record<number, string>,
       master: 'AECC master’s', parcours: 'Background',
       stages: 'Internships', formations: 'Education',
       outils: 'Tools',
@@ -76,25 +49,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       texteAudela: 'I like to spend my free time exploring different creative practices, such as drawing, painting and crafts like mosaic, scrapbooking and knitting. I particularly enjoy working with my hands, restoring old furniture or making new pieces. I am not a great photographer, but I like taking the time to photograph the places around me. It helps me look more closely at the architecture, the light and the details that make up a place.',
     },
     it: {
-      lignes: [
-        'Prima dell’architettura, ero disegnatrice edile.',
-        'Archicad, pratiche edilizie, scale, arredi:',
-        'ho imparato il mestiere in studio e in cantiere.',
-        ['Oggi frequento', 'il master AECC'],
-        ['all’ENSA di Grenoble,', 'dove si parte'],
-        ['dai materiali e', 'dalle risorse'],
-        ['del territorio.', 'Il mio rapporto di studi'],
-        ['riguardava', 'l’esperienza sensibile:'],
-        ['ciò che si tocca,', 'ciò che si sente'],
-        'attraversando un luogo.',
-        'Mi piace partire da ciò che c’è già:',
-        'il terreno, l’esistente, fino alle rovine.',
-        'Disegno molto a mano.',
-        'Cerco un tirocinio in uno studio.',
-      ] as (string | string[])[],
-      refsIntro: 'Progetti studiati nel mio rapporto sull’esperienza sensibile (2025-2026), attorno alle due domande che mi trattengono:',
-      themes: { existant: 'Comporre con l’esistente', matiere: 'La materia' } as Record<string, string>,
-      niveaux: { 2: 'Nozioni', 3: 'Buone basi', 4: 'Uso regolare', 5: 'Padronanza' } as Record<number, string>, references: 'Riferimenti',
+      statut: 'Studentessa del master AECC · ENSA Grenoble', stage: 'Cerco un tirocinio in uno studio di architettura.',
+      niveaux: { 2: 'Nozioni', 3: 'Buone basi', 4: 'Uso regolare', 5: 'Padronanza' } as Record<number, string>,
       master: 'Master AECC', parcours: 'Percorso',
       stages: 'Tirocini', formations: 'Formazione',
       outils: 'Strumenti',
@@ -103,54 +59,34 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     },
   });
 
-  const refs = getReferences(lang);
   const logiciels = Object.entries(cv.logiciels_sur_5 as Record<string, number>);
 
   return (
     <article className={`wrap ${styles.page} ${styles.apropos}`}>
-      {/* qui je suis : une page écrite à la main, la photo collée au milieu ; l'écriture passe autour et par-dessus */}
-      <header className={styles.lettre}>
-        <h1 className={styles.lettreNom}>Laura Pras</h1>
-        <ul className={styles.lettreLignes}>
-          {L.lignes.map((n, i) => (
-            <li key={i} className={Array.isArray(n) ? styles.lettreDeux : undefined} style={{ ['--l' as string]: i }}>
-              {Array.isArray(n) ? <><span>{n[0]}</span> <span>{n[1]}</span></> : n}
-            </li>
-          ))}
-          <li className={styles.lettrePhoto}>
-            <span className={styles.scotch} aria-hidden="true" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/media/site/portrait-1000.webp" alt="Laura Pras" width={1042} height={1469} fetchPriority="high" />
-          </li>
-        </ul>
-        <p className={styles.lettreSigne} style={{ ['--l' as string]: L.lignes.length }}>Laura</p>
-      </header>
-
-      {/* références : d'où elles viennent, et pourquoi elles sont là */}
-      <section className={styles.refs} aria-labelledby="references-t" id="references">
-        <div className={styles.refsTete}>
-          <h2 id="references-t" className={styles.aH2}>{L.references}</h2>
-          <p className={styles.refsIntro}>{L.refsIntro}</p>
-        </div>
-        <div className={styles.refsGroupes}>
-        {['existant', 'matiere'].map((th) => (
-          <div key={th} className={styles.refsTheme}>
-            <h3 className={styles.refsThemeT}>{L.themes[th]}</h3>
-            <ul className={styles.refsGrille}>
-              {refs.filter((x) => x.theme === th).map((x, i) => (
-                <li key={x.id} className="rv" style={{ ['--i' as string]: i }}>
-                  <figure>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/media/site/inspirations/${x.id}.webp`} alt={x.titre} width={x.w} height={x.h} loading="lazy" />
-                    <figcaption><b>{x.titre}</b>{[x.auteur, x.lieu].filter(Boolean).join(' · ')}</figcaption>
-                  </figure>
-                </li>
+      {/* qui je suis : un photomaton ; la bande de photos sort de la machine, mon texte à côté */}
+      <header className={styles.pm}>
+        <div className={styles.pmMachine} aria-hidden="true">
+          <span className={styles.pmRouleau} />
+          <span className={styles.pmFente} />
+          <div className={styles.pmSortie}>
+            <div className={styles.pmBande}>
+              {PHOTOS.map((ph, i) => (
+                <span key={i} className={styles.pmVue}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ph.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} style={{ objectPosition: ph.pos, transform: ph.zoom ? `scale(${ph.zoom})` : undefined, transformOrigin: ph.pos }} />
+                </span>
               ))}
-            </ul>
+            </div>
           </div>
-        ))}
+          <span className={styles.pmBac} />
         </div>
-      </section>
+        <div className={styles.pmTexte}>
+          <h1 className={styles.pmNom}>Laura Pras</h1>
+          <p className="eyebrow">{L.statut}</p>
+          {(cv.presentation[lang] as string).split(/\n+/).map((x, j) => <p key={j} className={styles.pmP}>{x}</p>)}
+          <p className={styles.pmP}>{L.stage}</p>
+        </div>
+      </header>
 
       <section className={styles.aMaster} aria-labelledby="master">
         <div>

@@ -45,7 +45,7 @@ export function xpPrecharge(ctx: XPContexte) {
 
 /** Images : celles qui ne sont pas encore arrivées apparaissent en fondu court au lieu de surgir par morceaux. */
 export function xpImagesDouces(root: HTMLElement) {
-  const imgs = [...root.querySelectorAll<HTMLImageElement>('figure img, [class*="__carteImg"] img, [class*="__tuile"] img')].filter((i) => !i.complete);
+  const imgs = [...root.querySelectorAll<HTMLImageElement>('figure img, [class*="__carteImg"] img, [class*="__tuile"] img')].filter((i) => !i.complete && !i.closest('[hidden]'));
   imgs.forEach((i) => {
     i.dataset.attente = '';
     const fin = () => { delete i.dataset.attente; };

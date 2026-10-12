@@ -65,6 +65,7 @@ export default function Header({ lang, t }: { lang: Lang; t: Dict }) {
   const links = [
     { href: `/${lang}/projets/`, label: t.nav.projets },
     { href: `/${lang}/a-propos/`, label: t.nav.apropos },
+    { href: `/${lang}/references/`, label: t.nav.references },
     { href: `/${lang}/contact/`, label: t.nav.contact },
   ];
 

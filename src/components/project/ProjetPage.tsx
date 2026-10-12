@@ -7,11 +7,13 @@ import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import { ancreDessin } from '@/lib/experience';
 import { v } from '@/lib/ver';
+import { tr } from '@/lib/tr';
 import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Materiautheque, { PALETTE } from './Materiautheque';
 import Visionneuse from './Visionneuse';
+import LivrePages from '@/components/home/LivrePages';
 import styles from './project.module.css';
 
 
@@ -27,7 +29,6 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
   // voix de Laura (facultative) : content/projets/<slug>/audio/presentation.mp3
   const voixFichier = ['presentation.mp3', 'presentation.m4a'].find((f) => fs.existsSync(path.join(process.cwd(), 'content/projets', p.slug, 'audio', f)));
   const voix = voixFichier ? v(`/media/${p.slug}/audio/${voixFichier}`) : null;
-  const paysage = cov.w > cov.h;
   let inter = 0;
 
   const texte = (k: string) => {
@@ -138,17 +139,23 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
 
   return (
     <article className={styles.projet} data-projet={p.slug}>
-      <header className={styles.ouv} data-format={paysage ? 'paysage' : 'portrait'}>
-        <div className={styles.ouvTxt}>
-          <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
-          <h1 className={styles.ouvT}>{p.titre}</h1>
-          <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.annee].filter(Boolean).join(' · ')}</p>
-        </div>
-        <figure className={styles.ouvImg}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes={paysage ? '100vw' : '(max-width: 900px) 100vw, 50vw'} alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
-        </figure>
+      <header className={`wrap ${styles.tete}`}>
+        <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
+        <h1 className={styles.teteT}>{p.titre}</h1>
+        <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.annee].filter(Boolean).join(' · ')}</p>
       </header>
+
+      {/* le livre du projet : ses pages tournent quand on fait défiler (experience/livres.ts) ;
+          sans JavaScript, on voit la couverture, puis le projet en détail dessous */}
+      <section className={`xp-lp ${styles.livreProjet}`} data-livre-projet="" aria-label={p.titre}>
+        <figure className={styles.livreSansJs}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes="(max-width: 900px) 100vw, 60vw" alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
+        </figure>
+        <LivrePages p={p} lang={lang} t={t} />
+      </section>
+
+      <p className={`wrap eyebrow ${styles.detailT}`}>{tr(lang, { fr: 'Le projet en détail', en: 'The project in detail', it: 'Il progetto nel dettaglio' })}</p>
 
       {/* présentation, comme dans le portfolio : numéro, titre, programme, cadre, année, lieu, puis le texte */}
       <section className={`wrap ${styles.presentation}`} id="presentation" data-chapitre={t.xp.presentation}>

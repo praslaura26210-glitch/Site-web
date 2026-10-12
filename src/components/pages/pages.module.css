@@ -47,20 +47,25 @@
 
 /* ---------- à propos ---------- */
 .apropos > * + * { margin-top: clamp(88px, 14vh, 160px); }
-/* qui je suis : une page écrite à la main ; la photo est collée au milieu, l'écriture passe autour et un peu par-dessus */
-.lettre { position: relative; width: min(100%, 820px); margin-inline: auto; padding: clamp(34px, 5vw, 60px) clamp(22px, 6vw, 64px) clamp(36px, 5vw, 54px); background: #fff; box-shadow: 0 1px 2px rgba(43, 33, 28, .08), 0 18px 50px -18px rgba(43, 33, 28, .28); transform: rotate(-.6deg); font-family: var(--main); color: var(--encre); }
-.lettreNom { font-family: var(--main); font-weight: 400; font-size: clamp(2.4rem, 5vw, 3.4rem); letter-spacing: 0; line-height: 1; margin-bottom: .35em; }
-.lettreLignes { --photo: 31%; --ligne: 2.7rem; position: relative; list-style: none; margin: 0; padding: 0; font-size: 1.68rem; line-height: var(--ligne); background: repeating-linear-gradient(180deg, transparent 0 calc(var(--ligne) - 1px), rgba(122, 111, 102, .16) calc(var(--ligne) - 1px) var(--ligne)); }
-.lettreLignes > li:not(.lettrePhoto), .lettreSigne { position: relative; z-index: 1; clip-path: inset(-.4em 100% -.4em 0); animation: aEcrit .9s cubic-bezier(.45, .05, .55, 1) forwards; animation-delay: calc(.3s + var(--l) * .5s); }
-/* les lignes qui passent à côté de la photo : un morceau à gauche, un à droite, qui mordent un peu sur elle */
-.lettreDeux { display: grid; grid-template-columns: minmax(0, 1fr) var(--photo) minmax(0, 1fr); column-gap: 10px; white-space: nowrap; }
-.lettreDeux > span:first-child { grid-column: 1; }
-.lettreDeux > span:last-child { grid-column: 3; margin-left: -14px; }
-@keyframes aEcrit { to { clip-path: inset(-.4em -.4em -.4em -.4em); } }
-.lettrePhoto { position: absolute; z-index: 0; left: 50%; top: calc(var(--ligne) * 3 + .35rem); width: calc(var(--photo) + 26px); height: calc(var(--ligne) * 6 - .7rem); translate: -50% 0; rotate: 2.2deg; padding: 7px; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 14px 30px -12px rgba(43, 33, 28, .35); }
-.lettrePhoto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
-.scotch { position: absolute; z-index: 1; top: -12px; left: 50%; width: 92px; height: 26px; translate: -50% 0; rotate: -5deg; background: rgba(236, 228, 210, .8); box-shadow: 0 1px 2px rgba(43, 33, 28, .12); clip-path: polygon(0 8%, 4% 0, 9% 10%, 14% 0, 100% 0, 97% 50%, 100% 100%, 6% 100%, 2% 88%, 5% 50%); }
-.lettreSigne { margin: .5rem 0 0; text-align: right; font-size: clamp(1.9rem, 3.4vw, 2.4rem); color: var(--accent-f); }
+/* qui je suis : un photomaton ; la bande sort de la machine, en plusieurs fois, comme une vraie */
+.pm { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 100px); align-items: center; }
+.pmMachine { position: relative; justify-self: center; width: min(100%, 330px); aspect-ratio: 33 / 60; border-radius: 6px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px), linear-gradient(90deg, #33241A, #6B4E33 16%, #47331F 38%, #7A5A3A 60%, #3D2B1D 84%, #2B1E14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), inset 0 0 40px rgba(0, 0, 0, .55), 0 34px 50px -26px rgba(43, 33, 28, .65); }
+.pmRouleau { position: absolute; top: 7%; left: 15%; right: 15%; height: 4.5%; border-radius: 10px; background: linear-gradient(#1C140F, #5A4636 45%, #2A1F17); box-shadow: 0 2px 4px rgba(0, 0, 0, .5); }
+.pmFente { position: absolute; top: 13%; left: 19%; right: 19%; height: 1.2%; border-radius: 2px; background: #0B0806; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9); }
+.pmSortie { position: absolute; top: 13.6%; left: 22%; right: 22%; bottom: 13%; overflow: hidden; }
+.pmBande { display: grid; gap: 4%; padding: 7% 8% 9%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-sort 5.2s cubic-bezier(.3, 0, .3, 1) .5s backwards; }
+@keyframes pm-sort {
+  0% { transform: translateY(-101%); } 22% { transform: translateY(-74%); } 30% { transform: translateY(-74%); }
+  52% { transform: translateY(-46%); } 60% { transform: translateY(-46%); } 82% { transform: translateY(-14%); } 88% { transform: translateY(-14%); } 100% { transform: translateY(0); }
+}
+.pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; }
+.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.06); }
+.pmBac { position: absolute; z-index: 2; bottom: 4%; left: 13%; right: 13%; height: 11%; border-radius: 2px 2px 7px 7px; background: linear-gradient(#5C4430, #2C1F15); box-shadow: inset 0 7px 10px rgba(0, 0, 0, .55), 0 -1px 0 rgba(255, 255, 255, .1); }
+.pmTexte { display: grid; gap: 16px; max-width: 54ch; }
+.pmNom { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; }
+.pmP { font-size: 1.02rem; line-height: 1.8; }
 
 /* outils : une ligne par logiciel ; la barre se remplit selon le niveau, le niveau est écrit à droite */
 .outils { display: grid; gap: 26px; }
@@ -71,24 +76,22 @@
 .nivBarre i { position: absolute; inset: 0 auto 0 0; width: calc(var(--n) / 5 * 100%); background: var(--accent); }
 .nivMot { font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); text-align: right; }
 
-/* références : une phrase pour dire d'où elles viennent, puis deux familles */
-.refs { display: grid; gap: 40px; }
+/* références (page à part) : une phrase pour dire d'où elles viennent, puis deux familles de tirages */
+.refsPage > * + * { margin-top: clamp(56px, 9vh, 100px); }
 .refsTete { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px clamp(32px, 6vw, 110px); align-items: end; }
 .refsIntro { max-width: 54ch; font-size: 1rem; line-height: 1.75; }
-.refsGroupes { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 40px clamp(32px, 5vw, 80px); align-items: start; }
-.refsTheme { display: grid; gap: 26px; }
+.refsTheme { display: grid; gap: 30px; }
 .refsThemeT { padding-top: 12px; border-top: 1px solid var(--encre); font-size: .62rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-f); }
-.refsGrille { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(22px, 4vw, 56px) clamp(18px, 3vw, 44px); }
-/* références : des tirages posés un peu de travers, la légende écrite dessous */
-.refsGrille li { --r: -2deg; width: clamp(130px, 12vw, 185px); }
-.refsGrille li:nth-child(2n) { --r: 1.8deg; margin-top: 34px; }
-.refsGrille li:nth-child(3n) { --r: -.6deg; }
-.refsGrille figure { margin: 0; padding: 8px 8px 0; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 12px 26px -12px rgba(43, 33, 28, .32); rotate: var(--r); transition: rotate .4s var(--ease), translate .4s var(--ease); }
-.refsGrille figure:hover { rotate: 0deg; translate: 0 -6px; }
-.refsGrille img { display: block; width: 100%; height: auto; }
-.refsGrille figcaption { padding: 8px 2px 10px; font-family: var(--main); font-size: 1.15rem; line-height: 1.1; color: var(--gris); }
-.refsGrille figcaption b { display: block; font-weight: 400; color: var(--encre); font-size: 1.3rem; }
-.aH2 { font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
+.refsListe { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(28px, 4vw, 60px); align-items: start; }
+.refsListe li { display: grid; gap: 14px; }
+.tirage { margin: 0; width: min(100%, 270px); padding: 9px 9px 0; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 12px 26px -12px rgba(43, 33, 28, .32); rotate: -1.6deg; transition: rotate .4s var(--ease); }
+.refsListe li:nth-child(2n) .tirage { rotate: 1.4deg; }
+.tirage:hover { rotate: 0deg; }
+.tirage img { display: block; width: 100%; height: auto; }
+.tirage figcaption { padding: 8px 2px 10px; font-family: var(--main); font-size: 1.1rem; line-height: 1.1; color: var(--gris); }
+.tirage figcaption b { display: block; font-weight: 400; color: var(--encre); font-size: 1.3rem; }
+.refsNote { font-size: .9rem; line-height: 1.75; max-width: 42ch; }
+.refsCredit { font-size: .6rem; color: var(--gris); }
 
 /* le master : son nom et ce qu'on y fait */
 .aMaster { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(32px, 6vw, 110px); padding-top: 22px; border-top: 1px solid var(--encre); }
@@ -122,22 +125,15 @@
   .col li { grid-template-columns: 1fr; }
   .pDate { grid-row: auto; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
-  .lettre { transform: none; }
-  /* sur téléphone : les lignes reprennent toute la largeur, la photo s'intercale après la troisième */
-  .lettreLignes { display: flex; flex-direction: column; font-size: 1.3rem; }
-  .lettreLignes > li { order: calc(var(--l) * 2); }
-  .lettreDeux { display: block; white-space: normal; }
-  .lettreDeux > span:last-child { margin-left: 0; }
-  .lettreLignes > li.lettrePhoto { position: relative; order: 5; left: auto; top: auto; translate: none; width: min(70%, 260px); height: auto; aspect-ratio: 4 / 5; margin: 1.2rem auto 1.4rem; }
   .niveaux { grid-template-columns: 1fr; }
   .niveaux li { grid-template-columns: 6.5rem minmax(0, 1fr) 7.6rem; gap: 12px; }
-  .refsTete, .refsGroupes { grid-template-columns: 1fr; }
-  .refsGrille li { width: calc(50% - 10px); }
-  .refsGrille li:nth-child(2n) { margin-top: 24px; }
+  .refsTete, .refsListe { grid-template-columns: 1fr; }
+  .pm { grid-template-columns: 1fr; }
+  .pmMachine { width: min(72vw, 260px); }
   .cGrille { grid-template-columns: 1fr; }
   .coordList { grid-template-columns: 1fr; justify-content: start; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lettreLignes li, .lettreSigne { animation: none; clip-path: none; }
+  .pmBande { animation: none; }
 }

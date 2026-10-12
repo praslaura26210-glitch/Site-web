@@ -174,30 +174,35 @@
   .visAside { grid-column: 1; grid-row: auto; margin-top: 28px; }
 }
 
-/* ---------- Pilates Room : la table des matériaux, en volume (experience/materiaux.ts) ---------- */
+/* ---------- Pilates Room : la planche des matériaux, en volume (experience/materiaux.ts) ---------- */
 .mat { margin-block: clamp(56px, 10vh, 120px); }
 .matTete { display: flex; justify-content: space-between; align-items: baseline; gap: 10px 30px; flex-wrap: wrap; margin-bottom: 18px; }
 .matAide { max-width: 62ch; font-size: .6rem; line-height: 1.7; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
-/* la scène : ce que voit la caméra ; au fond, la table se perd dans la lumière */
-.matScene { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; overflow: hidden; perspective: 1100px; perspective-origin: 50% 42%; background: linear-gradient(180deg, #F6F2EC, #E8E0D5); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; }
+/* la scène : fond blanc, la planche posée au milieu */
+.matScene { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; overflow: hidden; perspective: 1100px; perspective-origin: 50% 42%; background: #fff; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; }
 .matScene[data-geste] { cursor: grabbing; }
-.matScene::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(43, 33, 28, .14)); }
-.matTable { position: relative; width: 80%; aspect-ratio: 16 / 10; transform-style: preserve-3d; will-change: transform; }
-/* le plateau, bien plus grand que la zone des échantillons, pour qu'on n'en voie jamais le bord */
-.matSol { position: absolute; inset: -260% -200%; transform: translateZ(-1px); background: radial-gradient(16% 16% at 50% 50%, #FFFDF9, #F1EBE2 55%, #E6DED2 100%); pointer-events: none; }
-.matEch { position: absolute; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%); width: calc(var(--w) * 1%); padding: 0; border: 0; background: none; cursor: grab; transform-style: preserve-3d; transform: translateZ(var(--z0, 0px)) rotateZ(calc(var(--r) * 1deg)) translateZ(var(--lift, 0px)) rotateY(calc(var(--inc, 0) * 1deg)); transition: transform .45s var(--ease); }
-.matEch:hover { --lift: 5px; }
-.matEch[data-tenu] { --lift: 38px; cursor: grabbing; transition: transform .14s linear; }
-.matEch[data-range] { transition: left .7s var(--ease), top .7s var(--ease), transform .7s var(--ease); }
-.matEch:focus-visible { outline: none; --lift: 12px; }
+.matTable { position: relative; width: 74%; aspect-ratio: 16 / 10; transform-style: preserve-3d; will-change: transform; }
+/* le carton de la planche, avec son épaisseur */
+.matPlanche { position: absolute; inset: -1.5%; transform-style: preserve-3d; transform: translateZ(-.5px); background: url(/media/site/materiaux/planche.webp) center / cover; box-shadow: 0 30px 50px -24px rgba(43, 33, 28, .35); pointer-events: none; }
+.matPlanche::before, .matPlanche::after { content: ''; position: absolute; inset: 0; background: #C9BCA9; }
+.matPlanche::before { transform: translateZ(-3px); }
+.matPlanche::after { transform: translateZ(-6px); background: #B9AC98; }
+.matEch { position: absolute; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%); width: calc(var(--w) * 1%); padding: 0; border: 0; background: none; cursor: pointer; transform-style: preserve-3d; transform: translateZ(var(--z0, 0px)) rotateZ(calc(var(--r) * 1deg)) translateZ(var(--lift, 0px)); transition: transform .45s var(--ease); }
+.matEch:hover { --lift: 4px; }
+.matEch[data-vise] { --lift: 10px; }
+.matEch:focus-visible { outline: none; --lift: 10px; }
 .matEch > span { position: absolute; inset: 0; pointer-events: none; -webkit-mask: var(--img) center / 100% 100% no-repeat; mask: var(--img) center / 100% 100% no-repeat; }
-/* l'ombre reste sur la table quand l'échantillon se soulève */
-.matOmbre { background: rgba(58, 42, 32, .5); filter: blur(calc(2.5px + var(--lift, 0px) * .3)); opacity: calc(.75 - var(--lift, 0px) / 120px); transform: translate3d(calc(3px + var(--lift, 0px) * .35), calc(5px + var(--lift, 0px) * .5), calc(.4px - var(--lift, 0px))); transition: transform .45s var(--ease), filter .45s, opacity .45s; }
-/* la tranche : la matière elle-même, un peu plus sombre (ou la couleur du support, pour les peintures) */
+/* l'ombre reste sur ce qui est dessous quand l'échantillon se soulève */
+.matOmbre { background: rgba(58, 42, 32, .45); filter: blur(calc(2.5px + var(--lift, 0px) * .3)); opacity: calc(.7 - var(--lift, 0px) / 120px); transform: translate3d(calc(3px + var(--lift, 0px) * .35), calc(5px + var(--lift, 0px) * .5), calc(.4px - var(--lift, 0px))); transition: transform .45s var(--ease), filter .45s, opacity .45s; }
+/* la tranche : la matière elle-même, un peu plus sombre (ou la couleur du support) */
 .matCouche { background: linear-gradient(rgba(43, 33, 28, .3) 0 0), var(--img) center / 100% 100%; transform: translateZ(calc(var(--k) * 1px)); }
 .matCouche[data-bord] { filter: brightness(.9); }
 .matFace { transform: translateZ(var(--ep)); }
 .matFace img { display: block; width: 100%; height: 100%; object-fit: fill; -webkit-user-drag: none; }
+/* les tirages : cadre blanc, la légende écrite dessous */
+.matEch[data-photo] .matFace { box-sizing: border-box; padding: 7% 7% 23%; background: #fff; }
+.matEch[data-photo] .matFace img { object-fit: cover; }
+.matFace em { position: absolute; left: 9%; bottom: 5%; font-family: var(--main); font-style: normal; font-size: clamp(.7rem, 1.1vw, 1.05rem); color: var(--encre); }
 /* le reflet : il glisse sur la face quand la caméra tourne */
 .matFace::after { content: ''; position: absolute; inset: 0; background: radial-gradient(70% 60% at var(--sx, 50%) var(--sy, 30%), rgba(255, 255, 255, calc(var(--brille) * .85)), transparent 70%); }
 .matNom { position: absolute; left: clamp(14px, 2vw, 26px); bottom: clamp(10px, 1.6vw, 20px); margin: 0; font-family: var(--main); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; color: var(--encre); opacity: 0; translate: 0 6px; transition: opacity .4s, translate .4s var(--ease); pointer-events: none; }
@@ -206,11 +211,19 @@
 .matCam button { min-width: 34px; height: 34px; padding: 0 10px; border: 1px solid rgba(43, 33, 28, .18); background: rgba(255, 255, 255, .82); color: var(--encre); font: 400 .9rem/1 var(--sans); cursor: pointer; transition: background .2s, border-color .2s; }
 .matCam button[data-cam='vue'] { font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; }
 .matCam button:hover { background: #fff; border-color: var(--encre); }
-.matBas { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 14px; }
-.matCredit { font-size: .6rem; color: var(--gris); }
+.matCredit { margin-top: 12px; font-size: .6rem; color: var(--gris); }
 @media (max-width: 760px) {
-  .matScene { aspect-ratio: 4 / 5; perspective: 900px; }
-  .matTable { width: 84%; aspect-ratio: 4 / 5; }
-  .matEch { width: calc(var(--w) * 1.7%); touch-action: pan-y; }
+  .matScene { aspect-ratio: 1 / 1; perspective: 700px; }
+  .matTable { width: 94%; }
+  .matEch { touch-action: pan-y; }
   .matCam button[data-cam='plus'], .matCam button[data-cam='moins'] { display: none; }
 }
+
+/* ---------- haut de la page projet : le titre, puis le livre du projet ---------- */
+.tete { padding-top: calc(var(--header-h) + clamp(24px, 6vh, 64px)); display: grid; justify-items: center; gap: 12px; text-align: center; }
+.teteT { font-size: clamp(2rem, 4.4vw, 3.6rem); line-height: 1; }
+.livreProjet { margin-top: clamp(-30px, -2vh, 0px); }
+.livreSansJs { width: min(92vw, 900px); margin: 40px auto 0; }
+.livreSansJs img { width: 100%; height: auto; }
+.livreProjet:has(:global(.xp-lp-scene)) .livreSansJs { display: none; }
+.detailT { padding-top: clamp(40px, 8vh, 90px); text-align: center; color: var(--accent-f); }
