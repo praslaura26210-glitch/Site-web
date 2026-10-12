@@ -57,11 +57,8 @@ export default function Materiautheque({ lang, credit }: { lang: Lang; credit?: 
     it: { titre: 'I materiali', aide: 'Trascina per girare intorno alla tavola · clicca un campione per avvicinarti', dessus: 'Vista dall’alto', volume: 'Vista in volume', plus: 'Avvicinati', moins: 'Allontanati' },
   });
   return (
-    <section className={`${styles.mat} rv`} aria-labelledby="titre-materiaux">
-      <div className={styles.matTete}>
-        <h2 id="titre-materiaux" className={styles.texteT}>{L.titre}</h2>
-        <p className={styles.matAide}>{L.aide}</p>
-      </div>
+    <section className={`${styles.mat} rv`} aria-label={L.titre}>
+      <p className={styles.matAide}>{L.aide}</p>
       <div className={styles.matScene} data-materiaux-scene>
         <div className={styles.matTable} data-materiaux>
           {/* le carton de la planche, sous les échantillons */}

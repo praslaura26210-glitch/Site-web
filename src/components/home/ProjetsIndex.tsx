@@ -6,7 +6,7 @@ import styles from './home.module.css';
 export type Ligne = { slug: string; titre: string; programme: string; annee: number | null; img: { src: string; srcSmall: string; w: number; h: number; pos?: string } };
 
 /**
- * Index des projets : la liste à gauche ; à droite, le projet survolé sous forme de livre (sa couverture).
+ * Index des projets : la liste à gauche, la grande image du projet survolé à droite.
  * Sur téléphone, chaque ligne porte sa vignette.
  */
 export default function ProjetsIndex({ lignes, lang, voir }: { lignes: Ligne[]; lang: string; voir: string }) {
@@ -26,22 +26,10 @@ export default function ProjetsIndex({ lignes, lang, voir }: { lignes: Ligne[]; 
           </li>
         ))}
       </ol>
-      {/* à droite, le projet survolé en livre : sa couverture, son épaisseur ; un clic l'ouvre (page du projet) */}
       <div className={styles.apercu} aria-hidden="true">
         {lignes.map((l, i) => (
-          <Link key={l.slug} href={`/${lang}/projets/${l.slug}/`} tabIndex={-1} className={styles.livreCouv} data-on={i === cur || undefined}>
-            <span className={styles.lcLivre}>
-              <span className={styles.lcTranche} />
-              <span className={styles.lcFace}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.img.srcSmall} srcSet={`${l.img.srcSmall} 1000w, ${l.img.src} 2000w`} sizes="40vw" alt="" width={l.img.w} height={l.img.h} loading={i === 0 ? 'eager' : 'lazy'} style={l.img.pos ? { objectPosition: l.img.pos } : undefined} />
-                <span className={styles.lcN}>N° {String(i + 1).padStart(2, '0')}{l.annee ? ` — ${l.annee}` : ''}</span>
-                <span className={styles.lcT}>{l.titre}</span>
-                <span className={styles.lcNom}>Laura Pras</span>
-              </span>
-            </span>
-            <span className={styles.lcOmbre} />
-          </Link>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={l.slug} src={l.img.srcSmall} srcSet={`${l.img.srcSmall} 1000w, ${l.img.src} 2000w`} sizes="58vw" alt="" width={l.img.w} height={l.img.h} loading={i === 0 ? 'eager' : 'lazy'} data-on={i === cur || undefined} style={l.img.pos ? { objectPosition: l.img.pos } : undefined} />
         ))}
       </div>
     </div>

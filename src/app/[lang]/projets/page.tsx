@@ -1,7 +1,8 @@
 import { dict, type Lang } from '@/i18n';
 import { getProjets } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import Collection from '@/components/home/Collection';
+import { couverture } from '@/components/home/ProjetsGrille';
+import ProjetsIndex from '@/components/home/ProjetsIndex';
 import styles from '@/components/pages/pages.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -10,18 +11,21 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/projets/', `${t.meta.projetsTitle} · Laura Pras`, t.meta.projetsDescription);
 }
 
-/** Projets : la collection — les magazines des projets, posés devant la boîte où on les range. */
+/** Projets : la liste des projets ; au survol, la grande image du projet ; un clic ouvre sa page. */
 export default async function Projets({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
   const projets = getProjets(lang);
-  const annees = projets.map((p) => p.annee).filter((a): a is number => !!a).sort();
+  const lignes = projets.map((p) => {
+    const { img, pos } = couverture(p);
+    return { slug: p.slug, titre: p.titre, programme: p.programme, annee: p.annee, img: { src: img.src, srcSmall: img.srcSmall, w: img.w, h: img.h, pos } };
+  });
   return (
     <div className={`wrap ${styles.page}`}>
       <header className={styles.pHead}>
         <h1 className={styles.h1}>{t.meta.projetsTitle}</h1>
       </header>
-      <Collection projets={projets} lang={lang} titre={`${t.meta.projetsTitle} ${annees[0]}–${annees[annees.length - 1]}`} />
+      <ProjetsIndex lignes={lignes} lang={lang} voir={t.home.voir} />
     </div>
   );
 }

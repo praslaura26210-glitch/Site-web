@@ -1,7 +1,7 @@
 import { xpCalme, xpEl, xpFleche, xpSaisie, type XPContexte } from './outils';
 
 /*
- * Page projet : le livre du projet, tout en haut. On fait défiler la page et les pages du livre tournent,
+ * Le livre d'un projet (ouvert depuis la collection de l'accueil). On fait défiler la page et ses pages tournent,
  * l'une après l'autre, autour de la reliure (double page sur écran large, une page sur téléphone).
  * Les pages sont écrites dans la page (components/home/LivrePages.tsx) ; chacune s'anime la première fois
  * qu'elle apparaît : les images entrent, les plans se dessinent, l'existant glisse vers le projet (on peut
@@ -176,10 +176,6 @@ export function xpLivres(ctx: XPContexte, root: HTMLElement) {
   suiv.addEventListener('click', () => va(Math.round(progres()) + 1));
   livre.addEventListener('click', (e) => {
     const t = e.target as Element;
-    if (t.closest('[data-lv-detail]')) {
-      document.getElementById('presentation')?.scrollIntoView({ behavior: xpCalme() ? 'auto' : 'smooth', block: 'start' });
-      return;
-    }
     if (t.closest('a, button, [data-lv-cmp]')) return;
     const r = livre.getBoundingClientRect();
     va(Math.round(progres()) + (e.clientX > r.left + r.width / 2 ? 1 : -1));

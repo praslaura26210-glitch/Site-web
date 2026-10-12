@@ -4,54 +4,58 @@ import type { Projet } from '@/lib/content';
 import { couverture } from './ProjetsGrille';
 import styles from './home.module.css';
 
-/** Inclinaison de chaque magazine posé, un peu au hasard. */
-const PENTES = [-2.5, 1.5, -1, 2, -1.8, 1];
+/** L'éventail : l'angle de chaque livre (degrés), du premier au dernier. */
+const ANGLES = [-48, -29, -10, 9, 28, 47];
 
 /**
- * Page Projets : la collection. Au fond, la boîte en carton où on range les magazines, avec le dessin du
- * couloir imprimé dessus ; devant, les projets, tous visibles, comme des magazines sortis de la boîte et posés.
- * Un clic sur un magazine ouvre la page du projet (et son livre).
+ * Accueil : la collection. Sur la table, la boîte en carton, haute, faite pour ranger les livres debout
+ * (comme l'étui de la photo de Laura), avec le dessin du couloir et son nom sur le côté ; elle est vide,
+ * parce que les livres sont sortis : ils sont posés devant, en éventail. Un clic sur un livre l'ouvre.
  */
-export default function Collection({ projets, lang, titre }: { projets: Projet[]; lang: Lang; titre: string }) {
-  const dedans = projets.slice(0, 3).map((p) => couverture(p));
+export default function Collection({ projets, lang, titre, aide }: { projets: Projet[]; lang: Lang; titre: string; aide: string }) {
   return (
-    <div className={styles.coll}>
-      <div className={styles.collFond} aria-hidden="true">
-        <div className={styles.boite3d}>
-          <span className={`${styles.bxFace} ${styles.bxFond}`} />
-          <span className={`${styles.bxFace} ${styles.bxBas}`} />
-          <span className={`${styles.bxFace} ${styles.bxGauche}`} />
-          {/* trois magazines rangés, qui dépassent de la boîte */}
-          {dedans.map(({ img, pos }, i) => (
-            <span key={img.src} className={styles.bxMag} style={{ ['--i' as string]: i }}>
+    <div className={styles.col}>
+      <div className={styles.colScene}>
+        <div className={styles.colTable}>
+          {/* la boîte, vide, au fond de la table */}
+          <div className={styles.bx} aria-hidden="true">
+            <span className={`${styles.bxF} ${styles.bxSol}`} />
+            <span className={`${styles.bxF} ${styles.bxDos}`} />
+            <span className={`${styles.bxF} ${styles.bxInG}`} />
+            <span className={`${styles.bxF} ${styles.bxInD}`} />
+            <span className={`${styles.bxF} ${styles.bxInBas}`} />
+            <span className={`${styles.bxF} ${styles.bxG}`} />
+            <span className={`${styles.bxF} ${styles.bxD}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.srcSmall} alt="" loading="lazy" style={pos ? { objectPosition: pos } : undefined} />
+              <img src="/media/site/dessin-couverture-1000.webp" alt="" loading="lazy" />
+              <span className={styles.bxNom}>Laura Pras</span>
+              <span className={styles.bxSous}>{titre}</span>
             </span>
-          ))}
-          <span className={`${styles.bxFace} ${styles.bxDroite}`} />
-          <span className={`${styles.bxFace} ${styles.bxAvant}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/media/site/dessin-couverture-1000.webp" alt="" loading="lazy" />
-            <span className={styles.bxEtiquette}><b>Laura Pras</b>{titre}</span>
-          </span>
+            <span className={`${styles.bxF} ${styles.bxHaut}`} />
+            <span className={`${styles.bxF} ${styles.bxBord}`} />
+          </div>
+          {/* les livres, en éventail devant */}
+          {projets.map((p, i) => {
+            const { img, pos } = couverture(p);
+            return (
+              <Link key={p.slug} href={`/${lang}/livres/${p.slug}/`} className={styles.bk} style={{ ['--a' as string]: `${ANGLES[i % ANGLES.length]}deg`, ['--i' as string]: i }} aria-label={p.titre}>
+                <span className={styles.bkOmbre} aria-hidden="true" />
+                <span className={`${styles.bkPages} ${styles.bkP0}`} aria-hidden="true" />
+                <span className={`${styles.bkPages} ${styles.bkP1}`} aria-hidden="true" />
+                <span className={`${styles.bkPages} ${styles.bkP2}`} aria-hidden="true" />
+                <span className={styles.bkCouv}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img.srcSmall} alt="" loading="lazy" style={pos ? { objectPosition: pos } : undefined} />
+                  <span className={styles.bkN}>N° {String(i + 1).padStart(2, '0')}{p.annee ? ` — ${p.annee}` : ''}</span>
+                  <span className={styles.bkT}>{p.titre}</span>
+                  <span className={styles.bkNom}>Laura Pras</span>
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
-      <ul className={styles.collMags}>
-        {projets.map((p, i) => {
-          const { img, pos } = couverture(p);
-          return (
-            <li key={p.slug} className={styles.collLi} style={{ ['--r' as string]: `${PENTES[i % PENTES.length]}deg`, ['--k' as string]: i }}>
-              <Link href={`/${lang}/projets/${p.slug}/`} className={styles.collMag}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.srcSmall} alt="" width={img.w} height={img.h} loading={i < 3 ? 'eager' : 'lazy'} style={pos ? { objectPosition: pos } : undefined} />
-                <span className={styles.collN}>N° {String(i + 1).padStart(2, '0')}{p.annee ? ` — ${p.annee}` : ''}</span>
-                <span className={styles.collT}>{p.titre}</span>
-                <span className={styles.collP}>{p.programme}</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      <p className={styles.colAide}>{aide}</p>
     </div>
   );
 }

@@ -7,17 +7,15 @@ import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import { ancreDessin } from '@/lib/experience';
 import { v } from '@/lib/ver';
-import { tr } from '@/lib/tr';
 import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Materiautheque, { PALETTE } from './Materiautheque';
 import Visionneuse from './Visionneuse';
-import LivrePages from '@/components/home/LivrePages';
 import styles from './project.module.css';
 
 
-/** Page projet : ouverture (titre et grande image), présentation, puis les blocs choisis pour ce projet. */
+/** Page projet : la grande image et le nom, le descriptif, puis les chapitres (images à gauche, textes à droite). */
 export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p: Projet; t: Dict; lang: Lang; mise: Mise; next: Projet; prev: Projet; total: number }) {
   const L: Labels = { agrandir: t.projet.agrandir, fermer: t.projet.fermer, hint: t.projet.zoomHint, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, reset: t.projet.zoomReset };
   const VL = { ...L, precedent: t.projet.precedent, suivant: t.projet.suivant };
@@ -29,7 +27,6 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
   // voix de Laura (facultative) : content/projets/<slug>/audio/presentation.mp3
   const voixFichier = ['presentation.mp3', 'presentation.m4a'].find((f) => fs.existsSync(path.join(process.cwd(), 'content/projets', p.slug, 'audio', f)));
   const voix = voixFichier ? v(`/media/${p.slug}/audio/${voixFichier}`) : null;
-  let inter = 0;
 
   const texte = (k: string) => {
     if (k === 'poeme' && p.poeme) return (
@@ -62,14 +59,7 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
   const bloc = (b: Bloc, k: number) => {
     switch (b.t) {
       case 'inter':
-        inter++;
-        return (
-          <header key={k} className={`${styles.inter} rv`} id={`chapitre-${inter}`} data-chapitre={b.titre[lang]}>
-            <span className={styles.interN}>{String(inter).padStart(2, '0')}</span>
-            <h2>{b.titre[lang]}</h2>
-            {b.note && <p>{b.note[lang]}</p>}
-          </header>
-        );
+        return null;
       case 'grand':
         return <div key={k} className={styles.grand}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div>;
       case 'rang':
@@ -86,23 +76,13 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
             })}
           </div>
         );
-      case 'texte': {
-        const txt = texte(b.k);
-        if (!txt) return null;
-        return (
-          <section key={k} className={`${styles.texteImg} rv`} data-cote={b.cote || 'd'} data-seul={!b.r || undefined} data-colonnes={b.colonnes || undefined}>
-            <div className={styles.texteCol}>
-              {b.titre && <h2 className={styles.texteT}>{b.titre[lang]}</h2>}
-              {txt}
-            </div>
-            {b.r && <div className={styles.imageCol}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 55vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div>}
-          </section>
-        );
-      }
+      case 'texte':
+        // le texte va dans la colonne de droite du chapitre ; ici, seulement son image
+        return b.r ? <div key={k} className={styles.grand}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 60vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div> : null;
       case 'materiaux':
         return <Materiautheque key={k} lang={lang} credit={cr.defaut || undefined} />;
       case 'visionneuse':
-        return <Visionneuse key={k} ids={b.r.map(ancreDessin)} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} aside={b.k ? texte(b.k) : undefined} />;
+        return <Visionneuse key={k} ids={b.r.map(ancreDessin)} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} />;
       case 'composition':
         return (
           <div key={k} className={styles.compo}>
@@ -137,37 +117,47 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
     }
   };
 
+  // les chapitres : à gauche les images du chapitre, qui défilent ; à droite son titre et ses textes, qui restent à l'écran
+  type Chap = { titre?: string; note?: string; textes: React.ReactNode[]; medias: React.ReactNode[] };
+  const chapitres: Chap[] = [];
+  let cur: Chap = { textes: [], medias: [] };
+  mise.blocs.forEach((b, k) => {
+    if (b.t === 'inter') {
+      if (cur.medias.length || cur.textes.length) chapitres.push(cur);
+      cur = { titre: b.titre[lang], note: b.note?.[lang], textes: [], medias: [] };
+      return;
+    }
+    if (b.t === 'texte' || (b.t === 'visionneuse' && b.k)) {
+      const txt = texte(b.k!);
+      if (txt) cur.textes.push(<div key={`t${k}`} className={styles.chapBloc}>{b.t === 'texte' && b.titre && <h3 className={styles.chapSousT}>{b.titre[lang]}</h3>}{txt}</div>);
+    }
+    const m = bloc(b, k);
+    if (m) cur.medias.push(m);
+  });
+  if (cur.medias.length || cur.textes.length) chapitres.push(cur);
+
   return (
     <article className={styles.projet} data-projet={p.slug}>
-      <header className={`wrap ${styles.tete}`}>
-        <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
-        <h1 className={styles.teteT}>{p.titre}</h1>
-        <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.annee].filter(Boolean).join(' · ')}</p>
+      <header className={styles.ouv} data-format={cov.w > cov.h ? 'paysage' : 'portrait'}>
+        <div className={styles.ouvTxt}>
+          <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
+          <h1 className={styles.ouvT}>{p.titre}</h1>
+          <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.annee].filter(Boolean).join(' · ')}</p>
+        </div>
+        <figure className={styles.ouvImg}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes={cov.w > cov.h ? '100vw' : '(max-width: 900px) 100vw, 50vw'} alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
+        </figure>
       </header>
 
-      {/* le livre du projet : ses pages tournent quand on fait défiler (experience/livres.ts) ;
-          sans JavaScript, on voit la couverture, puis le projet en détail dessous */}
-      <section className={`xp-lp ${styles.livreProjet}`} data-livre-projet="" aria-label={p.titre}>
-        <figure className={styles.livreSansJs}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes="(max-width: 900px) 100vw, 60vw" alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
-        </figure>
-        <LivrePages p={p} lang={lang} t={t} />
-      </section>
-
-      <p className={`wrap eyebrow ${styles.detailT}`}>{tr(lang, { fr: 'Le projet en détail', en: 'The project in detail', it: 'Il progetto nel dettaglio' })}</p>
-
-      {/* présentation, comme dans le portfolio : numéro, titre, programme, cadre, année, lieu, puis le texte */}
+      {/* le descriptif : les informations à gauche, le texte à droite (le titre est déjà au-dessus) */}
       <section className={`wrap ${styles.presentation}`} id="presentation" data-chapitre={t.xp.presentation}>
-        <div className={`${styles.livret} rv`}>
-          <h2 className={styles.livretT}><span>{String(p.ordre).padStart(2, '0')}</span>{p.titre}</h2>
-          <ul className={styles.livretInfos}>
-            <li>{p.programme}</li>
-            {p.cadre && <li>{p.cadre}</li>}
-            {p.annee && <li>{t.projet.annee} : {p.annee}</li>}
-            {p.lieu && <li>{t.projet.lieu} : {p.lieu}</li>}
-          </ul>
-        </div>
+        <ul className={`${styles.livretInfos} rv`}>
+          <li>{p.programme}</li>
+          {p.cadre && <li>{p.cadre}</li>}
+          {p.annee && <li>{t.projet.annee} : {p.annee}</li>}
+          {p.lieu && <li>{t.projet.lieu} : {p.lieu}</li>}
+        </ul>
         <div className={`${styles.livretTexte} rv`}>
           {p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}
           {voix && (
@@ -181,10 +171,22 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         </div>
       </section>
 
-      {/* le projet en images, en défilé horizontal : construit dans le navigateur (experience/defile.ts) */}
-      <section className="xp-df" data-defile aria-label={t.xp.defile} />
-
-      <div className={`wrap ${styles.corpsProjet}`}>{mise.blocs.map(bloc)}</div>
+      {/* chaque dessin, chaque image n'apparaît qu'une fois : dans son chapitre */}
+      <div className={`wrap ${styles.corpsProjet}`}>
+        {chapitres.map((c, i) => (
+          <section key={i} className={styles.chap} id={`chapitre-${i + 1}`} data-chapitre={c.titre || t.xp.presentation} data-sans-media={c.medias.length ? undefined : ''}>
+            <div className={styles.chapMedias}>{c.medias}</div>
+            <aside className={styles.chapTexte}>
+              <div className={styles.chapColle}>
+                <span className={styles.interN}>{String(i + 1).padStart(2, '0')}</span>
+                {c.titre && <h2 className={styles.chapT}>{c.titre}</h2>}
+                {c.note && <p className={styles.chapNote}>{c.note}</p>}
+                {c.textes}
+              </div>
+            </aside>
+          </section>
+        ))}
+      </div>
 
       <nav className={`wrap ${styles.suite}`} aria-label={t.projet.next} id="suite" data-chapitre={t.projet.next}>
         <Link href={`/${lang}/projets/${prev.slug}/`} data-projet-precedent hidden tabIndex={-1}>{prev.titre}</Link>

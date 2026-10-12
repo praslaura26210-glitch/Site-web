@@ -55,26 +55,33 @@
 .pmRouleau { position: absolute; top: 7%; left: 15%; right: 15%; height: 4.5%; border-radius: 10px; background: linear-gradient(#1C140F, #5A4636 45%, #2A1F17); box-shadow: 0 2px 4px rgba(0, 0, 0, .5); }
 .pmFente { position: absolute; top: 13%; left: 19%; right: 19%; height: 1.2%; border-radius: 2px; background: #0B0806; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9); }
 .pmSortie { position: absolute; top: 13.6%; left: 22%; right: 22%; bottom: 13%; overflow: hidden; }
-.pmBande { display: grid; gap: 4%; padding: 7% 8% 9%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-sort 5.2s cubic-bezier(.3, 0, .3, 1) .5s backwards; }
-@keyframes pm-sort {
-  0% { transform: translateY(-101%); } 22% { transform: translateY(-74%); } 30% { transform: translateY(-74%); }
-  52% { transform: translateY(-46%); } 60% { transform: translateY(-46%); } 82% { transform: translateY(-14%); } 88% { transform: translateY(-14%); } 100% { transform: translateY(0); }
+.pmBande { padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-defile 10s cubic-bezier(.45, 0, .3, 1) infinite; }
+/* la bande sort de la machine case après case, sans fin (la deuxième moitié répète la première) */
+@keyframes pm-defile {
+  0% { transform: translateY(-50%); } 16% { transform: translateY(-37.5%); } 25% { transform: translateY(-37.5%); }
+  41% { transform: translateY(-25%); } 50% { transform: translateY(-25%); } 66% { transform: translateY(-12.5%); }
+  75% { transform: translateY(-12.5%); } 91% { transform: translateY(0); } 100% { transform: translateY(0); }
 }
-.pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; }
+.pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; margin: 0 0 9%; }
+.pmVue:first-child { margin-top: 9%; }
 .pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.06); }
 .pmBac { position: absolute; z-index: 2; bottom: 4%; left: 13%; right: 13%; height: 11%; border-radius: 2px 2px 7px 7px; background: linear-gradient(#5C4430, #2C1F15); box-shadow: inset 0 7px 10px rgba(0, 0, 0, .55), 0 -1px 0 rgba(255, 255, 255, .1); }
 .pmTexte { display: grid; gap: 16px; max-width: 54ch; }
 .pmNom { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; }
 .pmP { font-size: 1.02rem; line-height: 1.8; }
 
-/* outils : une ligne par logiciel ; la barre se remplit selon le niveau, le niveau est écrit à droite */
+/* outils : des tuiles comme des icônes ; la couleur dit le niveau, du contour (notions) au plein (maîtrise) */
 .outils { display: grid; gap: 26px; }
-.niveaux { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(32px, 6vw, 110px); border-top: 1px solid var(--encre); }
-.niveaux li { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) 9.5rem; align-items: center; gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--filet); }
-.nivNom { font-size: 1rem; }
-.nivBarre { position: relative; height: 3px; background: var(--filet); }
-.nivBarre i { position: absolute; inset: 0 auto 0 0; width: calc(var(--n) / 5 * 100%); background: var(--accent); }
-.nivMot { font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); text-align: right; }
+.tuiles { list-style: none; margin: 0; padding: 0; max-width: 980px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px; }
+.tuile { position: relative; aspect-ratio: 1; display: grid; grid-template-rows: 1fr auto auto; padding: 14px; border-radius: 14px; border: 1px solid var(--accent); color: var(--accent-f); transition: transform .3s var(--ease); }
+.tuile:hover { transform: translateY(-4px); }
+.tuile[data-n='5'] { grid-column: span 2; grid-row: span 2; background: var(--accent); border-color: var(--accent); color: #FBF6EE; }
+.tuile[data-n='4'] { background: #D8B9A9; border-color: #D8B9A9; color: #4A2A1D; }
+.tuile[data-n='3'] { background: #F1E4DC; border-color: #F1E4DC; color: #6B3A27; }
+.tuileSigle { align-self: center; font-size: 2.1rem; font-weight: 300; letter-spacing: -0.02em; line-height: 1; }
+.tuile[data-n='5'] .tuileSigle { font-size: 5rem; }
+.tuileNom { font-size: .82rem; font-weight: 400; }
+.tuileNiv { font-size: .52rem; letter-spacing: .16em; text-transform: uppercase; opacity: .75; margin-top: 3px; }
 
 /* références (page à part) : une phrase pour dire d'où elles viennent, puis deux familles de tirages */
 .refsPage > * + * { margin-top: clamp(56px, 9vh, 100px); }
@@ -125,8 +132,10 @@
   .col li { grid-template-columns: 1fr; }
   .pDate { grid-row: auto; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
-  .niveaux { grid-template-columns: 1fr; }
-  .niveaux li { grid-template-columns: 6.5rem minmax(0, 1fr) 7.6rem; gap: 12px; }
+  .tuiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .tuile { padding: 10px; border-radius: 10px; }
+  .tuileSigle { font-size: 1.6rem; }
+  .tuile[data-n='5'] .tuileSigle { font-size: 3.4rem; }
   .refsTete, .refsListe { grid-template-columns: 1fr; }
   .pm { grid-template-columns: 1fr; }
   .pmMachine { width: min(72vw, 260px); }

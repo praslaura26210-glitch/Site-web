@@ -13,13 +13,15 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 }
 
 
-/** La bande du photomaton : ma photo, puis des morceaux de ce que je fais à côté (dessins, bricolage, photos). */
+/** La bande du photomaton : ma photo dans chaque case, cadrée un peu autrement à chaque fois. */
 const PHOTOS = [
-  { src: '/media/site/portrait-1000.webp', pos: '50% 22%', zoom: 0 },
-  { src: '/media/au-dela-des-projets/images/planche-dessins-photos-bricolage-1000.webp', pos: '18% 30%', zoom: 2.4 },
-  { src: '/media/au-dela-des-projets/images/photo-1000.webp', pos: '50% 60%', zoom: 0 },
-  { src: '/media/au-dela-des-projets/images/planche-dessins-photos-bricolage-1000.webp', pos: '70% 82%', zoom: 2.6 },
+  { pos: '50% 20%', zoom: 1 },
+  { pos: '48% 16%', zoom: 1.45 },
+  { pos: '58% 24%', zoom: 1.2 },
+  { pos: '46% 14%', zoom: 1.85 },
 ];
+/** Les logiciels en tuiles : leurs deux lettres, comme sur les icônes. */
+const SIGLES: Record<string, string> = { Archicad: 'Ar', Sketchup: 'Sk', Twinmotion: 'Tw', Indesign: 'Id', Autocad: 'Ac', Revit: 'Rv', Photoshop: 'Ps', 'Pack Office': 'Of', Illustrator: 'Ai' };
 
 export default async function APropos({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -31,7 +33,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
   const planche = img('planche-dessins-photos-bricolage');
   const L = tr(lang, {
     fr: {
-      statut: 'Étudiante en master AECC · ENSA Grenoble', stage: 'Je cherche un stage en agence d’architecture.',
+      statut: 'Étudiante en master AECC · ENSA Grenoble',
       niveaux: { 2: 'Notions', 3: 'Bonnes bases', 4: 'Utilisation régulière', 5: 'Maîtrise' } as Record<number, string>,
       master: 'Master AECC', parcours: 'Parcours',
       stages: 'Stages', formations: 'Formations',
@@ -40,7 +42,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       texteAudela: audela.texte,
     },
     en: {
-      statut: 'AECC master’s student · ENSA Grenoble', stage: 'I’m looking for an internship in an architecture practice.',
+      statut: 'AECC master’s student · ENSA Grenoble',
       niveaux: { 2: 'Basics', 3: 'Good grounding', 4: 'Regular use', 5: 'Expert' } as Record<number, string>,
       master: 'AECC master’s', parcours: 'Background',
       stages: 'Internships', formations: 'Education',
@@ -49,7 +51,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
       texteAudela: 'I like to spend my free time exploring different creative practices, such as drawing, painting and crafts like mosaic, scrapbooking and knitting. I particularly enjoy working with my hands, restoring old furniture or making new pieces. I am not a great photographer, but I like taking the time to photograph the places around me. It helps me look more closely at the architecture, the light and the details that make up a place.',
     },
     it: {
-      statut: 'Studentessa del master AECC · ENSA Grenoble', stage: 'Cerco un tirocinio in uno studio di architettura.',
+      statut: 'Studentessa del master AECC · ENSA Grenoble',
       niveaux: { 2: 'Nozioni', 3: 'Buone basi', 4: 'Uso regolare', 5: 'Padronanza' } as Record<number, string>,
       master: 'Master AECC', parcours: 'Percorso',
       stages: 'Tirocini', formations: 'Formazione',
@@ -69,11 +71,12 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
           <span className={styles.pmRouleau} />
           <span className={styles.pmFente} />
           <div className={styles.pmSortie}>
+            {/* la bande défile toute seule, sans fin : deux fois les mêmes cases, pour que la boucle ne se voie pas */}
             <div className={styles.pmBande}>
-              {PHOTOS.map((ph, i) => (
+              {[...PHOTOS, ...PHOTOS].map((ph, i) => (
                 <span key={i} className={styles.pmVue}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={ph.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} style={{ objectPosition: ph.pos, transform: ph.zoom ? `scale(${ph.zoom})` : undefined, transformOrigin: ph.pos }} />
+                  <img src="/media/site/portrait-1000.webp" alt="" loading={i < 3 ? 'eager' : 'lazy'} style={{ objectPosition: ph.pos, transform: ph.zoom > 1 ? `scale(${ph.zoom})` : undefined, transformOrigin: ph.pos }} />
                 </span>
               ))}
             </div>
@@ -84,7 +87,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
           <h1 className={styles.pmNom}>Laura Pras</h1>
           <p className="eyebrow">{L.statut}</p>
           {(cv.presentation[lang] as string).split(/\n+/).map((x, j) => <p key={j} className={styles.pmP}>{x}</p>)}
-          <p className={styles.pmP}>{L.stage}</p>
         </div>
       </header>
 
@@ -116,15 +118,15 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </div>
       </section>
 
-      {/* outils : chaque logiciel, une barre qui se remplit selon le niveau, et le niveau écrit en clair */}
+      {/* outils : une tuile par logiciel, comme une icône ; plus la couleur est pleine, mieux je le maîtrise */}
       <section className={styles.outils} aria-labelledby="outils">
         <h2 id="outils" className={styles.aH2}>{L.outils}</h2>
-        <ul className={styles.niveaux}>
+        <ul className={styles.tuiles}>
           {logiciels.sort((a, b) => b[1] - a[1]).map(([k, n]) => (
-            <li key={k} className="rv" style={{ ['--n' as string]: n }}>
-              <span className={styles.nivNom}>{k}</span>
-              <span className={styles.nivBarre} aria-hidden="true"><i /></span>
-              <span className={styles.nivMot}>{L.niveaux[n]}</span>
+            <li key={k} className={`${styles.tuile} rv`} data-n={n}>
+              <span className={styles.tuileSigle} aria-hidden="true">{SIGLES[k] || k.slice(0, 2)}</span>
+              <span className={styles.tuileNom}>{k}</span>
+              <span className={styles.tuileNiv}>{L.niveaux[n]}</span>
             </li>
           ))}
         </ul>

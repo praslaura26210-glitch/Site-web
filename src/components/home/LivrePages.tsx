@@ -7,7 +7,7 @@ import { ECHANTILLONS, imageEchantillon, nomMateriau, PALETTE } from '@/componen
 import { couverture } from './ProjetsGrille';
 
 /*
- * Les pages du livre d'un projet (en haut de sa page). Elles sont écrites ici, cachées dans la page,
+ * Les pages du livre d'un projet (page « livre », ouverte depuis la collection de l'accueil). Elles sont écrites ici, cachées dans la page,
  * et experience/livres.ts les relie en livre : les pages tournent quand on fait défiler la page,
  * et chaque page s'anime quand elle apparaît (les images entrent, les plans se dessinent,
  * l'existant glisse vers le projet, les matériaux flottent, les chiffres défilent).
@@ -29,9 +29,9 @@ function Fig({ m, cle }: { m: Media; cle?: string }) {
 
 export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
   const L = tr(lang, {
-    fr: { voir: 'Le projet en détail', glisser: 'Faites glisser le trait', matieres: 'Les matériaux', fin: 'Fin' },
-    en: { voir: 'The project in detail', glisser: 'Drag the line', matieres: 'The materials', fin: 'The end' },
-    it: { voir: 'Il progetto nel dettaglio', glisser: 'Trascina la linea', matieres: 'I materiali', fin: 'Fine' },
+    fr: { voir: 'La fiche du projet', glisser: 'Faites glisser le trait', matieres: 'Les matériaux', fin: 'Fin' },
+    en: { voir: 'The project page', glisser: 'Drag the line', matieres: 'The materials', fin: 'The end' },
+    it: { voir: 'La scheda del progetto', glisser: 'Trascina la linea', matieres: 'I materiali', fin: 'Fine' },
   });
   const mise = MISES[p.slug];
   const M = (r: string) => media(p, r);
@@ -141,7 +141,7 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
     <div className="xp-lv-p xp-lv-fin">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={img.srcSmall} alt="" loading="lazy" />
-      <button type="button" className="lien" data-lv-detail="">{L.voir} ↓</button>
+      <a className="lien" href={`/${lang}/projets/${p.slug}/`}>{L.voir} →</a>
     </div>
   ));
   return pages;

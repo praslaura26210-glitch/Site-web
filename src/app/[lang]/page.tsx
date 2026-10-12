@@ -1,8 +1,8 @@
 import { dict, type Lang } from '@/i18n';
 import { getProjets } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import { couverture } from '@/components/home/ProjetsGrille';
-import ProjetsIndex from '@/components/home/ProjetsIndex';
+import Collection from '@/components/home/Collection';
+import { tr } from '@/lib/tr';
 import Couloir from '@/components/home/Couloir';
 import Portfolio from '@/components/home/Portfolio';
 import styles from '@/components/home/home.module.css';
@@ -13,15 +13,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/', `Laura Pras · ${t.home.statut}`, t.meta.siteDescription);
 }
 
-/** Accueil : le dessin au centre, le nom, une ligne, le portfolio ; le haut de la liste des projets dépasse en bas de l'écran. */
+/** Accueil : le dessin au centre, le nom, une ligne, le portfolio ; dessous, la collection des projets en livres. */
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
   const projets = getProjets(lang);
-  const lignes = projets.map((p) => {
-    const { img, pos } = couverture(p);
-    return { slug: p.slug, titre: p.titre, programme: p.programme, annee: p.annee, img: { src: img.src, srcSmall: img.srcSmall, w: img.w, h: img.h, pos } };
-  });
+  const annees = projets.map((p) => p.annee).filter((a): a is number => !!a).sort();
   return (
     <>
       <section className={styles.hero} aria-labelledby="nom">
@@ -33,12 +30,13 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <p className={styles.liens}><Portfolio t={t} /></p>
       </section>
 
-      <section id="projets" className={`wrap ${styles.projets}`} aria-labelledby="titre-projets">
+      {/* la collection : la boîte vide, les livres sortis et posés en éventail ; un clic ouvre le livre */}
+      <section id="collection" className={`wrap ${styles.projets}`} aria-labelledby="titre-collection">
         <div className={styles.projetsHead}>
-          <h2 id="titre-projets" className="eyebrow">{t.home.projetsTitre}</h2>
+          <h2 id="titre-collection" className="eyebrow">{tr(lang, { fr: 'La collection', en: 'The collection', it: 'La collezione' })}</h2>
           <span className="eyebrow">{String(projets.length).padStart(2, '0')}</span>
         </div>
-        <ProjetsIndex lignes={lignes} lang={lang} voir={t.home.voir} />
+        <Collection projets={projets} lang={lang} titre={`${t.meta.projetsTitle} ${annees[0]}–${annees[annees.length - 1]}`} aide={tr(lang, { fr: 'Choisissez un livre', en: 'Pick a book', it: 'Scegli un libro' })} />
       </section>
     </>
   );
