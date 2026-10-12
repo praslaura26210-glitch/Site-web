@@ -13,13 +13,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 }
 
 
-/** La bande du photomaton : ma photo dans chaque case, cadrée un peu autrement à chaque fois. */
-const PHOTOS = [
-  { pos: '50% 20%', zoom: 1 },
-  { pos: '48% 16%', zoom: 1.45 },
-  { pos: '58% 24%', zoom: 1.2 },
-  { pos: '46% 14%', zoom: 1.85 },
-];
+/** La bande du photomaton : la même photo, imprimée dix fois (la bande est doublée pour boucler sans fin). */
+const CASES = 10;
 /** Les logiciels en tuiles : leurs deux lettres, comme sur les icônes. */
 const SIGLES: Record<string, string> = { Archicad: 'Ar', Sketchup: 'Sk', Twinmotion: 'Tw', Indesign: 'Id', Autocad: 'Ac', Revit: 'Rv', Photoshop: 'Ps', 'Pack Office': 'Of', Illustrator: 'Ai' };
 
@@ -34,7 +29,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
   const L = tr(lang, {
     fr: {
       statut: 'Étudiante en master AECC · ENSA Grenoble',
-      niveaux: { 2: 'Notions', 3: 'Bonnes bases', 4: 'Utilisation régulière', 5: 'Maîtrise' } as Record<number, string>,
       master: 'Master AECC', parcours: 'Parcours',
       stages: 'Stages', formations: 'Formations',
       outils: 'Outils',
@@ -43,7 +37,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     },
     en: {
       statut: 'AECC master’s student · ENSA Grenoble',
-      niveaux: { 2: 'Basics', 3: 'Good grounding', 4: 'Regular use', 5: 'Expert' } as Record<number, string>,
       master: 'AECC master’s', parcours: 'Background',
       stages: 'Internships', formations: 'Education',
       outils: 'Tools',
@@ -52,7 +45,6 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     },
     it: {
       statut: 'Studentessa del master AECC · ENSA Grenoble',
-      niveaux: { 2: 'Nozioni', 3: 'Buone basi', 4: 'Uso regolare', 5: 'Padronanza' } as Record<number, string>,
       master: 'Master AECC', parcours: 'Percorso',
       stages: 'Tirocini', formations: 'Formazione',
       outils: 'Strumenti',
@@ -71,12 +63,12 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
           <span className={styles.pmRouleau} />
           <span className={styles.pmFente} />
           <div className={styles.pmSortie}>
-            {/* la bande défile toute seule, sans fin : deux fois les mêmes cases, pour que la boucle ne se voie pas */}
+            {/* la bande défile toute seule, vite et sans fin : deux fois les mêmes cases, pour que la boucle ne se voie pas */}
             <div className={styles.pmBande}>
-              {[...PHOTOS, ...PHOTOS].map((ph, i) => (
+              {Array.from({ length: CASES * 2 }, (_, i) => (
                 <span key={i} className={styles.pmVue}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/media/site/portrait-1000.webp" alt="" loading={i < 3 ? 'eager' : 'lazy'} style={{ objectPosition: ph.pos, transform: ph.zoom > 1 ? `scale(${ph.zoom})` : undefined, transformOrigin: ph.pos }} />
+                  <img src="/media/site/portrait-1000.webp" alt="" />
                 </span>
               ))}
             </div>
@@ -118,7 +110,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </div>
       </section>
 
-      {/* outils : une tuile par logiciel, comme une icône ; plus la couleur est pleine, mieux je le maîtrise */}
+      {/* outils : une tuile par logiciel, comme une icône ; le niveau en cinq points */}
       <section className={styles.outils} aria-labelledby="outils">
         <h2 id="outils" className={styles.aH2}>{L.outils}</h2>
         <ul className={styles.tuiles}>
@@ -126,7 +118,7 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
             <li key={k} className={`${styles.tuile} rv`} data-n={n}>
               <span className={styles.tuileSigle} aria-hidden="true">{SIGLES[k] || k.slice(0, 2)}</span>
               <span className={styles.tuileNom}>{k}</span>
-              <span className={styles.tuileNiv}>{L.niveaux[n]}</span>
+              <span className={styles.tuilePoints} aria-label={`${n} / 5`}>{[1, 2, 3, 4, 5].map((k) => <i key={k} data-plein={k <= n || undefined} />)}</span>
             </li>
           ))}
         </ul>

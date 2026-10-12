@@ -375,7 +375,10 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-ech:hover em { opacity: 1; }
 .xp-lv-ech[data-photo] { padding: 5% 5% 18%; background: #fff; }
 .xp-lv-ech[data-photo] img { object-fit: cover; }
-.xp-lv-ech[data-photo] em { opacity: 1; position: absolute; left: 7%; top: auto; bottom: 3%; font-size: .9rem; }
+.xp-lv-ech[data-photo] em { display: none; }
+/* les lettres en bois, en relief */
+.xp-lv-ech[data-mot] { container-type: inline-size; display: grid; place-items: center; filter: none; }
+.xp-lv-ech[data-mot] b { font: 600 19cqw/1 var(--sans); letter-spacing: .04em; color: transparent; background: var(--bois) center / cover; -webkit-background-clip: text; background-clip: text; text-shadow: none; filter: drop-shadow(1px 1px 0 #9C7A55) drop-shadow(1px 1px 0 #8E6D49) drop-shadow(2px 3px 3px rgba(43, 33, 28, .35)); }
 @keyframes xp-lv-flotte { from { transform: translateY(0) rotateX(0deg) rotateY(0deg); } to { transform: translateY(-7px) rotateX(9deg) rotateY(-8deg); } }
 
 .xp-lv-fin { display: grid; align-content: center; justify-items: center; gap: 26px; }

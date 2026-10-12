@@ -55,16 +55,11 @@
 .pmRouleau { position: absolute; top: 7%; left: 15%; right: 15%; height: 4.5%; border-radius: 10px; background: linear-gradient(#1C140F, #5A4636 45%, #2A1F17); box-shadow: 0 2px 4px rgba(0, 0, 0, .5); }
 .pmFente { position: absolute; top: 13%; left: 19%; right: 19%; height: 1.2%; border-radius: 2px; background: #0B0806; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9); }
 .pmSortie { position: absolute; top: 13.6%; left: 22%; right: 22%; bottom: 13%; overflow: hidden; }
-.pmBande { padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-defile 10s cubic-bezier(.45, 0, .3, 1) infinite; }
+.pmBande { padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-defile 7s linear infinite; }
 /* la bande sort de la machine case après case, sans fin (la deuxième moitié répète la première) */
-@keyframes pm-defile {
-  0% { transform: translateY(-50%); } 16% { transform: translateY(-37.5%); } 25% { transform: translateY(-37.5%); }
-  41% { transform: translateY(-25%); } 50% { transform: translateY(-25%); } 66% { transform: translateY(-12.5%); }
-  75% { transform: translateY(-12.5%); } 91% { transform: translateY(0); } 100% { transform: translateY(0); }
-}
-.pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; margin: 0 0 9%; }
-.pmVue:first-child { margin-top: 9%; }
-.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.06); }
+@keyframes pm-defile { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+.pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; margin: 9% 0 0; }
+.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) contrast(1.06); }
 .pmBac { position: absolute; z-index: 2; bottom: 4%; left: 13%; right: 13%; height: 11%; border-radius: 2px 2px 7px 7px; background: linear-gradient(#5C4430, #2C1F15); box-shadow: inset 0 7px 10px rgba(0, 0, 0, .55), 0 -1px 0 rgba(255, 255, 255, .1); }
 .pmTexte { display: grid; gap: 16px; max-width: 54ch; }
 .pmNom { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; }
@@ -81,7 +76,10 @@
 .tuileSigle { align-self: center; font-size: 2.1rem; font-weight: 300; letter-spacing: -0.02em; line-height: 1; }
 .tuile[data-n='5'] .tuileSigle { font-size: 5rem; }
 .tuileNom { font-size: .82rem; font-weight: 400; }
-.tuileNiv { font-size: .52rem; letter-spacing: .16em; text-transform: uppercase; opacity: .75; margin-top: 3px; }
+.tuilePoints { display: flex; gap: 5px; margin-top: 6px; }
+.tuilePoints i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid currentColor; opacity: .7; }
+.tuilePoints i[data-plein] { background: currentColor; opacity: 1; }
+.tuile[data-n='5'] .tuilePoints i { width: 10px; height: 10px; }
 
 /* références (page à part) : une phrase pour dire d'où elles viennent, puis deux familles de tirages */
 .refsPage > * + * { margin-top: clamp(56px, 9vh, 100px); }
@@ -98,6 +96,19 @@
 .tirage figcaption { padding: 8px 2px 10px; font-family: var(--main); font-size: 1.1rem; line-height: 1.1; color: var(--gris); }
 .tirage figcaption b { display: block; font-weight: 400; color: var(--encre); font-size: 1.3rem; }
 .refsNote { font-size: .9rem; line-height: 1.75; max-width: 42ch; }
+/* le catalogue : des images de tailles différentes ; la fiche s'ouvre sous l'image */
+.catalogue { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-flow: dense; gap: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 44px); align-items: start; }
+.catItem { grid-column: span 4; }
+.catItem[data-taille='g'] { grid-column: span 5; }
+.catItem[data-taille='m'] { grid-column: span 4; padding-top: 40px; }
+.catItem[data-taille='p'] { grid-column: span 3; padding-top: 90px; }
+.catFiche summary { list-style: none; cursor: pointer; }
+.catFiche summary::-webkit-details-marker { display: none; }
+.catFiche .tirage { width: 100%; }
+.catFiche[open] .tirage { rotate: 0deg; }
+.catInfo { display: grid; gap: 8px; margin-top: 16px; padding: 14px 16px; background: #fff; box-shadow: 0 10px 30px -14px rgba(43, 33, 28, .35); font-size: .86rem; line-height: 1.7; animation: catOuvre .3s ease both; }
+@keyframes catOuvre { from { opacity: 0; translate: 0 -6px; } }
+.catLieu { font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-f); }
 .refsCredit { font-size: .6rem; color: var(--gris); }
 
 /* le master : son nom et ce qu'on y fait */
@@ -137,6 +148,9 @@
   .tuileSigle { font-size: 1.6rem; }
   .tuile[data-n='5'] .tuileSigle { font-size: 3.4rem; }
   .refsTete, .refsListe { grid-template-columns: 1fr; }
+  .catalogue { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .catItem, .catItem[data-taille] { grid-column: span 1; padding-top: 0; }
+  .catItem[data-taille='g'] { grid-column: span 2; }
   .pm { grid-template-columns: 1fr; }
   .pmMachine { width: min(72vw, 260px); }
   .cGrille { grid-template-columns: 1fr; }

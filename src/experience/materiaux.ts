@@ -4,7 +4,7 @@ import { xpCalme } from './outils';
  * Pilates Room : la planche des matériaux, en volume. Les échantillons ne bougent pas : c'est la caméra
  * qui bouge. Elle part de la vue de dessus (comme la planche à plat), s'incline quand la planche arrive à
  * l'écran, puis respire un peu, comme tenue à la main.
- * Glisser : tourner autour. Cliquer un échantillon : la caméra s'en approche et son nom s'écrit ; recliquer,
+ * Glisser : tourner autour. La molette : se rapprocher, reculer. Cliquer un échantillon : la caméra s'en approche et son nom s'écrit ; recliquer,
  * cliquer ailleurs ou Échap : elle recule. Sur téléphone, le doigt tourne la caméra à l'horizontale.
  */
 type Cam = { yaw: number; tilt: number; zoom: number; px: number; py: number };
@@ -16,7 +16,6 @@ export function xpMateriaux(root: HTMLElement) {
   if (!scene || !table) return () => {};
   const items = [...table.querySelectorAll<HTMLElement>('[data-echantillon]')];
   const nomEl = scene.querySelector<HTMLElement>('[data-materiaux-nom]');
-  const vueBtn = scene.querySelector<HTMLElement>('[data-cam="vue"]');
   const calme = xpCalme();
   const etroit = () => matchMedia('(max-width: 760px)').matches;
 
@@ -47,7 +46,6 @@ export function xpMateriaux(root: HTMLElement) {
       py: table.clientHeight / 2 - (vise.offsetTop + vise.offsetHeight / 2),
     };
   };
-  const ecritVue = () => { if (vueBtn) vueBtn.textContent = (vue.tilt < 4 ? vueBtn.dataset.volume : vueBtn.dataset.dessus) || ''; };
   const t0 = performance.now();
   let last = t0, raf = 0, visible = false, tenu = false;
   const image = (now: number) => {
@@ -77,7 +75,7 @@ export function xpMateriaux(root: HTMLElement) {
     visible = e.isIntersecting;
     if (!visible) return;
     anime();
-    if (premiere && e.intersectionRatio > 0.4) { premiere = false; setTimeout(() => { Object.assign(vue, VOLUME); ecritVue(); }, 500); }
+    if (premiere && e.intersectionRatio > 0.4) { premiere = false; setTimeout(() => { Object.assign(vue, VOLUME); }, 500); }
   }, { threshold: [0, 0.45] });
   io.observe(scene);
 
@@ -94,7 +92,7 @@ export function xpMateriaux(root: HTMLElement) {
   let geste: { id: number; x: number; y: number; lx: number; ly: number; touche: boolean; bouge: boolean } | null = null;
   let aBouge = false;
   const prend = (e: PointerEvent) => {
-    if (e.button > 0 || (e.target as Element).closest('[data-cam]')) return;
+    if (e.button > 0) return;
     geste = { id: e.pointerId, x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, touche: e.pointerType === 'touch', bouge: false };
     aBouge = false;
     if (!geste.touche) e.preventDefault();
@@ -112,7 +110,7 @@ export function xpMateriaux(root: HTMLElement) {
     vue.yaw += dx * 0.28;
     if (!geste.touche) vue.tilt = Math.min(68, Math.max(0, vue.tilt - dy * 0.18));
     premiere = false;
-    ecritVue(); anime();
+    anime();
   };
   const lache = (e: PointerEvent) => {
     if (!geste || e.pointerId !== geste.id) return;
@@ -121,33 +119,31 @@ export function xpMateriaux(root: HTMLElement) {
   };
   const clic = (e: MouseEvent) => {
     if (aBouge) { aBouge = false; return; }
-    const b = (e.target as Element).closest<HTMLElement>('[data-cam]');
-    if (b) {
-      const quoi = b.dataset.cam;
-      if (quoi === 'plus') vue.zoom = Math.min(2.6, vue.zoom * 1.25);
-      else if (quoi === 'moins') vue.zoom = Math.max(0.7, vue.zoom / 1.25);
-      else if (vue.tilt < 4) Object.assign(vue, VOLUME);
-      else Object.assign(vue, { yaw: 0, tilt: 0 });
-      premiere = false;
-      ecritVue(); anime();
-      return;
-    }
     viser((e.target as Element).closest<HTMLElement>('[data-echantillon]'));
   };
   const touche = (e: KeyboardEvent) => { if (e.key === 'Escape' && vise) viser(null); };
+  // la molette rapproche ou recule la caméra ; arrivée au bout, elle rend la main à la page
+  const molette = (e: WheelEvent) => {
+    const z = Math.min(3, Math.max(0.75, vue.zoom * Math.exp(-e.deltaY * 0.0016)));
+    if (z === vue.zoom) return;
+    e.preventDefault();
+    vue.zoom = z; premiere = false;
+    if (vise && e.deltaY > 0) viser(null);
+    anime();
+  };
   scene.addEventListener('pointerdown', prend);
   scene.addEventListener('pointermove', deplace);
   scene.addEventListener('pointerup', lache);
   scene.addEventListener('pointercancel', lache);
   scene.addEventListener('click', clic);
   scene.addEventListener('keydown', touche);
+  scene.addEventListener('wheel', molette, { passive: false });
 
   const recale = () => {
     P = parseFloat(getComputedStyle(scene).perspective) || 1100;
     empile(); anime();
   };
   addEventListener('resize', recale);
-  ecritVue();
-  requestAnimationFrame(recale);
+    requestAnimationFrame(recale);
   return () => { io.disconnect(); cancelAnimationFrame(raf); visible = false; removeEventListener('resize', recale); };
 }

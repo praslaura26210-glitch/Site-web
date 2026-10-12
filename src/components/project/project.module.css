@@ -3,12 +3,15 @@
 .projet { --rythme: clamp(96px, 14vh, 160px); }
 
 /* ---------- ouverture : titre et grande image ---------- */
-.ouv { position: relative; max-width: var(--max); margin: 0 auto; padding: var(--header-h) var(--gut) 0; }
+.ouv { position: relative; max-width: var(--max); margin: 0 auto; padding: var(--header-h) var(--gut) 0; min-height: 100svh; box-sizing: border-box; }
 .ouv[data-format='portrait'] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: end; }
 .ouv[data-format='portrait'] .ouvTxt { align-self: end; padding: 0 0 8px; }
-.ouv[data-format='portrait'] .ouvImg img { width: 100%; height: min(78svh, 760px); object-fit: cover; }
+.ouv[data-format='portrait'] { align-items: stretch; }
+.ouv[data-format='portrait'] .ouvImg img { width: 100%; height: calc(100svh - var(--header-h) - 20px); object-fit: cover; }
 .ouv[data-format='paysage'] .ouvTxt { padding: clamp(32px, 7vh, 80px) 0 clamp(24px, 4vh, 44px); }
-.ouv[data-format='paysage'] .ouvImg img { width: 100%; height: min(70svh, 640px); object-fit: cover; }
+.ouv[data-format='paysage'] { display: flex; flex-direction: column; height: 100svh; }
+.ouv[data-format='paysage'] .ouvImg { flex: 1; min-height: 0; padding-bottom: 20px; }
+.ouv[data-format='paysage'] .ouvImg img { width: 100%; height: 100%; object-fit: cover; }
 .ouvImg { margin: 0; overflow: hidden; }
 .ouvImg img { animation: ouvIn 1.6s var(--ease) both; }
 @keyframes ouvIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
@@ -202,7 +205,12 @@
 /* les tirages : cadre blanc, la légende écrite dessous */
 .matEch[data-photo] .matFace { box-sizing: border-box; padding: 7% 7% 23%; background: #fff; }
 .matEch[data-photo] .matFace img { object-fit: cover; }
-.matFace em { position: absolute; left: 9%; bottom: 5%; font-family: var(--main); font-style: normal; font-size: clamp(.7rem, 1.1vw, 1.05rem); color: var(--encre); }
+/* les lettres en bois : le mot répété en épaisseur, la face prend la texture du bois */
+.matEch[data-mot] { container-type: inline-size; }
+.matEch[data-mot] > span { -webkit-mask: none; mask: none; display: grid; place-items: center; font: 600 19cqw/1 var(--sans); letter-spacing: .04em; white-space: nowrap; }
+.matMotCouche { color: #8E6D49; transform: translateZ(calc(var(--k) * 1px)); }
+.matMotFace { color: transparent; background: var(--bois) center / cover; -webkit-background-clip: text; background-clip: text; transform: translateZ(var(--ep)); }
+.matMotOmbre { color: rgba(58, 42, 32, .45); filter: blur(calc(2px + var(--lift, 0px) * .3)); transform: translate3d(calc(3px + var(--lift, 0px) * .35), calc(5px + var(--lift, 0px) * .5), calc(.4px - var(--lift, 0px))); transition: transform .45s var(--ease), filter .45s; }
 /* le reflet : il glisse sur la face quand la caméra tourne */
 .matFace::after { content: ''; position: absolute; inset: 0; background: radial-gradient(70% 60% at var(--sx, 50%) var(--sy, 30%), rgba(255, 255, 255, calc(var(--brille) * .85)), transparent 70%); }
 .matNom { position: absolute; left: clamp(14px, 2vw, 26px); bottom: clamp(10px, 1.6vw, 20px); margin: 0; font-family: var(--main); font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1; color: var(--encre); opacity: 0; translate: 0 6px; transition: opacity .4s, translate .4s var(--ease); pointer-events: none; }

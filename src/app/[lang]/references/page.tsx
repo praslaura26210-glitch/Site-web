@@ -6,16 +6,13 @@ import styles from '@/components/pages/pages.module.css';
 
 const L = (lang: Lang) => tr(lang, {
   fr: {
-    intro: 'Des projets étudiés dans mon rapport d’études sur l’expérience sensible (2025-2026). Je les ai rangés selon les deux questions qui me retiennent.',
-    themes: { existant: 'Composer avec l’existant', matiere: 'La matière' } as Record<string, string>,
+    intro: 'Des projets étudiés dans mon rapport d’études sur l’expérience sensible (2025-2026).',
   },
   en: {
-    intro: 'Projects studied in my report on sensory experience (2025-2026), grouped around the two questions that hold me.',
-    themes: { existant: 'Working with what exists', matiere: 'Material' } as Record<string, string>,
+    intro: 'Projects studied in my report on sensory experience (2025-2026).',
   },
   it: {
-    intro: 'Progetti studiati nel mio rapporto sull’esperienza sensibile (2025-2026), raccolti attorno alle due domande che mi trattengono.',
-    themes: { existant: 'Comporre con l’esistente', matiere: 'La materia' } as Record<string, string>,
+    intro: 'Progetti studiati nel mio rapporto sull’esperienza sensibile (2025-2026).',
   },
 });
 
@@ -25,7 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/references/', `${t.meta.referencesTitle} · Laura Pras`, L(lang).intro);
 }
 
-/** Références : les projets du rapport d'études, en tirages, avec ce que Laura en retient. */
+/** La taille de chaque image dans le catalogue, à tour de rôle. */
+const TAILLES = ['g', 'p', 'm', 'p', 'm', 'g', 'p'];
+/** Une ou deux informations : la première phrase de ce que Laura en dit. */
+const premierePhrase = (t: string) => (t.match(/^.*?[.!?»](\s|$)/)?.[0] || t).trim();
+
+/** Références : un catalogue des projets du rapport d'études ; un clic sur une image en dit un peu plus. */
 export default async function References({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
   const t = dict(lang);
@@ -37,24 +39,27 @@ export default async function References({ params }: { params: Promise<{ lang: s
         <h1 className={styles.h1}>{t.meta.referencesTitle}</h1>
         <p className={styles.refsIntro}>{l.intro}</p>
       </header>
-      {['existant', 'matiere'].map((th) => (
-        <section key={th} className={styles.refsTheme} aria-labelledby={`theme-${th}`}>
-          <h2 id={`theme-${th}`} className={styles.refsThemeT}>{l.themes[th]}</h2>
-          <ul className={styles.refsListe}>
-            {refs.filter((x) => x.theme === th).map((x, i) => (
-              <li key={x.id} className="rv" style={{ ['--i' as string]: i }}>
+      {/* un catalogue d'images de tailles différentes ; un clic sur une image donne une ou deux informations */}
+      <ul className={styles.catalogue}>
+        {refs.map((x, i) => (
+          <li key={x.id} className={`${styles.catItem} rv`} data-taille={TAILLES[i % TAILLES.length]}>
+            <details className={styles.catFiche}>
+              <summary>
                 <figure className={styles.tirage}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/media/site/inspirations/${x.id}.webp`} alt={x.titre} width={x.w} height={x.h} loading="lazy" />
-                  <figcaption><b>{x.titre}</b>{[x.auteur, x.lieu].filter(Boolean).join(' · ')}</figcaption>
+                  <figcaption><b>{x.titre}</b>{x.auteur}</figcaption>
                 </figure>
-                {x.texte && <p className={styles.refsNote}>{x.texte}</p>}
+              </summary>
+              <div className={styles.catInfo}>
+                <p className={styles.catLieu}>{[x.lieu, x.annee].filter(Boolean).join(' · ')}</p>
+                {x.texte && <p>{premierePhrase(x.texte)}</p>}
                 {x.credit && <p className={styles.refsCredit}>{x.credit}</p>}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+              </div>
+            </details>
+          </li>
+        ))}
+      </ul>
     </article>
   );
 }

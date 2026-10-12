@@ -11,14 +11,15 @@ export const PALETTE: Record<string, { en: string; it: string }> = {
   'Terrazzo rose': { en: 'Pink terrazzo', it: 'Terrazzo rosa' },
   'Menuiseries aluminium': { en: 'Aluminium frames', it: 'Serramenti in alluminio' },
   'Tissu bouclette, blanc cassé': { en: 'Off-white bouclé fabric', it: 'Tessuto bouclé, bianco sporco' },
-  'Accueil': { en: 'Reception desk', it: 'Bancone d’accoglienza' },
-  'Coiffeuse': { en: 'Dressing table', it: 'Toeletta' },
+  'Miroir de la coiffeuse': { en: 'Dressing-table mirror', it: 'Specchio della toeletta' },
+  'Suspension de l’accueil': { en: 'Reception pendant light', it: 'Lampada dell’accoglienza' },
+  'Lettres en bois de l’accueil': { en: 'Wooden letters, reception', it: 'Lettere in legno dell’accoglienza' },
 };
 export const nomMateriau = (n: string, lang: Lang) => (lang === 'fr' ? n : PALETTE[n]?.[lang] || n);
 
 export type Echantillon = {
   f: string; nom: string; w: number; ratio: number; x: number; y: number; r: number;
-  livre: number[]; ep: number; bord?: string; brille: number; photo?: string;
+  livre: number[]; ep: number; bord?: string; brille: number; photo?: string; mot?: string;
 };
 
 /**
@@ -31,43 +32,51 @@ export type Echantillon = {
  * matière elle-même, assombrie) ; brille : reflet (0 mat, 1 très brillant) ; photo : un tirage, avec son cadre.
  */
 export const ECHANTILLONS: Echantillon[] = [
-  { f: 'peinture-beige', nom: 'Peinture beige', w: 46, ratio: 1, x: -2, y: -3, r: 0, livre: [-4, 8, 64], ep: 2, bord: '#F7F2EA', brille: 0.06 },
-  { f: 'rose-feuille', nom: 'Peinture rose', w: 24, ratio: 399 / 188, x: 40, y: -4, r: 1.5, livre: [46, 4, 34], ep: 2, bord: '#F4EEE6', brille: 0.06 },
+  { f: 'peinture-beige-pinceau', nom: 'Peinture beige', w: 50, ratio: 360 / 520, x: -3, y: -4, r: 0, livre: [-6, 6, 70], ep: 2, brille: 0.12 },
   { f: 'bois', nom: 'Bois clair', w: 14, ratio: 520 / 190, x: 86, y: -4, r: 2, livre: [80, 0, 24], ep: 6, brille: 0.15 },
   { f: 'beton', nom: 'Béton ciré', w: 44, ratio: 210 / 300, x: 56, y: 47, r: -1, livre: [36, 58, 70], ep: 10, brille: 0.3 },
-  { f: 'moumoute', nom: 'Tissu bouclette, blanc cassé', w: 36, ratio: 400 / 460, x: -3, y: 50, r: -3, livre: [-6, 56, 54], ep: 6, brille: 0 },
-  { f: 'coiffeuse', nom: 'Coiffeuse', w: 23, ratio: 1.19, x: 63, y: 4, r: 3, livre: [60, 22, 34], ep: 2, bord: '#FFFFFF', brille: 0.2, photo: '/media/pilates-room/images/rendu-coiffeuse-1000.webp' },
-  { f: 'accueil', nom: 'Accueil', w: 18, ratio: 1.19, x: 33, y: 62, r: -4, livre: [16, 64, 32], ep: 2, bord: '#FFFFFF', brille: 0.2, photo: '/media/pilates-room/images/rendu-accueil-1000.webp' },
-  { f: 'terrazzo-carreau', nom: 'Terrazzo rose', w: 17, ratio: 376 / 292, x: 24, y: 14, r: -6, livre: [12, 22, 30], ep: 12, brille: 0.45 },
-  { f: 'peinture-goutte', nom: 'Peinture rose', w: 14, ratio: 421 / 318, x: 49, y: 36, r: 0, livre: [42, 40, 24], ep: 3, brille: 0.55 },
-  { f: 'aluminium', nom: 'Menuiseries aluminium', w: 12, ratio: 370 / 310, x: 50, y: 72, r: 12, livre: [54, 76, 20], ep: 14, brille: 0.6 },
+  { f: 'moumoute', nom: 'Tissu bouclette, blanc cassé', w: 38, ratio: 400 / 460, x: -3, y: 48, r: -3, livre: [-6, 56, 54], ep: 6, brille: 0 },
+  { f: 'terrazzo-carreau', nom: 'Terrazzo rose', w: 20, ratio: 376 / 292, x: 40, y: 2, r: -4, livre: [40, 6, 32], ep: 12, brille: 0.45 },
+  { f: 'miroir', nom: 'Miroir de la coiffeuse', w: 20, ratio: 1.62, x: 62, y: 2, r: 4, livre: [62, 18, 32], ep: 2, bord: '#FFFFFF', brille: 0.35, photo: '/media/site/materiaux/miroir.webp' },
+  { f: 'lustre', nom: 'Suspension de l’accueil', w: 15, ratio: 2.35, x: 36, y: 46, r: -5, livre: [18, 60, 28], ep: 2, bord: '#FFFFFF', brille: 0.2, photo: '/media/site/materiaux/lustre.webp' },
+  { f: 'pilates', nom: 'Lettres en bois de l’accueil', w: 36, ratio: 0.24, x: 22, y: 38, r: -6, livre: [8, 40, 56], ep: 9, brille: 0.15, mot: 'PILATES' },
+  { f: 'peinture-goutte', nom: 'Peinture rose', w: 13, ratio: 421 / 318, x: 52, y: 30, r: 0, livre: [52, 38, 22], ep: 3, brille: 0.55 },
+  { f: 'aluminium', nom: 'Menuiseries aluminium', w: 12, ratio: 370 / 310, x: 52, y: 74, r: 12, livre: [56, 78, 20], ep: 14, brille: 0.6 },
 ];
 /** L'image de la face d'un échantillon (pour une photo : le tirage lui-même). */
-export const imageEchantillon = (e: Echantillon) => e.photo || `/media/site/materiaux/${e.f}.webp`;
+export const imageEchantillon = (e: Echantillon) => e.photo || `/media/site/materiaux/${e.mot ? 'bois' : e.f}.webp`;
 
 /**
  * Pilates Room : la planche des matériaux, en volume. Rien ne bouge sur la planche : c'est la caméra qui
  * bouge. Elle part de la vue de dessus, s'incline quand la planche arrive à l'écran, et respire un peu, comme
- * filmée à la main. On tourne autour en glissant ; un clic s'approche d'un échantillon (experience/materiaux.ts).
+ * filmée à la main. On tourne autour en glissant, la molette rapproche ou recule ; un clic s'approche d'un
+ * échantillon (experience/materiaux.ts).
  */
 export default function Materiautheque({ lang, credit }: { lang: Lang; credit?: string }) {
   const L = tr(lang, {
-    fr: { titre: 'Les matériaux', aide: 'Glissez pour tourner autour de la planche · cliquez un échantillon pour vous approcher', dessus: 'Vue de dessus', volume: 'Vue en volume', plus: 'Se rapprocher', moins: 'Reculer' },
-    en: { titre: 'The materials', aide: 'Drag to move around the board · click a sample to get closer', dessus: 'Top view', volume: '3D view', plus: 'Closer', moins: 'Further' },
-    it: { titre: 'I materiali', aide: 'Trascina per girare intorno alla tavola · clicca un campione per avvicinarti', dessus: 'Vista dall’alto', volume: 'Vista in volume', plus: 'Avvicinati', moins: 'Allontanati' },
+    fr: { titre: 'Les matériaux' },
+    en: { titre: 'The materials' },
+    it: { titre: 'I materiali' },
   });
   return (
     <section className={`${styles.mat} rv`} aria-label={L.titre}>
-      <p className={styles.matAide}>{L.aide}</p>
       <div className={styles.matScene} data-materiaux-scene>
         <div className={styles.matTable} data-materiaux>
           {/* le carton de la planche, sous les échantillons */}
           <span className={styles.matPlanche} aria-hidden="true" />
           {ECHANTILLONS.map((e) => {
             const src = imageEchantillon(e);
+            const style = { ['--x' as string]: e.x, ['--y' as string]: e.y, ['--r' as string]: e.r, ['--w' as string]: e.w, ['--ep' as string]: `${e.ep}px`, ['--brille' as string]: e.brille, ['--img' as string]: e.photo || e.mot ? 'linear-gradient(#fff, #fff)' : `url(${src})`, ['--bois' as string]: `url(${src})`, aspectRatio: `1 / ${e.ratio}` };
+            // les lettres en bois : le mot, empilé en épaisseur, la face en bois
+            if (e.mot) return (
+              <button key={e.f} type="button" className={styles.matEch} data-echantillon data-mot="" aria-label={nomMateriau(e.nom, lang)} data-ep={e.ep} style={style}>
+                <span className={styles.matMotOmbre} aria-hidden="true">{e.mot}</span>
+                {Array.from({ length: e.ep }, (_, k) => <span key={k} className={styles.matMotCouche} style={{ ['--k' as string]: k }} aria-hidden="true">{e.mot}</span>)}
+                <span className={styles.matMotFace} aria-hidden="true">{e.mot}</span>
+              </button>
+            );
             return (
-              <button key={e.f} type="button" className={styles.matEch} data-echantillon data-photo={e.photo ? '' : undefined} aria-label={nomMateriau(e.nom, lang)} data-ep={e.ep}
-                style={{ ['--x' as string]: e.x, ['--y' as string]: e.y, ['--r' as string]: e.r, ['--w' as string]: e.w, ['--ep' as string]: `${e.ep}px`, ['--brille' as string]: e.brille, ['--img' as string]: e.photo ? 'linear-gradient(#fff, #fff)' : `url(${src})`, aspectRatio: `1 / ${e.ratio}` }}>
+              <button key={e.f} type="button" className={styles.matEch} data-echantillon data-photo={e.photo ? '' : undefined} aria-label={nomMateriau(e.nom, lang)} data-ep={e.ep} style={style}>
                 <span className={styles.matOmbre} aria-hidden="true" />
                 {/* la tranche : des feuilles empilées, au pixel près */}
                 {Array.from({ length: e.ep }, (_, k) => (
@@ -76,18 +85,12 @@ export default function Materiautheque({ lang, credit }: { lang: Lang; credit?: 
                 <span className={styles.matFace} aria-hidden="true">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={src} alt="" draggable={false} loading="lazy" />
-                  {e.photo && <em>{nomMateriau(e.nom, lang)}</em>}
                 </span>
               </button>
             );
           })}
         </div>
         <p className={styles.matNom} data-materiaux-nom aria-live="polite" />
-        <div className={styles.matCam}>
-          <button type="button" data-cam="moins" aria-label={L.moins}>−</button>
-          <button type="button" data-cam="plus" aria-label={L.plus}>+</button>
-          <button type="button" data-cam="vue" data-dessus={L.dessus} data-volume={L.volume}>{L.dessus}</button>
-        </div>
       </div>
       {credit && <p className={styles.matCredit}>{credit}</p>}
     </section>

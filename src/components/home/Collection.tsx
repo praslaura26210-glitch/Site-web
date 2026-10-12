@@ -4,58 +4,51 @@ import type { Projet } from '@/lib/content';
 import { couverture } from './ProjetsGrille';
 import styles from './home.module.css';
 
-/** L'éventail : l'angle de chaque livre (degrés), du premier au dernier. */
-const ANGLES = [-48, -29, -10, 9, 28, 47];
+/** De combien chaque livre dépasse de l'étui (px), comme sur la photo de Laura : pas tous pareil. */
+const SORTIS = [34, 20, 30, 14, 26, 8];
 
 /**
- * Accueil : la collection. Sur la table, la boîte en carton, haute, faite pour ranger les livres debout
- * (comme l'étui de la photo de Laura), avec le dessin du couloir et son nom sur le côté ; elle est vide,
- * parce que les livres sont sortis : ils sont posés devant, en éventail. Un clic sur un livre l'ouvre.
+ * Accueil : la collection. Un étui blanc, vu en axonométrie, avec le dessin du couloir sur le côté ;
+ * les projets y sont rangés comme des livres, debout, plus ou moins sortis. Au survol un livre sort,
+ * au clic il s'ouvre (page du livre). Un lien mène aussi à la liste des projets.
  */
-export default function Collection({ projets, lang, titre, aide }: { projets: Projet[]; lang: Lang; titre: string; aide: string }) {
+export default function Collection({ projets, lang, voir }: { projets: Projet[]; lang: Lang; voir: string }) {
+  const ep = 44, jeu = 3, pad = 10;
+  const W = projets.length * (ep + jeu) - jeu + pad * 2;
   return (
     <div className={styles.col}>
-      <div className={styles.colScene}>
-        <div className={styles.colTable}>
-          {/* la boîte, vide, au fond de la table */}
-          <div className={styles.bx} aria-hidden="true">
-            <span className={`${styles.bxF} ${styles.bxSol}`} />
-            <span className={`${styles.bxF} ${styles.bxDos}`} />
-            <span className={`${styles.bxF} ${styles.bxInG}`} />
-            <span className={`${styles.bxF} ${styles.bxInD}`} />
-            <span className={`${styles.bxF} ${styles.bxInBas}`} />
-            <span className={`${styles.bxF} ${styles.bxG}`} />
-            <span className={`${styles.bxF} ${styles.bxD}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/media/site/dessin-couverture-1000.webp" alt="" loading="lazy" />
-              <span className={styles.bxNom}>Laura Pras</span>
-              <span className={styles.bxSous}>{titre}</span>
-            </span>
-            <span className={`${styles.bxF} ${styles.bxHaut}`} />
-            <span className={`${styles.bxF} ${styles.bxBord}`} />
-          </div>
-          {/* les livres, en éventail devant */}
-          {projets.map((p, i) => {
-            const { img, pos } = couverture(p);
-            return (
-              <Link key={p.slug} href={`/${lang}/livres/${p.slug}/`} className={styles.bk} style={{ ['--a' as string]: `${ANGLES[i % ANGLES.length]}deg`, ['--i' as string]: i }} aria-label={p.titre}>
-                <span className={styles.bkOmbre} aria-hidden="true" />
-                <span className={`${styles.bkPages} ${styles.bkP0}`} aria-hidden="true" />
-                <span className={`${styles.bkPages} ${styles.bkP1}`} aria-hidden="true" />
-                <span className={`${styles.bkPages} ${styles.bkP2}`} aria-hidden="true" />
-                <span className={styles.bkCouv}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.srcSmall} alt="" loading="lazy" style={pos ? { objectPosition: pos } : undefined} />
-                  <span className={styles.bkN}>N° {String(i + 1).padStart(2, '0')}{p.annee ? ` — ${p.annee}` : ''}</span>
-                  <span className={styles.bkT}>{p.titre}</span>
-                  <span className={styles.bkNom}>Laura Pras</span>
-                </span>
-              </Link>
-            );
-          })}
+      <div className={styles.etuiScene}>
+        <div className={styles.etui} style={{ ['--W' as string]: `${W}px` }}>
+          <span className={`${styles.etuiF} ${styles.etuiSol}`} aria-hidden="true" />
+          <span className={`${styles.etuiF} ${styles.etuiFond}`} aria-hidden="true" />
+          <span className={`${styles.etuiF} ${styles.etuiBas}`} aria-hidden="true" />
+          <span className={`${styles.etuiF} ${styles.etuiGauche}`} aria-hidden="true" />
+          <ul className={styles.livres}>
+            {projets.map((p, i) => {
+              const { img, pos } = couverture(p);
+              return (
+                <li key={p.slug} className={styles.livre} style={{ ['--x' as string]: `${pad + i * (ep + jeu)}px`, ['--t' as string]: `${ep}px`, ['--sort0' as string]: `${SORTIS[i % SORTIS.length]}px`, ['--img' as string]: `url(${img.srcSmall})`, ['--pos' as string]: pos || '50% 50%' }}>
+                  <span className={`${styles.livreF} ${styles.livreHaut}`} aria-hidden="true" />
+                  <span className={`${styles.livreF} ${styles.livreCouv} ${styles.livreCouvG}`} aria-hidden="true" />
+                  <span className={`${styles.livreF} ${styles.livreCouv} ${styles.livreCouvD}`} aria-hidden="true" />
+                  <Link className={styles.livreDos} href={`/${lang}/livres/${p.slug}/`} aria-label={p.titre}>
+                    <span className={styles.livreEtiq}><span className={styles.livreT}>{p.titre}</span></span>
+                    <span className={styles.livreN}>N° {String(i + 1).padStart(2, '0')}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <span className={`${styles.etuiF} ${styles.etuiHaut}`} aria-hidden="true" />
+          {/* le grand côté de l'étui, avec le dessin du couloir */}
+          <span className={`${styles.etuiF} ${styles.etuiDroite}`} aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/media/site/dessin-couverture-1000.webp" alt="" loading="lazy" />
+          </span>
+          <span className={`${styles.etuiF} ${styles.etuiBord}`} aria-hidden="true" />
         </div>
       </div>
-      <p className={styles.colAide}>{aide}</p>
+      <p className={styles.colBas}><Link href={`/${lang}/projets/`} className={styles.colBouton}>{voir}</Link></p>
     </div>
   );
 }

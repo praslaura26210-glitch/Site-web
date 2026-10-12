@@ -104,9 +104,11 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
           <div className="xp-lv-p xp-lv-mat" data-lv-mat="">
             <h3>{L.matieres}</h3>
             {ECHANTILLONS.map((e, k) => (
-              <span key={e.f} className="xp-lv-ech" data-photo={e.photo ? '' : undefined} style={{ ['--x' as string]: `${e.livre[0]}%`, ['--y' as string]: `${e.livre[1]}%`, ['--w' as string]: `${e.livre[2]}%`, ['--r' as string]: `${e.r}deg`, ['--k' as string]: k, aspectRatio: `1 / ${e.ratio}` }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imageEchantillon(e)} alt="" draggable={false} loading="lazy" />
+              <span key={e.f} className="xp-lv-ech" data-photo={e.photo ? '' : undefined} data-mot={e.mot ? '' : undefined} style={{ ['--x' as string]: `${e.livre[0]}%`, ['--y' as string]: `${e.livre[1]}%`, ['--w' as string]: `${e.livre[2]}%`, ['--r' as string]: `${e.r}deg`, ['--k' as string]: k, ['--bois' as string]: `url(${imageEchantillon(e)})`, aspectRatio: `1 / ${e.ratio}` }}>
+                {e.mot ? <b>{e.mot}</b> : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={imageEchantillon(e)} alt="" draggable={false} loading="lazy" />
+                )}
                 <em>{nomMateriau(e.nom, lang)}</em>
               </span>
             ))}
