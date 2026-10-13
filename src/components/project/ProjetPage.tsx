@@ -7,6 +7,7 @@ import { media, type Media } from '@/lib/media';
 import { CHIFFRES, CREDITS, type Bloc, type Mise } from '@/lib/sequences';
 import { ancreDessin } from '@/lib/experience';
 import { v } from '@/lib/ver';
+import { tr } from '@/lib/tr';
 import { couverture } from '@/components/home/ProjetsGrille';
 import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
@@ -31,6 +32,11 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
   const cr = CREDITS[p.slug] || { defaut: '' };
   const credit = (r: string) => cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined);
   const cov = M(mise.ouverture);
+  const F = tr(lang, {
+    fr: { programme: 'Programme', cadre: 'Cadre', annee: 'Année', lieu: 'Lieu' },
+    en: { programme: 'Programme', cadre: 'Context', annee: 'Year', lieu: 'Place' },
+    it: { programme: 'Programma', cadre: 'Contesto', annee: 'Anno', lieu: 'Luogo' },
+  });
   // voix de Laura (facultative) : content/projets/<slug>/audio/presentation.mp3
   const voixFichier = ['presentation.mp3', 'presentation.m4a'].find((f) => fs.existsSync(path.join(process.cwd(), 'content/projets', p.slug, 'audio', f)));
   const voix = voixFichier ? v(`/media/${p.slug}/audio/${voixFichier}`) : null;
@@ -208,26 +214,30 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
 
   return (
     <article className={styles.projet} data-projet={p.slug}>
-      <header className={styles.ouv} data-format={cov.w > cov.h ? 'paysage' : 'portrait'}>
-        <div className={styles.ouvTxt}>
-          <p className="eyebrow"><span className={styles.ouvN}>{String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
-          <h1 className={styles.ouvT}>{p.titre}</h1>
-          <p className={`eyebrow ${styles.ouvMeta}`}>{[p.programme, p.annee].filter(Boolean).join(' · ')}</p>
+      {/* l'ouverture, comme la page de titre d'un livre : le numéro, le titre, puis l'image au centre,
+          tenue entre les informations du projet (à gauche le programme et le cadre, à droite l'année et le lieu) ;
+          l'image s'ouvre depuis le milieu, comme une porte */}
+      <header className={`wrap ${styles.ouv}`} data-format={cov.w > cov.h ? 'paysage' : 'portrait'}>
+        <p className={styles.ouvN}><span>N° {String(p.ordre).padStart(2, '0')}</span><span>{String(total).padStart(2, '0')}</span></p>
+        <h1 className={styles.ouvT}>{p.titre}</h1>
+        <div className={styles.ouvScene}>
+          <dl className={styles.ouvInfos}>
+            <div><dt>{F.programme}</dt><dd>{p.programme}</dd></div>
+            {p.cadre && <div><dt>{F.cadre}</dt><dd>{p.cadre}</dd></div>}
+          </dl>
+          <figure className={styles.ouvImg}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes="(max-width: 900px) 100vw, 50vw" alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
+          </figure>
+          <dl className={`${styles.ouvInfos} ${styles.ouvInfosD}`}>
+            {p.annee && <div><dt>{F.annee}</dt><dd>{p.annee}</dd></div>}
+            {p.lieu && <div><dt>{F.lieu}</dt><dd>{p.lieu}</dd></div>}
+          </dl>
         </div>
-        <figure className={styles.ouvImg}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes={cov.w > cov.h ? '100vw' : '(max-width: 900px) 100vw, 50vw'} alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
-        </figure>
       </header>
 
-      {/* le descriptif : les informations à gauche, le texte à droite (le titre est déjà au-dessus) */}
+      {/* le descriptif, seul, au centre : une colonne de lecture */}
       <section className={`wrap ${styles.presentation}`} id="presentation" data-chapitre={t.xp.presentation}>
-        <ul className={`${styles.livretInfos} rv`}>
-          <li>{p.programme}</li>
-          {p.cadre && <li>{p.cadre}</li>}
-          {p.annee && <li>{t.projet.annee} : {p.annee}</li>}
-          {p.lieu && <li>{t.projet.lieu} : {p.lieu}</li>}
-        </ul>
         <div className={`${styles.livretTexte} rv`}>
           {p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}
           {voix && (

@@ -2,35 +2,36 @@
 
 .projet { --rythme: clamp(96px, 14vh, 160px); }
 
-/* ---------- ouverture : titre et grande image ---------- */
-.ouv { position: relative; max-width: var(--max); margin: 0 auto; padding: var(--header-h) var(--gut) 0; min-height: 100svh; box-sizing: border-box; }
-.ouv[data-format='portrait'] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: end; }
-.ouv[data-format='portrait'] .ouvTxt { align-self: end; padding: 0 0 8px; }
-.ouv[data-format='portrait'] { align-items: stretch; }
-.ouv[data-format='portrait'] .ouvImg img { width: 100%; height: calc(100svh - var(--header-h) - 20px); object-fit: cover; }
-.ouv[data-format='paysage'] .ouvTxt { padding: clamp(32px, 7vh, 80px) 0 clamp(24px, 4vh, 44px); }
-.ouv[data-format='paysage'] { display: flex; flex-direction: column; height: 100svh; }
-.ouv[data-format='paysage'] .ouvImg { flex: 1; min-height: 0; padding-bottom: 20px; }
-.ouv[data-format='paysage'] .ouvImg img { width: 100%; height: 100%; object-fit: cover; }
+/* ---------- ouverture : la page de titre — le numéro, le titre, l'image tenue entre les informations ---------- */
+.projet .wrap { max-width: calc(1060px + 2 * var(--gut)); padding-inline: max(var(--gut), 6vw); }
+.ouv { padding-top: calc(var(--header-h) + clamp(24px, 5vh, 60px)); display: grid; gap: clamp(18px, 3vh, 30px); }
+.ouvN { display: flex; justify-content: space-between; margin: 0; padding-bottom: 12px; border-bottom: 1px solid var(--filet); font-size: .62rem; letter-spacing: .22em; color: var(--gris); }
+.ouvN span:first-child { color: var(--accent-f); }
+.ouvT { font-size: clamp(2.6rem, 5.6vw, 5.4rem); font-weight: 300; line-height: .95; letter-spacing: -0.04em; text-align: center; margin: clamp(8px, 2.4vh, 28px) 0 clamp(6px, 1.4vh, 16px); }
+.ouvScene { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: clamp(18px, 3vw, 44px); align-items: end; }
 .ouvImg { margin: 0; overflow: hidden; }
-.ouvImg img { animation: ouvIn 1.6s var(--ease) both; }
-@keyframes ouvIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
-.ouvN { color: var(--accent); }
-.ouvT { font-size: clamp(2.6rem, 5vw, 5.4rem); line-height: .94; letter-spacing: -0.035em; margin-top: 20px; max-width: 12ch; }
-.ouvMeta { margin-top: 28px; }
+.ouvImg img { display: block; height: min(calc(100svh - var(--header-h) - 260px), 620px); width: auto; max-width: min(56vw, 640px); object-fit: cover; clip-path: inset(0 50% 0 50%); animation: ouvPorte 1.5s cubic-bezier(.7, 0, .2, 1) .15s both; }
+.ouv[data-format='paysage'] .ouvImg img { height: min(calc(100svh - var(--header-h) - 300px), 500px); max-width: min(62vw, 760px); }
+@keyframes ouvPorte { to { clip-path: inset(0 0 0 0); } }
+.ouvInfos { margin: 0; display: grid; gap: 16px; align-content: end; font-size: .78rem; line-height: 1.5; }
+.ouvInfos div { display: grid; gap: 3px; padding-top: 8px; border-top: 1px solid var(--filet); }
+.ouvInfos dt { font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
+.ouvInfos dd { margin: 0; }
+.ouvInfosD { text-align: right; }
+@media (max-width: 900px) {
+  .ouvScene { grid-template-columns: 1fr 1fr; }
+  .ouvImg { grid-column: 1 / -1; grid-row: 1; }
+  .ouvImg img, .ouv[data-format='paysage'] .ouvImg img { width: 100%; height: auto; max-height: 62svh; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) { .ouvImg img { animation: none; clip-path: none; } }
 
-/* ---------- présentation, comme dans le portfolio ---------- */
-.presentation { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px clamp(24px, 4vw, 80px); padding-top: clamp(72px, 12vh, 140px); align-items: start; }
-.folio { grid-column: 1 / span 5; font-size: clamp(5rem, 11vw, 11rem); font-weight: 300; line-height: .8; letter-spacing: -0.05em; color: var(--filet); }
-.livret { grid-column: 1 / span 5; display: grid; gap: 18px; align-content: start; padding-top: 18px; border-top: 1px solid var(--encre); }
-.livretT { display: flex; gap: 22px; align-items: baseline; font-size: clamp(1.2rem, 1.6vw, 1.5rem); font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
-.livretT span { color: var(--accent); }
-.livretInfos { grid-column: 1 / span 5; list-style: none; margin: 0; padding: 18px 0 0; border-top: 1px solid var(--encre); display: grid; gap: 4px; font-size: .92rem; color: var(--gris); }
-.livretInfos li:first-child { color: var(--encre); }
-.livretTexte { grid-column: 7 / span 6; display: grid; gap: 1em; font-size: 1rem; line-height: 1.85; max-width: 62ch; padding-top: 18px; }
+/* ---------- le descriptif, seul, au centre ---------- */
+.presentation { padding-top: clamp(64px, 11vh, 120px); }
+.livretTexte { margin: 0 auto; display: grid; gap: 1em; max-width: 60ch; font-size: 1.02rem; line-height: 1.9; }
+.livretTexte p:first-child { font-size: 1.16rem; line-height: 1.75; }
 
 /* ---------- blocs ---------- */
-.corpsProjet { display: grid; gap: clamp(64px, 10vh, 120px); padding-top: clamp(72px, 11vh, 130px); }
+.corpsProjet { display: grid; gap: clamp(110px, 17vh, 190px); padding-top: clamp(96px, 15vh, 170px); }
 .inter { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 18px; align-items: baseline; padding-top: 18px; border-top: 1px solid var(--encre); margin-bottom: calc(var(--rythme) * -0.6); }
 .inter h2 { font-size: clamp(1.6rem, 2.4vw, 2.3rem); }
 .inter p { grid-column: 2; margin-top: 10px; font-size: .9rem; color: var(--gris); max-width: 60ch; }
@@ -228,10 +229,10 @@
 }
 
 /* ---------- les chapitres : le numéro et le titre, puis les dessins et les textes, à lire de haut en bas ---------- */
-.chap { display: grid; gap: clamp(48px, 8vh, 96px); }
-.chapTete { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 6px 22px; padding-top: 18px; border-top: 1px solid var(--encre); }
-.chapTete .interN { font-size: clamp(1rem, 1.4vw, 1.25rem); letter-spacing: .1em; }
-.chapT { font-size: clamp(1.9rem, 3.4vw, 3.2rem); line-height: 1.02; letter-spacing: -0.025em; }
+.chap { display: grid; gap: clamp(44px, 7vh, 80px); }
+.chapTete { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 6px 18px; padding-top: 14px; border-top: 1px solid var(--filet); }
+.chapTete .interN { font-size: .66rem; letter-spacing: .2em; }
+.chapT { font-size: clamp(1.3rem, 2vw, 1.75rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.01em; }
 .chapNote { grid-column: 2; max-width: 62ch; font-size: .9rem; color: var(--gris); line-height: 1.7; }
 .chapSousT { font-size: .62rem; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-f); }
 /* un texte à côté de son image : l'image d'un côté, le texte de l'autre, centrés l'un sur l'autre */
@@ -333,45 +334,44 @@
 .strophe[data-forme='portrait'] .stropheTexte { grid-column: 8 / span 4; }
 .strophe[data-forme='portrait'][data-cote='d'] .stropheTexte { grid-column: 2 / span 4; }
 .stropheImg .figBtn img { max-height: 82svh; }
-.stropheTexte p { font-size: clamp(1.05rem, 1.35vw, 1.28rem); line-height: 1.9; }
+.stropheTexte p { font-size: clamp(.98rem, 1.15vw, 1.12rem); line-height: 1.95; }
 .stropheTexte p span, .stropheSeule p span { display: block; }
 .stropheN { display: flex; align-items: center; gap: 14px; font-size: .68rem; letter-spacing: .24em; color: var(--accent-f); }
 .stropheN::after { content: ''; width: 46px; height: 1px; background: var(--accent); }
 .stropheSeule { margin: 0 auto; display: grid; justify-items: center; gap: 22px; text-align: center; max-width: 34ch; }
 .stropheSeule .stropheN::before { content: ''; width: 46px; height: 1px; background: var(--accent); }
-.stropheSeule p { font-size: clamp(1.4rem, 2.5vw, 2.25rem); line-height: 1.45; font-weight: 300; letter-spacing: -0.01em; }
+.stropheSeule p { font-size: clamp(1.2rem, 2vw, 1.75rem); line-height: 1.45; font-weight: 300; letter-spacing: -0.01em; }
 
 /* une image d'un bord à l'autre de l'écran */
-.plein { width: 100vw; margin-inline: calc(50% - 50vw); }
+.plein { width: 100%; }
 .plein .figBtn img { width: 100%; height: auto; max-height: none; }
-.plein .cap { padding-inline: var(--gut); }
+
 
 /* la planche de dessins, avec son cartouche */
-.feuille { position: relative; display: grid; gap: clamp(28px, 4vw, 48px); padding: clamp(22px, 3.4vw, 48px); border: 1px solid var(--encre); background: #fff; }
-.feuille::before { content: ''; position: absolute; inset: 7px; border: 1px solid rgba(43, 33, 28, .22); pointer-events: none; }
+.feuille { position: relative; display: grid; gap: clamp(28px, 4vw, 48px); }
 .feuilleDessins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px) clamp(24px, 3.5vw, 56px); align-items: center; }
 .feuilleItem { position: relative; min-width: 0; }
 .feuilleItem[data-large] { grid-column: 1 / -1; }
 .feuilleItem .figBtn img { max-height: 62svh; }
-.feuilleItem[data-carre] .figBtn img { max-height: 46svh; }
-.feuilleN { position: absolute; z-index: 1; top: -10px; left: -10px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--encre); background: #fff; font-size: .6rem; letter-spacing: .04em; }
-.cartouche { justify-self: end; width: min(100%, 320px); border: 1px solid var(--encre); font-size: .7rem; line-height: 1.5; }
-.cartouche > * { margin: 0; padding: 8px 12px; border-bottom: 1px solid var(--encre); }
-.cartouche > :last-child { border-bottom: 0; }
+.feuilleItem[data-carre] .figBtn img { max-height: 36svh; }
+.feuilleN { display: block; margin-bottom: 8px; font-size: .6rem; letter-spacing: .14em; color: var(--accent-f); }
+.cartouche { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 28px; padding-top: 12px; border-top: 1px solid var(--filet); font-size: .7rem; line-height: 1.5; }
+.cartouche > * { margin: 0; }
+.cartouche > p:first-child, .cartoucheT { display: none !important; }
 .cartouche p:first-child { display: flex; justify-content: space-between; gap: 12px; }
 .cartouche b { font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
 .cartoucheT { font-size: 1rem; }
-.cartouche ol { list-style: none; display: grid; gap: 2px; color: var(--gris); }
-.cartouche ol span { display: inline-block; width: 2.2em; color: var(--encre); }
+.cartouche ol { grid-column: 1 / -1; list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 26px; color: var(--gris); }
+.cartouche ol span { margin-right: .6em; color: var(--accent-f); }
 
 /* trois vues : une grande, deux l'une sous l'autre */
 .triptyque { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(16px, 2vw, 28px); align-items: start; }
 .triptyqueItem[data-j='0'] { grid-row: 1 / span 2; }
 
 /* la bande de photos qu'on fait défiler de côté */
-.galerie { width: 100vw; margin-inline: calc(50% - 50vw); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; outline: none; }
-.galerieRang { display: flex; gap: clamp(16px, 2vw, 28px); width: max-content; padding: 0 var(--gut) 18px; }
-.galerieItem { flex: none; height: min(74svh, 680px); scroll-snap-align: center; }
+.galerie { width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; outline: none; }
+.galerieRang { display: flex; gap: clamp(14px, 1.6vw, 22px); width: max-content; padding: 0 0 16px; }
+.galerieItem { flex: none; height: min(58svh, 520px); scroll-snap-align: start; }
 .galerieItem .fig { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
 .galerieItem .figBtn, .galerieItem .figBtn img { height: 100%; max-height: none; }
 .galerieItem .figBtn img { width: 100%; object-fit: cover; }

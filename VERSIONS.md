@@ -21,6 +21,11 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V24 (aperçu des essais)
+
+- **Fiches projet** : une colonne centrée avec de vraies marges, plus rien d'un bord à l'autre de l'écran. L'ouverture devient une page de titre : le numéro, le titre au centre, l'image qui s'ouvre depuis le milieu, tenue entre les informations du projet (programme et cadre à gauche, année et lieu à droite). Le descriptif seul, au centre. Des titres de chapitre plus discrets, plus d'air entre les chapitres, des planches de dessins sans cadre. Les animations d'assemblage n'ont pas changé.
+- **À propos** : la bande défile encore plus lentement ; les logos des outils sont plus grands.
+
 ## Essais en cours — V23 (aperçu des essais)
 
 Suite des essais, toujours sur l'aperçu des essais seulement.
