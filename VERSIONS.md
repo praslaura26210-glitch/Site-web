@@ -8,6 +8,9 @@ est retrouvé à partir de son identifiant (colonne de droite).
 
 **V21 — `184c46e`**. C'est la base des prochains essais, qui se font à côté, sur un aperçu séparé.
 
+- Aperçu de la version de référence (on n'y touche plus) : https://claude.ai/artifact/QKBfHyau4SxvDF66LmVsMx
+- Aperçu des nouveaux essais : https://claude.ai/artifact/QVdTjfcHjRd9NryPjnPPt1
+
 - **Ouverture** : verre dépoli sur l'accueil, axes noirs tracés puis effacés, logo dessiné d'après Laura, nom écrit lettre à lettre ; une fois par visite, rejouée par le logo.
 - **Accueil** : le dessin du couloir au centre, le nom, le statut, le portfolio. Plus bas, la collection : un étui blanc en axonométrie, le dessin du couloir sur le côté, les livres debout (au survol un livre sort, au clic il s'ouvre), et un bouton « Voir les projets ».
 - **Livres** (`/livres/<projet>/`) : le livre du projet. Ses pages tournent quand on fait défiler, et chacune s'anime : images, plans qui se dessinent, existant/projet, matériaux, chiffres.
