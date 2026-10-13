@@ -24,6 +24,13 @@ export function xpRaccourcis(ctx: XPContexte) {
 }
 
 /** Une fois pour toutes : raccourcis, copie d'adresse, navigation avec transition entre deux pages. */
+/** Ouvre la fiche d'un matériau sur la palette (f vide : ferme). */
+function xpPalette(palette: HTMLElement, f: string) {
+  palette.querySelectorAll<HTMLElement>('[data-pal-fiche]').forEach((x) => { x.hidden = x.dataset.palFiche !== f; });
+  if (f) palette.dataset.ouvert = f; else delete palette.dataset.ouvert;
+  if (f) palette.querySelector<HTMLElement>(`[data-pal-fiche="${f}"] [data-pal-ferme]`)?.focus({ preventScroll: true });
+}
+
 export function xpDemarrer(ctx: XPContexte) {
   const actions = {
     raccourcis: () => xpRaccourcis(ctx),
@@ -41,6 +48,14 @@ export function xpDemarrer(ctx: XPContexte) {
     if (cibleAncre) {
       e.preventDefault();
       cibleAncre.scrollIntoView({ behavior: xpCalme() ? 'auto' : 'smooth', block: 'start' });
+      return;
+    }
+    // la palette des matériaux (Pilates) : un clic ouvre la fiche du matériau ; la croix ou un clic à côté la ferme
+    const palette = (e.target as Element).closest<HTMLElement>('[data-palette]');
+    if (palette) {
+      const ouvre = (e.target as Element).closest<HTMLElement>('[data-pal]');
+      const fiche = (e.target as Element).closest('[data-pal-fiche]');
+      if (ouvre || !fiche || (e.target as Element).closest('[data-pal-ferme]')) xpPalette(palette, ouvre?.dataset.pal || '');
       return;
     }
     // une carte postale (références) : un clic la retourne, un autre la remet à l'endroit
@@ -76,6 +91,7 @@ export function xpDemarrer(ctx: XPContexte) {
     ctx.naviguer(cible, xpImageDuLien(a));
   };
   const touche = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') document.querySelectorAll<HTMLElement>('[data-palette][data-ouvert]').forEach((x) => xpPalette(x, ''));
     if (xpSaisie(e) || e.metaKey || e.ctrlKey || e.altKey || document.querySelector('dialog[open]')) return;
     if (e.key === '?') actions.raccourcis();
     else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && (e.target === document.body || e.target === document.documentElement)) {

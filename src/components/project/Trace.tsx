@@ -13,9 +13,9 @@ export default function Trace({ slug, nom, m, avec, labels, credit, rejouer }: {
   const f = path.join(process.cwd(), 'content/projets', slug, `${nom}-traits.json`);
   const t = fs.existsSync(f) ? (JSON.parse(fs.readFileSync(f, 'utf8')) as { w: number; h: number; lines: number[][] }) : null;
   return (
-    <div className={styles.trace}>
+    <div className={styles.trace} style={avec ? { gridTemplateColumns: `${m.w / m.h}fr ${avec.w / avec.h}fr`, ['--s' as string]: m.w / m.h + avec.w / avec.h } : undefined}>
       <figure className={styles.traceCroquis}>
-        <button type="button" className={styles.traceDessin} data-construire="" aria-label={`${m.legende} — ${rejouer}`} style={{ aspectRatio: `${m.w} / ${m.h}` }}>
+        <button type="button" className={styles.traceDessin} data-construire="" aria-label={`${m.legende} — ${rejouer}`} style={{ aspectRatio: `${m.w} / ${m.h}`, width: '100%' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={m.srcSmall || m.src} alt="" loading="lazy" />
           {t && (

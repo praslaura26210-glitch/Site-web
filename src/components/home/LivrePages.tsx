@@ -122,7 +122,8 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
       case 'trace': images(cle, [b.r, ...(b.avec ? [b.avec] : [])]); break;
       case 'superpose': images(cle, [b.a, b.b]); break;
       case 'cotes': images(cle, [b.r]); break;
-      case 'nuancier': break;
+      case 'nuancier': case 'palette': break;
+      case 'lignes': images(cle, b.r.flat()); break;
       case 'construction': images(cle, [b.r]); break;
       case 'comparer':
         b.items.forEach((x, k) => {

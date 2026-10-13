@@ -20,6 +20,7 @@ import Feuille from './Feuille';
 import Trace from './Trace';
 import Nuancier from './Nuancier';
 import Cotes from './Cotes';
+import Palette from './Palette';
 import styles from './project.module.css';
 
 
@@ -154,11 +155,32 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         return <Trace key={k} slug={p.slug} nom={b.r} m={M(b.r)} avec={b.avec ? M(b.avec) : undefined} labels={L} credit={cr.defaut || undefined} rejouer={t.xp.rejouer} />;
       case 'nuancier':
         return <Nuancier key={k} lang={lang} credit={cr.defaut || undefined} />;
+      case 'palette':
+        return <Palette key={k} lang={lang} credit={cr.defaut || undefined} />;
+      case 'lignes':
+        // chaque ligne : les images à la même hauteur, la ligne remplit la largeur sans dépasser la hauteur h
+        return (
+          <div key={k} className={styles.lignes}>
+            {b.r.map((ligne, j) => {
+              const ms = ligne.map(M);
+              const somme = ms.reduce((a, m) => a + m.w / m.h, 0);
+              return (
+                <div key={j} className={styles.ligne} style={{ ['--s' as string]: somme, ['--n' as string]: ligne.length, ['--h' as string]: b.h || 230 }}>
+                  {ligne.map((r, q) => (
+                    <div key={r} className={styles.ligneItem} style={{ flexGrow: ms[q].w / ms[q].h }}>
+                      <Planche m={ms[q]} sizes={`(max-width: 900px) 100vw, ${Math.round(900 * (ms[q].w / ms[q].h) / somme)}px`} labels={L} credit={credit(r)} ancre={ancreDessin(r)} />
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        );
       case 'superpose': {
         const a = M(b.a), c = M(b.b);
         return (
           <div key={k} className={styles.superpose}>
-            <Comparateur existant={{ src: a.src, w: a.w, h: a.h, legende: a.legende }} projet={{ src: c.src, w: c.w, h: c.h, legende: c.legende }} titre={b.titre[lang]} labels={{ existant: b.la[lang], projet: b.lb[lang], glisser: t.projet.glisser }} />
+            <Comparateur existant={{ src: a.src, w: a.w, h: a.h, legende: a.legende }} projet={{ src: c.src, w: c.w, h: c.h, legende: c.legende }} titre={b.titre[lang]} labels={{ existant: b.la[lang], projet: b.lb[lang], glisser: t.projet.glisser }} cadre={b.cadre} />
           </div>
         );
       }
@@ -254,10 +276,10 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
       case 'strophes': cur.textes.push(texteCourt('poeme', `${cle}-t`)); imgs(b.r.filter((x): x is string => !!x)); return;
       case 'texte': cur.textes.push(texteCourt(b.k, `${cle}-t`)); if (b.r) imgs([b.r]); return;
       case 'trace': {
-        cur.medias.push(<div key={cle} className={styles.vignetteAnim}><Trace slug={p.slug} nom={b.r} m={M(b.r)} labels={L} credit={cr.defaut || undefined} rejouer={t.xp.rejouer} /></div>);
-        if (b.avec) imgs([b.avec]);
+        cur.medias.push(<Trace key={cle} slug={p.slug} nom={b.r} m={M(b.r)} avec={b.avec ? M(b.avec) : undefined} labels={L} credit={cr.defaut || undefined} rejouer={t.xp.rejouer} />);
         return;
       }
+      case 'lignes': cur.medias.push(bloc(b, k)); return;
       default: {
         const m = bloc(b, k);
         if (m) cur.medias.push(<div key={cle} className={styles.anim} data-bloc={b.t}>{m}</div>);
@@ -269,48 +291,46 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
 
   return (
     <article className={styles.projet} data-projet={p.slug}>
-      {/* l'ouverture, comme la page de titre d'un livre : le numéro, le titre, puis l'image au centre,
-          tenue entre les informations du projet (à gauche le programme et le cadre, à droite l'année et le lieu) ;
-          l'image s'ouvre depuis le milieu, comme une porte */}
-      <header className={`wrap ${styles.ouv}`} data-format={cov.w > cov.h ? 'paysage' : 'portrait'}>
-        <p className={styles.ouvN}><span>N° {String(p.ordre).padStart(2, '0')}</span><span>{String(total).padStart(2, '0')}</span></p>
-        <h1 className={styles.ouvT}>{p.titre}</h1>
-        <div className={styles.ouvScene}>
+      {/* l'ouverture, en double page : à gauche l'image, à droite le numéro, le titre, les informations,
+          le descriptif en deux phrases et le sommaire des chapitres (un clic y descend) */}
+      <header className={`wrap ${styles.ouv}`} id="presentation" data-chapitre={t.xp.presentation} data-format={cov.w > cov.h ? 'paysage' : 'portrait'}>
+        <figure className={styles.ouvImg}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes="(max-width: 900px) 100vw, 45vw" alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
+        </figure>
+        <div className={styles.ouvTxt}>
+          <p className={styles.ouvN}><span>N° {String(p.ordre).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}</p>
+          <h1 className={styles.ouvT}>{p.titre}</h1>
           <dl className={styles.ouvInfos}>
             <div><dt>{F.programme}</dt><dd>{p.programme}</dd></div>
-            {p.cadre && <div><dt>{F.cadre}</dt><dd>{p.cadre}</dd></div>}
-          </dl>
-          <figure className={styles.ouvImg}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={cov.src} srcSet={cov.srcSmall ? `${cov.srcSmall} 1000w, ${cov.src} 2000w` : undefined} sizes="(max-width: 900px) 100vw, 50vw" alt={cov.legende} width={cov.w} height={cov.h} fetchPriority="high" style={mise.pos ? { objectPosition: mise.pos } : undefined} data-xp-cover />
-          </figure>
-          <dl className={`${styles.ouvInfos} ${styles.ouvInfosD}`}>
             {p.annee && <div><dt>{F.annee}</dt><dd>{p.annee}</dd></div>}
+            {p.cadre && <div><dt>{F.cadre}</dt><dd>{p.cadre}</dd></div>}
             {p.lieu && <div><dt>{F.lieu}</dt><dd>{p.lieu}</dd></div>}
           </dl>
+          <div className={styles.livretTexte}>
+            <p>{lead}</p>
+            {suiteTexte && <details className={styles.repli}><summary>{R.suite}</summary><p>{suiteTexte}</p></details>}
+            {voix && (
+              <button type="button" className="xp-ecoute" data-ecoute={voix} data-pause={t.xp.ecouterPause}>
+                <span className="xp-ecoute-icone" aria-hidden="true" />
+                <span className="xp-ecoute-t">{t.xp.ecouter}</span>
+                <span className="xp-ecoute-temps" aria-hidden="true" />
+                <span className="xp-ecoute-barre" aria-hidden="true"><i /></span>
+              </button>
+            )}
+          </div>
+          <ol className={styles.sommaire}>
+            {chapitres.map((c, i) => (
+              <li key={i}><a href={`#chapitre-${i + 1}`} data-ancre=""><span>{String(i + 1).padStart(2, '0')}</span>{c.titre}</a></li>
+            ))}
+          </ol>
         </div>
       </header>
-
-      {/* le descriptif, seul, au centre : une colonne de lecture */}
-      <section className={`wrap ${styles.presentation}`} id="presentation" data-chapitre={t.xp.presentation}>
-        <div className={`${styles.livretTexte} rv`}>
-          <p>{lead}</p>
-          {suiteTexte && <details className={styles.repli}><summary>{R.suite}</summary><p>{suiteTexte}</p></details>}
-          {voix && (
-            <button type="button" className="xp-ecoute" data-ecoute={voix} data-pause={t.xp.ecouterPause}>
-              <span className="xp-ecoute-icone" aria-hidden="true" />
-              <span className="xp-ecoute-t">{t.xp.ecouter}</span>
-              <span className="xp-ecoute-temps" aria-hidden="true" />
-              <span className="xp-ecoute-barre" aria-hidden="true"><i /></span>
-            </button>
-          )}
-        </div>
-      </section>
 
       {/* chaque chapitre : son numéro et son titre, puis ses dessins et ses textes, à lire de haut en bas */}
       <div className={`wrap ${styles.corpsProjet}`}>
         {chapitres.map((c, i) => (
-          <section key={i} className={styles.chap} id={`chapitre-${i + 1}`} data-chapitre={c.titre || t.xp.presentation}>
+          <section key={i} className={styles.chap} id={`chapitre-${i + 1}`} data-chapitre={c.titre || t.xp.presentation} data-sans-media={c.medias.length ? undefined : ''}>
             <aside className={`${styles.chapTexte} rv`}>
               <span className={styles.interN}>{String(i + 1).padStart(2, '0')}</span>
               {c.titre && <h2 className={styles.chapT}>{c.titre}</h2>}

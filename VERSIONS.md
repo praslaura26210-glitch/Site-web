@@ -21,6 +21,11 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V26 (aperçu des essais)
+
+- **Fiches projet** : l'ouverture en double page (l'image à gauche ; à droite le numéro, le titre, les informations, le descriptif et le sommaire des chapitres, cliquable), sans l'image qui s'ouvrait au milieu. Les images rangées en lignes composées à la main : dans une ligne, toutes à la même hauteur. Assemblages d'Illusion d'envol en deux lignes de deux.
+- **Pilates Room** : plans d'aménagement et d'électricité recalés à la même échelle ; les matériaux en palette mélangée, un clic ouvre la fiche du matériau en grand.
+
 ## Essais en cours — V25 (aperçu des essais)
 
 - **Fiches projet, tout en petit** : chaque chapitre tient à peu près sur un écran. À gauche le numéro, le titre et un texte court (« Lire la suite » déplie le reste, le poème se lit en entier sur demande) ; à droite les dessins en vignettes, à la même hauteur, qu'on agrandit d'un clic. Ouverture et descriptif réduits. Les axonométries animées, les avant/après, les plans superposés et les matériaux gardés, en plus petit. Escalier : les chiffres éclairent le dessin au survol.
