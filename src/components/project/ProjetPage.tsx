@@ -195,22 +195,77 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
     }
   };
 
-  // les chapitres : un titre, puis les dessins et les textes dans l'ordre, chaque texte à côté de son image
-  type Chap = { titre?: string; note?: string; blocs: React.ReactNode[] };
-  const chapitres: Chap[] = [];
-  let cur: Chap = { blocs: [] };
-  mise.blocs.forEach((b, k) => {
-    if (b.t === 'inter') {
-      if (cur.blocs.length) chapitres.push(cur);
-      cur = { titre: b.titre[lang], note: b.note?.[lang], blocs: [] };
-      return;
-    }
-    const m = bloc(b, k);
-    if (m) cur.blocs.push(m);
-    // les chiffres d'une visionneuse : sous elle
-    if (b.t === 'visionneuse' && b.k) { const x = texte(b.k); if (x) cur.blocs.push(<div key={`c${k}`} className={`${styles.solo} rv`}>{x}</div>); }
+  // ---------- tout en petit : chaque chapitre tient à peu près sur un écran ----------
+  const R = tr(lang, {
+    fr: { suite: 'Lire la suite', poeme: 'Lire tout le poème' },
+    en: { suite: 'Read more', poeme: 'Read the whole poem' },
+    it: { suite: 'Continua a leggere', poeme: 'Leggi tutta la poesia' },
   });
-  if (cur.blocs.length) chapitres.push(cur);
+  // les premières phrases d'un texte ; le reste se déplie (« Lire la suite »)
+  const phrases = (x: string, n: number) => {
+    const ph = x.match(/[^.!?…]+[.!?…]+[»"”)]*\s*|[^.!?…]+$/g) || [x];
+    return [ph.slice(0, n).join('').trim(), ph.slice(n).join('').trim()];
+  };
+  const repli = (k: string, vu: React.ReactNode, reste: React.ReactNode, libelle = R.suite) => (
+    <div key={k} className={styles.court}>
+      {vu}
+      {reste && <details className={styles.repli}><summary>{libelle}</summary>{reste}</details>}
+    </div>
+  );
+  const texteCourt = (k: string, cle: string): React.ReactNode => {
+    if (k === 'recit' && p.recit) {
+      const [vu, reste] = phrases(p.recit.replace(/^«\s*|\s*»$/g, ''), 2);
+      return repli(cle, <>{p.recit_titre && <h3 className={styles.courtT}>{p.recit_titre}</h3>}<p>{vu}</p></>, reste && <p>{reste}</p>);
+    }
+    if (k === 'experimentation' && p.experimentation) {
+      const [vu, reste] = phrases(p.experimentation, 2);
+      return repli(cle, <p>{vu}</p>, reste && <p>{reste}</p>);
+    }
+    if (k === 'poeme' && p.poeme) {
+      const st = p.poeme.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
+      const vers = (x: string, j: number) => <p key={j}>{x.split('\n').map((l, m) => <span key={m}>{l}</span>)}</p>;
+      return repli(cle, <div className={styles.courtPoeme}>{vers(st[0], 0)}</div>, st.length > 1 && <div className={styles.courtPoeme}>{st.slice(1).map((x, j) => vers(x, j + 1))}</div>, R.poeme);
+    }
+    if (k === 'chiffres') return <div key={cle} className={styles.court}>{texte('chiffres')}</div>;
+    return null;
+  };
+  // une vignette : l'image ou le dessin en petit ; un clic l'agrandit
+  const vignette = (r: string, cle: string) => {
+    const m = M(r);
+    const ratio = m.w / m.h;
+    return <div key={cle} className={styles.vignette} data-forme={ratio > 2.1 ? 'large' : ratio < 0.85 ? 'haut' : 'moyen'}><Planche m={m} sizes="(max-width: 900px) 50vw, 420px" labels={L} credit={credit(r)} ancre={ancreDessin(r)} /></div>;
+  };
+
+  // les chapitres : à gauche le numéro, le titre et un texte court ; à droite les vignettes et les animations
+  type Chap = { titre?: string; note?: string; textes: React.ReactNode[]; medias: React.ReactNode[] };
+  const chapitres: Chap[] = [];
+  let cur: Chap = { textes: [], medias: [] };
+  mise.blocs.forEach((b, k) => {
+    const cle = `b${k}`;
+    const imgs = (rs: string[]) => rs.forEach((r, j) => cur.medias.push(vignette(r, `${cle}-${j}`)));
+    switch (b.t) {
+      case 'inter':
+        if (cur.medias.length || cur.textes.length) chapitres.push(cur);
+        cur = { titre: b.titre[lang], note: b.note?.[lang], textes: [], medias: [] };
+        return;
+      case 'grand': case 'plein': imgs([b.r]); return;
+      case 'rang': case 'feuille': case 'triptyque': case 'galerie': case 'coupes': case 'visionneuse': imgs([...b.r]); if (b.t === 'visionneuse' && b.k) cur.textes.push(texteCourt(b.k, `${cle}-t`)); return;
+      case 'composition': imgs(b.rangs.flat().map((x) => x.r)); return;
+      case 'strophes': cur.textes.push(texteCourt('poeme', `${cle}-t`)); imgs(b.r.filter((x): x is string => !!x)); return;
+      case 'texte': cur.textes.push(texteCourt(b.k, `${cle}-t`)); if (b.r) imgs([b.r]); return;
+      case 'trace': {
+        cur.medias.push(<div key={cle} className={styles.vignetteAnim}><Trace slug={p.slug} nom={b.r} m={M(b.r)} labels={L} credit={cr.defaut || undefined} rejouer={t.xp.rejouer} /></div>);
+        if (b.avec) imgs([b.avec]);
+        return;
+      }
+      default: {
+        const m = bloc(b, k);
+        if (m) cur.medias.push(<div key={cle} className={styles.anim} data-bloc={b.t}>{m}</div>);
+      }
+    }
+  });
+  if (cur.medias.length || cur.textes.length) chapitres.push(cur);
+  const [lead, suiteTexte] = phrases(p.texte.replace(/\n+/g, ' '), 2);
 
   return (
     <article className={styles.projet} data-projet={p.slug}>
@@ -239,7 +294,8 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
       {/* le descriptif, seul, au centre : une colonne de lecture */}
       <section className={`wrap ${styles.presentation}`} id="presentation" data-chapitre={t.xp.presentation}>
         <div className={`${styles.livretTexte} rv`}>
-          {p.texte.split(/\n+/).map((x, j) => <p key={j}>{x}</p>)}
+          <p>{lead}</p>
+          {suiteTexte && <details className={styles.repli}><summary>{R.suite}</summary><p>{suiteTexte}</p></details>}
           {voix && (
             <button type="button" className="xp-ecoute" data-ecoute={voix} data-pause={t.xp.ecouterPause}>
               <span className="xp-ecoute-icone" aria-hidden="true" />
@@ -255,12 +311,13 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
       <div className={`wrap ${styles.corpsProjet}`}>
         {chapitres.map((c, i) => (
           <section key={i} className={styles.chap} id={`chapitre-${i + 1}`} data-chapitre={c.titre || t.xp.presentation}>
-            <header className={`${styles.chapTete} rv`}>
+            <aside className={`${styles.chapTexte} rv`}>
               <span className={styles.interN}>{String(i + 1).padStart(2, '0')}</span>
               {c.titre && <h2 className={styles.chapT}>{c.titre}</h2>}
               {c.note && <p className={styles.chapNote}>{c.note}</p>}
-            </header>
-            {c.blocs}
+              {c.textes}
+            </aside>
+            <div className={styles.chapMedias}>{c.medias}</div>
           </section>
         ))}
       </div>

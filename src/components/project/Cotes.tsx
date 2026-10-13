@@ -7,15 +7,14 @@ import styles from './project.module.css';
 const Y = (p: number) => +(p * 1.3006).toFixed(2);
 
 /**
- * Escalier suspendu, la conception : l'axonométrie reste à l'écran pendant qu'on lit les chiffres à côté.
- * Chaque chiffre, quand il passe au milieu de l'écran, éclaire la partie du dessin qu'il concerne : les deux
- * niveaux pour la hauteur, le limon, l'angle au pied de l'escalier, le garde-corps du palier
- * (experience/anim.ts pose data-etape). Les tracés sont des repères posés sur le dessin, pas des cotes mesurées.
+ * Escalier suspendu, la conception : l'axonométrie, et à côté les quatre chiffres. Au survol (ou au toucher)
+ * d'un chiffre, le dessin éclaire la partie qu'il concerne : les deux niveaux pour la hauteur, le limon,
+ * l'angle au pied de l'escalier, le garde-corps du palier (experience/index.ts pose data-etape). Les tracés sont des repères posés sur le dessin, pas des cotes mesurées.
  */
 export default function Cotes({ slug, m, lang }: { slug: string; m: Media; lang: Lang }) {
   const chiffres = CHIFFRES[slug] || [];
   return (
-    <div className={styles.cotes} data-etapes="" data-etape="0">
+    <div className={styles.cotes} data-cotes="" data-etape="0">
       <figure className={styles.cotesFig}>
         <div className={styles.cotesDessin} style={{ aspectRatio: `${m.w} / ${m.h}`, ['--r' as string]: m.w / m.h }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -49,7 +48,7 @@ export default function Cotes({ slug, m, lang }: { slug: string; m: Media; lang:
       </figure>
       <ol className={styles.cotesEtapes}>
         {chiffres.map((x, i) => (
-          <li key={x.label.fr} data-etape={i}>
+          <li key={x.label.fr} data-etape={i} tabIndex={0}>
             <span className={styles.cotesN}>{String(i + 1).padStart(2, '0')} / {String(chiffres.length).padStart(2, '0')}</span>
             <b>{x.valeur[lang]}</b>
             <span>{x.label[lang]}</span>

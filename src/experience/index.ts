@@ -92,14 +92,19 @@ export function xpDemarrer(ctx: XPContexte) {
     const li = (e.target as Element).closest?.<HTMLElement>('[data-etagere] li[data-i]');
     const et = li?.closest<HTMLElement>('[data-etagere]');
     if (li && et) et.dataset.choix = li.dataset.i;
+    // l'escalier : le chiffre survolé éclaire sa partie du dessin
+    const c = (e.target as Element).closest?.<HTMLElement>('[data-cotes] [data-etape]');
+    const bc = c?.closest<HTMLElement>('[data-cotes]');
+    if (c && bc) bc.dataset.etape = c.dataset.etape;
   };
   document.addEventListener('click', clic);
   document.addEventListener('click', lien, true);
   document.addEventListener('pointerover', etagere);
   document.addEventListener('focusin', etagere);
+  document.addEventListener('click', etagere);
   addEventListener('keydown', touche);
   const autres = [xpEntete(), xpPrecharge(ctx)];
-  return () => { document.removeEventListener('pointerover', etagere); document.removeEventListener('focusin', etagere); document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
+  return () => { document.removeEventListener('pointerover', etagere); document.removeEventListener('focusin', etagere); document.removeEventListener('click', etagere); document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
 /** À chaque page affichée : visionneuse, chapitres, carte, défilé, livres de l'étui. Retourne le nettoyage. */

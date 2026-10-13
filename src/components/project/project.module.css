@@ -469,3 +469,81 @@
 @media (prefers-reduced-motion: reduce) {
   .traceDessin :is(img, svg, line), .cotesSpot, .cotesDessin :is(g, .cotesTrait) { transition: none; }
 }
+
+/* ================= V25 : tout en petit — chaque chapitre tient à peu près sur un écran ================= */
+.projet .wrap { max-width: calc(1120px + 2 * var(--gut)); }
+.ouv { padding-top: calc(var(--header-h) + clamp(16px, 3.5vh, 40px)); gap: 12px; }
+.ouvT { font-size: clamp(2.1rem, 4.2vw, 3.8rem); }
+.ouvImg img { height: min(44svh, 430px); max-width: min(48vw, 520px); }
+.ouv[data-format='paysage'] .ouvImg img { height: min(36svh, 360px); max-width: min(56vw, 640px); }
+.presentation { padding-top: clamp(36px, 6vh, 64px); }
+.livretTexte { max-width: 58ch; font-size: .92rem; line-height: 1.8; }
+.livretTexte p:first-child { font-size: 1rem; line-height: 1.75; }
+.corpsProjet { gap: clamp(56px, 9vh, 100px); padding-top: clamp(56px, 9vh, 96px); }
+
+/* un chapitre : à gauche le numéro, le titre, un texte court ; à droite les vignettes */
+.chap { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 20px clamp(24px, 4vw, 64px); align-items: start; padding-top: 16px; border-top: 1px solid var(--filet); }
+.chapTexte { display: grid; gap: 10px; align-content: start; align-self: start; }
+.chapTexte .interN { font-size: .62rem; letter-spacing: .2em; }
+.chapT { font-size: clamp(1.05rem, 1.4vw, 1.3rem); font-weight: 400; line-height: 1.2; }
+.chapNote { grid-column: auto; font-size: .78rem; line-height: 1.6; }
+.chapMedias { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px 20px; min-width: 0; }
+
+/* les vignettes : petites, à la même hauteur, la légende pas plus large que l'image */
+.vignette { flex: none; max-width: 100%; }
+.vignette .fig { display: table; }
+.vignette .cap { display: table-caption; caption-side: bottom; margin-top: 6px; font-size: .6rem; }
+.vignette .figBtn img { height: 210px; width: auto; max-width: 100%; max-height: none; object-fit: contain; transition: opacity .3s; }
+.vignette[data-forme='large'] .figBtn img { height: 140px; }
+.vignette[data-forme='haut'] .figBtn img { height: 240px; }
+.vignette .figBtn:hover img { opacity: .82; }
+
+/* les textes courts ; le reste se déplie */
+.court { display: grid; gap: 8px; }
+.court p { font-size: .84rem; line-height: 1.75; }
+.courtT { font-size: .92rem; font-weight: 400; }
+.courtPoeme p { margin: 0 0 .9em; font-size: .82rem; line-height: 1.75; }
+.courtPoeme span { display: block; }
+.repli summary { list-style: none; cursor: pointer; font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-f); }
+.repli summary::-webkit-details-marker { display: none; }
+.repli summary:hover { color: var(--encre); }
+.repli[open] summary { display: none; }
+.repli[open] > * { animation: catOuvre .3s ease both; }
+.chapTexte .chiffres { grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.chapTexte .chiffres dd { font-size: 1.25rem; }
+
+/* les animations, en plus petit, dans la colonne des vignettes */
+.anim { flex: 1 1 100%; min-width: 0; }
+.anim .ecl { --fit: 60svh; margin: 0; justify-items: start; width: min(100%, 720px, calc(var(--fit) * var(--ratio))); }
+.anim .ecl[data-portrait] { --fit: 76svh; }
+.anim .eclLegende { justify-items: start; text-align: left; }
+.anim .comparer, .anim .comparer[data-deux] { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; align-items: end; }
+.anim .superpose { width: min(100%, 560px); margin: 0; }
+.anim .nuancier ul { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 26px 16px; }
+.anim .nuanceT { font-size: .8rem; }
+.anim .nuanceOu { font-size: .7rem; line-height: 1.5; }
+.anim .nuanceN { margin-top: 6px; }
+.vignetteAnim { flex: none; }
+.vignetteAnim .trace { display: block; }
+.vignetteAnim .traceDessin { width: calc(min(44svh, 380px) * 0.707); }
+.vignetteAnim .traceCroquis figcaption { font-size: .6rem; }
+/* l'escalier : le dessin, et les quatre chiffres à côté ; on survole un chiffre */
+.anim .cotes { grid-template-columns: auto minmax(180px, 240px); gap: 20px clamp(20px, 3vw, 44px); align-items: center; justify-content: start; }
+.anim .cotesFig { position: static; justify-items: start; }
+.anim .cotesDessin { width: min(100%, calc(54svh * var(--r))); }
+.anim .cotesEtapes li, .anim .cotesEtapes li:first-child { min-height: 0; padding: 12px 0; justify-content: flex-start; gap: 4px; border-top: 1px solid var(--filet); cursor: pointer; opacity: .4; outline: none; }
+.anim .cotesEtapes li:focus-visible { opacity: 1; }
+.anim .cotesEtapes b { font-size: clamp(1.3rem, 2vw, 1.8rem); }
+.anim .cotesEtapes li > span:last-child { font-size: .56rem; }
+
+@media (max-width: 900px) {
+  .chap { grid-template-columns: 1fr; }
+  .vignette .figBtn img { height: 150px; }
+  .vignette[data-forme='large'] .figBtn img { height: 100px; }
+  .vignette[data-forme='haut'] .figBtn img { height: 170px; }
+  .anim .comparer, .anim .comparer[data-deux] { grid-template-columns: 1fr; }
+  .anim .nuancier ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .anim .cotes { grid-template-columns: 1fr; }
+  .ouvImg img, .ouv[data-format='paysage'] .ouvImg img { height: auto; max-height: 46svh; width: 100%; max-width: none; object-fit: cover; }
+}
+.anim .cotes[data-etape='0'] li[data-etape='0'], .anim .cotes[data-etape='1'] li[data-etape='1'], .anim .cotes[data-etape='2'] li[data-etape='2'], .anim .cotes[data-etape='3'] li[data-etape='3'] { opacity: 1; }
