@@ -1,0 +1,13 @@
+{
+  "name": "moodboard-pilates",
+  "private": true,
+  "description": "Planche matériaux 3D du studio de Pilates (public/moodboard-pilates)",
+  "scripts": {
+    "build": "sh build.sh",
+    "textures": "sh build.sh --textures"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0",
+    "three": "0.169.0"
+  }
+}

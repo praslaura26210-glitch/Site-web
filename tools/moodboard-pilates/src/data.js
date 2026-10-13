@@ -1,0 +1,141 @@
+// Inventaire de la planche. Unités : centimètres. Planche centrée sur l'origine,
+// x vers la droite, z vers le bas de l'écran. rot en degrés.
+export const BOARD = { w: 132, d: 88, t: 1.2 };
+
+const GEN = "Texture générée pour cette planche d'après les rendus. À remplacer par un scan ou la texture du fabricant.";
+const NONID = 'Fabricant non identifié';
+
+// Matériaux PBR : tex = jeu de textures, size = côté physique couvert par une tuile (cm),
+// disp = amplitude du relief (cm), color = teinte multipliée à l'albedo.
+export const MATS = {
+  terrazzo: { tex: 'terrazzo', size: 40, disp: 0.06 },
+  terrazzo_fin: { tex: 'terrazzo_fin', size: 30, disp: 0.05 },
+  beton: { tex: 'beton_cire', size: 60, disp: 0.03 },
+  peinture_beige: { tex: 'peinture_beige', size: 30, disp: 0.02 },
+  peinture_rose: { tex: 'peinture_rose', size: 30, disp: 0.02 },
+  enduit_rose: { tex: 'enduit_rose', size: 30, disp: 0.03 },
+  laque_rose: { tex: 'laque_rose', size: 30, disp: 0.01 },
+  laque_creme: { tex: 'laque_creme', size: 30, disp: 0.01 },
+  chene: { tex: 'chene_clair', size: 40, disp: 0.04 },
+  bouclette: { tex: 'bouclette', size: 20, disp: 0.36 },
+  simili: { tex: 'simili_noir', size: 14, disp: 0.03, nscale: 0.45 },
+  voilage: { tex: 'voilage_lin', size: 5, disp: 0, alpha: true },
+  natte: { tex: 'natte_papier', size: 14, disp: 0.18 },
+  metal_noir: { tex: 'metal_noir', size: 12, disp: 0, metal: 0.25 },
+  email_noir: { tex: 'email_blanc', size: 20, disp: 0.02, color: '#26272a' },
+  email_rose: { tex: 'email_blanc', size: 20, disp: 0.02, color: '#dca99b' },
+  pierre: { tex: 'pierre_vasque', size: 24, disp: 0.04 },
+  ceramique_rose: { tex: 'ceramique_mate', size: 16, disp: 0.01, color: '#dc957d' },
+  ceramique_jaune: { tex: 'ceramique_mate', size: 16, disp: 0.01, color: '#ecc571' },
+};
+
+export const ITEMS = [
+  // --- sols et murs
+  { id: 'terrazzo', kind: 'slab', mat: 'terrazzo', w: 32, d: 32, t: 2, x: -3, z: 5, rot: 0,
+    cat: 'Sols et murs', name: 'Terrazzo rose à gros éclats', maker: NONID,
+    where: "Comptoir d'accueil, colonne de la cheminée", note: GEN },
+  { id: 'terrazzo_fin', kind: 'slab', mat: 'terrazzo_fin', w: 20, d: 20, t: 1.4, x: -48, z: 29, rot: -4,
+    cat: 'Sols et murs', name: 'Terrazzo rose, grain fin', maker: NONID,
+    where: 'Sol du vestiaire', note: GEN + ' Granulométrie à vérifier.' },
+  { id: 'beton', kind: 'slab', mat: 'beton', w: 30, d: 30, t: 1.2, x: 42, z: 24, rot: 3,
+    cat: 'Sols et murs', name: 'Béton ciré gris clair', maker: NONID,
+    where: "Sol de l'accueil et de la salle", note: GEN },
+  { id: 'peinture_beige', kind: 'slab', mat: 'peinture_beige', w: 15, d: 21, t: 0.15, x: -54, z: -26, rot: -3,
+    cat: 'Sols et murs', name: 'Peinture beige mate', maker: NONID,
+    where: 'Murs et plafonds', note: GEN },
+  { id: 'peinture_rose', kind: 'slab', mat: 'peinture_rose', w: 12, d: 19, t: 0.15, x: -43, z: -28, rot: 4,
+    cat: 'Sols et murs', name: 'Peinture rose poudré', maker: NONID,
+    where: 'Mur des arches (salle). Peinture ou enduit : à confirmer', note: GEN },
+  { id: 'enduit_rose', kind: 'slab', mat: 'enduit_rose', w: 15, d: 15, t: 1, x: -44, z: -8, rot: 2,
+    cat: 'Sols et murs', name: 'Volume rose moucheté', maker: NONID,
+    where: 'Cabine du vestiaire. Enduit, résine ou terrazzo micro : à confirmer', note: GEN },
+  { id: 'laque_rose', kind: 'slab', mat: 'laque_rose', w: 8, d: 26, t: 0.8, x: -29, z: 0, rot: 0,
+    cat: 'Sols et murs', name: 'Laque rose satinée', maker: NONID,
+    where: "Caisson intérieur du comptoir d'accueil", note: GEN },
+  { id: 'mutina', kind: 'ribbed', mat: 'email_noir', w: 10, d: 22, x: 19, z: -1, rot: 0,
+    cat: 'Sols et murs', name: 'Carreau émaillé à relief', maker: 'Mutina, collection à confirmer',
+    where: "Repris de ton ébauche. Emplacement dans le projet à confirmer",
+    note: "Forme et couleur provisoires, reprises de l'ébauche. À remplacer par la collection exacte." },
+  { id: 'carreau_rose', kind: 'slab', mat: 'email_rose', w: 7.5, d: 30, t: 0.9, x: -21, z: -6, rot: 0,
+    cat: 'Sols et murs', name: 'Carreau émaillé rose', maker: 'Fabricant à confirmer',
+    where: "Repris de ton ébauche. Emplacement à confirmer", note: GEN },
+
+  // --- bois
+  { id: 'chene', kind: 'slab', mat: 'chene', w: 40, d: 13, t: 1.9, x: 6, z: -21, rot: 0,
+    cat: 'Bois', name: 'Chêne clair (essence à confirmer)', maker: NONID,
+    where: 'Mobilier bas, étagères, porte en arche, casiers, plan vasque', note: GEN },
+  { id: 'claustra', kind: 'claustra', mat: 'chene', w: 11, d: 30, t: 1.8, x: -58, z: 3, rot: 0,
+    cat: 'Bois', name: 'Claustra bois, motif triangles', maker: NONID,
+    where: "Encadrement du passage vers la salle (accueil)", note: 'Motif redessiné d\'après le rendu, à vérifier.' },
+  { id: 'miroir', kind: 'mirror', mat: 'chene', w: 13, d: 21, x: 37, z: -21, rot: -8,
+    cat: 'Bois', name: 'Miroir en arche, cadre bois', maker: NONID,
+    where: 'Vestiaire. Verre teinté rosé', note: 'Cadre en chêne clair, miroir rosé.' },
+
+  // --- textiles et revêtements
+  { id: 'bouclette', kind: 'slab', mat: 'bouclette', w: 13, d: 22, t: 0.7, x: 13, z: 24, rot: 6,
+    cat: 'Textiles', name: 'Bouclette écrue', maker: NONID,
+    where: "Fauteuils de l'accueil", note: GEN },
+  { id: 'simili', kind: 'pinked', mat: 'simili', w: 19, d: 22, t: 0.12, x: -5, z: 31, rot: -5,
+    cat: 'Textiles', name: 'Simili-cuir noir', maker: NONID,
+    where: 'Chariots des reformers', note: GEN },
+  { id: 'laque_creme', kind: 'slab', mat: 'laque_creme', w: 8, d: 26, t: 1.6, x: -15, z: 29, rot: 0,
+    cat: 'Textiles', name: 'Bois laqué crème', maker: NONID,
+    where: 'Structure des reformers', note: GEN },
+  { id: 'voilage', kind: 'drape', mat: 'voilage', w: 20, d: 32, x: 56, z: -4, rot: 0,
+    cat: 'Textiles', name: 'Voilage lin, beige translucide', maker: NONID,
+    where: 'Rideaux de la salle et de la façade vitrée', note: GEN },
+  { id: 'natte', kind: 'slab', mat: 'natte', w: 12, d: 12, t: 0.6, x: 25, z: 34, rot: -6,
+    cat: 'Textiles', name: 'Assise tissée, corde papier (à confirmer)', maker: NONID,
+    where: 'Tabourets du vestiaire', note: GEN },
+
+  // --- métal
+  { id: 'profil', kind: 'profile', mat: 'metal_noir', x: -24, z: -30, rot: 0,
+    cat: 'Métal', name: 'Profilé de menuiserie, noir mat', maker: NONID,
+    where: 'Fenêtres, baies et hublot. Alu thermolaqué : à confirmer', note: 'Section simplifiée.' },
+  { id: 'tube', kind: 'tube', mat: 'metal_noir', x: 42, z: -3, rot: 0,
+    cat: 'Métal', name: 'Tube acier noir, suspente', maker: NONID,
+    where: "Suspentes des étagères et du portant (accueil)", note: 'Diamètre estimé à 2,5 cm.' },
+
+  // --- quincaillerie
+  { id: 'bequille', kind: 'lever', mat: 'metal_noir', x: 19, z: -19, rot: -15,
+    cat: 'Quincaillerie', name: 'Béquille de porte, noir mat', maker: NONID,
+    where: 'Portes (cabine du vestiaire)', note: 'Forme reprise du rendu.' },
+  { id: 'bouton', kind: 'knob', mat: 'metal_noir', x: 5, z: -3, rot: 0,
+    cat: 'Quincaillerie', name: 'Bouton de placard, noir mat', maker: NONID,
+    where: 'Meubles bas, casiers, porte en arche', note: 'Forme reprise du rendu.' },
+
+  // --- pierre, céramique, verre
+  { id: 'pierre', kind: 'slab', mat: 'pierre', w: 12, d: 12, t: 2, x: 57, z: 35, rot: 8,
+    cat: 'Céramique et verre', name: 'Pierre ou béton gris (vasque)', maker: NONID,
+    where: 'Vasque du vestiaire', note: GEN },
+  { id: 'vase_rose', kind: 'vase', mat: 'ceramique_rose', x: 59, z: -31, rot: 0, shape: 'bottle',
+    cat: 'Céramique et verre', name: 'Vase céramique mate, terracotta rose', maker: NONID,
+    where: "Comptoir d'accueil", note: '' },
+  { id: 'vase_jaune', kind: 'vase', mat: 'ceramique_jaune', x: 52, z: -23, rot: 0, shape: 'round',
+    cat: 'Céramique et verre', name: 'Vase céramique mate, jaune', maker: NONID,
+    where: "Comptoir d'accueil", note: '' },
+  { id: 'suspension', kind: 'pendant', x: -41, z: 12, rot: 25,
+    cat: 'Lumière', name: 'Suspension verre clair, forme bocal', maker: NONID,
+    where: "Accueil. Les deux autres modèles (goutte, ballon) sont sur la photo", note: '' },
+
+  // --- photos tirées des rendus
+  { id: 'ph_fauteuils', kind: 'photo', img: 'fauteuils', long: 20, x: -27, z: 35, rot: -2,
+    cat: 'Photos du projet', name: 'Fauteuils bouclette et cheminée', maker: 'Extrait de ton rendu', where: 'Accueil', note: '' },
+  { id: 'ph_suspensions', kind: 'photo', img: 'suspensions', long: 16, x: 24, z: -37, rot: -3,
+    cat: 'Photos du projet', name: "Suspensions de l'accueil", maker: 'Extrait de ton rendu', where: 'Accueil', note: '' },
+  { id: 'ph_reformers', kind: 'photo', img: 'reformers', long: 19, x: -22, z: -35, rot: -2,
+    cat: 'Photos du projet', name: 'Reformers', maker: 'Extrait de ton rendu', where: 'Salle de Pilates', note: '' },
+  { id: 'ph_miroirs', kind: 'photo', img: 'miroirs', long: 17, x: 55, z: 17, rot: 4,
+    cat: 'Photos du projet', name: 'Miroirs du vestiaire', maker: 'Extrait de ton rendu', where: 'Vestiaire', note: '' },
+  { id: 'ph_fleurs', kind: 'photo', img: 'fleurs', long: 14, x: 47, z: -36, rot: 3,
+    cat: 'Photos du projet', name: 'Fleurs séchées et vases', maker: 'Extrait de ton rendu', where: 'Accueil', note: '' },
+  { id: 'ph_suspension_sdb', kind: 'photo', img: 'suspension_sdb', long: 13, x: -60, z: 28, rot: 3,
+    cat: 'Photos du projet', name: 'Suspensions du vestiaire', maker: 'Extrait de ton rendu', where: 'Vestiaire', note: '' },
+  { id: 'ph_tabourets', kind: 'photo', img: 'tabourets', long: 16, x: 31, z: 31, rot: 4,
+    cat: 'Photos du projet', name: 'Tabourets tissés', maker: 'Extrait de ton rendu', where: 'Vestiaire', note: '' },
+
+  // --- graphisme
+  { id: 'lettrage', kind: 'text', mat: 'chene', text: 'PILATES', size: 4.2, x: 4, z: -39, rot: 0,
+    cat: 'Graphisme', name: 'Lettrage « PILATES »', maker: 'Police Mont, provisoire',
+    where: "Mur derrière l'accueil", note: 'Remplace la police par celle du projet si elle diffère.' },
+];

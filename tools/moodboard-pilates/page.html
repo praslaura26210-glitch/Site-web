@@ -1,0 +1,188 @@
+<title>Studio Pilates, planche matériaux</title>
+<style>
+/* Plein écran : la planche occupe tout, l'interface flotte en marge comme des étiquettes d'échantillothèque */
+@font-face { font-family: 'Mont'; font-weight: 300; font-display: swap; src: url(data:font/woff2;base64,{{MONT300}}) format('woff2'); }
+@font-face { font-family: 'Mont'; font-weight: 500; font-display: swap; src: url(data:font/woff2;base64,{{MONT500}}) format('woff2'); }
+:root {
+  --scene: #e9e6e1;
+  --detail-bg: #e4dfd8;
+  --paper: #f8f6f2;
+  --ink: #2b2724;
+  --muted: #7a716a;
+  --line: #d9d2c9;
+  --accent: #b9654a;
+  --accent-ink: #fff8f3;
+  --shadow: 0 1px 2px rgb(43 39 36 / .08), 0 6px 20px rgb(43 39 36 / .08);
+  --f-display: 'Mont', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  --f-body: 'Mont', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --scene: #2a2724; --detail-bg: #2f2b28; --paper: #1f1c1a; --ink: #efe8e1; --muted: #a99f96;
+    --line: #3d3833; --accent: #e08f72; --accent-ink: #22130d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --scene: #2a2724; --detail-bg: #2f2b28; --paper: #1f1c1a; --ink: #efe8e1; --muted: #a99f96;
+  --line: #3d3833; --accent: #e08f72; --accent-ink: #22130d; color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--scene); color: var(--ink); font-family: var(--f-body); font-weight: 300; overflow: hidden; }
+#app { position: relative; height: 100%; }
+#stage { position: absolute; inset: 0; touch-action: none; cursor: default; }
+#stage canvas { display: block; width: 100%; height: 100%; }
+body[data-mode="compose"] #stage.hovering { cursor: grab; }
+body[data-mode="lock"] #stage.hovering { cursor: zoom-in; }
+#stage.grabbing { cursor: grabbing !important; }
+#labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+.panel { background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 3px; }
+header.title { position: absolute; top: 16px; left: 16px; padding: 12px 16px 13px; max-width: calc(100% - 32px); }
+header.title h1 { margin: 0; font-family: var(--f-display); font-weight: 300; font-size: 1.45rem; letter-spacing: .01em; line-height: 1.1; }
+header.title p { margin: 4px 0 0; font-size: .7rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); font-weight: 500; }
+
+.seg { position: absolute; top: 16px; right: 16px; display: flex; padding: 3px; gap: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.seg button, .bar button, .tools button {
+  border: 0; background: transparent; padding: 8px 12px; border-radius: 2px; font-size: .78rem; font-weight: 500; letter-spacing: .02em; white-space: nowrap;
+}
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.bar button[aria-pressed="true"]::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 7px; vertical-align: 1px; }
+.bar button[aria-pressed="false"]::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--muted); box-sizing: border-box; margin-right: 7px; vertical-align: 1px; }
+button:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.seg button[aria-pressed="true"]:hover { background: var(--ink); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#reset.confirm { background: var(--accent); color: var(--accent-ink); }
+
+.bar { position: absolute; left: 16px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; max-width: calc(100% - 32px); }
+.bar .sep { width: 1px; background: var(--line); margin: 6px 4px; }
+#hint { position: absolute; left: 50%; bottom: 72px; transform: translateX(-50%); font-size: .72rem; color: var(--muted); text-align: center; max-width: min(640px, calc(100% - 32px)); text-wrap: balance; pointer-events: none; }
+#status { position: absolute; top: 76px; right: 16px; font-size: .72rem; color: var(--muted); opacity: 0; transition: opacity .3s; }
+#status.on { opacity: 1; }
+
+#invToggle { position: absolute; right: 16px; bottom: 16px; padding: 11px 14px; font-size: .78rem; font-weight: 500; }
+#inventory { position: absolute; right: 16px; top: 64px; bottom: 70px; width: min(340px, calc(100% - 32px)); display: flex; flex-direction: column; }
+#inventory header { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 16px 10px; border-bottom: 1px solid var(--line); gap: 12px; }
+#inventory header h2 { margin: 0; font-size: .95rem; font-weight: 500; }
+#inventory header p { margin: 4px 0 0; font-size: .7rem; color: var(--muted); line-height: 1.4; }
+#invClose { border: 0; background: transparent; padding: 6px 8px; font-size: .78rem; }
+#invList { overflow: auto; padding: 4px 8px 12px; }
+#invList h3 { font-size: .64rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); font-weight: 500; margin: 14px 8px 4px; }
+.inv-row { display: grid; width: 100%; text-align: left; border: 0; background: transparent; padding: 7px 8px; border-radius: 2px; gap: 1px; }
+.inv-row b { font-weight: 500; font-size: .82rem; }
+.inv-row span { font-size: .7rem; color: var(--muted); }
+
+.tag { position: absolute; left: 0; top: 0; background: var(--paper); color: var(--ink); border: 1px solid var(--line); padding: 5px 8px 6px; border-radius: 2px; font-size: .68rem; line-height: 1.3; max-width: 190px; box-shadow: var(--shadow); opacity: 0; transition: opacity .15s; white-space: normal; }
+.tag.on { opacity: 1; }
+.tag b { display: block; font-weight: 500; }
+.tag span { color: var(--muted); }
+.tag.compact { padding: 3px 7px 4px; font-size: .62rem; max-width: 150px; }
+.tag.compact.unknown span { display: none; }
+.tag.compact span { display: block; }
+
+.tools { position: absolute; left: 0; top: 0; display: flex; gap: 2px; padding: 3px; }
+
+#detail { position: absolute; inset: 0; background: color-mix(in srgb, var(--scene) 55%, transparent); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 16px; }
+#detail .sheet { width: min(1100px, 100%); height: min(720px, 100%); display: grid; grid-template-columns: minmax(0, 1fr) 300px; overflow: hidden; }
+#detailStage { position: relative; min-height: 0; background: var(--detail-bg); }
+#detailStage canvas { display: block; width: 100%; height: 100%; }
+#detail aside { padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 14px; overflow: auto; min-width: 0; }
+#detail aside .eyebrow { font-size: .64rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); font-weight: 500; }
+#detail aside h2 { margin: 0; font-family: var(--f-display); font-weight: 300; font-size: 1.5rem; line-height: 1.15; text-wrap: balance; }
+#detail dl { margin: 0; display: grid; gap: 10px; font-size: .8rem; }
+#detail dt { font-size: .64rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); font-weight: 500; }
+#detail dd { margin: 2px 0 0; line-height: 1.45; }
+.light { margin-top: auto; display: grid; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .74rem; }
+.light label { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; }
+.light input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+#dClose { position: absolute; top: 12px; left: 12px; border: 1px solid var(--line); background: var(--paper); padding: 8px 12px; font-size: .78rem; font-weight: 500; border-radius: 2px; }
+#loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: .78rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; pointer-events: none; transition: opacity .6s; }
+body.ready #loading { opacity: 0; }
+
+@media (max-width: 720px) {
+  header.title h1 { font-size: 1.1rem; }
+  .seg { top: auto; bottom: 64px; right: 16px; }
+  #hint { display: none; }
+  #invToggle { bottom: 16px; }
+  .bar { right: 16px; max-width: none; left: 16px; bottom: 112px; justify-content: flex-start; }
+  #inventory { top: 16px; bottom: 16px; }
+  #detail .sheet { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+  #detail aside { max-height: 42vh; }
+}
+@media (prefers-reduced-motion: reduce) { .tag, #status, #loading { transition: none; } }
+</style>
+
+<div id="app">
+  <div id="stage" aria-label="Planche matériaux en 3D"></div>
+  <div id="labels"></div>
+  <div id="loading">Chargement des matières…</div>
+
+  <header class="title panel">
+    <h1>Studio Pilates</h1>
+    <p>Planche matériaux · Laura Pras</p>
+  </header>
+
+  <div class="seg panel" role="group" aria-label="Mode">
+    <button id="modeCompose" aria-pressed="true">Composer</button>
+    <button id="modeLock" aria-pressed="false">Figer</button>
+  </div>
+  <div id="status" role="status"></div>
+
+  <div class="tools panel" id="itemTools" hidden>
+    <button id="rotL" title="Tourner de 15° (Q)">↺ 15°</button>
+    <button id="rotR" title="Tourner de 15° (E)">↻ 15°</button>
+    <button id="back" title="Glisser sous les autres">Dessous</button>
+    <button id="look">Examiner</button>
+    <span id="selName" hidden></span>
+  </div>
+
+  <p id="hint"></p>
+
+  <div class="bar panel">
+    <button id="tLabels" aria-pressed="false">Étiquettes</button>
+    <button id="tLetter" aria-pressed="true">Lettrage « Pilates »</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button id="home">Recentrer</button>
+    <button id="reset">Réinitialiser</button>
+  </div>
+
+  <button id="invToggle" class="panel" aria-expanded="false" aria-controls="inventory">Matériaux</button>
+  <section id="inventory" class="panel" hidden>
+    <header>
+      <div>
+        <h2>Matériaux</h2>
+        <p>Textures générées d'après tes rendus, à remplacer par des scans ou les textures fabricant.</p>
+      </div>
+      <button id="invClose">Fermer</button>
+    </header>
+    <div id="invList"></div>
+  </section>
+
+  <div id="detail" hidden>
+    <div class="sheet panel">
+      <div id="detailStage">
+        <button id="dClose">← Retour à la planche</button>
+      </div>
+      <aside>
+        <div>
+          <div class="eyebrow" id="dCat"></div>
+          <h2 id="dName"></h2>
+        </div>
+        <dl>
+          <div><dt>Fabricant</dt><dd id="dMaker"></dd></div>
+          <div><dt>Dans le projet</dt><dd id="dWhere"></dd></div>
+          <div><dt>Échantillon</dt><dd id="dSize"></dd></div>
+          <div><dt>Note</dt><dd id="dNote"></dd></div>
+        </dl>
+        <div class="light">
+          <label for="lightEl">Hauteur de la lumière <output id="lightElOut">12°</output>
+            <input id="lightEl" type="range" min="3" max="70" value="12"></label>
+          <label for="lightAz">Orientation de la lumière
+            <input id="lightAz" type="range" min="0" max="360" value="210"></label>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
