@@ -161,7 +161,8 @@ html[data-vt='cover'] [data-xp-cover]:not([data-xp-ancien]) { view-transition-na
 
 /* plus de place pour les images : l'en-tête s'efface en descendant, revient en remontant */
 html body > header[class] { transition: background-color .5s var(--ease), box-shadow .5s var(--ease), opacity .35s var(--ease), translate .3s var(--ease); }
-html[data-entete-cache] body > header[class] { translate: 0 -100%; }
+/* sur téléphone, la barre du haut se cache en descendant ; sur ordinateur, la barre latérale reste toujours là */
+@media (max-width: 900px) { html[data-entete-cache] body > header[class] { translate: 0 -100%; } }
 
 /* projet suivant : on voit où l'on va avant d'y aller */
 [class*='project-module'][class*='__suivant'] { position: relative; }
