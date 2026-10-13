@@ -1,4 +1,4 @@
-import { xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
+import { xpConstruire, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpMateriaux } from './materiaux';
 import { xpLivres } from './livres';
@@ -43,8 +43,14 @@ export function xpDemarrer(ctx: XPContexte) {
       cibleAncre.scrollIntoView({ behavior: xpCalme() ? 'auto' : 'smooth', block: 'start' });
       return;
     }
+    // une carte postale (références) : un clic la retourne, un autre la remet à l'endroit
+    const carte = (e.target as Element).closest<HTMLElement>('[data-retourne]');
+    if (carte) {
+      carte.setAttribute('aria-pressed', String(carte.getAttribute('aria-pressed') !== 'true'));
+      return;
+    }
     // copier une adresse
-    const c = (e.target as Element).closest<HTMLElement>('[data-copier]');
+    const c =(e.target as Element).closest<HTMLElement>('[data-copier]');
     if (c) {
       e.preventDefault();
       const msg = c.querySelector<HTMLElement>('[data-copie-msg]');
@@ -94,7 +100,7 @@ export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.enteteCache;
   const f = [
     xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpMateriaux(root),
-    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root), xpLivres(ctx, root),
+    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root), xpLivres(ctx, root), xpConstruire(root),
   ];
   return () => f.forEach((x) => x());
 }

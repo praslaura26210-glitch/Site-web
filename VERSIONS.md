@@ -21,6 +21,17 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V22 (aperçu des essais)
+
+Sur l'aperçu des essais seulement ; la version de référence V21 n'a pas bougé.
+
+- **Ouverture** : l'animation du logo ne se joue qu'à l'arrivée sur le site, plus en revenant à l'accueil.
+- **Accueil** : la collection devient une étagère : le dessin du couloir encadré, les six livres debout, dos toilés de couleur ; au survol un livre sort et montre sa couverture.
+- **Projets** : les livres, deux rangées de trois, sur fond blanc ; au survol le livre se tourne et s'entrouvre sur sa page de titre ; un clic ouvre la fiche.
+- **Fiches projet** : chaque chapitre se lit de haut en bas, le texte posé à côté de son image. Illusion d'envol et La Ruche : l'axonométrie éclatée est rassemblée, un clic la sépare pièce par pièce. Escalier suspendu : l'axonométrie se construit de bas en haut. Pilates Room : chaque matériau se clique (sur la planche ou dans la liste) ; sa fiche dit où il est dans le projet et montre le rendu.
+- **À propos** : une vieille cabine photo (émail crème, enseigne bordeaux, fenêtre chromée), bande plus lente ; outils avec leur logo ; la planche du bas bouge à peine.
+- **Références** : des cartes postales aimantées sur un tableau blanc ; un clic retourne la carte.
+
 ## Versions précédentes
 
 | Version | Ce qui a changé | Identifiant |

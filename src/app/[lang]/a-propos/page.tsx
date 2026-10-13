@@ -4,6 +4,7 @@ import { meta } from '@/lib/seo';
 import { tr } from '@/lib/tr';
 import styles from '@/components/pages/pages.module.css';
 import { PARCOURS } from '@/lib/parcours';
+import { LOGICIELS } from '@/lib/logiciels';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -15,8 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 /** La bande du photomaton : la même photo, imprimée dix fois (la bande est doublée pour boucler sans fin). */
 const CASES = 10;
-/** Les logiciels en tuiles : leurs deux lettres, comme sur les icônes. */
-const SIGLES: Record<string, string> = { Archicad: 'Ar', Sketchup: 'Sk', Twinmotion: 'Tw', Indesign: 'Id', Autocad: 'Ac', Revit: 'Rv', Photoshop: 'Ps', 'Pack Office': 'Of', Illustrator: 'Ai' };
+/** La planche « dessins, photos, bricolage » découpée en morceaux, pour qu'ils bougent chacun un peu. */
+const MORCEAUX = [[1, 79.25, 1.55, 19.95], [2, 2.6, 3.39, 43.5], [3, 51.1, 4.03, 28.55], [4, 79.85, 31.66, 13.3], [5, 44.95, 58.23, 16.6], [6, 61.4, 58.94, 19.85], [7, 82.1, 66.86, 15.35]];
 
 export default async function APropos({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -59,21 +60,27 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     <article className={`wrap ${styles.page} ${styles.apropos}`}>
       {/* qui je suis : un photomaton ; la bande de photos sort de la machine, mon texte à côté */}
       <header className={styles.pm}>
+        {/* une vieille cabine photo : façade émaillée, enseigne, fenêtre chromée d'où sort la bande, monnayeur, bac */}
         <div className={styles.pmMachine} aria-hidden="true">
-          <span className={styles.pmRouleau} />
-          <span className={styles.pmFente} />
-          <div className={styles.pmSortie}>
-            {/* la bande défile toute seule, vite et sans fin : deux fois les mêmes cases, pour que la boucle ne se voie pas */}
-            <div className={styles.pmBande}>
-              {Array.from({ length: CASES * 2 }, (_, i) => (
-                <span key={i} className={styles.pmVue}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/media/site/portrait-1000.webp" alt="" />
-                </span>
-              ))}
+          <span className={styles.pmEnseigne}><span>Photos</span></span>
+          <span className={styles.pmLampe} />
+          <div className={styles.pmFenetre}>
+            <span className={styles.pmFente} />
+            <div className={styles.pmSortie}>
+              {/* la bande défile toute seule et sans fin : deux fois les mêmes cases, pour que la boucle ne se voie pas */}
+              <div className={styles.pmBande}>
+                {Array.from({ length: CASES * 2 }, (_, i) => (
+                  <span key={i} className={styles.pmVue}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/media/site/portrait-1000.webp" alt="" />
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
+          <span className={styles.pmMonnaie}><i /><b>4 poses</b></span>
           <span className={styles.pmBac} />
+          {[0, 1, 2, 3].map((k) => <span key={k} className={styles.pmRivet} data-k={k} />)}
         </div>
         <div className={styles.pmTexte}>
           <h1 className={styles.pmNom}>Laura Pras</h1>
@@ -110,17 +117,22 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </div>
       </section>
 
-      {/* outils : une tuile par logiciel, comme une icône ; le niveau en cinq points */}
+      {/* outils : l'icône de chaque logiciel, son nom, le niveau en cinq points */}
       <section className={styles.outils} aria-labelledby="outils">
         <h2 id="outils" className={styles.aH2}>{L.outils}</h2>
         <ul className={styles.tuiles}>
-          {logiciels.sort((a, b) => b[1] - a[1]).map(([k, n]) => (
-            <li key={k} className={`${styles.tuile} rv`} data-n={n}>
-              <span className={styles.tuileSigle} aria-hidden="true">{SIGLES[k] || k.slice(0, 2)}</span>
-              <span className={styles.tuileNom}>{k}</span>
-              <span className={styles.tuilePoints} aria-label={`${n} / 5`}>{[1, 2, 3, 4, 5].map((k) => <i key={k} data-plein={k <= n || undefined} />)}</span>
-            </li>
-          ))}
+          {logiciels.sort((a, b) => b[1] - a[1]).map(([k, n]) => {
+            const lg = LOGICIELS[k];
+            return (
+              <li key={k} className={`${styles.tuile} rv`} data-n={n}>
+                <span className={styles.icone} style={{ background: lg?.fond, color: lg?.couleur }} aria-hidden="true">
+                  {lg?.trace ? <svg viewBox="0 0 24 24"><path d={lg.trace} fill="currentColor" /></svg> : <b>{lg?.sigle || k.slice(0, 2)}</b>}
+                </span>
+                <span className={styles.tuileNom}>{k}</span>
+                <span className={styles.tuilePoints} aria-label={`${n} / 5`}>{[1, 2, 3, 4, 5].map((j) => <i key={j} data-plein={j <= n || undefined} />)}</span>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -134,9 +146,12 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
           <h2 id="audela" className={styles.aH2}>{L.audela}</h2>
           <p>{L.texteAudela}</p>
         </div>
-        <figure className={`${styles.audelaPlanche} rv`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={planche.srcSmall} srcSet={`${planche.srcSmall} 1000w, ${planche.src} 2000w`} sizes="(max-width: 900px) 100vw, 80vw" alt={planche.legende} width={planche.w} height={planche.h} loading="lazy" />
+        {/* la planche : chaque dessin, chaque photo bouge à peine, chacun à son rythme */}
+        <figure className={`${styles.audelaPlanche} ${styles.planche} rv`} aria-label={planche.legende}>
+          {MORCEAUX.map(([n, x, y, w], i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={n} src={`/media/site/planche/morceau-${n}.webp`} alt="" loading="lazy" style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, ['--i' as string]: i }} />
+          ))}
         </figure>
       </section>
 

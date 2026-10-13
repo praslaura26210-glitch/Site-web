@@ -1,52 +1,49 @@
 import Link from 'next/link';
 import type { Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
-import { couverture } from './ProjetsGrille';
+import { couverture, TOILES } from './ProjetsGrille';
 import styles from './home.module.css';
 
-/** De combien chaque livre dépasse de l'étui (px), comme sur la photo de Laura : pas tous pareil. */
-const SORTIS = [34, 20, 30, 14, 26, 8];
+/** La hauteur et l'épaisseur de chaque livre (px) : pas tous pareils, comme sur une vraie étagère. */
+const FORMATS = [[318, 54], [292, 44], [336, 60], [304, 48], [284, 56], [326, 46]];
 
 /**
- * Accueil : la collection. Un étui blanc, vu en axonométrie, avec le dessin du couloir sur le côté ;
- * les projets y sont rangés comme des livres, debout, plus ou moins sortis. Au survol un livre sort,
- * au clic il s'ouvre (page du livre). Un lien mène aussi à la liste des projets.
+ * Accueil : la collection, une étagère. Le dessin du couloir, encadré, est posé contre le mur ; les projets
+ * sont rangés à côté, debout, dos toilés de couleur. Au survol un livre sort de l'étagère et se tourne : on
+ * voit sa couverture. Au clic il s'ouvre (page du livre). Un lien mène aussi à la liste des projets.
  */
 export default function Collection({ projets, lang, voir }: { projets: Projet[]; lang: Lang; voir: string }) {
-  const ep = 44, jeu = 3, pad = 10;
-  const W = projets.length * (ep + jeu) - jeu + pad * 2;
   return (
     <div className={styles.col}>
-      <div className={styles.etuiScene}>
-        <div className={styles.etui} style={{ ['--W' as string]: `${W}px` }}>
-          <span className={`${styles.etuiF} ${styles.etuiSol}`} aria-hidden="true" />
-          <span className={`${styles.etuiF} ${styles.etuiFond}`} aria-hidden="true" />
-          <span className={`${styles.etuiF} ${styles.etuiBas}`} aria-hidden="true" />
-          <span className={`${styles.etuiF} ${styles.etuiGauche}`} aria-hidden="true" />
-          <ul className={styles.livres}>
+      <div className={styles.biblio}>
+        <div className={styles.bibRang}>
+          <figure className={styles.bibCadre} aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/media/site/dessin-couverture-1000.webp" alt="" loading="lazy" />
+          </figure>
+          <ul className={styles.bibLivres}>
             {projets.map((p, i) => {
               const { img, pos } = couverture(p);
+              const [h, e] = FORMATS[i % FORMATS.length];
+              const toile = TOILES[i % TOILES.length];
               return (
-                <li key={p.slug} className={styles.livre} style={{ ['--x' as string]: `${pad + i * (ep + jeu)}px`, ['--t' as string]: `${ep}px`, ['--sort0' as string]: `${SORTIS[i % SORTIS.length]}px`, ['--img' as string]: `url(${img.srcSmall})`, ['--pos' as string]: pos || '50% 50%' }}>
-                  <span className={`${styles.livreF} ${styles.livreHaut}`} aria-hidden="true" />
-                  <span className={`${styles.livreF} ${styles.livreCouv} ${styles.livreCouvG}`} aria-hidden="true" />
-                  <span className={`${styles.livreF} ${styles.livreCouv} ${styles.livreCouvD}`} aria-hidden="true" />
-                  <Link className={styles.livreDos} href={`/${lang}/livres/${p.slug}/`} aria-label={p.titre}>
-                    <span className={styles.livreEtiq}><span className={styles.livreT}>{p.titre}</span></span>
-                    <span className={styles.livreN}>N° {String(i + 1).padStart(2, '0')}</span>
+                <li key={p.slug} className={styles.bibLivre} style={{ ['--h' as string]: `${h}px`, ['--e' as string]: `${e}px`, ['--toile' as string]: toile.fond, ['--toileEncre' as string]: toile.encre }}>
+                  <span className={styles.bibCouv} aria-hidden="true">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.srcSmall} alt="" loading="lazy" style={{ objectPosition: pos || '50% 50%' }} />
+                  </span>
+                  <Link className={styles.bibDos} href={`/${lang}/livres/${p.slug}/`} aria-label={p.titre}>
+                    <span className={styles.bibFilets} aria-hidden="true" />
+                    <span className={styles.bibT}>{p.titre}</span>
+                    <span className={styles.bibN}>{String(i + 1).padStart(2, '0')}</span>
                   </Link>
                 </li>
               );
             })}
           </ul>
-          <span className={`${styles.etuiF} ${styles.etuiHaut}`} aria-hidden="true" />
-          {/* le grand côté de l'étui, avec le dessin du couloir */}
-          <span className={`${styles.etuiF} ${styles.etuiDroite}`} aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/media/site/dessin-couverture-1000.webp" alt="" loading="lazy" />
-          </span>
-          <span className={`${styles.etuiF} ${styles.etuiBord}`} aria-hidden="true" />
+          <span className={styles.bibSerre} aria-hidden="true" />
         </div>
+        <span className={styles.bibPlanche} aria-hidden="true" />
       </div>
       <p className={styles.colBas}><Link href={`/${lang}/projets/`} className={styles.colBouton}>{voir}</Link></p>
     </div>

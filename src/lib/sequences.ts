@@ -11,10 +11,14 @@ export type Bloc =
   | { t: 'grand'; r: string }
   /** une rangée d'images ramenées à la même hauteur, sur toute la largeur */
   | { t: 'rang'; r: string[] }
-  /** un texte (poème, récit, expérimentation, chiffres, palette) avec, ou non, une image à côté */
+  /** un texte (poème, récit, expérimentation, chiffres, palette) avec, ou non, une image à côté (cote : le côté de l'image) */
   | { t: 'texte'; k: 'poeme' | 'recit' | 'experimentation' | 'chiffres' | 'palette'; titre?: L3; r?: string; cote?: 'g' | 'd'; colonnes?: boolean }
-  /** la table des matériaux : des échantillons qu'on déplace (Pilates Room) */
+  /** la planche des matériaux : chaque échantillon se clique, sa fiche dit où il est dans le projet (Pilates Room) */
   | { t: 'materiaux' }
+  /** l'axonométrie éclatée, en calques : rassemblée, elle se sépare au clic (lib/eclatees.ts) */
+  | { t: 'eclatee' }
+  /** un dessin vectoriel qui se construit quand il arrive à l'écran, avec les chiffres à côté */
+  | { t: 'construction'; r: string; k?: 'chiffres' }
   /** une visionneuse : un grand dessin à la fois, flèches pour passer au suivant */
   | { t: 'visionneuse'; titre: L3; r: string[]; k?: 'chiffres' }
   /**
@@ -68,14 +72,18 @@ const T = {
   coupes: D('Coupes', 'Sections', 'Sezioni'),
   conception: D('Conception', 'Design', 'Progettazione'),
   techniques: D('Dessins techniques', 'Technical drawings', 'Disegni tecnici'),
+  esquisse: D('Esquisse', 'Sketch', 'Schizzo'),
+  structure: D('Structure', 'Structure', 'Struttura'),
 };
 
 export const MISES: Record<string, Mise> = {
   'illusion-d-envol': {
     ouverture: 'maquette',
     blocs: [
-      { t: 'rang', r: ['croquis-perspective', 'axonometrie-eclatee'] },
-      { t: 'texte', k: 'poeme', colonnes: true },
+      { t: 'inter', titre: T.esquisse },
+      { t: 'texte', k: 'poeme', r: 'croquis-perspective', cote: 'g' },
+      { t: 'inter', titre: T.structure },
+      { t: 'eclatee' },
       { t: 'inter', titre: T.dessins },
       { t: 'visionneuse', titre: T.dessins, r: ['coupe-aa', 'plan-rdc', 'facade-sud'] },
       { t: 'inter', titre: T.assemblages },
@@ -89,9 +97,11 @@ export const MISES: Record<string, Mise> = {
       { t: 'grand', r: 'coupe-aa' },
       { t: 'texte', k: 'poeme', r: 'maquette-3', cote: 'd' },
       { t: 'rang', r: ['maquette-2', 'maquette-4'] },
+      { t: 'inter', titre: T.structure },
+      { t: 'eclatee' },
       { t: 'inter', titre: T.dessins },
-      { t: 'visionneuse', titre: T.dessins, r: ['plan-masse', 'plan-rdc', 'plan-r-1', 'plan-structure', 'facade-ouest', 'axonometrie-eclatee'] },
-      { t: 'rang', r: ['maquette-5'] },
+      { t: 'visionneuse', titre: T.dessins, r: ['plan-masse', 'plan-rdc', 'plan-r-1', 'plan-structure', 'facade-ouest'] },
+      { t: 'grand', r: 'maquette-5' },
     ],
   },
   'le-passage-des-artistes': {
@@ -148,7 +158,8 @@ export const MISES: Record<string, Mise> = {
   'escalier-suspendu': {
     ouverture: 'rendu',
     blocs: [
-      { t: 'texte', k: 'chiffres', titre: T.conception, r: 'p:axonometrie', cote: 'd' },
+      { t: 'inter', titre: T.conception },
+      { t: 'construction', r: 'p:axonometrie', k: 'chiffres' },
       { t: 'inter', titre: T.techniques },
       { t: 'visionneuse', titre: T.techniques, r: ['p:vue-de-face', 'p:vue-en-plan', 'p:planche-limon-marches', 'p:planche-garde-corps'] },
     ],

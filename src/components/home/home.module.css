@@ -90,41 +90,73 @@
   .carteImg { aspect-ratio: 4 / 3; }
 }
 
-/* ---------- accueil : la collection — l'étui blanc en axonométrie, les livres rangés debout ---------- */
-.col { position: relative; display: grid; justify-items: center; padding-bottom: clamp(30px, 6vh, 70px); }
-/* pas de perspective : une vraie axonométrie, comme un dessin d'archi */
-.etuiScene { position: relative; display: grid; justify-items: center; padding: clamp(80px, 12vh, 140px) 0 clamp(70px, 10vh, 110px); }
-.etui { --H: 360px; --D: 270px; --ep: 5px;
-  --toile: repeating-linear-gradient(0deg, rgba(0, 0, 0, .018) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0, 0, 0, .014) 0 1px, transparent 1px 3px);
-  position: relative; width: var(--W); height: var(--H); transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(-40deg); }
-.etuiF { position: absolute; display: block; pointer-events: none; }
-.etuiFond { inset: 0; transform: translateZ(calc(var(--D) / -2)); background: var(--toile), #CFCBC3; }
-.etuiBas { left: 0; top: calc((var(--H) - var(--D)) / 2); width: var(--W); height: var(--D); transform: translateY(calc(var(--H) / 2 - var(--ep))) rotateX(90deg); background: #D6D2CA; }
-.etuiGauche { top: 0; left: calc((var(--W) - var(--D)) / 2); width: var(--D); height: var(--H); transform: translateX(calc(var(--W) / -2 + var(--ep))) rotateY(90deg); background: var(--toile), #D9D5CE; }
-.etuiHaut { left: 0; top: calc((var(--H) - var(--D)) / 2); width: var(--W); height: var(--D); transform: translateY(calc(var(--H) / -2)) rotateX(90deg); background: var(--toile), #F2F0EC; }
-.etuiDroite { top: 0; left: calc((var(--W) - var(--D)) / 2); width: var(--D); height: var(--H); transform: translateX(calc(var(--W) / 2)) rotateY(90deg); display: grid; place-items: center; background: var(--toile), linear-gradient(100deg, #E2DFD9, #E9E7E2); }
-.etuiDroite img { width: 62%; height: auto; mix-blend-mode: multiply; opacity: .8; }
-.etuiBord { inset: 0; transform: translateZ(calc(var(--D) / 2)); border: var(--ep) solid #ECEAE5; box-shadow: inset 0 0 14px -6px rgba(43, 33, 28, .35); }
-.etuiSol { top: calc((var(--H) - var(--D) * 1.6) / 2); left: calc((var(--W) - var(--D) * 1.6) / 2); width: calc(var(--D) * 1.6); height: calc(var(--D) * 1.6); transform: translateY(calc(var(--H) / 2 + 1px)) rotateX(90deg); background: radial-gradient(closest-side, rgba(43, 33, 28, .22), rgba(43, 33, 28, .06) 60%, transparent); }
-/* les livres : dos en toile blanche avec une étiquette, couverture = l'image du projet */
-.livres { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; transform-style: preserve-3d; }
-.livre { --d: calc(var(--D) - 14px); position: absolute; left: var(--x); bottom: var(--ep); width: var(--t); height: calc(var(--H) - var(--ep) * 2 - 8px); transform-style: preserve-3d; transform: translateZ(var(--sort, var(--sort0))); transition: transform .55s var(--ease); }
-.livre:hover, .livre:focus-within { --sort: 96px; }
-.livreF { position: absolute; display: block; pointer-events: none; }
-.livreHaut { left: 0; top: 0; width: 100%; height: var(--d); transform-origin: 50% 0; transform: translateZ(calc(var(--d) / 2)) rotateX(-90deg); background: repeating-linear-gradient(90deg, #FAF8F4 0 1px, #E7E2D8 1px 2px); }
-.livreCouv { top: 0; left: 0; width: var(--d); height: 100%; transform-origin: 0 50%; transform: translateZ(calc(var(--d) / 2)) rotateY(90deg); background: var(--img) var(--pos) / cover, #444; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
-.livreCouvD { left: 100%; }
-.livreDos { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 22px 0 14px; transform: translateZ(calc(var(--d) / 2)); background: var(--toile), #F1EFEA; color: var(--encre); text-decoration: none; box-shadow: inset 2px 0 3px -1px rgba(43, 33, 28, .18), inset -2px 0 3px -1px rgba(255, 255, 255, .6); }
-.livreDos:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.livreEtiq { padding: 10px 4px; background: #FBFAF6; box-shadow: 0 0 0 1px rgba(43, 33, 28, .1); }
-.livreT { display: block; writing-mode: vertical-rl; transform: rotate(180deg); max-height: 230px; overflow: hidden; white-space: nowrap; font-size: .58rem; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; }
-.livreN { padding: 3px 4px; background: #FBFAF6; box-shadow: 0 0 0 1px rgba(43, 33, 28, .1); font-size: .44rem; letter-spacing: .08em; white-space: nowrap; }
+/* ---------- accueil : la collection — une étagère : le dessin encadré, les livres debout, dos toilés ---------- */
+.col { position: relative; display: grid; justify-items: center; gap: clamp(40px, 7vh, 70px); padding-bottom: clamp(30px, 6vh, 70px); }
+.biblio { position: relative; width: min(100%, 820px); padding-top: clamp(60px, 10vh, 110px); perspective: 1700px; perspective-origin: 50% 20%; }
+.bibRang { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center; transform-style: preserve-3d; }
+/* le dessin du couloir, dans un cadre de chêne clair, posé contre le mur */
+.bibCadre { flex: none; width: 214px; margin: 0 clamp(26px, 5vw, 60px) 0 0; padding: 14px; background: #FDFCF9; border: 8px solid #D2B993; rotate: -3.5deg; transform-origin: 0 100%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06), 0 1px 0 #B99D74, 10px 16px 22px -12px rgba(43, 33, 28, .45); }
+.bibCadre img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+.bibLivres { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 2px; transform-style: preserve-3d; }
+.bibLivre { --D: 214px; position: relative; flex: none; width: var(--e); height: var(--h); transform-style: preserve-3d; transition: transform .75s var(--ease); }
+/* au survol : le livre sort de l'étagère et se tourne, on voit sa couverture */
+.bibLivre:hover, .bibLivre:focus-within { z-index: 5; transform: translateZ(150px) translateY(-16px) rotateY(-58deg); }
+.bibDos { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 18px 0 14px; color: var(--toileEncre); text-decoration: none; backface-visibility: hidden;
+  background: linear-gradient(90deg, rgba(0, 0, 0, .22), rgba(255, 255, 255, .14) 16%, rgba(255, 255, 255, 0) 42%, rgba(0, 0, 0, .1) 82%, rgba(0, 0, 0, .28)), repeating-linear-gradient(0deg, rgba(255, 255, 255, .03) 0 1px, transparent 1px 3px), var(--toile);
+  box-shadow: 7px 0 10px -7px rgba(43, 33, 28, .45); }
+.bibDos:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.bibFilets { width: 64%; height: 6px; border-block: 1px solid currentColor; opacity: .55; }
+.bibT { writing-mode: vertical-rl; transform: rotate(180deg); max-height: calc(var(--h) - 92px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: .6rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
+.bibN { font-size: .58rem; font-weight: 500; letter-spacing: .08em; opacity: .85; }
+.bibCouv { position: absolute; top: 0; left: 100%; width: var(--D); height: 100%; transform-origin: 0 50%; transform: rotateY(90deg); overflow: hidden; backface-visibility: hidden; background: var(--toile); opacity: 0; transition: opacity .3s .1s; }
+.bibLivre:hover .bibCouv, .bibLivre:focus-within .bibCouv { opacity: 1; transition-delay: 0s; }
+.bibCouv img { width: 100%; height: 100%; object-fit: cover; }
+.bibCouv::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .3), rgba(255, 255, 255, .18) 4%, transparent 10%); }
+/* le serre-livres, et la planche */
+.bibSerre { flex: none; width: 12px; height: 150px; margin-left: 3px; border-radius: 2px 2px 0 0; background: linear-gradient(90deg, #E6E3DD, #FAF9F6 40%, #D9D5CE); box-shadow: 4px 6px 10px -6px rgba(43, 33, 28, .4); }
+.bibPlanche { position: relative; display: block; height: 18px; background: linear-gradient(#FBFAF7, #ECE8E1); border-top: 1px solid #fff;
+  box-shadow: 0 1px 0 #DAD5CC, 0 22px 26px -16px rgba(43, 33, 28, .45), 0 -6px 14px -8px rgba(43, 33, 28, .25); }
 .colBas { margin: 0; }
 .colBouton { display: inline-block; padding: 14px 28px; border: 1px solid var(--encre); font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; text-decoration: none; color: var(--encre); transition: background .25s, color .25s; }
 .colBouton:hover { background: var(--encre); color: var(--fond); }
 @media (max-width: 760px) {
-  .etuiScene { padding: 50px 0 40px; }
-  .etui { scale: .68; margin-block: -60px; }
+  .bibCadre { display: none; }
+}
+
+/* ---------- Projets : les livres, trois par rangée, sur le blanc ---------- */
+.bks { list-style: none; margin: clamp(40px, 8vh, 90px) auto 0; padding: 0; max-width: 1100px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(70px, 11vh, 130px) clamp(30px, 5vw, 80px); }
+.bkLien { display: grid; justify-items: center; gap: 6px; text-align: center; color: inherit; text-decoration: none; }
+.bkScene { position: relative; width: min(100%, 250px); aspect-ratio: 4 / 5; margin-bottom: 30px; perspective: 1500px; }
+.bkVol { --T: 30px; position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(26deg); transition: transform .85s var(--ease); }
+.bkDos { position: absolute; top: 0; left: 0; width: var(--T); height: 100%; transform-origin: 0 50%; transform: rotateY(-90deg); display: grid; place-items: end center; padding-bottom: 14px; color: var(--toileEncre);
+  background: linear-gradient(90deg, rgba(0, 0, 0, .25), rgba(255, 255, 255, .12) 30%, rgba(0, 0, 0, .12)), var(--toile); }
+.bkDos span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: .5rem; font-weight: 500; letter-spacing: .14em; }
+/* la page de titre, sous la couverture */
+.bkPage { position: absolute; inset: 2px 3px 2px 0; transform: translateZ(calc(var(--T) - 2px)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14%; text-align: center;
+  background: linear-gradient(90deg, rgba(0, 0, 0, .1), transparent 8%), #FBFAF7; box-shadow: 3px 0 0 #EEEBE4, 5px 0 0 #E2DED6; }
+.bkPage em { font-style: normal; font-size: .56rem; letter-spacing: .2em; color: var(--accent-f); }
+.bkPage b { font-size: 1rem; font-weight: 400; line-height: 1.25; color: var(--encre); }
+.bkPage i { font-style: normal; font-size: .62rem; letter-spacing: .1em; color: var(--gris); }
+.bkCouv { position: absolute; inset: 0; transform-origin: 0 50%; transform: translateZ(var(--T)); transform-style: preserve-3d; transition: transform .95s var(--ease); }
+.bkCouv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; backface-visibility: hidden; }
+.bkCouv::after { content: ''; position: absolute; inset: 0; backface-visibility: hidden; background: linear-gradient(90deg, rgba(0, 0, 0, .3), rgba(255, 255, 255, .2) 3%, transparent 9%), linear-gradient(120deg, rgba(255, 255, 255, .14), transparent 40%); }
+.bkCouvDos { position: absolute; inset: 0; transform: rotateY(180deg); backface-visibility: hidden; background: var(--toile); }
+.bkOmbre { position: absolute; left: 6%; right: -10%; bottom: -20px; height: 30px; background: radial-gradient(closest-side, rgba(43, 33, 28, .3), transparent); transition: transform .85s var(--ease), opacity .85s; }
+.bkLien:hover .bkVol, .bkLien:focus-visible .bkVol { transform: rotateY(4deg) translateY(-10px); }
+.bkLien:hover .bkCouv, .bkLien:focus-visible .bkCouv { transform: translateZ(var(--T)) rotateY(-68deg); }
+.bkLien:hover .bkOmbre { transform: scale(.88); opacity: .7; }
+.bkLien:focus-visible { outline: none; }
+.bkLien:focus-visible .bkT { text-decoration: underline; }
+.bkT { font-size: 1.05rem; font-weight: 400; line-height: 1.25; }
+.bkM { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
+@media (max-width: 760px) {
+  .bks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 60px 22px; }
+  .bkVol { --T: 20px; }
+  .bkT { font-size: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bibLivre, .bkVol, .bkCouv, .bkOmbre { transition: none; }
 }
 
 /* ---------- la page d'un livre (ouverte depuis la collection) ---------- */

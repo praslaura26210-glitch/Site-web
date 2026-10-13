@@ -31,6 +31,7 @@ for (const slug of fs.readdirSync(path.join(src, 'projets'))) {
   const p = path.join(src, 'projets', slug);
   n += copyDir(path.join(p, 'images'), path.join(dst, slug, 'images'));
   n += copyDir(path.join(p, 'plans'), path.join(dst, slug, 'plans'));
+  n += copyDir(path.join(p, 'eclatee'), path.join(dst, slug, 'eclatee'));
   // voix de Laura qui présente le projet (facultatif) : audio/presentation.mp3
   n += copyDir(path.join(p, 'audio'), path.join(dst, slug, 'audio'), (f) => /\.(mp3|m4a)$/i.test(f));
   // données publiques du projet (maquette 3D, croquis vectorisés) ; pas les fiches ni les textes
@@ -43,6 +44,7 @@ for (const slug of fs.readdirSync(path.join(src, 'projets'))) {
 }
 n += copyDir(path.join(src, 'site', 'images'), path.join(dst, 'site'));
 n += copyDir(path.join(src, 'site', 'inspirations'), path.join(dst, 'site', 'inspirations'));
+n += copyDir(path.join(src, 'site', 'planche'), path.join(dst, 'site', 'planche'));
 n += copyDir(path.join(src, 'site', 'materiaux'), path.join(dst, 'site', 'materiaux'));
 n += copyDir(path.join(src, 'intro'), path.join(dst, 'intro'));
 n += copyDir(path.join(src, 'logo', 'cabane'), path.join(dst, 'logo'));

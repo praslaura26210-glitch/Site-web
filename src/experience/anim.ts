@@ -1,4 +1,4 @@
-import type { XPContexte } from './outils';
+import { xpCalme, type XPContexte } from './outils';
 
 /*
  * Mouvements de la page. Règle : un mouvement n'existe que s'il répond à une question du visiteur.
@@ -111,4 +111,29 @@ export function xpTerritoire(root: HTMLElement) {
     });
   }));
   return () => {};
+}
+
+/**
+ * Les dessins qui se construisent (escalier) : quand le dessin arrive à l'écran, data-vu le fait apparaître,
+ * forme après forme, de bas en haut (CSS) ; un clic le rejoue.
+ */
+export function xpConstruire(root: HTMLElement) {
+  const els = [...root.querySelectorAll<HTMLElement>('[data-construire]')];
+  if (!els.length) return () => {};
+  if (xpCalme()) { els.forEach((el) => { el.dataset.vu = ''; }); return () => {}; }
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { (e.target as HTMLElement).dataset.vu = ''; io.unobserve(e.target); }
+  }), { threshold: 0.35 });
+  els.forEach((el) => io.observe(el));
+  const rejoue = (e: MouseEvent) => {
+    const el = (e.target as Element).closest<HTMLElement>('[data-construire]');
+    if (!el || !els.includes(el)) return;
+    el.dataset.rejoue = '';
+    delete el.dataset.vu;
+    void el.offsetWidth;
+    delete el.dataset.rejoue;
+    el.dataset.vu = '';
+  };
+  root.addEventListener('click', rejoue);
+  return () => { io.disconnect(); root.removeEventListener('click', rejoue); };
 }

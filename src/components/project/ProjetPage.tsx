@@ -12,6 +12,8 @@ import Comparateur from './Comparateur';
 import Planche, { type Labels } from './Planche';
 import Materiautheque, { PALETTE } from './Materiautheque';
 import Visionneuse from './Visionneuse';
+import Eclatee from './Eclatee';
+import Construction from './Construction';
 import styles from './project.module.css';
 
 
@@ -76,11 +78,31 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
             })}
           </div>
         );
-      case 'texte':
-        // le texte va dans la colonne de droite du chapitre ; ici, seulement son image
-        return b.r ? <div key={k} className={styles.grand}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 60vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div> : null;
+      case 'texte': {
+        // un texte seul, au centre ; avec une image, côte à côte (l'image du côté indiqué)
+        const txt = texte(b.k);
+        const tete = b.titre && <h3 className={styles.chapSousT}>{b.titre[lang]}</h3>;
+        if (!b.r) return txt ? <div key={k} className={`${styles.solo} rv`} data-k={b.k}>{tete}{txt}</div> : null;
+        return (
+          <div key={k} className={styles.duo} data-cote={b.cote || 'g'} data-k={b.k}>
+            <div className={`${styles.duoImg} rv`}><Planche m={M(b.r)} sizes="(max-width: 900px) 100vw, 55vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} /></div>
+            {txt && <div className={`${styles.duoTexte} rv`}>{tete}{txt}</div>}
+          </div>
+        );
+      }
       case 'materiaux':
         return <Materiautheque key={k} lang={lang} credit={cr.defaut || undefined} />;
+      case 'eclatee':
+        return <Eclatee key={k} slug={p.slug} lang={lang} />;
+      case 'construction': {
+        const m = M(b.r);
+        return (
+          <div key={k} className={styles.duo} data-cote="g" data-k="construction">
+            <div className={styles.duoImg}><Construction slug={p.slug} nom={b.r.replace(/^\w:/, '')} legende={m.legende} rejouer={t.xp.rejouer} /></div>
+            {b.k && <div className={`${styles.duoTexte} rv`}>{texte(b.k)}</div>}
+          </div>
+        );
+      }
       case 'visionneuse':
         return <Visionneuse key={k} ids={b.r.map(ancreDessin)} items={b.r.map(M)} labels={VL} credit={cr.defaut || undefined} />;
       case 'composition':
@@ -117,24 +139,22 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
     }
   };
 
-  // les chapitres : à gauche les images du chapitre, qui défilent ; à droite son titre et ses textes, qui restent à l'écran
-  type Chap = { titre?: string; note?: string; textes: React.ReactNode[]; medias: React.ReactNode[] };
+  // les chapitres : un titre, puis les dessins et les textes dans l'ordre, chaque texte à côté de son image
+  type Chap = { titre?: string; note?: string; blocs: React.ReactNode[] };
   const chapitres: Chap[] = [];
-  let cur: Chap = { textes: [], medias: [] };
+  let cur: Chap = { blocs: [] };
   mise.blocs.forEach((b, k) => {
     if (b.t === 'inter') {
-      if (cur.medias.length || cur.textes.length) chapitres.push(cur);
-      cur = { titre: b.titre[lang], note: b.note?.[lang], textes: [], medias: [] };
+      if (cur.blocs.length) chapitres.push(cur);
+      cur = { titre: b.titre[lang], note: b.note?.[lang], blocs: [] };
       return;
     }
-    if (b.t === 'texte' || (b.t === 'visionneuse' && b.k)) {
-      const txt = texte(b.k!);
-      if (txt) cur.textes.push(<div key={`t${k}`} className={styles.chapBloc}>{b.t === 'texte' && b.titre && <h3 className={styles.chapSousT}>{b.titre[lang]}</h3>}{txt}</div>);
-    }
     const m = bloc(b, k);
-    if (m) cur.medias.push(m);
+    if (m) cur.blocs.push(m);
+    // les chiffres d'une visionneuse : sous elle
+    if (b.t === 'visionneuse' && b.k) { const x = texte(b.k); if (x) cur.blocs.push(<div key={`c${k}`} className={`${styles.solo} rv`}>{x}</div>); }
   });
-  if (cur.medias.length || cur.textes.length) chapitres.push(cur);
+  if (cur.blocs.length) chapitres.push(cur);
 
   return (
     <article className={styles.projet} data-projet={p.slug}>
@@ -171,19 +191,16 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
         </div>
       </section>
 
-      {/* chaque dessin, chaque image n'apparaît qu'une fois : dans son chapitre */}
+      {/* chaque chapitre : son numéro et son titre, puis ses dessins et ses textes, à lire de haut en bas */}
       <div className={`wrap ${styles.corpsProjet}`}>
         {chapitres.map((c, i) => (
-          <section key={i} className={styles.chap} id={`chapitre-${i + 1}`} data-chapitre={c.titre || t.xp.presentation} data-sans-media={c.medias.length ? undefined : ''}>
-            <div className={styles.chapMedias}>{c.medias}</div>
-            <aside className={styles.chapTexte}>
-              <div className={styles.chapColle}>
-                <span className={styles.interN}>{String(i + 1).padStart(2, '0')}</span>
-                {c.titre && <h2 className={styles.chapT}>{c.titre}</h2>}
-                {c.note && <p className={styles.chapNote}>{c.note}</p>}
-                {c.textes}
-              </div>
-            </aside>
+          <section key={i} className={styles.chap} id={`chapitre-${i + 1}`} data-chapitre={c.titre || t.xp.presentation}>
+            <header className={`${styles.chapTete} rv`}>
+              <span className={styles.interN}>{String(i + 1).padStart(2, '0')}</span>
+              {c.titre && <h2 className={styles.chapT}>{c.titre}</h2>}
+              {c.note && <p className={styles.chapNote}>{c.note}</p>}
+            </header>
+            {c.blocs}
           </section>
         ))}
       </div>

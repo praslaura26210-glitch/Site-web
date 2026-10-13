@@ -49,67 +49,110 @@
 .apropos > * + * { margin-top: clamp(88px, 14vh, 160px); }
 /* qui je suis : un photomaton ; la bande sort de la machine, en plusieurs fois, comme une vraie */
 .pm { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 100px); align-items: center; }
-.pmMachine { position: relative; justify-self: center; width: min(100%, 330px); aspect-ratio: 33 / 60; border-radius: 6px;
-  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px), linear-gradient(90deg, #33241A, #6B4E33 16%, #47331F 38%, #7A5A3A 60%, #3D2B1D 84%, #2B1E14);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), inset 0 0 40px rgba(0, 0, 0, .55), 0 34px 50px -26px rgba(43, 33, 28, .65); }
-.pmRouleau { position: absolute; top: 7%; left: 15%; right: 15%; height: 4.5%; border-radius: 10px; background: linear-gradient(#1C140F, #5A4636 45%, #2A1F17); box-shadow: 0 2px 4px rgba(0, 0, 0, .5); }
-.pmFente { position: absolute; top: 13%; left: 19%; right: 19%; height: 1.2%; border-radius: 2px; background: #0B0806; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9); }
-.pmSortie { position: absolute; top: 13.6%; left: 22%; right: 22%; bottom: 13%; overflow: hidden; }
-.pmBande { padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-defile 7s linear infinite; }
+/* une vieille cabine photo : façade émaillée crème, enseigne bordeaux à lettres dorées, fenêtre chromée, monnayeur, bac */
+.pmMachine { position: relative; justify-self: center; width: min(100%, 330px); aspect-ratio: 33 / 60; border-radius: 22px 22px 8px 8px;
+  background: radial-gradient(120% 60% at 30% 18%, rgba(255, 255, 255, .55), transparent 60%), linear-gradient(90deg, #D9CDB6, #F2EADA 18%, #EDE3CF 55%, #E3D6BE 82%, #CDBFA5);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5), inset 0 -18px 30px rgba(120, 95, 60, .18), 0 2px 0 #BCAE93, 0 40px 60px -30px rgba(43, 33, 28, .55); }
+/* le liseré chromé qui fait le tour de la façade */
+.pmMachine::before { content: ''; position: absolute; inset: 9px; border-radius: 16px 16px 4px 4px; border: 1px solid rgba(140, 120, 90, .35); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6); pointer-events: none; }
+/* le socle */
+.pmMachine::after { content: ''; position: absolute; left: -3%; right: -3%; bottom: -2.4%; height: 3%; border-radius: 3px; background: linear-gradient(#6E1F27, #4A1218); box-shadow: 0 8px 14px -6px rgba(0, 0, 0, .5); }
+.pmEnseigne { position: absolute; top: 4.5%; left: 12%; right: 12%; height: 9%; display: grid; place-items: center; border-radius: 40px 40px 6px 6px;
+  background: linear-gradient(#8E2B35, #6A1C25); box-shadow: inset 0 0 0 3px #C9A55C, inset 0 0 0 5px #6A1C25, inset 0 0 0 6px rgba(201, 165, 92, .6), 0 3px 6px rgba(0, 0, 0, .25); }
+.pmEnseigne span { font: 500 clamp(.9rem, 1.6vw, 1.15rem)/1 var(--sans); letter-spacing: .42em; padding-left: .42em; text-transform: uppercase;
+  background: linear-gradient(#F6E3A8, #C99A3E 55%, #F1D88E); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35)); }
+/* la petite lampe ronde au-dessus de la fenêtre, qui s'allume à chaque pose */
+.pmLampe { position: absolute; top: 15.5%; left: 50%; width: 7%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #FFF8E2, #F2D27A 45%, #B9862E); box-shadow: 0 0 0 3px #D8D8D4, 0 0 0 4px #9A9A96, 0 0 14px 2px rgba(255, 214, 120, .55); animation: pm-flash 3.4s ease-in-out infinite; }
+@keyframes pm-flash { 0%, 86%, 100% { filter: brightness(.85); } 90% { filter: brightness(1.5); box-shadow: 0 0 0 3px #D8D8D4, 0 0 0 4px #9A9A96, 0 0 34px 10px rgba(255, 224, 150, .8); } }
+/* la fenêtre chromée : la bande y descend */
+.pmFenetre { position: absolute; top: 21.5%; left: 17%; right: 17%; bottom: 25%; border-radius: 8px; padding: 6%;
+  background: linear-gradient(135deg, #F4F4F1, #A9A9A4 30%, #E9E9E5 52%, #8E8E89 78%, #DADAD5); box-shadow: 0 3px 6px rgba(0, 0, 0, .2); }
+.pmFente { position: absolute; z-index: 2; top: 6%; left: 10%; right: 10%; height: 2.4%; border-radius: 3px; background: #0F0B08; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9), 0 1px 0 rgba(255, 255, 255, .7); }
+.pmSortie { position: absolute; inset: 7.5% 6% 6%; overflow: hidden; border-radius: 3px; background: linear-gradient(#1A1411, #2E2620); box-shadow: inset 0 6px 14px rgba(0, 0, 0, .75); }
+.pmSortie::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, .16), transparent 35%); pointer-events: none; }
+.pmBande { margin: 0 14%; padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .45); animation: pm-defile 13s linear infinite; }
 /* la bande sort de la machine case après case, sans fin (la deuxième moitié répète la première) */
 @keyframes pm-defile { from { transform: translateY(-50%); } to { transform: translateY(0); } }
 .pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; margin: 9% 0 0; }
-.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) contrast(1.06); }
-.pmBac { position: absolute; z-index: 2; bottom: 4%; left: 13%; right: 13%; height: 11%; border-radius: 2px 2px 7px 7px; background: linear-gradient(#5C4430, #2C1F15); box-shadow: inset 0 7px 10px rgba(0, 0, 0, .55), 0 -1px 0 rgba(255, 255, 255, .1); }
+.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) sepia(.18) contrast(1.06); }
+/* le monnayeur : plaque chromée, fente à pièce, le prix */
+.pmMonnaie { position: absolute; bottom: 14.5%; left: 50%; transform: translateX(-50%); width: 34%; height: 7.5%; display: flex; align-items: center; justify-content: center; gap: 9%; border-radius: 5px;
+  background: linear-gradient(135deg, #F2F2EF, #A3A39E 40%, #E4E4E0 60%, #96968F); box-shadow: 0 2px 4px rgba(0, 0, 0, .2); }
+.pmMonnaie i { width: 5%; height: 54%; border-radius: 2px; background: #1A1512; box-shadow: inset 0 1px 2px #000; }
+.pmMonnaie b { font: 500 .58rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #6A1C25; }
+.pmBac { position: absolute; z-index: 2; bottom: 4.5%; left: 22%; right: 22%; height: 7%; border-radius: 3px 3px 12px 12px;
+  background: linear-gradient(#ECECE8, #9C9C96 60%, #C8C8C3); box-shadow: inset 0 9px 10px rgba(0, 0, 0, .45), 0 2px 4px rgba(0, 0, 0, .2); }
+.pmRivet { position: absolute; width: 2.4%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #A9A9A4 60%, #6E6E69); box-shadow: 0 1px 1px rgba(0, 0, 0, .3); }
+.pmRivet[data-k='0'] { top: 17%; left: 7%; }
+.pmRivet[data-k='1'] { top: 17%; right: 7%; }
+.pmRivet[data-k='2'] { bottom: 6%; left: 7%; }
+.pmRivet[data-k='3'] { bottom: 6%; right: 7%; }
 .pmTexte { display: grid; gap: 16px; max-width: 54ch; }
 .pmNom { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; }
 .pmP { font-size: 1.02rem; line-height: 1.8; }
 
-/* outils : des tuiles comme des icônes ; la couleur dit le niveau, du contour (notions) au plein (maîtrise) */
-.outils { display: grid; gap: 26px; }
-.tuiles { list-style: none; margin: 0; padding: 0; max-width: 980px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px; }
-.tuile { position: relative; aspect-ratio: 1; display: grid; grid-template-rows: 1fr auto auto; padding: 14px; border-radius: 14px; border: 1px solid var(--accent); color: var(--accent-f); transition: transform .3s var(--ease); }
-.tuile:hover { transform: translateY(-4px); }
-.tuile[data-n='5'] { grid-column: span 2; grid-row: span 2; background: var(--accent); border-color: var(--accent); color: #FBF6EE; }
-.tuile[data-n='4'] { background: #D8B9A9; border-color: #D8B9A9; color: #4A2A1D; }
-.tuile[data-n='3'] { background: #F1E4DC; border-color: #F1E4DC; color: #6B3A27; }
-.tuileSigle { align-self: center; font-size: 2.1rem; font-weight: 300; letter-spacing: -0.02em; line-height: 1; }
-.tuile[data-n='5'] .tuileSigle { font-size: 5rem; }
-.tuileNom { font-size: .82rem; font-weight: 400; }
-.tuilePoints { display: flex; gap: 5px; margin-top: 6px; }
-.tuilePoints i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid currentColor; opacity: .7; }
+/* outils : l'icône de chaque logiciel, comme sur un bureau ; son nom ; le niveau en cinq points */
+.outils { display: grid; gap: 30px; }
+.tuiles { list-style: none; margin: 0; padding: 0; max-width: 1040px; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 26px 14px; }
+.tuile { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.icone { display: grid; place-items: center; width: min(100%, 76px); aspect-ratio: 1; border-radius: 23%;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), inset 0 -2px 0 rgba(0, 0, 0, .18), 0 10px 18px -10px rgba(43, 33, 28, .55);
+  transition: transform .45s cubic-bezier(.3, 1.6, .5, 1), box-shadow .45s var(--ease); }
+.icone svg { width: 56%; height: 56%; }
+.icone b { font: 500 clamp(1rem, 1.9vw, 1.55rem)/1 var(--sans); letter-spacing: -0.02em; }
+.tuile:hover .icone { transform: translateY(-7px) rotate(-4deg) scale(1.06); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), inset 0 -2px 0 rgba(0, 0, 0, .18), 0 18px 24px -12px rgba(43, 33, 28, .5); }
+.tuileNom { font-size: .78rem; font-weight: 400; line-height: 1.2; }
+.tuilePoints { display: flex; gap: 4px; color: var(--accent-f); }
+.tuilePoints i { width: 6px; height: 6px; border-radius: 50%; border: 1px solid currentColor; opacity: .55; }
 .tuilePoints i[data-plein] { background: currentColor; opacity: 1; }
-.tuile[data-n='5'] .tuilePoints i { width: 10px; height: 10px; }
 
 /* références (page à part) : une phrase pour dire d'où elles viennent, puis deux familles de tirages */
 .refsPage > * + * { margin-top: clamp(56px, 9vh, 100px); }
 .refsTete { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px clamp(32px, 6vw, 110px); align-items: end; }
 .refsIntro { max-width: 54ch; font-size: 1rem; line-height: 1.75; }
-.refsTheme { display: grid; gap: 30px; }
-.refsThemeT { padding-top: 12px; border-top: 1px solid var(--encre); font-size: .62rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-f); }
-.refsListe { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(28px, 4vw, 60px); align-items: start; }
-.refsListe li { display: grid; gap: 14px; }
-.tirage { margin: 0; width: min(100%, 270px); padding: 9px 9px 0; background: #fff; box-shadow: 0 2px 4px rgba(43, 33, 28, .1), 0 12px 26px -12px rgba(43, 33, 28, .32); rotate: -1.6deg; transition: rotate .4s var(--ease); }
-.refsListe li:nth-child(2n) .tirage { rotate: 1.4deg; }
-.tirage:hover { rotate: 0deg; }
-.tirage img { display: block; width: 100%; height: auto; }
-.tirage figcaption { padding: 8px 2px 10px; font-family: var(--main); font-size: 1.1rem; line-height: 1.1; color: var(--gris); }
-.tirage figcaption b { display: block; font-weight: 400; color: var(--encre); font-size: 1.3rem; }
-.refsNote { font-size: .9rem; line-height: 1.75; max-width: 42ch; }
-/* le catalogue : des images de tailles différentes ; la fiche s'ouvre sous l'image */
-.catalogue { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-flow: dense; gap: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 44px); align-items: start; }
-.catItem { grid-column: span 4; }
-.catItem[data-taille='g'] { grid-column: span 5; }
-.catItem[data-taille='m'] { grid-column: span 4; padding-top: 40px; }
-.catItem[data-taille='p'] { grid-column: span 3; padding-top: 90px; }
-.catFiche summary { list-style: none; cursor: pointer; }
-.catFiche summary::-webkit-details-marker { display: none; }
-.catFiche .tirage { width: 100%; }
-.catFiche[open] .tirage { rotate: 0deg; }
-.catInfo { display: grid; gap: 8px; margin-top: 16px; padding: 14px 16px; background: #fff; box-shadow: 0 10px 30px -14px rgba(43, 33, 28, .35); font-size: .86rem; line-height: 1.7; animation: catOuvre .3s ease both; }
-@keyframes catOuvre { from { opacity: 0; translate: 0 -6px; } }
-.catLieu { font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-f); }
-.refsCredit { font-size: .6rem; color: var(--gris); }
+/* le tableau : un tableau blanc cerclé d'alu ; les cartes postales y tiennent par un aimant, en désordre organisé */
+.tableau { list-style: none; margin: clamp(64px, 9vh, 110px) 0 0; padding: clamp(40px, 5vw, 80px) clamp(24px, 4vw, 64px) clamp(56px, 6vw, 90px); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(36px, 4vw, 56px) clamp(22px, 3vw, 44px); align-items: start;
+  background: radial-gradient(120% 90% at 20% 0%, #FFFFFF, #F4F3F0 70%); border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04), inset 0 2px 10px rgba(0, 0, 0, .05), 0 0 0 9px #E4E3E0, 0 0 0 10px #C7C5C0, 0 0 0 11px #EFEEEB, 0 40px 60px -40px rgba(43, 33, 28, .45); }
+.carteLieu { grid-column: span 2; position: relative; display: flex; justify-content: center; }
+.carteLieu:nth-child(5n + 4) { grid-column: 2 / span 2; }
+.carte { all: unset; box-sizing: border-box; position: relative; display: block; width: 100%; cursor: pointer; perspective: 1600px;
+  transform: translate(var(--dx), var(--dy)) rotate(var(--r)); transition: transform .5s var(--ease); }
+.carteLieu[data-portrait] .carte { width: 76%; }
+.carte:hover, .carte:focus-visible { transform: translate(var(--dx), calc(var(--dy) - 8px)) rotate(calc(var(--r) * .3)) scale(1.03); z-index: 3; }
+.carte:focus-visible .recto { outline: 2px solid var(--accent); outline-offset: 4px; }
+.carteIn { display: grid; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3, .9, .3, 1); }
+.carte[aria-pressed='true'] .carteIn { transform: rotateY(180deg); }
+.recto, .verso { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; background: #fff;
+  box-shadow: 0 1px 2px rgba(43, 33, 28, .12), 0 16px 26px -14px rgba(43, 33, 28, .4); transition: box-shadow .5s var(--ease); }
+.carte:hover :is(.recto, .verso) { box-shadow: 0 1px 2px rgba(43, 33, 28, .12), 0 28px 40px -18px rgba(43, 33, 28, .45); }
+.recto { padding: 10px 10px 16px; }
+.recto img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.carteLieu[data-portrait] .recto img { aspect-ratio: 3 / 4; }
+.rectoT { margin-top: 14px; font-size: 1rem; font-weight: 500; line-height: 1.25; letter-spacing: -0.01em; color: var(--encre); }
+.rectoA { margin-top: 4px; font-size: .8rem; color: var(--gris); }
+/* le verso : papier crème, « Carte postale », un trait au milieu ; à gauche le mot, à droite le timbre et l'adresse */
+.verso { position: absolute; inset: 0; overflow: hidden; transform: rotateY(180deg); padding: 14px 16px 16px; background: #FBF8F1; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 10px 14px; }
+.versoTete { grid-column: 1 / -1; text-align: center; font-size: .56rem; font-weight: 500; letter-spacing: .32em; text-transform: uppercase; color: var(--gris); }
+.versoMot { display: flex; flex-direction: column; gap: 8px; padding-right: 14px; border-right: 1px solid rgba(43, 33, 28, .22); }
+.versoLieu { font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-f); }
+.versoTxt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 11; overflow: hidden; font-size: .7rem; line-height: 1.55; color: var(--encre); }
+.carteLieu[data-portrait] .versoTxt { -webkit-line-clamp: 16; }
+.versoAdr { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; padding-top: 86px; }
+.ligne { padding: 6px 0 3px; border-bottom: 1px solid rgba(43, 33, 28, .25); font-size: .7rem; line-height: 1.3; }
+.ligneCredit { font-size: .58rem; color: var(--gris); }
+/* le timbre, dentelé, et le cachet de la poste */
+.timbre { position: absolute; top: 0; right: 0; width: 56px; height: 68px; padding: 5px; background: #fff; rotate: 3deg;
+  -webkit-mask: radial-gradient(circle at 3px 3px, transparent 2.2px, #000 2.6px) -3px -3px / 7px 7px; mask: radial-gradient(circle at 3px 3px, transparent 2.2px, #000 2.6px) -3px -3px / 7px 7px; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .2)); }
+.timbre i { display: block; width: 100%; height: 100%; background: center / cover no-repeat; filter: saturate(.8) sepia(.15); }
+.versoAdr::before { content: ''; position: absolute; z-index: 1; top: 30px; right: 34px; width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid rgba(110, 31, 39, .45); background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(110, 31, 39, .35) 7px 8.5px) 0 50% / 100% 60% no-repeat; rotate: -14deg; }
+/* l'aimant qui tient la carte */
+.aimant { position: absolute; z-index: 2; top: -9px; left: 50%; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .7), transparent 45%), var(--c, #B5563A); box-shadow: 0 3px 4px rgba(0, 0, 0, .28), inset 0 -2px 3px rgba(0, 0, 0, .2); }
+.carteLieu:nth-child(4n + 2) .aimant { --c: #7E8F6A; left: 30%; }
+.carteLieu:nth-child(4n + 3) .aimant { --c: #D0A54B; left: 66%; }
+.carteLieu:nth-child(4n) .aimant { --c: #5D7389; left: 42%; }
+.refsAide { margin-top: 28px; text-align: center; font-size: .72rem; letter-spacing: .08em; color: var(--gris); }
 
 /* le master : son nom et ce qu'on y fait */
 .aMaster { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(32px, 6vw, 110px); padding-top: 22px; border-top: 1px solid var(--encre); }
@@ -131,7 +174,13 @@
 
 .audela { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px); align-items: end; }
 .audelaPhoto { grid-column: 1 / span 5; margin: 0; }
-.audelaPhoto img, .audelaPlanche img { width: 100%; height: auto; }
+.audelaPhoto img { width: 100%; height: auto; }
+/* la planche : chaque dessin, chaque photo, découpé, flotte à peine, chacun à son rythme */
+.planche { position: relative; aspect-ratio: 2000 / 1415; }
+.planche img { position: absolute; height: auto; filter: drop-shadow(0 6px 8px rgba(43, 33, 28, .14)); animation: planche-flotte calc(7s + var(--i) * .9s) ease-in-out calc(var(--i) * -1.7s) infinite alternate; }
+.planche img:nth-child(even) { animation-name: planche-flotte2; }
+@keyframes planche-flotte { from { transform: translate(0, 0) rotate(0); } to { transform: translate(2px, -5px) rotate(.7deg); } }
+@keyframes planche-flotte2 { from { transform: translate(0, 0) rotate(0); } to { transform: translate(-3px, -4px) rotate(-.6deg); } }
 .audelaTxt { grid-column: 7 / span 6; }
 .audelaTxt p { margin-top: 22px; max-width: 56ch; }
 .audelaPlanche { grid-column: 2 / span 10; margin: clamp(24px, 6vh, 64px) 0 0; }
@@ -143,14 +192,14 @@
   .col li { grid-template-columns: 1fr; }
   .pDate { grid-row: auto; }
   .audelaPhoto, .audelaTxt, .audelaPlanche { grid-column: 1 / -1; }
-  .tuiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .tuile { padding: 10px; border-radius: 10px; }
-  .tuileSigle { font-size: 1.6rem; }
-  .tuile[data-n='5'] .tuileSigle { font-size: 3.4rem; }
-  .refsTete, .refsListe { grid-template-columns: 1fr; }
-  .catalogue { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .catItem, .catItem[data-taille] { grid-column: span 1; padding-top: 0; }
-  .catItem[data-taille='g'] { grid-column: span 2; }
+  .tuiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 10px; }
+  .icone { width: 64px; }
+  .refsTete { grid-template-columns: 1fr; }
+  .tableau { grid-template-columns: 1fr; gap: 44px; padding: 40px 22px 50px; }
+  .carteLieu, .carteLieu:nth-child(5n + 4) { grid-column: auto; }
+  .carte { transform: rotate(var(--r)); }
+  .carte:hover { transform: rotate(0) scale(1.01); }
+  .carteLieu[data-portrait] .carte { width: 82%; }
   .pm { grid-template-columns: 1fr; }
   .pmMachine { width: min(72vw, 260px); }
   .cGrille { grid-template-columns: 1fr; }
@@ -158,5 +207,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pmBande { animation: none; }
+  .pmBande, .pmLampe, .planche img { animation: none; }
+  .carte, .carteIn { transition: none; }
 }

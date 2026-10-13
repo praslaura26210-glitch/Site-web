@@ -15,7 +15,10 @@ export function xpMateriaux(root: HTMLElement) {
   const table = root.querySelector<HTMLElement>('[data-materiaux]');
   if (!scene || !table) return () => {};
   const items = [...table.querySelectorAll<HTMLElement>('[data-echantillon]')];
-  const nomEl = scene.querySelector<HTMLElement>('[data-materiaux-nom]');
+  // la fiche à côté de la planche : la liste des matériaux, ou la fiche de celui qu'on regarde
+  const bloc = scene.closest<HTMLElement>('[data-materiaux-bloc]') || root;
+  const liste = bloc.querySelector<HTMLElement>('[data-fiche-liste]');
+  const fiches = [...bloc.querySelectorAll<HTMLElement>('[data-fiche]')];
   const calme = xpCalme();
   const etroit = () => matchMedia('(max-width: 760px)').matches;
 
@@ -84,7 +87,10 @@ export function xpMateriaux(root: HTMLElement) {
     vise = el && el !== vise ? el : null;
     if (vise) vise.dataset.vise = '';
     scene.toggleAttribute('data-proche', !!vise);
-    if (nomEl) nomEl.textContent = vise?.getAttribute('aria-label') || '';
+    const f = vise?.dataset.echantillon || '';
+    fiches.forEach((x) => { x.hidden = x.dataset.fiche !== f; });
+    if (liste) liste.hidden = !!f;
+    items.forEach((x) => x.setAttribute('aria-pressed', String(x === vise)));
     anime();
   };
 
@@ -122,6 +128,16 @@ export function xpMateriaux(root: HTMLElement) {
     viser((e.target as Element).closest<HTMLElement>('[data-echantillon]'));
   };
   const touche = (e: KeyboardEvent) => { if (e.key === 'Escape' && vise) viser(null); };
+  // la liste de la fiche : un nom ouvre sa fiche (et la caméra va voir l'échantillon) ; « tous » y revient
+  const choisir = (e: MouseEvent) => {
+    const b = (e.target as Element).closest<HTMLElement>('[data-choisir]');
+    if (!b) return;
+    const el = items.find((x) => x.dataset.echantillon === b.dataset.choisir) || null;
+    if (el !== vise) viser(el);
+    if (!el) liste?.querySelector<HTMLElement>(`[data-choisir]`)?.focus({ preventScroll: true });
+  };
+  bloc.addEventListener('click', choisir);
+  bloc.addEventListener('keydown', touche);
   // la molette rapproche ou recule la caméra ; arrivée au bout, elle rend la main à la page
   const molette = (e: WheelEvent) => {
     const z = Math.min(3, Math.max(0.75, vue.zoom * Math.exp(-e.deltaY * 0.0016)));
@@ -136,7 +152,6 @@ export function xpMateriaux(root: HTMLElement) {
   scene.addEventListener('pointerup', lache);
   scene.addEventListener('pointercancel', lache);
   scene.addEventListener('click', clic);
-  scene.addEventListener('keydown', touche);
   scene.addEventListener('wheel', molette, { passive: false });
 
   const recale = () => {
@@ -145,5 +160,5 @@ export function xpMateriaux(root: HTMLElement) {
   };
   addEventListener('resize', recale);
     requestAnimationFrame(recale);
-  return () => { io.disconnect(); cancelAnimationFrame(raf); visible = false; removeEventListener('resize', recale); };
+  return () => { bloc.removeEventListener('click', choisir); bloc.removeEventListener('keydown', touche); io.disconnect(); cancelAnimationFrame(raf); visible = false; removeEventListener('resize', recale); };
 }

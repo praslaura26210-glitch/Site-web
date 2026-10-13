@@ -115,6 +115,8 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
           </div>
         ));
         break;
+      case 'eclatee': images(cle, ['axonometrie-eclatee']); break;
+      case 'construction': images(cle, [b.r]); break;
       case 'comparer':
         b.items.forEach((x, k) => {
           const a = M(x.existant), c = M(x.projet);

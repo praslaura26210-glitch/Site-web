@@ -44,3 +44,9 @@ export default function ProjetsGrille({ projets, lang, headingLevel = 3 }: { pro
     </ol>
   );
 }
+
+/** La teinte de la toile de chaque livre (le dos), dans l'ordre des projets : la même sur l'accueil et sur Projets. */
+export const TOILES = [
+  { fond: '#B5563A', encre: '#FBF3EA' }, { fond: '#E9E2D3', encre: '#3A2E26' }, { fond: '#7E8F6A', encre: '#F6F3EA' },
+  { fond: '#2F3A45', encre: '#EDE6D8' }, { fond: '#D0A54B', encre: '#2E241B' }, { fond: '#6E1F27', encre: '#F3E3C8' },
+];
