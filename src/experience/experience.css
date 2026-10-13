@@ -416,3 +416,8 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
   .xp-lv-page :is(.xp-lv-fig, .xp-lv-titre, .xp-lv-meta, .xp-lv-texte, .xp-lv-poeme span, .xp-lv-recit p, .xp-lv-chiffres div, .xp-lv-palette li, .xp-lv-ech, .xp-lv-fin img) { opacity: 1 !important; animation: none !important; }
   .xp-lv-ech img { animation: none; }
 }
+
+/* les repères animés de l'escalier (project.module.css, .cotesSpot) : des propriétés qu'on peut faire glisser */
+@property --cx { syntax: '<percentage>'; inherits: true; initial-value: 50%; }
+@property --cy { syntax: '<percentage>'; inherits: true; initial-value: 50%; }
+@property --cr { syntax: '<percentage>'; inherits: true; initial-value: 70%; }

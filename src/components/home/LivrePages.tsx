@@ -116,6 +116,13 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
         ));
         break;
       case 'eclatee': images(cle, ['axonometrie-eclatee']); break;
+      case 'strophes': images(cle, b.r.filter((x): x is string => !!x)); break;
+      case 'plein': images(cle, [b.r]); break;
+      case 'feuille': case 'triptyque': case 'galerie': case 'coupes': images(cle, [...b.r]); break;
+      case 'trace': images(cle, [b.r, ...(b.avec ? [b.avec] : [])]); break;
+      case 'superpose': images(cle, [b.a, b.b]); break;
+      case 'cotes': images(cle, [b.r]); break;
+      case 'nuancier': break;
       case 'construction': images(cle, [b.r]); break;
       case 'comparer':
         b.items.forEach((x, k) => {

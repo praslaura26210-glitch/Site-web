@@ -21,6 +21,21 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V23 (aperçu des essais)
+
+Suite des essais, toujours sur l'aperçu des essais seulement.
+
+- **Accueil** : l'étagère sans cadre photo. Un livre présenté de face à gauche ; au survol d'un dos, ce livre monte un peu et c'est lui qu'on voit de face, avec son titre dessous. Les livres ne se recouvrent plus.
+- **À propos** : retour de la machine en bois ; la bande défile plus lentement.
+- **Références** : les cartes postales directement sur le blanc, sans tableau.
+- **Fiches projet**, chacune avec sa mise en page :
+  - Illusion d'envol : le poème strophe par strophe, chacune à côté d'un dessin ; le pavillon seul, qui se décompose vers la droite au clic ; les détails d'assemblage sur une planche avec cartouche.
+  - La Ruche : la coupe d'un bord à l'autre, le poème avec les maquettes, l'axonométrie en quatre couches collées qui se séparent au clic, les dessins sur une planche, la maquette en grand.
+  - Le Passage des artistes : le croquis de la cour qui se dessine, à côté du plan masse ; la coupe perspective en grand ; les dessins sur une planche ; l'expérimentation et ses photos en bande qu'on fait défiler.
+  - Entre deux regards : le plan masse en grand, les trois vues en triptyque, le récit en deux colonnes, les avant/après gardés.
+  - Pilates Room : les rendus composés, le plan d'aménagement et le plan d'électricité superposés (on glisse de l'un à l'autre), les matériaux à plat et aérés, les coupes l'une sous l'autre avec leur lettre.
+  - Escalier suspendu : le dessin reste à l'écran et chaque chiffre, en défilant, éclaire la partie de l'escalier qu'il concerne ; les dessins techniques sur une planche.
+
 ## Essais en cours — V22 (aperçu des essais)
 
 Sur l'aperçu des essais seulement ; la version de référence V21 n'a pas bougé.

@@ -90,38 +90,56 @@
   .carteImg { aspect-ratio: 4 / 3; }
 }
 
-/* ---------- accueil : la collection — une étagère : le dessin encadré, les livres debout, dos toilés ---------- */
+/* ---------- accueil : la collection — une étagère : un livre de face, les autres debout ---------- */
 .col { position: relative; display: grid; justify-items: center; gap: clamp(40px, 7vh, 70px); padding-bottom: clamp(30px, 6vh, 70px); }
-.biblio { position: relative; width: min(100%, 820px); padding-top: clamp(60px, 10vh, 110px); perspective: 1700px; perspective-origin: 50% 20%; }
-.bibRang { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center; transform-style: preserve-3d; }
-/* le dessin du couloir, dans un cadre de chêne clair, posé contre le mur */
-.bibCadre { flex: none; width: 214px; margin: 0 clamp(26px, 5vw, 60px) 0 0; padding: 14px; background: #FDFCF9; border: 8px solid #D2B993; rotate: -3.5deg; transform-origin: 0 100%;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06), 0 1px 0 #B99D74, 10px 16px 22px -12px rgba(43, 33, 28, .45); }
-.bibCadre img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
-.bibLivres { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 2px; transform-style: preserve-3d; }
-.bibLivre { --D: 214px; position: relative; flex: none; width: var(--e); height: var(--h); transform-style: preserve-3d; transition: transform .75s var(--ease); }
-/* au survol : le livre sort de l'étagère et se tourne, on voit sa couverture */
-.bibLivre:hover, .bibLivre:focus-within { z-index: 5; transform: translateZ(150px) translateY(-16px) rotateY(-58deg); }
-.bibDos { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 18px 0 14px; color: var(--toileEncre); text-decoration: none; backface-visibility: hidden;
+.biblio { position: relative; width: min(100%, 760px); padding-top: clamp(60px, 10vh, 110px); }
+.bibRang { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center; gap: clamp(28px, 5vw, 64px); }
+/* le présentoir : la couverture du livre regardé, de face, un peu inclinée contre le mur */
+.bibPresentoir { position: relative; flex: none; width: 236px; aspect-ratio: 3 / 4; }
+.bibFace { position: absolute; inset: 0; display: block; opacity: 0; visibility: hidden; transform: translateY(8px) rotate(-1deg); transform-origin: 50% 100%; transition: opacity .45s var(--ease), transform .6s var(--ease), visibility 0s .45s;
+  background: var(--toile); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06), 14px 18px 26px -16px rgba(43, 33, 28, .55); }
+.bibFace img { width: 100%; height: 100%; object-fit: cover; }
+.bibFace::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .28), rgba(255, 255, 255, .16) 3%, transparent 9%), linear-gradient(125deg, rgba(255, 255, 255, .16), transparent 40%); }
+.bibFace:is(:hover, :focus-visible) { transform: translateY(-4px); }
+.biblio[data-choix='0'] :is(.bibFace, .bibLegende)[data-i='0'] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.biblio[data-choix='1'] :is(.bibFace, .bibLegende)[data-i='1'] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.biblio[data-choix='2'] :is(.bibFace, .bibLegende)[data-i='2'] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.biblio[data-choix='3'] :is(.bibFace, .bibLegende)[data-i='3'] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.biblio[data-choix='4'] :is(.bibFace, .bibLegende)[data-i='4'] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.biblio[data-choix='5'] :is(.bibFace, .bibLegende)[data-i='5'] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.bibLivres { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 2px; }
+.bibLivre { position: relative; flex: none; width: var(--e); height: var(--h); transition: transform .45s var(--ease); }
+/* au survol : le livre monte un peu, comme quand on le tire par le haut ; il reste sorti tant qu'on le regarde de face */
+.bibLivre:hover, .bibLivre:focus-within { transform: translateY(-18px); }
+.biblio[data-choix='0'] .bibLivre[data-i='0'] { transform: translateY(-10px); }
+.biblio[data-choix='1'] .bibLivre[data-i='1'] { transform: translateY(-10px); }
+.biblio[data-choix='2'] .bibLivre[data-i='2'] { transform: translateY(-10px); }
+.biblio[data-choix='3'] .bibLivre[data-i='3'] { transform: translateY(-10px); }
+.biblio[data-choix='4'] .bibLivre[data-i='4'] { transform: translateY(-10px); }
+.biblio[data-choix='5'] .bibLivre[data-i='5'] { transform: translateY(-10px); }
+.bibDos { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 18px 0 14px; color: var(--toileEncre); text-decoration: none;
   background: linear-gradient(90deg, rgba(0, 0, 0, .22), rgba(255, 255, 255, .14) 16%, rgba(255, 255, 255, 0) 42%, rgba(0, 0, 0, .1) 82%, rgba(0, 0, 0, .28)), repeating-linear-gradient(0deg, rgba(255, 255, 255, .03) 0 1px, transparent 1px 3px), var(--toile);
   box-shadow: 7px 0 10px -7px rgba(43, 33, 28, .45); }
 .bibDos:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .bibFilets { width: 64%; height: 6px; border-block: 1px solid currentColor; opacity: .55; }
 .bibT { writing-mode: vertical-rl; transform: rotate(180deg); max-height: calc(var(--h) - 92px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: .6rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
 .bibN { font-size: .58rem; font-weight: 500; letter-spacing: .08em; opacity: .85; }
-.bibCouv { position: absolute; top: 0; left: 100%; width: var(--D); height: 100%; transform-origin: 0 50%; transform: rotateY(90deg); overflow: hidden; backface-visibility: hidden; background: var(--toile); opacity: 0; transition: opacity .3s .1s; }
-.bibLivre:hover .bibCouv, .bibLivre:focus-within .bibCouv { opacity: 1; transition-delay: 0s; }
-.bibCouv img { width: 100%; height: 100%; object-fit: cover; }
-.bibCouv::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .3), rgba(255, 255, 255, .18) 4%, transparent 10%); }
 /* le serre-livres, et la planche */
-.bibSerre { flex: none; width: 12px; height: 150px; margin-left: 3px; border-radius: 2px 2px 0 0; background: linear-gradient(90deg, #E6E3DD, #FAF9F6 40%, #D9D5CE); box-shadow: 4px 6px 10px -6px rgba(43, 33, 28, .4); }
+.bibSerre { flex: none; width: 12px; height: 150px; margin-left: calc(3px - clamp(28px, 5vw, 64px)); border-radius: 2px 2px 0 0; background: linear-gradient(90deg, #E6E3DD, #FAF9F6 40%, #D9D5CE); box-shadow: 4px 6px 10px -6px rgba(43, 33, 28, .4); }
 .bibPlanche { position: relative; display: block; height: 18px; background: linear-gradient(#FBFAF7, #ECE8E1); border-top: 1px solid #fff;
   box-shadow: 0 1px 0 #DAD5CC, 0 22px 26px -16px rgba(43, 33, 28, .45), 0 -6px 14px -8px rgba(43, 33, 28, .25); }
+/* sous la planche : le titre du livre regardé */
+.bibLegendes { display: grid; margin-top: 26px; text-align: center; }
+.bibLegende { grid-area: 1 / 1; display: grid; gap: 4px; margin: 0; font-size: 1.05rem; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .4s var(--ease), transform .4s var(--ease), visibility 0s .4s; }
+.bibLegende span { font-size: .6rem; letter-spacing: .2em; color: var(--accent-f); }
+.bibLegende em { font-style: normal; font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
 .colBas { margin: 0; }
 .colBouton { display: inline-block; padding: 14px 28px; border: 1px solid var(--encre); font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; text-decoration: none; color: var(--encre); transition: background .25s, color .25s; }
 .colBouton:hover { background: var(--encre); color: var(--fond); }
 @media (max-width: 760px) {
-  .bibCadre { display: none; }
+  .bibPresentoir { display: none; }
+  .bibRang { gap: 0; }
+  .bibSerre { margin-left: 3px; }
 }
 
 /* ---------- Projets : les livres, trois par rangée, sur le blanc ---------- */
@@ -156,7 +174,7 @@
   .bkT { font-size: .9rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bibLivre, .bkVol, .bkCouv, .bkOmbre { transition: none; }
+  .bibLivre, .bibFace, .bibLegende, .bkVol, .bkCouv, .bkOmbre { transition: none; }
 }
 
 /* ---------- la page d'un livre (ouverte depuis la collection) ---------- */

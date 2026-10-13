@@ -1,4 +1,4 @@
-import { xpConstruire, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
+import { xpConstruire, xpEtapes, xpEcoute, xpEntete, xpImagesDouces, xpPrecharge, xpTerritoire } from './anim';
 import { xpChapitres } from './chapitres';
 import { xpMateriaux } from './materiaux';
 import { xpLivres } from './livres';
@@ -87,11 +87,19 @@ export function xpDemarrer(ctx: XPContexte) {
     } else return;
     e.preventDefault();
   };
+  // l'étagère de l'accueil : le livre survolé (ou atteint au clavier) est celui qu'on voit de face
+  const etagere = (e: Event) => {
+    const li = (e.target as Element).closest?.<HTMLElement>('[data-etagere] li[data-i]');
+    const et = li?.closest<HTMLElement>('[data-etagere]');
+    if (li && et) et.dataset.choix = li.dataset.i;
+  };
   document.addEventListener('click', clic);
   document.addEventListener('click', lien, true);
+  document.addEventListener('pointerover', etagere);
+  document.addEventListener('focusin', etagere);
   addEventListener('keydown', touche);
   const autres = [xpEntete(), xpPrecharge(ctx)];
-  return () => { document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
+  return () => { document.removeEventListener('pointerover', etagere); document.removeEventListener('focusin', etagere); document.removeEventListener('click', clic); document.removeEventListener('click', lien, true); removeEventListener('keydown', touche); autres.forEach((f) => f()); };
 }
 
 /** À chaque page affichée : visionneuse, chapitres, carte, défilé, livres de l'étui. Retourne le nettoyage. */
@@ -100,7 +108,7 @@ export function xpPage(ctx: XPContexte, root: HTMLElement) {
   delete document.documentElement.dataset.enteteCache;
   const f = [
     xpLightboxPage(ctx, root), xpChapitres(ctx, root), xpMateriaux(root),
-    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root), xpLivres(ctx, root), xpConstruire(root),
+    xpImagesDouces(root), xpEcoute(root), xpTerritoire(root), xpDefile(ctx, root), xpLivres(ctx, root), xpConstruire(root), xpEtapes(root),
   ];
   return () => f.forEach((x) => x());
 }

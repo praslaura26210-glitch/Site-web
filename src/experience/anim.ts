@@ -137,3 +137,20 @@ export function xpConstruire(root: HTMLElement) {
   root.addEventListener('click', rejoue);
   return () => { io.disconnect(); root.removeEventListener('click', rejoue); };
 }
+
+/**
+ * Les lectures guidées (escalier) : la liste d'étapes défile à côté du dessin ; l'étape qui passe au milieu
+ * de l'écran devient data-etape du bloc, et le dessin éclaire la partie qui la concerne (CSS).
+ */
+export function xpEtapes(root: HTMLElement) {
+  const blocs = [...root.querySelectorAll<HTMLElement>('[data-etapes]')];
+  if (!blocs.length) return () => {};
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const el = e.target as HTMLElement;
+    const b = el.closest<HTMLElement>('[data-etapes]');
+    if (b) b.dataset.etape = el.dataset.etape || '0';
+  }), { rootMargin: matchMedia('(max-width: 900px)').matches ? '-62% 0px -26% 0px' : '-45% 0px -45% 0px' });
+  blocs.forEach((b) => b.querySelectorAll('li[data-etape]').forEach((li) => io.observe(li)));
+  return () => io.disconnect();
+}

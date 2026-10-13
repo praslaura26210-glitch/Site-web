@@ -49,45 +49,18 @@
 .apropos > * + * { margin-top: clamp(88px, 14vh, 160px); }
 /* qui je suis : un photomaton ; la bande sort de la machine, en plusieurs fois, comme une vraie */
 .pm { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 100px); align-items: center; }
-/* une vieille cabine photo : façade émaillée crème, enseigne bordeaux à lettres dorées, fenêtre chromée, monnayeur, bac */
-.pmMachine { position: relative; justify-self: center; width: min(100%, 330px); aspect-ratio: 33 / 60; border-radius: 22px 22px 8px 8px;
-  background: radial-gradient(120% 60% at 30% 18%, rgba(255, 255, 255, .55), transparent 60%), linear-gradient(90deg, #D9CDB6, #F2EADA 18%, #EDE3CF 55%, #E3D6BE 82%, #CDBFA5);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5), inset 0 -18px 30px rgba(120, 95, 60, .18), 0 2px 0 #BCAE93, 0 40px 60px -30px rgba(43, 33, 28, .55); }
-/* le liseré chromé qui fait le tour de la façade */
-.pmMachine::before { content: ''; position: absolute; inset: 9px; border-radius: 16px 16px 4px 4px; border: 1px solid rgba(140, 120, 90, .35); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6); pointer-events: none; }
-/* le socle */
-.pmMachine::after { content: ''; position: absolute; left: -3%; right: -3%; bottom: -2.4%; height: 3%; border-radius: 3px; background: linear-gradient(#6E1F27, #4A1218); box-shadow: 0 8px 14px -6px rgba(0, 0, 0, .5); }
-.pmEnseigne { position: absolute; top: 4.5%; left: 12%; right: 12%; height: 9%; display: grid; place-items: center; border-radius: 40px 40px 6px 6px;
-  background: linear-gradient(#8E2B35, #6A1C25); box-shadow: inset 0 0 0 3px #C9A55C, inset 0 0 0 5px #6A1C25, inset 0 0 0 6px rgba(201, 165, 92, .6), 0 3px 6px rgba(0, 0, 0, .25); }
-.pmEnseigne span { font: 500 clamp(.9rem, 1.6vw, 1.15rem)/1 var(--sans); letter-spacing: .42em; padding-left: .42em; text-transform: uppercase;
-  background: linear-gradient(#F6E3A8, #C99A3E 55%, #F1D88E); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35)); }
-/* la petite lampe ronde au-dessus de la fenêtre, qui s'allume à chaque pose */
-.pmLampe { position: absolute; top: 15.5%; left: 50%; width: 7%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #FFF8E2, #F2D27A 45%, #B9862E); box-shadow: 0 0 0 3px #D8D8D4, 0 0 0 4px #9A9A96, 0 0 14px 2px rgba(255, 214, 120, .55); animation: pm-flash 3.4s ease-in-out infinite; }
-@keyframes pm-flash { 0%, 86%, 100% { filter: brightness(.85); } 90% { filter: brightness(1.5); box-shadow: 0 0 0 3px #D8D8D4, 0 0 0 4px #9A9A96, 0 0 34px 10px rgba(255, 224, 150, .8); } }
-/* la fenêtre chromée : la bande y descend */
-.pmFenetre { position: absolute; top: 21.5%; left: 17%; right: 17%; bottom: 25%; border-radius: 8px; padding: 6%;
-  background: linear-gradient(135deg, #F4F4F1, #A9A9A4 30%, #E9E9E5 52%, #8E8E89 78%, #DADAD5); box-shadow: 0 3px 6px rgba(0, 0, 0, .2); }
-.pmFente { position: absolute; z-index: 2; top: 6%; left: 10%; right: 10%; height: 2.4%; border-radius: 3px; background: #0F0B08; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9), 0 1px 0 rgba(255, 255, 255, .7); }
-.pmSortie { position: absolute; inset: 7.5% 6% 6%; overflow: hidden; border-radius: 3px; background: linear-gradient(#1A1411, #2E2620); box-shadow: inset 0 6px 14px rgba(0, 0, 0, .75); }
-.pmSortie::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, .16), transparent 35%); pointer-events: none; }
-.pmBande { margin: 0 14%; padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .45); animation: pm-defile 13s linear infinite; }
+.pmMachine { position: relative; justify-self: center; width: min(100%, 330px); aspect-ratio: 33 / 60; border-radius: 6px;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px), linear-gradient(90deg, #33241A, #6B4E33 16%, #47331F 38%, #7A5A3A 60%, #3D2B1D 84%, #2B1E14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), inset 0 0 40px rgba(0, 0, 0, .55), 0 34px 50px -26px rgba(43, 33, 28, .65); }
+.pmRouleau { position: absolute; top: 7%; left: 15%; right: 15%; height: 4.5%; border-radius: 10px; background: linear-gradient(#1C140F, #5A4636 45%, #2A1F17); box-shadow: 0 2px 4px rgba(0, 0, 0, .5); }
+.pmFente { position: absolute; top: 13%; left: 19%; right: 19%; height: 1.2%; border-radius: 2px; background: #0B0806; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9); }
+.pmSortie { position: absolute; top: 13.6%; left: 22%; right: 22%; bottom: 13%; overflow: hidden; }
+.pmBande { padding: 0 8%; background: #F3F0E9; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); animation: pm-defile 16s linear infinite; }
 /* la bande sort de la machine case après case, sans fin (la deuxième moitié répète la première) */
 @keyframes pm-defile { from { transform: translateY(-50%); } to { transform: translateY(0); } }
 .pmVue { display: block; aspect-ratio: 1 / 1.1; overflow: hidden; background: #ddd; margin: 9% 0 0; }
-.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) sepia(.18) contrast(1.06); }
-/* le monnayeur : plaque chromée, fente à pièce, le prix */
-.pmMonnaie { position: absolute; bottom: 14.5%; left: 50%; transform: translateX(-50%); width: 34%; height: 7.5%; display: flex; align-items: center; justify-content: center; gap: 9%; border-radius: 5px;
-  background: linear-gradient(135deg, #F2F2EF, #A3A39E 40%, #E4E4E0 60%, #96968F); box-shadow: 0 2px 4px rgba(0, 0, 0, .2); }
-.pmMonnaie i { width: 5%; height: 54%; border-radius: 2px; background: #1A1512; box-shadow: inset 0 1px 2px #000; }
-.pmMonnaie b { font: 500 .58rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #6A1C25; }
-.pmBac { position: absolute; z-index: 2; bottom: 4.5%; left: 22%; right: 22%; height: 7%; border-radius: 3px 3px 12px 12px;
-  background: linear-gradient(#ECECE8, #9C9C96 60%, #C8C8C3); box-shadow: inset 0 9px 10px rgba(0, 0, 0, .45), 0 2px 4px rgba(0, 0, 0, .2); }
-.pmRivet { position: absolute; width: 2.4%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #A9A9A4 60%, #6E6E69); box-shadow: 0 1px 1px rgba(0, 0, 0, .3); }
-.pmRivet[data-k='0'] { top: 17%; left: 7%; }
-.pmRivet[data-k='1'] { top: 17%; right: 7%; }
-.pmRivet[data-k='2'] { bottom: 6%; left: 7%; }
-.pmRivet[data-k='3'] { bottom: 6%; right: 7%; }
+.pmVue img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) contrast(1.06); }
+.pmBac { position: absolute; z-index: 2; bottom: 4%; left: 13%; right: 13%; height: 11%; border-radius: 2px 2px 7px 7px; background: linear-gradient(#5C4430, #2C1F15); box-shadow: inset 0 7px 10px rgba(0, 0, 0, .55), 0 -1px 0 rgba(255, 255, 255, .1); }
 .pmTexte { display: grid; gap: 16px; max-width: 54ch; }
 .pmNom { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1; letter-spacing: -0.03em; }
 .pmP { font-size: 1.02rem; line-height: 1.8; }
@@ -111,10 +84,8 @@
 .refsPage > * + * { margin-top: clamp(56px, 9vh, 100px); }
 .refsTete { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px clamp(32px, 6vw, 110px); align-items: end; }
 .refsIntro { max-width: 54ch; font-size: 1rem; line-height: 1.75; }
-/* le tableau : un tableau blanc cerclé d'alu ; les cartes postales y tiennent par un aimant, en désordre organisé */
-.tableau { list-style: none; margin: clamp(64px, 9vh, 110px) 0 0; padding: clamp(40px, 5vw, 80px) clamp(24px, 4vw, 64px) clamp(56px, 6vw, 90px); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(36px, 4vw, 56px) clamp(22px, 3vw, 44px); align-items: start;
-  background: radial-gradient(120% 90% at 20% 0%, #FFFFFF, #F4F3F0 70%); border-radius: 4px;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04), inset 0 2px 10px rgba(0, 0, 0, .05), 0 0 0 9px #E4E3E0, 0 0 0 10px #C7C5C0, 0 0 0 11px #EFEEEB, 0 40px 60px -40px rgba(43, 33, 28, .45); }
+/* les cartes postales, posées sur le blanc de la page, en désordre organisé, chacune tenue par un aimant */
+.tableau { list-style: none; margin: clamp(64px, 9vh, 110px) 0 0; padding: 20px 0 30px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(44px, 5vw, 70px) clamp(22px, 3vw, 44px); align-items: start; }
 .carteLieu { grid-column: span 2; position: relative; display: flex; justify-content: center; }
 .carteLieu:nth-child(5n + 4) { grid-column: 2 / span 2; }
 .carte { all: unset; box-sizing: border-box; position: relative; display: block; width: 100%; cursor: pointer; perspective: 1600px;
@@ -195,7 +166,7 @@
   .tuiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 10px; }
   .icone { width: 64px; }
   .refsTete { grid-template-columns: 1fr; }
-  .tableau { grid-template-columns: 1fr; gap: 44px; padding: 40px 22px 50px; }
+  .tableau { grid-template-columns: 1fr; gap: 48px; padding: 20px 10px 30px; }
   .carteLieu, .carteLieu:nth-child(5n + 4) { grid-column: auto; }
   .carte { transform: rotate(var(--r)); }
   .carte:hover { transform: rotate(0) scale(1.01); }
@@ -207,6 +178,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pmBande, .pmLampe, .planche img { animation: none; }
+  .pmBande, .planche img { animation: none; }
   .carte, .carteIn { transition: none; }
 }

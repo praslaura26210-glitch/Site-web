@@ -60,27 +60,22 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     <article className={`wrap ${styles.page} ${styles.apropos}`}>
       {/* qui je suis : un photomaton ; la bande de photos sort de la machine, mon texte à côté */}
       <header className={styles.pm}>
-        {/* une vieille cabine photo : façade émaillée, enseigne, fenêtre chromée d'où sort la bande, monnayeur, bac */}
+        {/* la machine en bois : la bande de photos sort par la fente et descend, sans fin */}
         <div className={styles.pmMachine} aria-hidden="true">
-          <span className={styles.pmEnseigne}><span>Photos</span></span>
-          <span className={styles.pmLampe} />
-          <div className={styles.pmFenetre}>
-            <span className={styles.pmFente} />
-            <div className={styles.pmSortie}>
-              {/* la bande défile toute seule et sans fin : deux fois les mêmes cases, pour que la boucle ne se voie pas */}
-              <div className={styles.pmBande}>
-                {Array.from({ length: CASES * 2 }, (_, i) => (
-                  <span key={i} className={styles.pmVue}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/media/site/portrait-1000.webp" alt="" />
-                  </span>
-                ))}
-              </div>
+          <span className={styles.pmRouleau} />
+          <span className={styles.pmFente} />
+          <div className={styles.pmSortie}>
+            {/* deux fois les mêmes cases, pour que la boucle ne se voie pas */}
+            <div className={styles.pmBande}>
+              {Array.from({ length: CASES * 2 }, (_, i) => (
+                <span key={i} className={styles.pmVue}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/media/site/portrait-1000.webp" alt="" />
+                </span>
+              ))}
             </div>
           </div>
-          <span className={styles.pmMonnaie}><i /><b>4 poses</b></span>
           <span className={styles.pmBac} />
-          {[0, 1, 2, 3].map((k) => <span key={k} className={styles.pmRivet} data-k={k} />)}
         </div>
         <div className={styles.pmTexte}>
           <h1 className={styles.pmNom}>Laura Pras</h1>

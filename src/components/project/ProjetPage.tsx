@@ -14,6 +14,11 @@ import Materiautheque, { PALETTE } from './Materiautheque';
 import Visionneuse from './Visionneuse';
 import Eclatee from './Eclatee';
 import Construction from './Construction';
+import Strophes from './Strophes';
+import Feuille from './Feuille';
+import Trace from './Trace';
+import Nuancier from './Nuancier';
+import Cotes from './Cotes';
 import styles from './project.module.css';
 
 
@@ -119,6 +124,51 @@ export default function ProjetPage({ p, t, lang, mise, next, prev, total }: { p:
             ))}
           </div>
         );
+      case 'strophes':
+        return p.poeme ? <Strophes key={k} poeme={p.poeme} medias={b.r.map((r) => (r ? M(r) : null))} labels={L} credit={cr.defaut || undefined} /> : null;
+      case 'plein':
+        return <div key={k} className={styles.plein}><Planche m={M(b.r)} sizes="100vw" labels={L} credit={credit(b.r)} ancre={ancreDessin(b.r)} pos={b.pos} /></div>;
+      case 'feuille':
+        return <Feuille key={k} titre={b.titre[lang]} projet={p.titre} annee={p.annee ? String(p.annee) : undefined} medias={b.r.map(M)} labels={L} credit={cr.defaut || undefined} ids={b.r.map(ancreDessin)} />;
+      case 'triptyque':
+        return (
+          <div key={k} className={styles.triptyque}>
+            {b.r.map((r, j) => <div key={r} className={styles.triptyqueItem} data-j={j}><Planche m={M(r)} sizes={j ? '(max-width: 900px) 100vw, 34vw' : '(max-width: 900px) 100vw, 64vw'} labels={L} credit={credit(r)} ancre={ancreDessin(r)} /></div>)}
+          </div>
+        );
+      case 'galerie':
+        return (
+          <div key={k} className={styles.galerie} tabIndex={0} aria-label={t.xp.glisser}>
+            <div className={styles.galerieRang}>
+              {b.r.map((r) => { const m = M(r); return <div key={r} className={styles.galerieItem} style={{ aspectRatio: `${m.w} / ${m.h}` }}><Planche m={m} sizes="70vh" labels={L} credit={credit(r)} ancre={ancreDessin(r)} /></div>; })}
+            </div>
+          </div>
+        );
+      case 'trace':
+        return <Trace key={k} slug={p.slug} nom={b.r} m={M(b.r)} avec={b.avec ? M(b.avec) : undefined} labels={L} credit={cr.defaut || undefined} rejouer={t.xp.rejouer} />;
+      case 'nuancier':
+        return <Nuancier key={k} lang={lang} credit={cr.defaut || undefined} />;
+      case 'superpose': {
+        const a = M(b.a), c = M(b.b);
+        return (
+          <div key={k} className={styles.superpose}>
+            <Comparateur existant={{ src: a.src, w: a.w, h: a.h, legende: a.legende }} projet={{ src: c.src, w: c.w, h: c.h, legende: c.legende }} titre={b.titre[lang]} labels={{ existant: b.la[lang], projet: b.lb[lang], glisser: t.projet.glisser }} />
+          </div>
+        );
+      }
+      case 'coupes':
+        return (
+          <div key={k} className={styles.coupes}>
+            {b.r.map((r, j) => (
+              <div key={r} className={`${styles.coupe} rv`}>
+                <span className={styles.coupeL} aria-hidden="true">{b.lettres[j]}<i>–</i>{b.lettres[j]}</span>
+                <Planche m={M(r)} sizes="(max-width: 900px) 100vw, 80vw" labels={L} credit={credit(r)} ancre={ancreDessin(r)} />
+              </div>
+            ))}
+          </div>
+        );
+      case 'cotes':
+        return <Cotes key={k} slug={p.slug} m={M(b.r)} lang={lang} />;
       case 'comparer':
         return (
           <div key={k} className={styles.comparer} data-deux={b.deux || undefined}>

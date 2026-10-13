@@ -19,6 +19,26 @@ export type Bloc =
   | { t: 'eclatee' }
   /** un dessin vectoriel qui se construit quand il arrive à l'écran, avec les chiffres à côté */
   | { t: 'construction'; r: string; k?: 'chiffres' }
+  /** le poème strophe par strophe, chacune à côté d'un dessin (null : la strophe seule, au centre) */
+  | { t: 'strophes'; r: (string | null)[] }
+  /** une image d'un bord à l'autre de l'écran */
+  | { t: 'plein'; r: string; pos?: string }
+  /** une planche de dessins, comme une feuille de rendu : les dessins numérotés et un cartouche */
+  | { t: 'feuille'; titre: L3; r: string[] }
+  /** trois images : une grande, deux l'une sous l'autre */
+  | { t: 'triptyque'; r: [string, string, string] }
+  /** une bande de grandes photos qu'on fait défiler de côté */
+  | { t: 'galerie'; r: string[] }
+  /** un croquis qui se dessine trait par trait (content/projets/<slug>/<nom>-traits.json), avec une image à côté */
+  | { t: 'trace'; r: string; avec?: string }
+  /** les matériaux, posés à plat : un échantillon, son nom, où il est dans le projet (Pilates Room) */
+  | { t: 'nuancier' }
+  /** deux plans superposés, on glisse le trait de l'un à l'autre */
+  | { t: 'superpose'; a: string; b: string; la: L3; lb: L3; titre: L3 }
+  /** des coupes l'une sous l'autre, chacune avec sa lettre */
+  | { t: 'coupes'; r: string[]; lettres: string[] }
+  /** l'escalier : le dessin reste à l'écran ; chaque chiffre, en défilant, éclaire la partie qu'il concerne */
+  | { t: 'cotes'; r: string }
   /** une visionneuse : un grand dessin à la fois, flèches pour passer au suivant */
   | { t: 'visionneuse'; titre: L3; r: string[]; k?: 'chiffres' }
   /**
@@ -73,6 +93,11 @@ const T = {
   conception: D('Conception', 'Design', 'Progettazione'),
   techniques: D('Dessins techniques', 'Technical drawings', 'Disegni tecnici'),
   esquisse: D('Esquisse', 'Sketch', 'Schizzo'),
+  poeme: D('Le poème et les dessins', 'The poem and the drawings', 'La poesia e i disegni'),
+  details: D('Détails d’assemblage', 'Joint details', 'Dettagli di giunzione'),
+  cour: D('La cour', 'The courtyard', 'La corte'),
+  coupeMaquette: D('Coupe et maquette', 'Section and model', 'Sezione e plastico'),
+  recit: D('Le récit', 'The story', 'Il racconto'),
   structure: D('Structure', 'Structure', 'Struttura'),
 };
 
@@ -80,42 +105,41 @@ export const MISES: Record<string, Mise> = {
   'illusion-d-envol': {
     ouverture: 'maquette',
     blocs: [
-      { t: 'inter', titre: T.esquisse },
-      { t: 'texte', k: 'poeme', r: 'croquis-perspective', cote: 'g' },
+      { t: 'inter', titre: T.poeme },
+      { t: 'strophes', r: ['croquis-perspective', 'facade-sud', 'coupe-aa', 'plan-rdc', null] },
       { t: 'inter', titre: T.structure },
       { t: 'eclatee' },
-      { t: 'inter', titre: T.dessins },
-      { t: 'visionneuse', titre: T.dessins, r: ['coupe-aa', 'plan-rdc', 'facade-sud'] },
       { t: 'inter', titre: T.assemblages },
-      { t: 'rang', r: ['detail-assemblage-1', 'detail-assemblage-2', 'detail-assemblage-3', 'detail-assemblage-4'] },
+      { t: 'feuille', titre: T.details, r: ['detail-assemblage-1', 'detail-assemblage-2', 'detail-assemblage-3', 'detail-assemblage-4'] },
     ],
   },
   'la-ruche': {
     ouverture: 'maquette-1',
     blocs: [
       { t: 'inter', titre: T.pente },
-      { t: 'grand', r: 'coupe-aa' },
-      { t: 'texte', k: 'poeme', r: 'maquette-3', cote: 'd' },
-      { t: 'rang', r: ['maquette-2', 'maquette-4'] },
+      { t: 'plein', r: 'coupe-aa' },
+      { t: 'strophes', r: ['maquette-3', 'maquette-2', 'maquette-4'] },
       { t: 'inter', titre: T.structure },
       { t: 'eclatee' },
       { t: 'inter', titre: T.dessins },
-      { t: 'visionneuse', titre: T.dessins, r: ['plan-masse', 'plan-rdc', 'plan-r-1', 'plan-structure', 'facade-ouest'] },
-      { t: 'grand', r: 'maquette-5' },
+      { t: 'feuille', titre: T.dessins, r: ['plan-masse', 'plan-rdc', 'plan-r-1', 'plan-structure', 'facade-ouest'] },
+      { t: 'inter', titre: T.maquette },
+      { t: 'plein', r: 'maquette-5' },
     ],
   },
   'le-passage-des-artistes': {
     ouverture: 'maquette-2',
     blocs: [
-      { t: 'inter', titre: T.site },
-      { t: 'grand', r: 'plan-masse' },
-      { t: 'rang', r: ['croquis-cour', 'maquette-1', 'detail-axonometrie'] },
-      { t: 'grand', r: 'coupe-perspective' },
+      { t: 'inter', titre: T.cour },
+      { t: 'trace', r: 'croquis-cour', avec: 'plan-masse' },
+      { t: 'inter', titre: T.coupeMaquette },
+      { t: 'plein', r: 'coupe-perspective' },
+      { t: 'rang', r: ['maquette-1', 'detail-axonometrie'] },
       { t: 'inter', titre: T.dessins },
-      { t: 'visionneuse', titre: T.dessins, r: ['plan-rdc', 'plan-etages', 'facade-sud', 'facade-nord', 'coupe'] },
+      { t: 'feuille', titre: T.dessins, r: ['plan-rdc', 'plan-etages', 'facade-sud', 'facade-nord', 'coupe'] },
       { t: 'inter', titre: T.experimentation },
-      { t: 'texte', k: 'experimentation', r: 'experimentation-2', cote: 'd' },
-      { t: 'rang', r: ['experimentation-1', 'experimentation-3'] },
+      { t: 'texte', k: 'experimentation' },
+      { t: 'galerie', r: ['experimentation-1', 'experimentation-2', 'experimentation-3'] },
     ],
   },
   'entre-deux-regards': {
@@ -123,9 +147,10 @@ export const MISES: Record<string, Mise> = {
     pos: '50% 60%',
     blocs: [
       { t: 'inter', titre: T.site },
-      { t: 'grand', r: 'x:plan-masse-projet' },
+      { t: 'plein', r: 'x:plan-masse-projet' },
       { t: 'inter', titre: T.vues },
-      { t: 'visionneuse', titre: T.vues, r: ['perspective-exterieure', 'perspective-cour', 'perspective-escalier'] },
+      { t: 'triptyque', r: ['perspective-exterieure', 'perspective-cour', 'perspective-escalier'] },
+      { t: 'inter', titre: T.recit },
       { t: 'texte', k: 'recit' },
       { t: 'inter', titre: T.regard, note: T.glisser },
       {
@@ -146,22 +171,22 @@ export const MISES: Record<string, Mise> = {
     ouverture: 'rendu-accueil',
     blocs: [
       { t: 'inter', titre: T.ambiances },
-      { t: 'rang', r: ['rendu-salle', 'rendu-vestiaire', 'rendu-coiffeuse'] },
+      { t: 'composition', rangs: [[{ r: 'rendu-salle', col: [1, 8] }, { r: 'rendu-vestiaire', col: [9, 4], mt: 8 }], [{ r: 'rendu-coiffeuse', col: [3, 6] }]] },
       { t: 'inter', titre: T.plans },
-      { t: 'visionneuse', titre: T.plans, r: ['p:plan-amenagement', 'p:plan-electricite'] },
+      { t: 'superpose', a: 'p:plan-amenagement', b: 'p:plan-electricite', la: D('Aménagement', 'Layout', 'Arredo'), lb: D('Électricité', 'Electrical', 'Impianto elettrico'), titre: D('Plan d’aménagement et plan d’électricité', 'Layout plan and electrical plan', 'Pianta dell’arredo e pianta elettrica') },
       { t: 'inter', titre: T.matieres },
-      { t: 'materiaux' },
+      { t: 'nuancier' },
       { t: 'inter', titre: T.coupes },
-      { t: 'visionneuse', titre: T.coupes, r: ['p:coupe-aa', 'p:coupe-bb', 'p:coupe-cc'] },
+      { t: 'coupes', r: ['p:coupe-aa', 'p:coupe-bb', 'p:coupe-cc'], lettres: ['A', 'B', 'C'] },
     ],
   },
   'escalier-suspendu': {
     ouverture: 'rendu',
     blocs: [
       { t: 'inter', titre: T.conception },
-      { t: 'construction', r: 'p:axonometrie', k: 'chiffres' },
+      { t: 'cotes', r: 'p:axonometrie' },
       { t: 'inter', titre: T.techniques },
-      { t: 'visionneuse', titre: T.techniques, r: ['p:vue-de-face', 'p:vue-en-plan', 'p:planche-limon-marches', 'p:planche-garde-corps'] },
+      { t: 'feuille', titre: T.techniques, r: ['p:vue-de-face', 'p:vue-en-plan', 'p:planche-limon-marches', 'p:planche-garde-corps'] },
     ],
   },
 };
