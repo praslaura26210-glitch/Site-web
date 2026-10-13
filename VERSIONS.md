@@ -21,6 +21,11 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V27 (aperçu des essais)
+
+- **Menu** : sur ordinateur, la barre du haut devient une barre latérale fixe à gauche (le logo et le nom en haut, qui ramènent à l'accueil ; Projets, À propos, Références, Contact dessous ; la langue en bas). Tout le contenu se décale à droite. Sur téléphone, rien ne change (barre du haut et menu).
+- Pour revenir à la barre du haut : retirer les deux blocs « barre latérale » de globals.css et chrome.module.css.
+
 ## Essais en cours — V26 (aperçu des essais)
 
 - **Fiches projet** : l'ouverture en double page (l'image à gauche ; à droite le numéro, le titre, les informations, le descriptif et le sommaire des chapitres, cliquable), sans l'image qui s'ouvrait au milieu. Les images rangées en lignes composées à la main : dans une ligne, toutes à la même hauteur. Assemblages d'Illusion d'envol en deux lignes de deux.
