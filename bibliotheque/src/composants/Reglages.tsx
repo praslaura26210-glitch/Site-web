@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Categorie, Famille, Fiche } from '../types';
 import { classeTravail, useBiblio } from '../contexte';
-import { api, srcImage } from '../lib/api';
+import { api, srcImage, srcPdf } from '../lib/api';
 import { lireFavoris, estVideo, type Favori } from '../lib/favoris';
 import { normaliser } from '../lib/recherche';
 import { creerZip, lireZip } from '../lib/zip';
@@ -527,6 +527,12 @@ function Sauvegarde() {
         const ext = (r.headers.get('content-type') ?? 'image/webp').split('/')[1].replace('jpeg', 'jpg');
         fichiers.push({ nom: `images/${id}.${ext}`, data: new Uint8Array(await r.arrayBuffer()) });
       }
+      const pdfs = [...new Set(b.fiches.flatMap((f) => (f.pdfs ?? []).map((d) => d.id)))];
+      for (const [k, id] of pdfs.entries()) {
+        setEnvoi(`${k + 1} / ${pdfs.length} PDF`);
+        const r = await fetch(srcPdf(id));
+        if (r.ok) fichiers.push({ nom: `pdfs/${id}.pdf`, data: new Uint8Array(await r.arrayBuffer()) });
+      }
       await telecharger(creerZip(fichiers), `bibliotheque-${jour}.zip`);
     } catch (e) {
       notifier(e instanceof Error ? e.message : 'Erreur.');
@@ -572,6 +578,13 @@ function Restaurer() {
         const type = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`;
         const r = await fetch(`/api/images/${encodeURIComponent(id)}`, { method: 'PUT', headers: { 'content-type': type }, body: im.data as BlobPart as Blob });
         if (!r.ok) throw new Error(`Image ${k + 1} refusée par le serveur.`);
+      }
+      const pdfs = contenu.filter((f) => f.nom.startsWith('pdfs/'));
+      for (const [k, d] of pdfs.entries()) {
+        setEtat(`PDF : ${k + 1} / ${pdfs.length}`);
+        const id = d.nom.slice(5).replace(/\.pdf$/i, '');
+        const r = await fetch(`/api/pdfs/${encodeURIComponent(id)}`, { method: 'PUT', headers: { 'content-type': 'application/pdf' }, body: d.data as BlobPart as Blob });
+        if (!r.ok) throw new Error(`PDF ${k + 1} refusé par le serveur.`);
       }
       setEtat('Fiches…');
       const r = await fetch('/api/restaurer', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) });

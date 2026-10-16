@@ -37,6 +37,14 @@ export interface Lien {
 }
 
 /** Lien ajouté à une fiche : vidéo, conférence, plans, article… */
+/** PDF joint à une fiche (plans, dossier, article…). */
+export interface Pdf {
+  id: string;
+  nom: string;
+  /** Poids en octets. */
+  taille?: number;
+}
+
 export interface LienWeb {
   titre: string;
   url: string;
@@ -73,6 +81,8 @@ export interface Fiche {
   citations: Citation[];
   /** Liens utiles : vidéo, plans, entretien, documents. */
   liens?: LienWeb[];
+  /** PDF joints : plans, dossier de presse, article… */
+  pdfs?: Pdf[];
   voirAussi: Lien[];
   statut: Statut;
   /** Où la trouver : chez moi, BU, PDF, dossier des favoris… */

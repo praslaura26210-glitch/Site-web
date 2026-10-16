@@ -53,7 +53,7 @@ export class Coffre extends DurableObject<Env> {
   }
 
   async ecrireImage(id: string, data: ArrayBuffer, type: string): Promise<void> {
-    if (data.byteLength > 12_000_000) throw new Error('Image trop lourde (12 Mo au plus).');
+    if (data.byteLength > 25_000_000) throw new Error('Fichier trop lourd (25 Mo au plus).');
     this.ctx.storage.transactionSync(() => {
       this.ctx.storage.sql.exec('DELETE FROM morceaux WHERE id = ?', id);
       const morceau = (n: number) => data.slice(n * MAX, (n + 1) * MAX);

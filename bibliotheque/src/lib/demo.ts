@@ -106,7 +106,7 @@ async function stockerImage(blob: Blob): Promise<Image> {
 }
 
 async function route(chemin: string, methode: string, corps: BodyInit | null | undefined): Promise<Response> {
-  const [nom, brut] = chemin.replace(/^\/?api\//, '').split('/');
+  const [nom, brut] = chemin.replace(/^\/?api\//, '').split('?')[0].split('/');
   const param = brut ? decodeURIComponent(brut.split('?')[0]) : undefined;
   const json = async () => JSON.parse(typeof corps === 'string' ? corps : '{}');
   const maintenant = new Date().toISOString();
@@ -141,9 +141,9 @@ async function route(chemin: string, methode: string, corps: BodyInit | null | u
       const f = b.fiches.find((x) => x.id === param);
       if (db) await db.doc(`fiches/${param}`).delete();
       b.fiches = b.fiches.filter((x) => x.id !== param);
-      for (const im of f?.images ?? []) {
-        // une photo n'est effacée que si plus aucune fiche ne l'utilise
-        if (b.fiches.some((x) => x.images.some((y) => y.id === im.id))) continue;
+      for (const im of [...(f?.images ?? []), ...(f?.pdfs ?? [])]) {
+        // une photo (ou un PDF) n'est effacée que si plus aucune fiche ne l'utilise
+        if (b.fiches.some((x) => [...x.images, ...(x.pdfs ?? [])].some((y) => y.id === im.id))) continue;
         if (assets && /^[0-9a-f]{32}$/.test(im.id)) await assets.delete(im.id).catch(() => {});
         images.delete(im.id);
         effacer(PREFIXE_IMAGE + im.id);
@@ -181,6 +181,13 @@ async function route(chemin: string, methode: string, corps: BodyInit | null | u
     if (nom === 'images' && methode === 'POST' && corps instanceof Blob) {
       return reponse(await stockerImage(corps));
     }
+    if (nom === 'pdfs' && methode === 'POST' && corps instanceof Blob) {
+      // PDF : seulement avec le stockage de claude.ai (trop lourd pour le navigateur)
+      if (!assets) return erreur('Ajout de PDF impossible ici : autorise le stockage de fichiers de la page (menu Permissions).', 503);
+      const r = await assets.upload(new Blob([corps], { type: 'application/pdf' }));
+      const nomFichier = new URLSearchParams(chemin.split('?')[1] ?? '').get('nom') ?? 'Document.pdf';
+      return reponse({ id: r.id, nom: nomFichier, taille: corps.size });
+    }
     if (nom === 'isbn' || nom === 'apercu' || nom === 'image-distante') {
       return erreur('Ici, sur claude.ai, la page ne peut pas aller chercher sur Internet : ajoute une capture ou une photo.', 503);
     }
@@ -188,7 +195,7 @@ async function route(chemin: string, methode: string, corps: BodyInit | null | u
   } catch (e: any) {
     const code = e?.code ?? '';
     if (code === 'quota_exceeded' || code === 'quota_or_state') return erreur('L’espace de stockage est plein.', 507);
-    if (code === 'too_large') return erreur('Image trop lourde.', 413);
+    if (code === 'too_large') return erreur('Fichier trop lourd (20 Mo au plus ici).', 413);
     return erreur('Enregistrement impossible pour le moment. Réessaie dans un instant.', 503);
   }
 }

@@ -1,4 +1,4 @@
-import type { Bibliotheque, Categorie, Famille, Fiche, Image } from '../types';
+import type { Bibliotheque, Categorie, Famille, Fiche, Image, Pdf } from '../types';
 import { DEMO, demoSrc } from './demo';
 
 export class ErreurApi extends Error {
@@ -35,6 +35,8 @@ export const api = {
   supprimer: (id: string) => appel<{ rev: number }>(`fiches/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   vocabulaire: (v: { familles?: Famille[]; synonymes?: string[][]; categories?: Categorie[]; renommer?: { de: string; vers: string | null } }) =>
     appel<Bibliotheque>('vocabulaire', corps('PUT', v)),
+  envoyerPdf: (fichier: File) =>
+    appel<Pdf>(`pdfs?nom=${encodeURIComponent(fichier.name)}`, { method: 'POST', headers: { 'content-type': 'application/pdf' }, body: fichier }),
   envoyerImage: (blob: Blob) => appel<Image>('images', { method: 'POST', headers: { 'content-type': blob.type }, body: blob }),
   isbn: (isbn: string) =>
     appel<{ titre?: string; auteurs?: string[]; annee?: string; editeur?: string; pages?: string; lien?: string; image: Image | null }>(`isbn/${encodeURIComponent(isbn)}`),
@@ -46,3 +48,6 @@ export const api = {
 const repriseClaude = (id: string) => /^[0-9a-f]{32}$/.test(id);
 export const srcImage = (id: string) =>
   DEMO ? demoSrc(id) : repriseClaude(id) ? `/depart-images/${id}.webp` : `/api/images/${encodeURIComponent(id)}`;
+
+/** Adresse d'un PDF joint : sur claude.ai, fichier stocké avec la page ; sur le site, dans le coffre. */
+export const srcPdf = (id: string) => (DEMO ? demoSrc(id) : `/api/pdfs/${encodeURIComponent(id)}`);

@@ -162,6 +162,10 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
       .filter((l: any) => l && typeof l.url === 'string' && /^https?:\/\//i.test(l.url.trim()))
       .slice(0, 50)
       .map((l: any) => ({ titre: texte(l.titre, 300) ?? '', url: texte(l.url, 2000)!.trim() })),
+    pdfs: (Array.isArray(f.pdfs) ? f.pdfs : [])
+      .filter((d: any) => d && typeof d.id === 'string')
+      .slice(0, 50)
+      .map((d: any) => ({ id: d.id, nom: texte(d.nom, 300) || 'Document.pdf', taille: Number(d.taille) || undefined })),
     voirAussi: (Array.isArray(f.voirAussi) ? f.voirAussi : [])
       .filter((l: any) => l && typeof l.id === 'string' && l.id !== f.id)
       .map((l: any) => ({ id: l.id, note: texte(l.note, 500) })),
@@ -178,9 +182,14 @@ function nettoyer(f: any, ancienne?: Fiche): Fiche {
   };
 }
 
-const imagesUtilisees = (b: Bibliotheque) => new Set(b.fiches.flatMap((f) => f.images.map((i) => i.id)));
+/** Images et PDF sont rangés au même endroit : un fichier n'est effacé que si plus aucune fiche ne l'utilise. */
+/** Un PDF passe en entier entre le site et le coffre : 25 Mo au plus. */
+const MAX_PDF = 25_000_000;
 
-async function nettoyerImages(avant: Image[], b: Bibliotheque) {
+const imagesUtilisees = (b: Bibliotheque) => new Set(b.fiches.flatMap((f) => [...f.images, ...(f.pdfs ?? [])].map((i) => i.id)));
+const fichiersDe = (f: Fiche) => [...f.images, ...(f.pdfs ?? [])];
+
+async function nettoyerImages(avant: { id: string }[], b: Bibliotheque) {
   const utilisees = imagesUtilisees(b);
   await Promise.all(avant.filter((i) => !utilisees.has(i.id)).map((i) => supprimerImage(i.id).catch(() => {})));
 }
@@ -242,7 +251,7 @@ export async function gerer(req: Request): Promise<Response> {
       else b.fiches.push(fiche);
       b.rev++;
       await ecrireBibliotheque(b);
-      if (ancienne) await nettoyerImages(ancienne.images, b);
+      if (ancienne) await nettoyerImages(fichiersDe(ancienne), b);
       return json({ fiche, rev: b.rev });
     }
 
@@ -265,7 +274,7 @@ export async function gerer(req: Request): Promise<Response> {
       for (const f of b.fiches) f.voirAussi = f.voirAussi.filter((l) => l.id !== param);
       b.rev++;
       await ecrireBibliotheque(b);
-      await nettoyerImages(ancienne.images, b);
+      await nettoyerImages(fichiersDe(ancienne), b);
       return json({ rev: b.rev });
     }
 
@@ -316,6 +325,24 @@ export async function gerer(req: Request): Promise<Response> {
       if (!type || !dim) return erreur('Format d’image non reconnu.', 400);
       await ecrireImage(param, data, type);
       return json({ id: param, ...dim });
+    }
+
+    if (route === 'pdfs' && (m === 'POST' || m === 'PUT')) {
+      // PDF joint à une fiche ; PUT : restauration d'une sauvegarde, le fichier garde son identifiant
+      if (m === 'PUT' && !/^[\w.-]{1,80}$/.test(param ?? '')) return erreur('Identifiant invalide.', 400);
+      const data = await req.arrayBuffer();
+      const debut = new TextDecoder().decode(new Uint8Array(data, 0, Math.min(1024, data.byteLength)));
+      if (!debut.includes('%PDF')) return erreur('Ce fichier n’est pas un PDF.', 400);
+      if (data.byteLength > MAX_PDF) return erreur(`PDF trop lourd : ${Math.round(MAX_PDF / 1e6)} Mo au plus. Réduis-le (par exemple avec ilovepdf.com, « Compresser »).`, 413);
+      const id = m === 'PUT' ? param! : crypto.randomUUID();
+      await ecrireImage(id, data, 'application/pdf');
+      return json({ id, nom: (url.searchParams.get('nom') ?? 'Document.pdf').slice(0, 300), taille: data.byteLength });
+    }
+
+    if (route === 'pdfs' && m === 'GET' && param) {
+      const doc = await lireImage(param);
+      if (!doc) return new Response('Introuvable', { status: 404 });
+      return new Response(doc.data, { headers: { 'content-type': 'application/pdf', 'content-disposition': 'inline', 'cache-control': 'private, max-age=31536000, immutable' } });
     }
 
     if (route === 'restaurer' && m === 'POST') {

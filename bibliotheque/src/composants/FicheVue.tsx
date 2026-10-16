@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import type { Fiche, Image } from '../types';
 import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
-import { api, srcImage } from '../lib/api';
+import { api, srcImage, srcPdf } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { compresser } from '../lib/images';
@@ -125,6 +125,57 @@ function Liens({ fiche }: { fiche: Fiche }) {
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+const poids = (o?: number) => (!o ? '' : o < 1e6 ? `${Math.max(1, Math.round(o / 1e3))} ko` : `${(o / 1e6).toFixed(1).replace('.', ',')} Mo`);
+
+/** PDF joints (plans, dossier, article) : on les ouvre d'un clic ; le petit « + » en ajoute. */
+function Pdfs({ fiche, enregistrer }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void }) {
+  const { notifier } = useBiblio();
+  const [envoi, setEnvoi] = useState(false);
+  const pdfs = fiche.pdfs ?? [];
+  async function ajouter(fichiers: FileList | null) {
+    if (!fichiers?.length) return;
+    setEnvoi(true);
+    const nouveaux = [];
+    for (const fichier of [...fichiers]) {
+      try {
+        nouveaux.push(await api.envoyerPdf(fichier));
+      } catch (e) {
+        notifier(e instanceof Error ? e.message : 'PDF non envoyé.');
+      }
+    }
+    setEnvoi(false);
+    if (nouveaux.length) enregistrer({ ...fiche, pdfs: [...pdfs, ...nouveaux] }, nouveaux.length > 1 ? 'PDF ajoutés.' : 'PDF ajouté.');
+  }
+  function retirer(id: string, nom: string) {
+    if (!window.confirm(`Retirer « ${nom} » de la fiche ?`)) return;
+    enregistrer({ ...fiche, pdfs: pdfs.filter((d) => d.id !== id) }, 'PDF retiré.');
+  }
+  return (
+    <section className="bloc liens-fiche pdfs-fiche">
+      {pdfs.length > 0 && <h2>Documents</h2>}
+      {pdfs.length > 0 && (
+        <ul>
+          {pdfs.map((d) => (
+            <li key={d.id}>
+              <a href={srcPdf(d.id)} target="_blank" rel="noreferrer">
+                <span>{d.nom.replace(/\.pdf$/i, '')}</span>
+                <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''} <Icone nom="lien" taille={14} /></span>
+              </a>
+              <button className="bouton-icone retirer-pdf" aria-label={`Retirer ${d.nom}`} title="Retirer le PDF" onClick={() => retirer(d.id, d.nom)}>
+                <Icone nom="fermer" taille={14} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <label className="ajout-pdf" aria-busy={envoi}>
+        {envoi ? 'Envoi du PDF…' : <><Icone nom="plus" taille={14} /> Ajouter un PDF</>}
+        <input type="file" accept="application/pdf,.pdf" multiple hidden onChange={(e) => { ajouter(e.target.files); e.target.value = ''; }} />
+      </label>
     </section>
   );
 }
@@ -400,6 +451,7 @@ export function FicheVue({ id }: { id: string }) {
   const suite = (
     <>
       <Liens fiche={fiche} />
+      <Pdfs fiche={fiche} enregistrer={enregistrer} />
 
       {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} />}
 
