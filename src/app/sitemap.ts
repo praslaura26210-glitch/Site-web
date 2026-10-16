@@ -6,7 +6,7 @@ import { SITE_URL } from '@/lib/seo';
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = ['/', '/projets/', ...ORDRE.map((s) => `/projets/${s}/`), '/a-propos/', '/references/', '/contact/'];
+  const paths = ['/', '/projets/', ...ORDRE.map((s) => `/livres/${s}/`), '/a-propos/', '/references/', '/contact/'];
   return paths.flatMap((p) =>
     LANGS.map((l) => ({
       url: `${SITE_URL}/${l}${p}`,

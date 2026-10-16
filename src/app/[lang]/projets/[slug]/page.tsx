@@ -1,10 +1,7 @@
 import { notFound } from 'next/navigation';
-import { LANGS, dict, type Lang } from '@/i18n';
-import { ORDRE, getProjet } from '@/lib/content';
-import { meta } from '@/lib/seo';
-import { MISES } from '@/lib/sequences';
-import { couverture } from '@/components/home/ProjetsGrille';
-import ProjetPage from '@/components/project/ProjetPage';
+import { LANGS, type Lang } from '@/i18n';
+import { ORDRE } from '@/lib/content';
+import LivreProjet, { livreMeta } from '@/components/home/LivreProjet';
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -15,18 +12,12 @@ type Params = { params: Promise<{ lang: string; slug: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { lang, slug } = (await params) as { lang: Lang; slug: string };
-  const p = getProjet(slug, lang);
-  const desc = `${p.programme}${p.lieu ? `, ${p.lieu}` : ''}${p.annee ? `, ${p.annee}` : ''}. ${p.texte.slice(0, 120).replace(/\s+\S*$/, '')}…`;
-  return meta(lang, `/projets/${slug}/`, `${p.titre} · Laura Pras`, desc, couverture(p).img.src);
+  return livreMeta(lang, slug);
 }
 
+/** L'ancienne adresse de la fiche d'un projet : il n'y a plus de fiche, on y trouve le livre du projet (même page que /livres/…, adresse canonique /livres/…). */
 export default async function Page({ params }: Params) {
   const { lang, slug } = (await params) as { lang: Lang; slug: string };
   if (!(ORDRE as readonly string[]).includes(slug)) notFound();
-  const t = dict(lang);
-  const p = getProjet(slug, lang);
-  const i = ORDRE.indexOf(slug as (typeof ORDRE)[number]);
-  const next = getProjet(ORDRE[(i + 1) % ORDRE.length], lang);
-  const prev = getProjet(ORDRE[(i - 1 + ORDRE.length) % ORDRE.length], lang);
-  return <ProjetPage p={p} t={t} lang={lang} mise={MISES[slug]} next={next} prev={prev} total={ORDRE.length} />;
+  return <LivreProjet lang={lang} slug={slug} />;
 }

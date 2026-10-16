@@ -60,7 +60,7 @@ export function donneesExperience(lang: Lang): XPDonnees {
       const m = media(p, r);
       const vect = m.kind === 'plan' && m.src === m.svg;
       dessins.push({
-        id: ancreDessin(r), slug: p.slug, projet: p.titre, legende: m.legende, thumb: m.srcSmall || m.src, w: m.w, h: m.h, href: `/${lang}/projets/${p.slug}/#${ancreDessin(r)}`,
+        id: ancreDessin(r), slug: p.slug, projet: p.titre, legende: m.legende, thumb: m.srcSmall || m.src, w: m.w, h: m.h, href: `/${lang}/livres/${p.slug}/`,
         preview: vect ? undefined : m.src, svg: m.svg, full: m.full, credit: cr.images?.[r.replace(/^\w:/, '')] ?? (cr.defaut || undefined), dessin: m.kind === 'plan' || !!m.scan,
         nature: nature(media(pFr, r).legende, p.images.find((i) => i.nom === r.replace(/^\w:/, ''))?.type || (m.kind === 'plan' ? 'plan' : ''), r.replace(/^\w:/, '')),
       });
@@ -71,7 +71,7 @@ export function donneesExperience(lang: Lang): XPDonnees {
     t: { ...t.xp, zoomIn: t.projet.zoomIn, zoomOut: t.projet.zoomOut, zoomReset: t.projet.zoomReset },
     projets: projets.map((p, i) => {
       const { img, pos } = couverture(p);
-      return { slug: p.slug, n: i + 1, titre: p.titre, programme: p.programme, annee: p.annee, lieu: p.lieu, resume: resume(p), cover: { src: img.src, srcSmall: img.srcSmall, w: img.w, h: img.h, pos }, href: `/${lang}/projets/${p.slug}/` };
+      return { slug: p.slug, n: i + 1, titre: p.titre, programme: p.programme, annee: p.annee, lieu: p.lieu, resume: resume(p), cover: { src: img.src, srcSmall: img.srcSmall, w: img.w, h: img.h, pos }, href: `/${lang}/livres/${p.slug}/` };
     }),
     dessins,
   };

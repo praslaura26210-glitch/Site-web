@@ -27,7 +27,7 @@ export default function ProjetsGrille({ projets, lang, headingLevel = 3 }: { pro
         const { img, pos } = couverture(p);
         return (
           <li key={p.slug} className={`${styles.carte} rv`}>
-            <Link href={`/${lang}/projets/${p.slug}/`}>
+            <Link href={`/${lang}/livres/${p.slug}/`}>
               <div className={styles.carteImg}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.srcSmall} srcSet={`${img.srcSmall} 1000w, ${img.src} 2000w`} sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" alt="" width={img.w} height={img.h} loading={i < 3 ? 'eager' : 'lazy'} decoding="async" style={pos ? { objectPosition: pos } : undefined} />
@@ -45,8 +45,12 @@ export default function ProjetsGrille({ projets, lang, headingLevel = 3 }: { pro
   );
 }
 
-/** La teinte de la toile de chaque livre (le dos), dans l'ordre des projets : la même sur l'accueil et sur Projets. */
+/**
+ * La toile de chaque livre de la collection, dans l'ordre des projets : des teintes de terre, accordées à la
+ * terre cuite du site (--accent #A46B57) : terre cuite, sable, sauge, noisette, rose argile, taupe.
+ * encre : la couleur des lettres sur la toile.
+ */
 export const TOILES = [
-  { fond: '#B5563A', encre: '#FBF3EA' }, { fond: '#E9E2D3', encre: '#3A2E26' }, { fond: '#7E8F6A', encre: '#F6F3EA' },
-  { fond: '#2F3A45', encre: '#EDE6D8' }, { fond: '#D0A54B', encre: '#2E241B' }, { fond: '#6E1F27', encre: '#F3E3C8' },
+  { fond: '#A46B57', encre: '#FBF4EA' }, { fond: '#C9A982', encre: '#3A2A1F' }, { fond: '#8F8D74', encre: '#F7F2E8' },
+  { fond: '#6E4D3C', encre: '#F4E9DA' }, { fond: '#D6B3A2', encre: '#4A2E22' }, { fond: '#5E5550', encre: '#F2ECE3' },
 ];

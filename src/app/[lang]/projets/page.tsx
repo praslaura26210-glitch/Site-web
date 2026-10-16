@@ -1,7 +1,7 @@
 import { dict, type Lang } from '@/i18n';
 import { getProjets } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import LivresGrille from '@/components/home/LivresGrille';
+import Collection from '@/components/home/Collection';
 import styles from '@/components/pages/pages.module.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -20,7 +20,7 @@ export default async function Projets({ params }: { params: Promise<{ lang: stri
       <header className={styles.pHead}>
         <h1 className={styles.h1}>{t.meta.projetsTitle}</h1>
       </header>
-      <LivresGrille projets={projets} lang={lang} />
+      <Collection projets={projets} lang={lang} />
     </div>
   );
 }

@@ -4,7 +4,8 @@ import { media, type Media } from '@/lib/media';
 import { CHIFFRES, MISES, type Bloc } from '@/lib/sequences';
 import { tr } from '@/lib/tr';
 import { ECHANTILLONS, imageEchantillon, nomMateriau, PALETTE } from '@/components/project/Materiautheque';
-import { couverture } from './ProjetsGrille';
+import { couverture, TOILES } from './ProjetsGrille';
+import { numeroCollection } from '@/lib/collection';
 
 /*
  * Les pages du livre d'un projet (page « livre », ouverte depuis la collection de l'accueil). Elles sont écrites ici, cachées dans la page,
@@ -27,11 +28,11 @@ function Fig({ m, cle }: { m: Media; cle?: string }) {
   );
 }
 
-export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
+export function pagesDuLivre(p: Projet, k: number, suivant: Projet, lang: Lang, t: Dict): Page[] {
   const L = tr(lang, {
-    fr: { voir: 'La fiche du projet', glisser: 'Faites glisser le trait', matieres: 'Les matériaux', fin: 'Fin' },
-    en: { voir: 'The project page', glisser: 'Drag the line', matieres: 'The materials', fin: 'The end' },
-    it: { voir: 'La scheda del progetto', glisser: 'Trascina la linea', matieres: 'I materiali', fin: 'Fine' },
+    fr: { suivant: 'Livre suivant', glisser: 'Faites glisser le trait', matieres: 'Les matériaux', fin: 'Fin' },
+    en: { suivant: 'Next book', glisser: 'Drag the line', matieres: 'The materials', fin: 'The end' },
+    it: { suivant: 'Libro successivo', glisser: 'Trascina la linea', matieres: 'I materiali', fin: 'Fine' },
   });
   const mise = MISES[p.slug];
   const M = (r: string) => media(p, r);
@@ -47,7 +48,7 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
 
   ajoute('intro', (
     <div className="xp-lv-p xp-lv-intro">
-      <p className="xp-lv-n">N° {p.numero}</p>
+      <p className="xp-lv-n">N° {numeroCollection(k)}</p>
       <h2 className="xp-lv-titre">{p.titre}</h2>
       <p className="xp-lv-meta">{[p.programme, p.lieu, p.annee].filter(Boolean).join(' · ')}</p>
       <p className="xp-lv-texte">{p.texte}</p>
@@ -126,45 +127,62 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
       case 'lignes': images(cle, b.r.flat()); break;
       case 'construction': images(cle, [b.r]); break;
       case 'comparer':
-        b.items.forEach((x, k) => {
-          const a = M(x.existant), c = M(x.projet);
-          ajoute(`${cle}-${k}`, (
-            <div className="xp-lv-p xp-lv-cmp">
-              <h3>{x.titre[lang]}</h3>
-              <div className="xp-lv-cmp-scene" data-lv-cmp="" style={{ aspectRatio: `${c.w} / ${c.h}` }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={c.src} alt={c.legende} draggable={false} loading="lazy" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="xp-lv-cmp-haut" src={a.src} alt={a.legende} draggable={false} loading="lazy" />
-                <span className="xp-lv-cmp-trait" aria-hidden="true" />
-                <span className="xp-lv-cmp-lab">{t.projet.existant}</span>
-                <span className="xp-lv-cmp-lab xp-lv-cmp-labd">{t.projet.projet}</span>
-              </div>
+        // existant / projet : deux vues par page, l'une au-dessus de l'autre
+        for (let j = 0; j < b.items.length; j += 2) {
+          const lot = b.items.slice(j, j + 2);
+          ajoute(`${cle}-${j}`, (
+            <div className={`xp-lv-p xp-lv-cmp${lot.length > 1 ? ' xp-lv-deux' : ''}`}>
+              {lot.map((x) => {
+                const a = M(x.existant), c = M(x.projet);
+                return (
+                  <div className="xp-lv-cmp-un" key={x.existant}>
+                    <h3>{x.titre[lang]}</h3>
+                    <div className="xp-lv-cmp-cadre">
+                      <div className="xp-lv-cmp-scene" data-lv-cmp="" style={{ aspectRatio: `${c.w} / ${c.h}`, ['--r' as string]: (c.w / c.h).toFixed(3) }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={c.src} alt={c.legende} draggable={false} loading="lazy" />
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img className="xp-lv-cmp-haut" src={a.src} alt={a.legende} draggable={false} loading="lazy" />
+                        <span className="xp-lv-cmp-trait" aria-hidden="true" />
+                        <span className="xp-lv-cmp-lab">{t.projet.existant}</span>
+                        <span className="xp-lv-cmp-lab xp-lv-cmp-labd">{t.projet.projet}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
               <p className="xp-lv-aide">{L.glisser}</p>
             </div>
           ));
-        });
+        }
         break;
     }
   });
 
-  const { img } = couverture(p);
+  // la dernière page : le livre suivant de la collection, qu'on ouvre d'un clic
+  const s = couverture(suivant);
+  const ks = (k + 1) % TOILES.length;
   ajoute('fin', (
     <div className="xp-lv-p xp-lv-fin">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={img.srcSmall} alt="" loading="lazy" />
-      <a className="lien" href={`/${lang}/projets/${p.slug}/`}>{L.voir} →</a>
+      <p className="xp-lv-fin-mot">{L.fin}</p>
+      <a className="xp-lv-suivant" href={`/${lang}/livres/${suivant.slug}/`} style={{ ['--toile' as string]: TOILES[ks].fond, ['--toileEncre' as string]: TOILES[ks].encre }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={s.img.srcSmall} alt="" loading="lazy" style={s.pos ? { objectPosition: s.pos } : undefined} />
+        <span>{L.suivant} →</span>
+        <b>{suivant.titre}</b>
+      </a>
     </div>
   ));
   return pages;
 }
 
 /** Les pages du livre d'un projet, cachées (experience/livres.ts en fait un livre). */
-export default function LivrePages({ p, lang, t }: { p: Projet; lang: Lang; t: Dict }) {
+export default function LivrePages({ p, k, suivant, lang, t }: { p: Projet; k: number; suivant: Projet; lang: Lang; t: Dict }) {
   const { img, pos } = couverture(p);
+  const toile = TOILES[k % TOILES.length];
   return (
-    <div hidden data-livre-pages={p.slug} data-titre={p.titre} data-n={p.numero} data-couv={img.srcSmall} data-couv-pos={pos || ''} data-annee={p.annee || ''}>
-      {pagesDuLivre(p, lang, t).map((x) => <section key={x.cle} data-rubrique={x.rubrique || ''}>{x.el}</section>)}
+    <div hidden data-livre-pages={p.slug} data-titre={p.titre} data-n={numeroCollection(k)} data-couv={img.srcSmall} data-couv-pos={pos || ''} data-annee={p.annee || ''} data-toile={toile.fond} data-encre={toile.encre}>
+      {pagesDuLivre(p, k, suivant, lang, t).map((x) => <section key={x.cle} data-rubrique={x.rubrique || ''}>{x.el}</section>)}
     </div>
   );
 }

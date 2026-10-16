@@ -33,7 +33,7 @@ export function xpPrecharge(ctx: XPContexte) {
     const a = (e.target as Element).closest?.('a[href]');
     if (!a) return;
     const h = a.getAttribute('href') || '';
-    const p = ctx.D.projets.find((x) => h.endsWith(`/projets/${x.slug}/`) || h.endsWith(`/projets/${x.slug}`));
+    const p = ctx.D.projets.find((x) => /\/(projets|livres)\//.test(h) && h.replace(/\/$/, "").endsWith(`/${x.slug}`));
     if (!p || fait.has(p.slug)) return;
     fait.add(p.slug);
     new Image().src = p.cover.src;

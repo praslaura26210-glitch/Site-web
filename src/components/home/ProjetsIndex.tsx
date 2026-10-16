@@ -16,7 +16,7 @@ export default function ProjetsIndex({ lignes, lang, voir }: { lignes: Ligne[]; 
       <ol className={styles.liste}>
         {lignes.map((l, i) => (
           <li key={l.slug} className="rv" data-on={i === cur || undefined}>
-            <Link href={`/${lang}/projets/${l.slug}/`} onPointerEnter={() => setCur(i)} onFocus={() => setCur(i)} aria-label={`${l.titre}, ${voir}`}>
+            <Link href={`/${lang}/livres/${l.slug}/`} onPointerEnter={() => setCur(i)} onFocus={() => setCur(i)} aria-label={`${l.titre}, ${voir}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className={styles.vignette} src={l.img.srcSmall} alt="" width={l.img.w} height={l.img.h} loading="lazy" style={l.img.pos ? { objectPosition: l.img.pos } : undefined} />
               <span className={styles.lN}>{String(i + 1).padStart(2, '0')}</span>

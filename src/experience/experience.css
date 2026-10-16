@@ -296,8 +296,9 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lp-livre[data-simple] { width: min(92vw, (100svh - var(--header-h) - 190px) * .75); aspect-ratio: 3 / 4; }
 .xp-lp-feuille { position: absolute; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; }
 .xp-lp-livre[data-simple] .xp-lp-feuille { left: 0; width: 100%; }
-.xp-lp-face { position: absolute; inset: 0; overflow: hidden; background: #FCFBF8; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 24px 40px -22px rgba(43, 33, 28, .45), 0 0 0 1px rgba(43, 33, 28, .04); }
-/* dans le livre en volume, le mode « produit » des dessins efface les images : on le retire */
+.xp-lp-face { position: absolute; inset: 0; overflow: hidden; background: #fff; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 24px 40px -22px rgba(43, 33, 28, .45), 0 0 0 1px rgba(43, 33, 28, .04); }
+/* dans le livre en volume, le mode « produit » des dessins efface les images : on le retire ;
+   le papier est blanc pur, comme le fond des images, pour qu'on ne voie pas leur bord */
 .xp-lp :is(.xp-lv-dessin img, .xp-lv-cmp-scene img) { mix-blend-mode: normal; }
 .xp-lp-verso { transform: rotateY(180deg); }
 /* le creux de la reliure */
@@ -305,25 +306,27 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lp-recto::after { left: 0; background: linear-gradient(to right, rgba(43, 33, 28, .15), transparent); }
 .xp-lp-verso::after { right: 0; background: linear-gradient(to left, rgba(43, 33, 28, .13), transparent); }
 .xp-lp-feuille:first-child .xp-lp-recto::after { width: 14px; background: linear-gradient(to right, rgba(0, 0, 0, .35), transparent); }
-.xp-lv-page { position: absolute; inset: 0; margin: 0; background: #FCFBF8; }
+.xp-lv-page { position: absolute; inset: 0; margin: 0; background: #fff; }
 .xp-lv-p { position: absolute; inset: 0 0 34px; padding: 8% 9% 3%; }
 .xp-lv-pied { position: absolute; left: 9%; right: 9%; bottom: 14px; display: flex; justify-content: space-between; gap: 12px; font-size: .52rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
 .xp-lv-folio { color: var(--accent-f); font-variant-numeric: tabular-nums; }
 .xp-lv-p h3 { font-size: .6rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-f); margin-bottom: 18px; }
 
-.xp-lv-couv-recto { background: #2B211C; color: #FBF6EE; box-shadow: inset 6px 0 10px -4px rgba(0, 0, 0, .5), 0 10px 40px -10px rgba(43, 33, 28, .5); }
-.xp-lv-couv-recto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .82; }
-.xp-lv-couv-recto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(20, 15, 12, .55), transparent 40%, transparent 70%, rgba(20, 15, 12, .5)); }
-.xp-lv-couv-n, .xp-lv-couv-t, .xp-lv-couv-nom { position: absolute; z-index: 1; left: 9%; right: 9%; }
-.xp-lv-couv-n { top: 7%; font-size: .6rem; letter-spacing: .22em; }
-.xp-lv-couv-t { top: calc(7% + 22px); font-size: clamp(1.6rem, 3.2vw, 2.8rem); font-weight: 500; line-height: 1; letter-spacing: .02em; text-transform: uppercase; }
-.xp-lv-couv-nom { bottom: 6%; font-size: .62rem; letter-spacing: .26em; text-transform: uppercase; }
+/* la couverture : la même maquette que sur l'étagère de la collection (toile de couleur, numéro, photo en fenêtre, titre) */
+.xp-lv-couv-recto { display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; padding: 9% 10% 8%; background: var(--toile); color: var(--toileEncre); box-shadow: inset 6px 0 10px -4px rgba(0, 0, 0, .35), 0 10px 40px -10px rgba(43, 33, 28, .5); }
+.xp-lv-couv-recto::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .18), rgba(255, 255, 255, .1) 2%, transparent 7%), linear-gradient(125deg, rgba(255, 255, 255, .1), transparent 45%); }
+.xp-lv-couv-n { display: flex; font-size: .62rem; font-weight: 500; letter-spacing: .22em; }
+.xp-lv-couv-n::after { content: ''; flex: 1; margin: 0 0 .45em 14px; align-self: end; border-bottom: 1px solid currentColor; opacity: .5; }
+.xp-lv-couv-fen { display: block; margin-top: 9%; min-height: 0; overflow: hidden; }
+.xp-lv-couv-fen img { width: 100%; height: 100%; object-fit: cover; }
+.xp-lv-couv-t { margin-top: 8%; font-size: clamp(1.1rem, 2.1vw, 1.9rem); font-weight: 400; line-height: 1.1; letter-spacing: .06em; text-transform: uppercase; }
+.xp-lv-couv-a { margin-top: 8px; font-size: .6rem; letter-spacing: .22em; opacity: .75; }
 
-/* page de garde : papier kraft, le nom au centre */
-.xp-lv-garde { inset: 0; display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center; color: var(--accent-f); background: repeating-linear-gradient(97deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 7px), linear-gradient(#D2B48E, #C7A57C); }
-.xp-lv-garde-n { font-size: .6rem; letter-spacing: .22em; }
-.xp-lv-garde-nom { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 300; }
-.xp-lv-garde-t { font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; }
+/* page de garde : la toile du livre, le numéro et le titre */
+.xp-lv-page:has(> .xp-lv-garde) { background: var(--toile); }
+.xp-lv-garde { inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 12%; text-align: center; color: var(--toileEncre); background: linear-gradient(90deg, rgba(0, 0, 0, .06), transparent 12%); }
+.xp-lv-garde-n { font-size: .6rem; letter-spacing: .24em; opacity: .85; }
+.xp-lv-garde-t { font-size: clamp(1.2rem, 2.2vw, 1.9rem); font-weight: 300; line-height: 1.15; letter-spacing: .04em; }
 
 /* page d'ouverture du projet */
 .xp-lv-intro { display: grid; align-content: center; gap: 14px; }
@@ -335,7 +338,7 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 /* images : une grande, ou deux l'une sous l'autre */
 .xp-lv-images { display: grid; gap: 14px; grid-template-rows: minmax(0, 1fr); }
 .xp-lv-deux { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
-.xp-lv-fig { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; margin: 0; background: #FCFBF8; }
+.xp-lv-fig { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; margin: 0; background: #fff; }
 .xp-lv-fig img { width: 100%; height: 100%; min-height: 0; object-fit: contain; pointer-events: none; }
 .xp-lv-dessin img { mix-blend-mode: multiply; }
 .xp-lv-fig figcaption { padding-top: 8px; font-size: .54rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
@@ -354,20 +357,24 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-palette li { display: grid; gap: 8px; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; }
 .xp-lv-palette i { display: block; aspect-ratio: 3 / 2; box-shadow: inset 0 0 0 1px rgba(43, 33, 28, .08); }
 
-/* existant / projet : un trait qu'on fait glisser */
-.xp-lv-cmp { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
-.xp-lv-cmp-scene { --p: 100%; position: relative; align-self: center; justify-self: center; max-width: 100%; max-height: 100%; width: 100%; cursor: ew-resize; touch-action: none; user-select: none; }
+/* existant / projet : un trait qu'on fait glisser ; deux vues par page */
+.xp-lv-cmp { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 18px; }
+.xp-lv-cmp.xp-lv-deux { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; }
+.xp-lv-cmp-un { display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; }
+.xp-lv-cmp-un h3 { margin-bottom: 10px; }
+.xp-lv-cmp-cadre { container-type: size; min-height: 0; display: grid; place-items: center; }
+.xp-lv-cmp-scene { --p: 100%; position: relative; width: min(100cqw, 100cqh * var(--r, 1.4)); cursor: ew-resize; touch-action: none; user-select: none; }
 .xp-lv-cmp-scene img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; pointer-events: none; }
-.xp-lv-cmp-haut { clip-path: inset(0 calc(100% - var(--p)) 0 0); background: #FCFBF8; }
+.xp-lv-cmp-haut { clip-path: inset(0 calc(100% - var(--p)) 0 0); background: #fff; }
 .xp-lv-cmp-trait { position: absolute; top: -4%; bottom: -4%; left: var(--p); width: 1px; background: var(--accent); }
 .xp-lv-cmp-trait::after { content: ''; position: absolute; top: 50%; left: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); }
-.xp-lv-cmp-lab { position: absolute; top: -26px; left: 0; font-size: .52rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
-.xp-lv-cmp-labd { left: auto; right: 0; color: var(--accent-f); }
+.xp-lv-cmp-lab { position: absolute; z-index: 1; top: 6px; left: 6px; padding: 2px 6px; background: rgba(255, 255, 255, .88); font-size: .5rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gris); }
+.xp-lv-cmp-labd { left: auto; right: 6px; color: var(--accent-f); }
 .xp-lv-aide { font-size: .52rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); text-align: center; }
 
 /* les matériaux posés sur la page : ils tombent, se chevauchent, puis flottent */
 .xp-lv-mat { --mx: 0; --my: 0; inset: 0 0 34px; padding: 0; overflow: hidden; perspective: 900px; }
-.xp-lv-mat h3 { position: absolute; z-index: 20; left: 9%; top: 6%; margin: 0; padding: 4px 8px; background: #FCFBF8; }
+.xp-lv-mat h3 { position: absolute; z-index: 20; left: 9%; top: 6%; margin: 0; padding: 4px 8px; background: #fff; }
 .xp-lv-ech { position: absolute; left: var(--x); top: var(--y); width: var(--w); display: block; transform: translate(calc(var(--mx) * (8px + var(--k) * 3px)), calc(var(--my) * (8px + var(--k) * 3px))) rotate(var(--r)); transition: transform .5s var(--ease); filter: drop-shadow(0 10px 12px rgba(43, 33, 28, .25)); }
 .xp-lv-ech img { display: block; width: 100%; height: 100%; object-fit: fill; pointer-events: none; animation: xp-lv-flotte 6s ease-in-out infinite alternate; animation-delay: calc(var(--k) * -.9s); }
 .xp-lv-ech em { position: absolute; left: 0; top: calc(100% + 4px); white-space: nowrap; font-family: var(--main); font-style: normal; font-size: 1.05rem; color: var(--encre); opacity: 0; transition: opacity .3s; }
@@ -380,11 +387,17 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-ech[data-mot] b { font: 600 19cqw/1 var(--sans); letter-spacing: .04em; color: transparent; background: var(--bois) center / cover; -webkit-background-clip: text; background-clip: text; text-shadow: none; filter: drop-shadow(1px 1px 0 #9C7A55) drop-shadow(1px 1px 0 #8E6D49) drop-shadow(2px 3px 3px rgba(43, 33, 28, .35)); }
 @keyframes xp-lv-flotte { from { transform: translateY(0) rotateX(0deg) rotateY(0deg); } to { transform: translateY(-7px) rotateX(9deg) rotateY(-8deg); } }
 
-.xp-lv-fin { display: grid; align-content: center; justify-items: center; gap: 26px; }
-.xp-lv-fin img { width: 62%; aspect-ratio: 4 / 5; object-fit: cover; }
+/* la dernière page : le livre suivant de la collection */
+.xp-lv-fin { display: grid; align-content: center; justify-items: center; gap: 22px; }
+.xp-lv-fin-mot { font-size: .6rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gris); }
+.xp-lv-suivant { display: grid; gap: 10px; width: min(56%, 260px); padding: 9% 9% 8%; background: var(--toile); color: var(--toileEncre); text-decoration: none; box-shadow: 1px 16px 22px -14px rgba(43, 33, 28, .5); transition: transform .5s var(--ease); }
+.xp-lv-suivant:hover { transform: translateY(-6px) rotate(-1deg); }
+.xp-lv-suivant img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.xp-lv-suivant span { margin-top: 6px; font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
+.xp-lv-suivant b { font-size: .95rem; font-weight: 400; line-height: 1.2; letter-spacing: .04em; text-transform: uppercase; }
 
 /* ce qui s'anime quand la page apparaît */
-.xp-lv-page:not([data-vu]) :is(.xp-lv-fig, .xp-lv-titre, .xp-lv-meta, .xp-lv-texte, .xp-lv-poeme span, .xp-lv-recit p, .xp-lv-chiffres div, .xp-lv-palette li, .xp-lv-ech, .xp-lv-fin img) { opacity: 0; }
+.xp-lv-page:not([data-vu]) :is(.xp-lv-fig, .xp-lv-titre, .xp-lv-meta, .xp-lv-texte, .xp-lv-poeme span, .xp-lv-recit p, .xp-lv-chiffres div, .xp-lv-palette li, .xp-lv-ech, .xp-lv-suivant) { opacity: 0; }
 .xp-lv-page[data-vu] .xp-lv-fig { animation: xp-lv-entre .9s var(--ease) both; }
 .xp-lv-page[data-vu] .xp-lv-fig + .xp-lv-fig { animation-delay: .25s; }
 .xp-lv-page[data-vu] .xp-lv-dessin img { animation: xp-lv-trace 1.6s cubic-bezier(.4, 0, .2, 1) both .15s; }
@@ -398,7 +411,7 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-page[data-vu] .xp-lv-chiffres div:nth-child(4) { animation-delay: .45s; }
 .xp-lv-page[data-vu] .xp-lv-palette li { animation: xp-lv-tombe .7s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--k) * .1s); }
 .xp-lv-page[data-vu] .xp-lv-ech { animation: xp-lv-tombe .8s cubic-bezier(.3, 1.3, .5, 1) both; animation-delay: calc(.1s + var(--k) * .12s); }
-.xp-lv-page[data-vu] .xp-lv-fin img { animation: xp-lv-entre .9s var(--ease) both; }
+.xp-lv-page[data-vu] .xp-lv-suivant { animation: xp-lv-entre .9s var(--ease) both; }
 @keyframes xp-lv-entre { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
 @keyframes xp-lv-trace { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes xp-lv-ecrit { from { opacity: 1; clip-path: inset(-.3em 100% -.3em 0); } to { opacity: 1; clip-path: inset(-.3em -.3em -.3em 0); } }
@@ -412,7 +425,7 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-compte span { color: var(--gris); }
 
 @media (prefers-reduced-motion: reduce) {
-  .xp-lv-page :is(.xp-lv-fig, .xp-lv-titre, .xp-lv-meta, .xp-lv-texte, .xp-lv-poeme span, .xp-lv-recit p, .xp-lv-chiffres div, .xp-lv-palette li, .xp-lv-ech, .xp-lv-fin img) { opacity: 1 !important; animation: none !important; }
+  .xp-lv-page :is(.xp-lv-fig, .xp-lv-titre, .xp-lv-meta, .xp-lv-texte, .xp-lv-poeme span, .xp-lv-recit p, .xp-lv-chiffres div, .xp-lv-palette li, .xp-lv-ech, .xp-lv-suivant) { opacity: 1 !important; animation: none !important; }
   .xp-lv-ech img { animation: none; }
 }
 

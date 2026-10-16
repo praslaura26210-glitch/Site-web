@@ -180,7 +180,24 @@
 /* ---------- la page d'un livre (ouverte depuis la collection) ---------- */
 .livrePage { padding-top: calc(var(--header-h) + 18px); }
 .livreNav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline; gap: 16px; }
-.livreNav > a:last-child { justify-self: end; }
+.livreNav > :first-child { justify-self: start; }
+.livreNav > :last-child { justify-self: end; }
+.livreAn { font-size: .62rem; letter-spacing: .22em; color: var(--gris); }
+.livreCorps { position: relative; }
+/* les autres livres de la collection, à côté du livre ouvert */
+.livreAutres ol { list-style: none; margin: 0; padding: 4px 0 30px; display: flex; justify-content: center; gap: 12px; }
+.livreAutres li { width: 50px; transition: transform .45s var(--ease), opacity .3s; opacity: .62; }
+.livreAutres li:hover, .livreAutres li[data-ici] { opacity: 1; }
+.livreAutres li:hover { transform: translateY(-5px); }
+.livreAutres li[data-ici] { transform: translateY(-9px); }
+.livreAutres a { display: block; }
+.livreAutres :is(.cvT, .cvA) { display: none; }
+@media (min-width: 1000px) and (min-aspect-ratio: 7 / 5) {
+  .livreAutres { position: absolute; z-index: 2; left: var(--gut); top: 50%; translate: 0 -55%; }
+  .livreAutres ol { flex-direction: column; padding: 0; }
+  .livreAutres li:hover { transform: translateX(5px); }
+  .livreAutres li[data-ici] { transform: translateX(10px); }
+}
 .livreTitre { font-size: clamp(1.4rem, 2.4vw, 2rem); text-align: center; }
 .livreSansJs { width: min(92vw, 640px); margin: 40px auto 0; }
 .livreSansJs img { width: 100%; height: auto; }
@@ -191,3 +208,50 @@
 }
 /* la collection n'apparaît qu'en descendant, bien après le premier écran */
 .collection { margin-top: clamp(120px, 26vh, 300px); }
+
+/* ---------- la collection : les livres de face sur une tablette, la frise des années dessous ---------- */
+.coll { --w: clamp(132px, 12vw, 166px); --g: clamp(16px, 2.2vw, 30px); display: grid; grid-template-columns: repeat(var(--n), var(--w)); column-gap: var(--g); justify-content: center; padding: clamp(40px, 7vh, 80px) 0 10px; }
+.collLivres, .collFrise { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; list-style: none; margin: 0; padding: 0; }
+.collLivres { align-items: end; position: relative; z-index: 1; }
+.collLivre { position: relative; animation: collPose .9s var(--ease) both; animation-delay: calc(var(--k) * 90ms); }
+@keyframes collPose { from { opacity: 0; transform: translateY(14px); } }
+.collLien { position: relative; display: block; color: inherit; text-decoration: none; }
+.collLien .cv { transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+.collLien:is(:hover, :focus-visible) .cv { transform: translateY(-14px) rotate(-1.2deg); box-shadow: 2px 26px 30px -16px rgba(43, 33, 28, .45); }
+.collLien:focus-visible { outline: none; }
+.collLien:focus-visible .cv { outline: 1.5px solid var(--accent-f); outline-offset: 4px; }
+/* le programme, qui apparaît sous la tablette au survol */
+.collProg { position: absolute; left: 50%; top: calc(100% + 84px); width: calc(var(--w) + var(--g)); translate: -50% 0; text-align: center; font-size: .56rem; line-height: 1.6; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); opacity: 0; transition: opacity .4s var(--ease); pointer-events: none; }
+.collLien:is(:hover, :focus-visible) .collProg { opacity: 1; }
+.collTablette { grid-column: 1 / -1; position: relative; height: 12px; margin: 0 calc(var(--g) * -1); background: linear-gradient(#FBF8F3, #EAE3D9); border-top: 1px solid #fff; box-shadow: 0 14px 18px -12px rgba(43, 33, 28, .35); }
+.collTablette::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 5px; background: #DCD3C7; }
+.collFrise { margin-top: 22px; }
+.collFrise li { position: relative; display: flex; justify-content: center; padding-top: 12px; border-top: 1px solid var(--filet); margin: 0 6px; }
+.collFrise li::before { content: ''; position: absolute; left: 50%; top: -3.5px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--accent); }
+.collFrise span { font-size: .62rem; letter-spacing: .22em; color: var(--gris); }
+.collLegende { grid-column: 1 / -1; margin: 84px 0 0; text-align: center; font-size: .6rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gris); }
+
+/* la couverture, la même pour toute la série : la toile de couleur, le numéro, une photo en fenêtre, le titre */
+.cv { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; aspect-ratio: 5 / 7; padding: 11% 11% 10%; background: var(--toile); color: var(--toileEncre); box-shadow: 1px 14px 16px -12px rgba(43, 33, 28, .45); overflow: hidden; }
+/* le dos et le pli de la couverture, à gauche */
+.cv::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .22), rgba(255, 255, 255, .12) 2.5%, rgba(0, 0, 0, .06) 5%, transparent 9%), linear-gradient(125deg, rgba(255, 255, 255, .1), transparent 45%); }
+.cvN { display: flex; justify-content: space-between; font-size: .54rem; font-weight: 500; letter-spacing: .2em; opacity: .9; }
+.cvN::after { content: ''; flex: 1; margin: 0 0 .45em 10px; align-self: end; border-bottom: 1px solid currentColor; opacity: .5; }
+.cvFenetre { display: block; margin-top: 12%; min-height: 0; overflow: hidden; background: rgba(255, 255, 255, .15); }
+.cvFenetre img { width: 100%; height: 100%; object-fit: cover; }
+.cvT { min-height: 2.6em; margin-top: 10%; font-size: .74rem; font-weight: 400; line-height: 1.3; letter-spacing: .08em; text-transform: uppercase; }
+.cvA { margin-top: 6px; font-size: .56rem; letter-spacing: .2em; opacity: .75; }
+.cv[data-petit] { padding: 10%; box-shadow: 1px 8px 10px -8px rgba(43, 33, 28, .45); }
+.cv[data-petit] :is(.cvN, .cvA) { font-size: .42rem; }
+.cv[data-petit] .cvT { font-size: .5rem; letter-spacing: .04em; }
+@media (max-width: 760px) {
+  .coll { --w: 136px; --g: 18px; justify-content: start; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-inline: var(--gut); margin-inline: calc(var(--gut) * -1); scrollbar-width: none; }
+  .collLivre { scroll-snap-align: center; }
+  .collTablette { margin: 0; }
+  .collProg { display: none; }
+  .collLegende { position: sticky; left: 0; text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collLivre { animation: none; }
+  .collLien .cv { transition: none; }
+}

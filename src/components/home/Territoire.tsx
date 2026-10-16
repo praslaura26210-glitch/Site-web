@@ -26,7 +26,7 @@ export default function Territoire({ projets, t, lang }: { projets: Projet[]; t:
   const noms = Object.keys(C.lieux);
   const parLieu = new Map<string, Entree[]>();
   const ajoute = (n: string | null, e: Entree) => { if (!n) return; parLieu.set(n, [...(parLieu.get(n) || []), e]); };
-  projets.forEach((p) => ajoute(commune(p.lieu, noms), { type: 'p', titre: p.titre, sous: [p.programme, p.annee].filter(Boolean).join(' · '), href: `/${lang}/projets/${p.slug}/` }));
+  projets.forEach((p) => ajoute(commune(p.lieu, noms), { type: 'p', titre: p.titre, sous: [p.programme, p.annee].filter(Boolean).join(' · '), href: `/${lang}/livres/${p.slug}/` }));
   [...PARCOURS].reverse().forEach((e) => ajoute(commune(e.lieu, noms), { type: e.type, titre: e.titre[lang], sous: `${e.lieu.split(',')[0]} · ${e.date[lang]}` }));
   ajoute(MAISON, { type: 'm', titre: t.xp.terrMaison });
 

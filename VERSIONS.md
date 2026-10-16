@@ -21,6 +21,13 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V29 (aperçu des essais)
+
+- **Collection** : les six livres de face sur une tablette, dans l'ordre des années (N° 01 à 06), avec la frise des années dessous. Même maquette pour tous (toile de couleur, numéro, photo en fenêtre, titre, année). Couleurs de toile reprises dans des tons terre : terre cuite, sable, olive, brun, rose poudré, taupe.
+- **Livre** : on tourne les pages en cliquant sur la page de droite (ou à gauche pour revenir). Couverture et page de garde à la couleur du livre, sans « Laura Pras ». Papier blanc pur, comme le fond des images. Entre deux regards : les vues existant / projet vont deux par page.
+- **Les autres livres** de la collection sont rangés à côté du livre ouvert (à gauche sur écran large, dessous sinon). La dernière page ouvre le livre suivant.
+- **Plus de fiche projet** : les anciennes adresses /projets/… montrent le livre du projet.
+
 ## Essais en cours — V28 (aperçu des essais)
 
 - **Menu** : retour à la barre du haut (la barre latérale V27 est retirée).
