@@ -497,6 +497,830 @@
      ]
     }
    ]
+  },
+  {
+   "version": 3,
+   "ajouter": [
+    {
+     "annee": "2021",
+     "auteurs": [
+      "DBA, Dupond-Braillon Architectes"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:12:00.000Z",
+     "editeur": "La Chapelle-en-Vercors, Drôme, France",
+     "emplacement": "",
+     "id": "refuge-du-vercors",
+     "images": [
+      {
+       "h": 518,
+       "id": "97e793c240ce990bfc862e9e852d5658",
+       "w": 691
+      },
+      {
+       "h": 624,
+       "id": "9116027af5b39b00768f573b1454e08b",
+       "w": 832
+      },
+      {
+       "h": 359,
+       "id": "c591835ba71d2c4e3a7a29b1393b3228",
+       "w": 480
+      },
+      {
+       "h": 459,
+       "id": "682ac2bcc0a65954e3cd8809b1833bce",
+       "w": 637
+      },
+      {
+       "h": 905,
+       "id": "1e569d748fd6b854c26f86b7eac2bb6c",
+       "w": 668
+      },
+      {
+       "h": 1103,
+       "id": "aca3827002bdf49397cc619694b772c1",
+       "w": 827
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:12:00.000Z",
+     "motsCles": [
+      "refuge",
+      "pierre",
+      "bois",
+      "réhabilitation",
+      "montagne",
+      "autonomie énergétique",
+      "Vercors",
+      "Drôme"
+     ],
+     "prix": "Prix régional de la construction bois AURA 2023",
+     "resume": "Un ancien refuge abandonné depuis des décennies, lieu de réunion de la Résistance, transformé en maison autonome en énergie. L’expression régionale est gardée : mur de pierre, façade en bois, toit à deux pans.",
+     "source": "https://www.dba.archi/projets/refuge-du-vercors",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Refuge du Vercors",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Atelier Lara"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:11:00.000Z",
+     "editeur": "",
+     "emplacement": "",
+     "id": "atelier-lara-ferme",
+     "images": [
+      {
+       "h": 330,
+       "id": "9b5e3716e7b3c928b87b4bd3967cd18a",
+       "w": 330
+      },
+      {
+       "h": 199,
+       "id": "321c9f30bc0996dda78c23b8691b37c9",
+       "w": 354
+      },
+      {
+       "h": 390,
+       "id": "77b57673def1227334831070a586bc36",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "543587f4eec19a18869c30b9b13aa842",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "60f41f2911ae8cf6f881c1dc19ef7894",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "f15bb145ff2c9436b721511a277c79b1",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "a70adf66d58ffe1bef6073b472abc983",
+       "w": 275
+      },
+      {
+       "h": 390,
+       "id": "229c8f6df33278c99b9a2f104be2fc7d",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "a3c82a308d4809390dd5e853c4c3565f",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "c4d9c791033b38e9c21b460a7f25b1b3",
+       "w": 275
+      },
+      {
+       "h": 390,
+       "id": "4b0a04f71f04f6d6c51b5ca58ddc6d15",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "de60993ce218b4218f991e6d34625fe8",
+       "w": 275
+      },
+      {
+       "h": 390,
+       "id": "101ab5209b852391c7a33d80ce1db3c4",
+       "w": 275
+      },
+      {
+       "h": 275,
+       "id": "ecf26212e06d43587d7f2a9a93fb75b9",
+       "w": 275
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:11:00.000Z",
+     "motsCles": [
+      "ferme",
+      "pierre",
+      "réhabilitation",
+      "escalier"
+     ],
+     "resume": "",
+     "source": "https://www.atelierlara.fr/r%C3%A9novation-d-une-ferme-lr",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Rénovation d’une ferme",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Atelier FC"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:10:00.000Z",
+     "editeur": "Saint-Donat-sur-l’Herbasse, Drôme, France",
+     "emplacement": "",
+     "id": "saint-donat-atelier-fc",
+     "images": [
+      {
+       "h": 360,
+       "id": "552c6a2f8dcc980b4c297814f076072c",
+       "w": 520
+      },
+      {
+       "h": 360,
+       "id": "c0ef099b7bf0640e8f4d6b7fa27250ef",
+       "w": 520
+      },
+      {
+       "h": 360,
+       "id": "b7e854cf0a2ac9cd4b1324288105bd80",
+       "w": 271
+      },
+      {
+       "h": 360,
+       "id": "579490a2eb477b06ad49f6d6df840f5a",
+       "w": 520
+      },
+      {
+       "h": 360,
+       "id": "789e32c8cdb01b33e26f9b81011e9ed9",
+       "w": 520
+      },
+      {
+       "dessin": true,
+       "h": 360,
+       "id": "033a710d7710dec57f1b86d15d35fa71",
+       "w": 520
+      },
+      {
+       "dessin": true,
+       "h": 241,
+       "id": "257ea60241a1a049832d21c9af550b6a",
+       "w": 502
+      },
+      {
+       "dessin": true,
+       "h": 302,
+       "id": "fedf0c2302574bb8c4f619f0a5584d56",
+       "w": 519
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:10:00.000Z",
+     "motsCles": [
+      "maison",
+      "pierre",
+      "réhabilitation",
+      "Drôme"
+     ],
+     "resume": "",
+     "source": "https://www.atelier-fc.com/projets/architecte-renovation-maison/Drome/projet.html",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Réhabilitation d’une maison",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Artéphise architecte"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:09:00.000Z",
+     "editeur": "",
+     "emplacement": "",
+     "id": "cleon-artephise",
+     "images": [
+      {
+       "h": 330,
+       "id": "c2276bf5e03b03c66b1835de9e55999e",
+       "w": 496
+      },
+      {
+       "h": 514,
+       "id": "12ed267576b187b072babe6dfd754b0f",
+       "w": 346
+      },
+      {
+       "h": 263,
+       "id": "80a2c7b35cfdcea567abe3bb6d247b4f",
+       "w": 393
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:09:00.000Z",
+     "motsCles": [
+      "pierre",
+      "voûte",
+      "réhabilitation"
+     ],
+     "resume": "",
+     "source": "https://www.artephise-architecte.com/cleon",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Cléon",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Atelier Joëlle Personnaz"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:08:00.000Z",
+     "editeur": "",
+     "emplacement": "",
+     "id": "personnaz-grange",
+     "images": [
+      {
+       "h": 494,
+       "id": "fb815b65e39d2dc0a3f447853392ce9d",
+       "w": 490
+      },
+      {
+       "h": 494,
+       "id": "44723f277de4c5c1961506563d05de76",
+       "w": 490
+      },
+      {
+       "h": 516,
+       "id": "da4ab611cbdf9140fedbc2b474cb01a8",
+       "w": 341
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:08:00.000Z",
+     "motsCles": [
+      "grange",
+      "charpente",
+      "bois",
+      "réhabilitation",
+      "Atelier Joëlle Personnaz"
+     ],
+     "resume": "",
+     "source": "https://www.joelle-personnaz-architecte.archi/copie-de-maison-aribert",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Rénovation d’une grange",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Mesure architecture"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:07:00.000Z",
+     "editeur": "Virieu",
+     "emplacement": "",
+     "id": "virieu-mesure",
+     "images": [
+      {
+       "h": 380,
+       "id": "ea298b3b4d9a10419cf147166adb71b9",
+       "w": 279
+      },
+      {
+       "h": 383,
+       "id": "ece1cf409122f72fe5fa97f37531b0e5",
+       "w": 280
+      },
+      {
+       "h": 380,
+       "id": "728d496cb8d865b4dc05913d456ff604",
+       "w": 287
+      },
+      {
+       "h": 380,
+       "id": "89527729073e2cf97f9917484a78e4d4",
+       "w": 280
+      },
+      {
+       "h": 253,
+       "id": "b48981247f120ffa9880eee2e1c4a9a8",
+       "w": 383
+      },
+      {
+       "h": 380,
+       "id": "6e21cf05a632d85c295fa569229f74f0",
+       "w": 280
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:07:00.000Z",
+     "motsCles": [
+      "bois",
+      "pierre",
+      "réhabilitation",
+      "Mesure architecture"
+     ],
+     "resume": "",
+     "source": "https://mesure.archi/portfolio/virieu/",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Virieu",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "J. Belmonte architecte"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:06:00.000Z",
+     "editeur": "",
+     "emplacement": "",
+     "id": "belmonte-grange",
+     "images": [
+      {
+       "h": 286,
+       "id": "495079aa7b9e9f38bfc267989d5c52f5",
+       "w": 459
+      },
+      {
+       "h": 342,
+       "id": "ef93f8ee21cdb010466576fa25f069a9",
+       "w": 470
+      },
+      {
+       "h": 387,
+       "id": "df0fa94cd775bff46eabbef5b7446272",
+       "w": 698
+      },
+      {
+       "h": 318,
+       "id": "1d98141e8e74b893a3e162df8a8d4418",
+       "w": 479
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:06:00.000Z",
+     "motsCles": [
+      "grange",
+      "pierre",
+      "charpente",
+      "réhabilitation"
+     ],
+     "resume": "",
+     "source": "https://www.architectes-pour-tous.fr/architectes-pour-tous/jbelmonte-architecte/renovation-dune-ancienne-grange-et-dune-habitation-en",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Rénovation d’une ancienne grange et d’une habitation",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Maud Laronze"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© Clément Molinier",
+     "creeLe": "2026-10-16T12:05:00.000Z",
+     "editeur": "Champ-Laurent, Savoie, France",
+     "emplacement": "",
+     "id": "refuge-iska",
+     "images": [
+      {
+       "h": 600,
+       "id": "d989e121a1208e5adfcb04ebf83864bc",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "be722d2dd5e366c10aced239bba6a13e",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "eccc96be581a72c40f68da1a9fcdf951",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "9a14f7493b00b72345617eb743476582",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "3dc134a1384350f135755bfe80061128",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "c6e87bac2b89b81615a325cdc8062924",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "b0ae8e3648463b1170a7e0b546a14b96",
+       "w": 484
+      },
+      {
+       "h": 600,
+       "id": "f80d010193f3e5f54fc159c486123720",
+       "w": 484
+      },
+      {
+       "h": 400,
+       "id": "080d9bd5e223ed4230dc1444e5f89881",
+       "w": 497
+      },
+      {
+       "dessin": true,
+       "h": 387,
+       "id": "eaa369630b7aa145fec59efe99b25db6",
+       "w": 428
+      },
+      {
+       "dessin": true,
+       "h": 387,
+       "id": "4e7c90102a1f4332d8ac9b7442ccb393",
+       "w": 348
+      },
+      {
+       "dessin": true,
+       "h": 344,
+       "id": "a41a10dc4ab156923746cc53ca11fd21",
+       "w": 566
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:05:00.000Z",
+     "motsCles": [
+      "grange",
+      "chalet",
+      "gîte",
+      "pierre",
+      "charpente",
+      "ossature bois",
+      "réhabilitation",
+      "montagne",
+      "Belledonne",
+      "Savoie"
+     ],
+     "resume": "Une grange et le chalet attenant, au nord du massif de Belledonne, vers 1 200 m, transformés en gîte de quatorze couchages. Murs de pierre, charpente centenaire et volume de la grange sont gardés, largement ouverts. Une doublure intérieure à ossature bois, décollée de la pierre, laisse les murs gérer l’eau ; l’ancienne porte de garage devient une grande baie. Chambres au nord, pièces communes au sud.",
+     "source": "https://divisare.com/projects/556252-maud-laronze-clement-molinier-le-petit-refuge-d-iska",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Le Petit Refuge d’Iska",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Scodellari Architecte"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:04:00.000Z",
+     "editeur": "Saint-Appolinard, Loire, France",
+     "emplacement": "",
+     "id": "grange-saint-appolinard",
+     "images": [
+      {
+       "h": 480,
+       "id": "af11996ea663c38caa342a196f4695a2",
+       "w": 640
+      },
+      {
+       "h": 360,
+       "id": "a334f023d09027f399bd37c002ab07c7",
+       "w": 480
+      },
+      {
+       "h": 480,
+       "id": "5ae0b2527b2d6bf1924f441062e0477e",
+       "w": 640
+      },
+      {
+       "h": 300,
+       "id": "215ab8ef03608717cbf7c97ae96d6f6c",
+       "w": 400
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:04:00.000Z",
+     "motsCles": [
+      "grange",
+      "pierre",
+      "réhabilitation",
+      "Loire"
+     ],
+     "resume": "Réhabilitation d’une grange en logement à Saint-Appolinard, dans la Loire, par l’agence lyonnaise de Pierre Scodellari, architecte-conseil auprès de communes rurales du nord de la Loire de 2009 à 2017. Le site de l’agence ne donne ni date ni surface pour ce projet.",
+     "source": "https://atelier-sca.fr/portfolio/transformation-d-une-grange-en-logement-individuel/",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Transformation d’une grange en logement individuel",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "2023",
+     "auteurs": [
+      "COVE Architectes"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© Charles Bouchaïb",
+     "creeLe": "2026-10-16T12:03:00.000Z",
+     "editeur": "Chamboirat, Ébreuil, Allier, France",
+     "emplacement": "",
+     "id": "chamboirat",
+     "images": [
+      {
+       "h": 600,
+       "id": "65dfe1fe6d1813022d2cad75ff0583da",
+       "w": 750
+      },
+      {
+       "h": 600,
+       "id": "913c054afceaf1ccb9c29313ffcf1eb4",
+       "w": 750
+      },
+      {
+       "h": 600,
+       "id": "fa97966e766bb4944f03fca8186e8ea5",
+       "w": 480
+      },
+      {
+       "h": 600,
+       "id": "1842c6bca1dc4556c1c732bb8b371bde",
+       "w": 480
+      },
+      {
+       "h": 600,
+       "id": "f09e01933fe7444d38039541ee01ef74",
+       "w": 480
+      },
+      {
+       "h": 600,
+       "id": "374e7827f1dc5cd0eace3a1ce9af90fc",
+       "w": 480
+      },
+      {
+       "h": 600,
+       "id": "466a57f54f56774b8319df7dba74f039",
+       "w": 480
+      },
+      {
+       "h": 600,
+       "id": "efb5eb64161907ca9992cb3c7f4bdbb0",
+       "w": 480
+      },
+      {
+       "dessin": true,
+       "h": 226,
+       "id": "bb1d353f2b089dffccdf7783ebc02180",
+       "w": 442
+      },
+      {
+       "dessin": true,
+       "h": 390,
+       "id": "e029b275ddbbd3b961e58f68b455e195",
+       "w": 484
+      },
+      {
+       "dessin": true,
+       "h": 390,
+       "id": "ec7285bddcbbde12b5aa7e7ef2f70ef6",
+       "w": 480
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:03:00.000Z",
+     "motsCles": [
+      "longère",
+      "grange",
+      "réhabilitation",
+      "pierre",
+      "chaux",
+      "chêne",
+      "chanvre",
+      "ressources locales",
+      "COVE Architectes",
+      "Allier"
+     ],
+     "resume": "Une longère de deux siècles, au bord de la Sioule, transformée en maison familiale de 280 m². Hauts murs de pierre de 9 m, charpente complexe, mais un bâtiment très humide, abîmé par d’anciennes rénovations partielles. La charpente d’origine est gardée et complétée en chêne ; renforts en bois et en pierre, isolation en chanvre : uniquement des matériaux locaux.",
+     "source": "https://divisare.com/projects/515634-cove-architectes-charles-bouchaib-home-in-auvergne-s-countryside",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Maison à Chamboirat",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "2011",
+     "auteurs": [
+      "Buchner Bründler Architekten"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© Ruedi Walti",
+     "creeLe": "2026-10-16T12:02:00.000Z",
+     "editeur": "Linescio, Tessin, Suisse",
+     "emplacement": "",
+     "id": "casa-destate",
+     "images": [
+      {
+       "h": 479,
+       "id": "9b41d3e0cf287f5b61c387b8c3941821",
+       "w": 573
+      },
+      {
+       "h": 608,
+       "id": "b4bbf16bf371087b7f0bd23536b4debc",
+       "w": 429
+      },
+      {
+       "h": 364,
+       "id": "6d5b34806fa3d5e3d09802f50bcaf954",
+       "w": 553
+      },
+      {
+       "h": 492,
+       "id": "f774a4e524ea1cbfccb1ce33a07bca12",
+       "w": 411
+      },
+      {
+       "h": 484,
+       "id": "fd09da6140189d840922b7d328628e4d",
+       "w": 413
+      },
+      {
+       "h": 364,
+       "id": "2ff68115036cd52b2d1bb7c08e3e7f39",
+       "w": 537
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T01:53:26.830Z",
+     "motsCles": [
+      "pierre",
+      "béton",
+      "ruine",
+      "réhabilitation",
+      "dialogue avec l’existant",
+      "Buchner Bründler",
+      "Tessin",
+      "Suisse"
+     ],
+     "resume": "Une maison d’été dans une bâtisse en pierre d’environ deux siècles, autrefois utilisée pour sécher les châtaignes. Les murs de pierre sont gardés et servent de coffrage perdu à une coque en béton armé coulée à l’intérieur ; volets en chêne. Ni isolation ni chauffage : la cheminée en béton, qui traverse le toit, est la seule source de chaleur.",
+     "source": "https://bbarc.ch/en/casa-destate",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Casa d’Estate",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Laure Burellier Architecture"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-10-16T12:01:00.000Z",
+     "editeur": "",
+     "emplacement": "",
+     "id": "le-treuil-burellier",
+     "images": [
+      {
+       "h": 342,
+       "id": "865ac1a71d8feb974f3778bcb582a09f",
+       "w": 540
+      },
+      {
+       "h": 343,
+       "id": "17f36f47527865700e5a451023b0200b",
+       "w": 500
+      },
+      {
+       "h": 335,
+       "id": "d94e22a317bc763595317a6082f23126",
+       "w": 500
+      },
+      {
+       "h": 335,
+       "id": "d73f471f09b5c3ddfac467c38152c439",
+       "w": 500
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-10-16T12:01:00.000Z",
+     "motsCles": [
+      "ruine",
+      "pierre",
+      "réhabilitation"
+     ],
+     "resume": "",
+     "source": "",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Réhabilitation du Treuil",
+     "type": "projet",
+     "voirAussi": []
+    }
+   ],
+   "modifier": []
   }
  ]
 }
