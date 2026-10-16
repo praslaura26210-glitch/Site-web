@@ -3,13 +3,12 @@ import type { Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { tr } from '@/lib/tr';
 import { numeroCollection, rangeCollection } from '@/lib/collection';
-import { TRAITS } from '@/components/chrome/Logo';
 import { couverture, TOILES } from './ProjetsGrille';
 import styles from './home.module.css';
 
 /**
- * La couverture d'un livre de la collection : la photo du projet sur toute la couverture,
- * et la tranche, à gauche, à la couleur du livre (avec le titre écrit dessus).
+ * La couverture à plat d'un livre de la collection (petits livres à côté du livre ouvert) :
+ * la photo sur toute la couverture, la tranche à la couleur du livre.
  */
 export function CouvLivre({ p, k, petit = false }: { p: Projet; k: number; petit?: boolean }) {
   const { img, pos } = couverture(p);
@@ -23,82 +22,99 @@ export function CouvLivre({ p, k, petit = false }: { p: Projet; k: number; petit
   );
 }
 
-/** Le dos d'un livre rangé debout dans la boîte : la tranche, son numéro et son titre. */
-function Dos({ p, k }: { p: Projet; k: number }) {
+/*
+ * Les livres en volume (CSS 3D). Un livre fin : la couverture (la photo), la tranche à la couleur du livre
+ * avec son titre, le quatrième de couverture, et les pages (tête, pied, gouttière).
+ * Pose : x, z (au sol, en unités --u), rotation autour de la verticale, couché ou debout, penché, hauteur (pile).
+ */
+type Pose = { x: number; z: number; ry: number; couche?: boolean; rz?: number; pile?: number };
+
+function Livre3D({ p, k, pose, lang, ouvrir }: { p: Projet; k: number; pose: Pose; lang: Lang; ouvrir: string }) {
+  const { img, pos } = couverture(p);
   const t = TOILES[k % TOILES.length];
   return (
-    <span className={styles.dos} style={{ ['--toile' as string]: t.fond, ['--toileEncre' as string]: t.encre }}>
-      <i>{numeroCollection(k)}</i>
-      <b>{p.titre}</b>
-    </span>
+    <Link
+      href={`/${lang}/livres/${p.slug}/`}
+      className={styles.b3}
+      data-k={k}
+      data-couche={pose.couche || undefined}
+      aria-label={`${p.titre} — ${ouvrir}`}
+      style={{ ['--toile' as string]: t.fond, ['--toileEncre' as string]: t.encre, ['--x' as string]: pose.x, ['--z' as string]: pose.z, ['--ry' as string]: `${pose.ry}deg`, ['--rz' as string]: `${pose.rz || 0}deg`, ['--pile' as string]: pose.pile || 0 }}
+    >
+      <span className={styles.fC}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={img.srcSmall} alt="" loading="lazy" draggable={false} style={pos ? { objectPosition: pos } : undefined} />
+      </span>
+      <span className={styles.fB} />
+      <span className={styles.fD}><i>{numeroCollection(k)}</i><b>{p.titre}</b></span>
+      <span className={styles.fT} />
+      <span className={styles.fH} />
+      <span className={styles.fP} />
+    </Link>
   );
 }
 
-// où sont posés les livres, en vrac : centre x, haut y (en % de la scène), rotation ; puis la même chose sur téléphone
-type Pose = [number, number, number, number, number, number];
-const DEVANT: Pose[] = [[24, 49, -8, 27, 33, -6], [43, 59, 4, 73, 37, 6], [62, 54, -3, 28, 65, 4], [79, 44, 9, 72, 68, -7]];
-const VRAC: Pose[] = [[15, 6, -7, 28, 0, -6], [39, 1, 4, 72, 7, 5], [63, 8, -3, 29, 31, 4], [86, 3, 8, 71, 38, -5], [30, 50, 5, 29, 62, -4], [58, 53, -6, 71, 69, 6]];
+// l'accueil : l'étui au fond, les livres posés devant (un debout contre l'étui, deux couchés, une pile de trois)
+const DEVANT: Pose[] = [
+  { x: 150, z: -95, ry: -10, rz: -5 },
+  { x: -190, z: 250, ry: -16, couche: true },
+  { x: 10, z: 300, ry: 12, couche: true },
+  { x: 290, z: 175, ry: 4, couche: true },
+  { x: 285, z: 172, ry: -6, couche: true, pile: 1 },
+  { x: 292, z: 178, ry: 9, couche: true, pile: 2 },
+];
 
 /**
- * La collection. `boite` (accueil) : une boîte carrée debout, le logo en blanc dessus ; les deux premiers livres
- * sont rangés dedans (on voit leur tranche dépasser), les autres sont sortis et posés en vrac devant.
- * Sans `boite` (page Projets) : les six livres posés en vrac. Un clic ouvre le livre.
+ * La collection. `boite` (accueil) : l'étui, avec le dessin du couloir sur la face, et les six livres posés devant.
+ * Sans `boite` (page Projets) : les livres debout, en rangée décalée, et dessous une petite photo de chacun pour choisir.
  */
 export default function Collection({ projets, lang, boite = false }: { projets: Projet[]; lang: Lang; boite?: boolean }) {
   const L = tr(lang, {
-    fr: { ouvrir: 'Ouvrir le livre', nom: 'La collection de Laura Pras' },
-    en: { ouvrir: 'Open the book', nom: 'Laura Pras’s collection' },
-    it: { ouvrir: 'Apri il libro', nom: 'La collezione di Laura Pras' },
+    fr: { ouvrir: 'Ouvrir le livre', nom: 'Laura Pras · Portfolio', serie: 'La collection' },
+    en: { ouvrir: 'Open the book', nom: 'Laura Pras · Portfolio', serie: 'The collection' },
+    it: { ouvrir: 'Apri il libro', nom: 'Laura Pras · Portfolio', serie: 'La collezione' },
   });
   const liste = rangeCollection(projets);
-  const dedans = boite ? liste.slice(0, 2) : [];
-  const dehors = boite ? liste.slice(2) : liste;
-  const poses = boite ? DEVANT : VRAC;
+  const titres = (
+    <ol className={styles.c3Titres}>
+      {liste.map((p, k) => {
+        const { img, pos } = couverture(p);
+        return (
+          <li key={p.slug} data-k={k}>
+            <Link href={`/${lang}/livres/${p.slug}/`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {!boite && <img src={img.srcSmall} alt="" loading="lazy" style={pos ? { objectPosition: pos } : undefined} />}
+              <span><i>N° {numeroCollection(k)}</i> {p.titre}</span>
+            </Link>
+          </li>
+        );
+      })}
+    </ol>
+  );
   return (
-    <div className={styles.coll} data-boite={boite || undefined}>
-      {boite && (
-        <div className={styles.bx} aria-label={L.nom} role="group">
-          {/* le fond et l'intérieur de la boîte, vus un peu d'en haut */}
-          <svg className={styles.bxFond} viewBox="0 0 130 130" aria-hidden="true">
-            <polygon points="0,30 30,0 130,0 100,30" className={styles.bxDedans} />
-            <polygon points="30,0 130,0 130,6 30,6" className={styles.bxOmbre} />
-          </svg>
-          <ul className={styles.bxLivres}>
-            {dedans.map((p, j) => (
-              <li key={p.slug} style={{ ['--j' as string]: j }}>
-                <Link href={`/${lang}/livres/${p.slug}/`} aria-label={`${p.titre} — ${L.ouvrir}`}>
-                  <Dos p={p} k={j} />
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {/* la face avant (le logo en blanc) et le côté */}
-          <svg className={styles.bxFace} viewBox="0 0 130 130" aria-hidden="true">
-            <polygon points="100,30 130,0 130,100 100,130" className={styles.bxCote} />
-            <rect x="0" y="30" width="100" height="100" className={styles.bxAvant} />
-            <polyline points="0,30 100,30 130,0" className={styles.bxBord} />
-            <g transform="translate(35.3 49) scale(.3)" fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round">
-              {TRAITS.map((t, i) => <path key={i} d={t.d} strokeWidth={t.w * 3.4} transform="translate(-12 -16)" />)}
-            </g>
-            <text x="50" y="97" textAnchor="middle" className={styles.bxNom}>LAURA PRAS</text>
-            <text x="50" y="105" textAnchor="middle" className={styles.bxSous}>PORTFOLIO</text>
-          </svg>
+    <div className={styles.c3} data-boite={boite || undefined}>
+      <div className={styles.c3Scene}>
+        <div className={styles.c3Monde}>
+          <span className={styles.c3Sol} aria-hidden="true" />
+          {boite && (
+            <span className={styles.etui} role="img" aria-label={L.nom}>
+              <span className={styles.eAv}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/media/site/dessin-couverture-1000.webp" alt="" draggable={false} />
+              </span>
+              <span className={styles.eAr} />
+              <span className={styles.eG}><b>Laura Pras</b><i>Portfolio</i></span>
+              <span className={styles.eD} />
+              <span className={styles.eH} />
+            </span>
+          )}
+          {liste.map((p, k) => (
+            <Livre3D key={p.slug} p={p} k={k} lang={lang} ouvrir={L.ouvrir}
+              pose={boite ? DEVANT[k] : { x: 0, z: -(liste.length - 1 - k) * 78, ry: 0 }} />
+          ))}
         </div>
-      )}
-      <ul className={styles.vrac}>
-        {dehors.map((p, j) => {
-          const k = liste.indexOf(p);
-          const [x, y, r, xm, ym, rm] = poses[j];
-          return (
-            <li key={p.slug} className={styles.vracLivre} style={{ ['--x' as string]: `${x}%`, ['--y' as string]: `${y}%`, ['--r' as string]: `${r}deg`, ['--xm' as string]: `${xm}%`, ['--ym' as string]: `${ym}%`, ['--rm' as string]: `${rm}deg`, ['--z' as string]: Math.round(y), ['--zm' as string]: Math.round(ym), ['--k' as string]: j }}>
-              <Link href={`/${lang}/livres/${p.slug}/`} className={styles.vracLien} aria-label={`${p.titre} — ${L.ouvrir}`}>
-                <CouvLivre p={p} k={k} />
-                <span className={styles.vracCap}><i>N° {numeroCollection(k)}</i> {p.titre}</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      </div>
+      {titres}
     </div>
   );
 }

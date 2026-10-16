@@ -209,42 +209,85 @@
 /* la collection n'apparaît qu'en descendant, bien après le premier écran */
 .collection { margin-top: clamp(120px, 26vh, 300px); }
 
-/* ---------- la collection : une boîte carrée debout (le logo en blanc), les livres posés en vrac devant ---------- */
-.coll { position: relative; width: min(100%, 1060px); margin: clamp(30px, 6vh, 70px) auto 0; aspect-ratio: 16 / 10; --bw: 15%; }
-.coll:not([data-boite]) { aspect-ratio: 16 / 9.6; --bw: 18.5%; }
-.coll[data-boite] { margin-top: clamp(90px, 14vh, 140px); }
-/* la boîte : fond et intérieur, puis les livres rangés, puis la face avant */
-.bx { position: absolute; left: 30%; top: 4%; width: 28%; aspect-ratio: 1; }
-.bx svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.bxFond { z-index: 0; }
-.bxFace { z-index: 2; pointer-events: none; filter: drop-shadow(10px 18px 18px rgba(90, 50, 30, .22)); }
-.bxDedans { fill: #6F3726; }
-.bxOmbre { fill: rgba(0, 0, 0, .18); }
-.bxAvant { fill: #A85F45; }
-.bxCote { fill: #8B4A34; }
-.bxBord { fill: none; stroke: rgba(255, 255, 255, .28); stroke-width: .6; }
-.bxNom { fill: #fff; font: 500 6px var(--sans); letter-spacing: .32em; }
-.bxSous { fill: #fff; fill-opacity: .8; font: 400 3.6px var(--sans); letter-spacing: .5em; }
-/* les livres rangés dans la boîte : on voit leur tranche dépasser ; au survol, le livre sort un peu */
-.bxLivres { list-style: none; margin: 0; padding: 0; position: absolute; z-index: 1; left: 28%; top: -30%; width: 40%; height: 100%; display: flex; gap: 2%; align-items: flex-start; }
-.bxLivres li { width: 30%; height: 110%; transition: translate .5s var(--ease); }
-.bxLivres li:nth-child(2) { margin-top: 9%; rotate: 5deg; transform-origin: 50% 100%; }
-.bxLivres li:hover, .bxLivres li:focus-within { translate: 0 -16%; }
-.bxLivres a { display: block; height: 100%; color: inherit; text-decoration: none; }
-.dos { display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; padding: 14px 0; background: var(--toile); color: var(--toileEncre); box-shadow: inset -3px 0 6px rgba(0, 0, 0, .14), inset 2px 0 0 rgba(255, 255, 255, .18); }
-.dos i { font-style: normal; font-size: .52rem; letter-spacing: .1em; }
-.dos b { writing-mode: vertical-rl; transform: rotate(180deg); font-size: .62rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
+/* ---------- la collection en volume (CSS 3D) : l'étui et les livres devant (accueil), la rangée (Projets) ---------- */
+@property --lift { syntax: '<number>'; inherits: false; initial-value: 0; }
+.c3 { --u: clamp(.48px, .082vw, 1.05px); --W: calc(200 * var(--u)); --H: calc(250 * var(--u)); --E: calc(16 * var(--u)); --leve: 28; margin-top: clamp(30px, 6vh, 70px); }
+.c3:not([data-boite]) { --u: clamp(.72px, .1vw, 1.4px); --H: calc(260 * var(--u)); --E: calc(18 * var(--u)); --leve: 48; }
+.c3Scene { position: relative; overflow: hidden; height: calc(600 * var(--u)); perspective: calc(2600 * var(--u)); perspective-origin: 50% 20%; }
+.c3:not([data-boite]) .c3Scene { height: calc(420 * var(--u)); perspective-origin: 50% 40%; }
+.c3Monde { position: absolute; left: calc(50% - 10 * var(--u)); top: 57%; transform-style: preserve-3d; transform: rotateX(-30deg) rotateY(24deg); }
+.c3:not([data-boite]) .c3Monde { left: calc(50% + 150 * var(--u)); top: 89%; transform: rotateX(-11deg) rotateY(42deg); }
+.c3Sol { position: absolute; left: calc(-400 * var(--u)); top: calc(-300 * var(--u)); width: calc(800 * var(--u)); height: calc(600 * var(--u)); transform: rotateX(90deg); background: radial-gradient(closest-side, rgba(130, 80, 55, .07), rgba(130, 80, 55, 0) 80%); pointer-events: none; }
 
-/* les livres en vrac */
-.vrac { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; }
-.vracLivre { position: absolute; z-index: var(--z); left: var(--x); top: var(--y); width: var(--bw); translate: -50% 0; rotate: var(--r); transition: rotate .55s var(--ease), translate .55s var(--ease), scale .55s var(--ease); animation: vracPose .9s var(--ease) both; animation-delay: calc(.1s + var(--k) * 110ms); }
-@keyframes vracPose { from { opacity: 0; translate: -50% -26px; } }
-.vracLivre:is(:hover, :focus-within) { z-index: 90; rotate: 0deg; translate: -50% -12px; scale: 1.05; }
-.vracLien { display: block; color: inherit; text-decoration: none; }
-.vracLien:focus-visible { outline: none; }
-.vracLien:focus-visible .cv { outline: 1.5px solid var(--accent-f); outline-offset: 4px; }
-.vracCap { display: block; margin-top: 12px; font-size: .6rem; line-height: 1.5; letter-spacing: .14em; text-transform: uppercase; color: var(--encre); }
-.vracCap i { font-style: normal; color: var(--accent-f); margin-right: 4px; }
+/* un livre fin : six faces autour de son pied (au sol, au milieu) */
+.b3 { position: absolute; left: 0; top: 0; display: block; transform-style: preserve-3d; color: inherit; text-decoration: none; transition: --lift .5s var(--ease);
+  transform: translate3d(calc(var(--x) * var(--u)), calc((var(--pile) * -16 - var(--lift)) * var(--u)), calc(var(--z) * var(--u))) rotateY(var(--ry)) rotateZ(var(--rz)); }
+.b3[data-couche] { transform: translate3d(calc(var(--x) * var(--u)), calc((-8 - var(--pile) * 16 - var(--lift)) * var(--u)), calc(var(--z) * var(--u))) rotateY(var(--ry)) rotateX(90deg); }
+.b3:is(:hover, :focus-visible) { --lift: var(--leve); }
+.b3:focus-visible { outline: none; }
+.b3 > span { position: absolute; display: block; }
+.fC, .fB { left: calc(var(--W) / -2); top: calc(var(--H) * -1); width: var(--W); height: var(--H); background: var(--toile); overflow: hidden; }
+.fC { transform: translateZ(calc(var(--E) / 2)); }
+.fC img { width: 100%; height: 100%; object-fit: cover; }
+.fC::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .28), rgba(255, 255, 255, .16) 1.6%, rgba(0, 0, 0, .05) 3.5%, transparent 7%), linear-gradient(130deg, rgba(255, 255, 255, .12), transparent 50%); }
+.b3:focus-visible .fC { outline: 2px solid var(--accent-f); outline-offset: -2px; }
+.fB { transform: rotateY(180deg) translateZ(calc(var(--E) / 2)); }
+.fD { left: calc(var(--E) / -2); top: calc(var(--H) * -1); width: var(--E); height: var(--H); transform: rotateY(-90deg) translateZ(calc(var(--W) / 2)); background: var(--toile); color: var(--toileEncre); display: flex !important; flex-direction: column; align-items: center; gap: calc(10 * var(--u)); padding: calc(12 * var(--u)) 0; overflow: hidden; box-shadow: inset 0 0 calc(6 * var(--u)) rgba(0, 0, 0, .15); }
+.fD i { font-style: normal; font-size: calc(8 * var(--u)); letter-spacing: .06em; }
+.fD b { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-size: calc(8.6 * var(--u)); font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
+.fT { left: calc(var(--E) / -2); top: calc(var(--H) * -1); width: var(--E); height: var(--H); transform: rotateY(90deg) translateZ(calc(var(--W) / 2)); background: repeating-linear-gradient(90deg, #F7F3EC 0 1px, #E6DED1 1px 2px); }
+.fH, .fP { left: calc(var(--W) / -2); top: calc(var(--E) / -2); width: var(--W); height: var(--E); background: repeating-linear-gradient(0deg, #F7F3EC 0 1px, #E6DED1 1px 2px); }
+.fH { transform: translateY(calc(var(--H) * -1)) rotateX(90deg); }
+.fP { transform: rotateX(-90deg); }
+
+/* l'étui : la face avec le dessin du couloir, les côtés terre cuite */
+.etui { position: absolute; left: 0; top: 0; transform-style: preserve-3d; --BW: calc(250 * var(--u)); --BH: calc(270 * var(--u)); --BD: calc(96 * var(--u));
+  transform: translate3d(calc(-110 * var(--u)), 0, calc(-80 * var(--u))) rotateY(-6deg); }
+.etui > span { position: absolute; display: block; }
+.eAv, .eAr { left: calc(var(--BW) / -2); top: calc(var(--BH) * -1); width: var(--BW); height: var(--BH); }
+.eAv { transform: translateZ(calc(var(--BD) / 2)); background: #FFFFFF; padding: 9% 8% 14%; box-shadow: inset 0 0 0 calc(5 * var(--u)) #A85F45; }
+.eAv img { width: 100%; height: 100%; object-fit: contain; }
+.eAv::after { content: 'LAURA PRAS — PORTFOLIO'; position: absolute; left: 0; right: 0; bottom: 6%; text-align: center; font-size: calc(7.5 * var(--u)); letter-spacing: .34em; color: #A85F45; }
+.eAr { transform: rotateY(180deg) translateZ(calc(var(--BD) / 2)); background: #A85F45; }
+.eG, .eD { left: calc(var(--BD) / -2); top: calc(var(--BH) * -1); width: var(--BD); height: var(--BH); }
+.eG { transform: rotateY(-90deg) translateZ(calc(var(--BW) / 2)); background: #A85F45; color: #fff; display: grid !important; place-content: center; justify-items: center; gap: calc(14 * var(--u)); }
+.eG b { writing-mode: vertical-rl; transform: rotate(180deg); font-size: calc(13 * var(--u)); font-weight: 500; letter-spacing: .32em; text-transform: uppercase; }
+.eG i { writing-mode: vertical-rl; transform: rotate(180deg); font-style: normal; font-size: calc(7.5 * var(--u)); letter-spacing: .4em; text-transform: uppercase; opacity: .8; }
+.eD { transform: rotateY(90deg) translateZ(calc(var(--BW) / 2)); background: #8E4D37; }
+.eH { left: calc(var(--BW) / -2); top: calc(var(--BD) / -2); width: var(--BW); height: var(--BD); transform: translateY(calc(var(--BH) * -1)) rotateX(90deg); background: #B9735A; }
+
+/* les titres : une ligne sous l'étui ; sur la page Projets, une petite photo de chaque livre pour le choisir */
+.c3Titres { list-style: none; margin: calc(10 * var(--u)) auto 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; max-width: 900px; }
+.c3Titres a { display: grid; justify-items: center; gap: 10px; color: var(--gris); text-decoration: none; font-size: .6rem; line-height: 1.5; letter-spacing: .14em; text-transform: uppercase; text-align: center; transition: color .3s; }
+.c3Titres i { font-style: normal; color: var(--accent-f); }
+.c3Titres a:hover, .c3Titres a:focus-visible { color: var(--encre); }
+.c3:not([data-boite]) .c3Titres { gap: 24px clamp(14px, 2.2vw, 30px); margin-top: 34px; }
+.c3:not([data-boite]) .c3Titres li { width: clamp(84px, 9vw, 120px); }
+.c3Titres img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: translate .4s var(--ease), box-shadow .4s; }
+.c3Titres a:hover img { translate: 0 -6px; box-shadow: 0 12px 16px -10px rgba(70, 40, 25, .45); }
+.c3:has(.c3Titres li[data-k='0'] a:is(:hover, :focus-visible)) .b3[data-k='0'] { --lift: var(--leve); }
+.c3:has(.b3[data-k='0']:hover) .c3Titres li[data-k='0'] a { color: var(--encre); }
+.c3:has(.c3Titres li[data-k='1'] a:is(:hover, :focus-visible)) .b3[data-k='1'] { --lift: var(--leve); }
+.c3:has(.b3[data-k='1']:hover) .c3Titres li[data-k='1'] a { color: var(--encre); }
+.c3:has(.c3Titres li[data-k='2'] a:is(:hover, :focus-visible)) .b3[data-k='2'] { --lift: var(--leve); }
+.c3:has(.b3[data-k='2']:hover) .c3Titres li[data-k='2'] a { color: var(--encre); }
+.c3:has(.c3Titres li[data-k='3'] a:is(:hover, :focus-visible)) .b3[data-k='3'] { --lift: var(--leve); }
+.c3:has(.b3[data-k='3']:hover) .c3Titres li[data-k='3'] a { color: var(--encre); }
+.c3:has(.c3Titres li[data-k='4'] a:is(:hover, :focus-visible)) .b3[data-k='4'] { --lift: var(--leve); }
+.c3:has(.b3[data-k='4']:hover) .c3Titres li[data-k='4'] a { color: var(--encre); }
+.c3:has(.c3Titres li[data-k='5'] a:is(:hover, :focus-visible)) .b3[data-k='5'] { --lift: var(--leve); }
+.c3:has(.b3[data-k='5']:hover) .c3Titres li[data-k='5'] a { color: var(--encre); }
+
+@media (max-width: 760px) {
+  .c3 { --u: clamp(.38px, .122vw, .58px); }
+  .c3[data-boite] .c3Monde { left: calc(50% - 70 * var(--u)); }
+  .c3:not([data-boite]) { --u: clamp(.52px, .16vw, .8px); }
+  .c3:not([data-boite]) .c3Titres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .c3:not([data-boite]) .c3Titres li { width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b3 { transition: none; }
+}
 
 /* la couverture : la photo sur toute la couverture, la tranche à la couleur du livre */
 .cv { position: relative; display: block; aspect-ratio: 4 / 5; background: var(--toile);
@@ -259,13 +302,3 @@
 .cv[data-petit] .cvDos { width: 12%; }
 .cv[data-petit]::after { background: linear-gradient(90deg, transparent 12%, rgba(0, 0, 0, .25) 12%, transparent 18%); }
 
-@media (max-width: 760px) {
-  .coll { aspect-ratio: 3 / 6; --bw: 40%; }
-  .coll:not([data-boite]) { aspect-ratio: 3 / 7.1; --bw: 41%; }
-  .bx { left: 20%; top: 4%; width: 56%; }
-  .vracLivre { left: var(--xm); top: var(--ym); rotate: var(--rm); z-index: var(--zm); }
-  .vracCap { font-size: .54rem; letter-spacing: .1em; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .vracLivre { animation: none; transition: none; }
-}

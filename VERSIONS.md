@@ -21,6 +21,11 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V31 (aperçu des essais)
+
+- **Accueil** : un étui fermé, en volume, avec le dessin du couloir sur la face et les côtés terre cuite (« Laura Pras · Portfolio » sur la tranche). Les six livres, fins, sont posés devant comme sur la photo de référence : un debout contre l'étui, deux couchés, une pile de trois. Un livre se soulève au survol ; les titres sont écrits dessous.
+- **Projets** : les livres debout en rangée décalée (comme la collection Monocle) : on voit la tranche de couleur de chacun, et la couverture du dernier. Dessous, une petite photo de chaque projet pour le choisir ; survoler la photo soulève le livre.
+
 ## Essais en cours — V30 (aperçu des essais)
 
 - **Accueil** : une boîte carrée debout, terre cuite, avec le logo et « Laura Pras · Portfolio » en blanc. Deux livres sont rangés dedans (leur tranche dépasse, ils sortent un peu au survol), les quatre autres sont posés en vrac devant.
