@@ -77,15 +77,15 @@ const premiereIdee = (t: string, n = 190) => {
 
 /**
  * La collection.
- * `accueil` : la rangée de livres et, en grand, « Découvrir la collection » ; le tout mène à la page Projets.
- * `projets` : en haut la rangée (chaque livre s'ouvre), puis tous les projets en grand, l'un après l'autre,
+ * `accueil` : la rangée de livres et, en grand, « Voir les projets » ; le tout mène à la page Projets.
+ * `projets` : tous les projets en grand, l'un après l'autre,
  * la photo d'un côté, le titre, le programme et quelques lignes de l'autre, pour donner envie de les ouvrir.
  */
 export default function Collection({ projets, lang, mode = 'projets' }: { projets: Projet[]; lang: Lang; mode?: 'accueil' | 'projets' }) {
   const L = tr(lang, {
-    fr: { ouvrir: 'Ouvrir le livre', serie: 'La collection', decouvrir: 'Découvrir la collection', livres: 'livres, un par projet', voir: 'Voir les projets', titre: 'Projets', chapeau: 'Six livres, un par projet. Ouvrez-en un pour le feuilleter.' },
-    en: { ouvrir: 'Open the book', serie: 'The collection', decouvrir: 'Discover the collection', livres: 'books, one per project', voir: 'See the projects', titre: 'Projects', chapeau: 'Six books, one per project. Open one to leaf through it.' },
-    it: { ouvrir: 'Apri il libro', serie: 'La collezione', decouvrir: 'Scopri la collezione', livres: 'libri, uno per progetto', voir: 'Vedi i progetti', titre: 'Progetti', chapeau: 'Sei libri, uno per progetto. Aprine uno per sfogliarlo.' },
+    fr: { ouvrir: 'Ouvrir le livre', serie: 'La collection', projets: 'projets', voir: 'Voir les projets', titre: 'Projets' },
+    en: { ouvrir: 'Open the book', serie: 'The collection', projets: 'projects', voir: 'See the projects', titre: 'Projects' },
+    it: { ouvrir: 'Apri il libro', serie: 'La collezione', projets: 'progetti', voir: 'Vedi i progetti', titre: 'Progetti' },
   });
   const liste = rangeCollection(projets);
   const annees = `${liste[0].annee} — ${liste[liste.length - 1].annee}`;
@@ -94,10 +94,8 @@ export default function Collection({ projets, lang, mode = 'projets' }: { projet
     return (
       <Link href={`/${lang}/projets/`} className={`${styles.c3} ${styles.cAcc}`} data-accueil="">
         <span className={styles.cAccTexte}>
-          <span className="eyebrow">{L.serie} · {annees}</span>
-          <span className={styles.cAccT}>{L.decouvrir}</span>
-          <span className={styles.cAccS}>{liste.length} {L.livres}</span>
-          <span className={styles.cAccLien}>{L.voir} →</span>
+          <span className="eyebrow">{liste.length} {L.projets} · {annees}</span>
+          <span className={styles.cAccT}>{L.voir} <i aria-hidden="true">→</i></span>
         </span>
         <Rangee liste={liste} lang={lang} ouvrir={L.ouvrir} fige />
       </Link>
@@ -107,12 +105,8 @@ export default function Collection({ projets, lang, mode = 'projets' }: { projet
   return (
     <div className={styles.c3}>
       <header className={styles.cPHaut}>
-        <div className={styles.cPTexte}>
-          <h1 className={styles.cPTitre}>{L.titre}</h1>
-          <p className={styles.cPChapeau}>{L.chapeau}</p>
-          <p className="eyebrow">{L.serie} · {annees}</p>
-        </div>
-        <Rangee liste={liste} lang={lang} ouvrir={L.ouvrir} />
+        <h1 className={styles.cPTitre}>{L.titre}</h1>
+        <p className="eyebrow">{liste.length} {L.projets} · {annees}</p>
       </header>
       {/* tous les projets, en grand */}
       <ol className={styles.bandes}>
