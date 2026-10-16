@@ -1176,6 +1176,3 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 .pdfs-fiche li > a { flex: 1; min-width: 0; }
 .pdfs-fiche .retirer-pdf { opacity: .35; width: 30px; height: 30px; }
 .pdfs-fiche .retirer-pdf:hover, .pdfs-fiche .retirer-pdf:focus-visible { opacity: 1; }
-.ajout-pdf { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: .82rem; color: var(--encre-2); cursor: pointer; letter-spacing: .02em; }
-.ajout-pdf:hover { color: var(--encre); }
-.pdfs-fiche:not(:has(ul)) { margin-top: 0; padding-top: 0; border-top: 0; }

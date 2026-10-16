@@ -131,77 +131,62 @@ function Liens({ fiche }: { fiche: Fiche }) {
 
 const poids = (o?: number) => (!o ? '' : o < 1e6 ? `${Math.max(1, Math.round(o / 1e3))} ko` : `${(o / 1e6).toFixed(1).replace('.', ',')} Mo`);
 
-/** PDF joints (plans, dossier, article) : on les ouvre d'un clic ; le petit « + » en ajoute. */
+/** PDF joints (plans, dossier, article) : on les ouvre d'un clic ; on les ajoute avec le « + » des images. */
 function Pdfs({ fiche, enregistrer }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void }) {
-  const { notifier } = useBiblio();
-  const [envoi, setEnvoi] = useState(false);
   const pdfs = fiche.pdfs ?? [];
-  async function ajouter(fichiers: FileList | null) {
-    if (!fichiers?.length) return;
-    setEnvoi(true);
-    const nouveaux = [];
-    for (const fichier of [...fichiers]) {
-      try {
-        nouveaux.push(await api.envoyerPdf(fichier));
-      } catch (e) {
-        notifier(e instanceof Error ? e.message : 'PDF non envoyé.');
-      }
-    }
-    setEnvoi(false);
-    if (nouveaux.length) enregistrer({ ...fiche, pdfs: [...pdfs, ...nouveaux] }, nouveaux.length > 1 ? 'PDF ajoutés.' : 'PDF ajouté.');
-  }
+  if (!pdfs.length) return null;
   function retirer(id: string, nom: string) {
     if (!window.confirm(`Retirer « ${nom} » de la fiche ?`)) return;
     enregistrer({ ...fiche, pdfs: pdfs.filter((d) => d.id !== id) }, 'PDF retiré.');
   }
   return (
     <section className="bloc liens-fiche pdfs-fiche">
-      {pdfs.length > 0 && <h2>Documents</h2>}
-      {pdfs.length > 0 && (
-        <ul>
-          {pdfs.map((d) => (
-            <li key={d.id}>
-              <a href={srcPdf(d.id)} target="_blank" rel="noreferrer">
-                <span>{d.nom.replace(/\.pdf$/i, '')}</span>
-                <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''} <Icone nom="lien" taille={14} /></span>
-              </a>
-              <button className="bouton-icone retirer-pdf" aria-label={`Retirer ${d.nom}`} title="Retirer le PDF" onClick={() => retirer(d.id, d.nom)}>
-                <Icone nom="fermer" taille={14} />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      <label className="ajout-pdf" aria-busy={envoi}>
-        {envoi ? 'Envoi du PDF…' : <><Icone nom="plus" taille={14} /> Ajouter un PDF</>}
-        <input type="file" accept="application/pdf,.pdf" multiple hidden onChange={(e) => { ajouter(e.target.files); e.target.value = ''; }} />
-      </label>
+      <h2>Documents</h2>
+      <ul>
+        {pdfs.map((d) => (
+          <li key={d.id}>
+            <a href={srcPdf(d.id)} target="_blank" rel="noreferrer">
+              <span>{d.nom.replace(/\.pdf$/i, '')}</span>
+              <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''} <Icone nom="lien" taille={14} /></span>
+            </a>
+            <button className="bouton-icone retirer-pdf" aria-label={`Retirer ${d.nom}`} title="Retirer le PDF" onClick={() => retirer(d.id, d.nom)}>
+              <Icone nom="fermer" taille={14} />
+            </button>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
 
-/** Choisir une image sur l'appareil et l'ajouter tout de suite à la fiche. */
-function AjoutImage({ fiche, enregistrer, className, children }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; className: string; children: React.ReactNode }) {
+const estPdf = (f: File) => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+
+/** Choisir des images (et, sauf pour une couverture, des PDF) sur l'appareil et les ajouter tout de suite à la fiche. */
+function AjoutImage({ fiche, enregistrer, className, children, pdf = true }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; className: string; children: React.ReactNode; pdf?: boolean }) {
   const { notifier } = useBiblio();
   const [envoi, setEnvoi] = useState(false);
   async function ajouter(fichiers: FileList | null) {
     if (!fichiers?.length) return;
     setEnvoi(true);
     const nouvelles = [];
+    const pdfs = [];
     for (const fichier of [...fichiers]) {
       try {
-        nouvelles.push(await api.envoyerImage(await compresser(fichier)));
+        if (pdf && estPdf(fichier)) pdfs.push(await api.envoyerPdf(fichier));
+        else nouvelles.push(await api.envoyerImage(await compresser(fichier)));
       } catch (e) {
-        notifier(e instanceof Error ? e.message : 'Image non envoyée.');
+        notifier(e instanceof Error ? e.message : 'Fichier non envoyé.');
       }
     }
     setEnvoi(false);
-    if (nouvelles.length) enregistrer({ ...fiche, images: [...fiche.images, ...nouvelles] }, nouvelles.length > 1 ? 'Images ajoutées.' : 'Image ajoutée.');
+    if (!nouvelles.length && !pdfs.length) return;
+    const message = pdfs.length && nouvelles.length ? 'Images et PDF ajoutés.' : pdfs.length ? (pdfs.length > 1 ? 'PDF ajoutés.' : 'PDF ajouté.') : nouvelles.length > 1 ? 'Images ajoutées.' : 'Image ajoutée.';
+    enregistrer({ ...fiche, images: [...fiche.images, ...nouvelles], pdfs: [...(fiche.pdfs ?? []), ...pdfs] }, message);
   }
   return (
     <label className={className} aria-busy={envoi}>
-      {envoi ? <span>Envoi de l’image…</span> : children}
-      <input type="file" accept="image/*" multiple hidden onChange={(e) => { ajouter(e.target.files); e.target.value = ''; }} />
+      {envoi ? <span>Envoi…</span> : children}
+      <input type="file" accept={pdf ? 'image/*,application/pdf,.pdf' : 'image/*'} multiple hidden onChange={(e) => { ajouter(e.target.files); e.target.value = ''; }} />
     </label>
   );
 }
@@ -504,7 +489,7 @@ export function FicheVue({ id }: { id: string }) {
                 <img src={srcImage(fiche.images[0].id)} alt={`Couverture : ${fiche.titre}`} style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
               </button>
             ) : (
-              <AjoutImage fiche={fiche} enregistrer={enregistrer} className="couv-a-ajouter">
+              <AjoutImage fiche={fiche} enregistrer={enregistrer} className="couv-a-ajouter" pdf={false}>
                 <Couverture fiche={fiche} />
                 <span className="couv-ajout-texte"><Icone nom="photo" taille={16} /> Ajouter la couverture</span>
               </AjoutImage>
@@ -566,7 +551,7 @@ function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: 
       <Icone nom="plus" taille={18} />
     </AjoutImage>
   );
-  if (!documents.length) return <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>;
+  if (!documents.length) return <div className="ajout-documents" title="Ajouter une image, un plan ou un PDF">{ajout}</div>;
   return (
     <section className="documents" aria-label="Plans, coupes et documents">
       <div className="quinconce">
@@ -585,7 +570,7 @@ function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: 
           </ul>
         ))}
       </div>
-      <div className="ajout-documents" title="Ajouter un plan, une coupe, une façade">{ajout}</div>
+      <div className="ajout-documents" title="Ajouter une image, un plan ou un PDF">{ajout}</div>
     </section>
   );
 }

@@ -184,6 +184,11 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
     setImagesEnCours((n) => n + liste.length);
     for (const fichier of liste) {
       try {
+        if (fichier.type === 'application/pdf' || /\.pdf$/i.test(fichier.name)) {
+          const pdf = await api.envoyerPdf(fichier);
+          setEtat((e) => ({ ...e, f: { ...e.f, pdfs: [...(e.f.pdfs ?? []), pdf] } }));
+          continue;
+        }
         const blob = await compresser(fichier);
         const image = await api.envoyerImage(blob);
         setEtat((e) => ({ ...e, f: { ...e.f, images: [...e.f.images, image] } }));
@@ -387,8 +392,8 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
           {Array.from({ length: imagesEnCours }, (_, i) => <div key={`e${i}`} className="image-form en-cours"><span>Envoi de l’image…</span></div>)}
           <label className="image-ajout">
             <Icone nom="photo" taille={22} />
-            <span>{f.images.length ? 'Ajouter une image' : t === 'livre' ? 'Ajouter la couverture' : 'Ajouter une image'}</span>
-            <input type="file" accept="image/*" multiple onChange={(e) => { ajouterImages(e.target.files); e.target.value = ''; }} />
+            <span>{f.images.length ? (t === 'livre' ? 'Ajouter une image' : 'Ajouter une image ou un PDF') : t === 'livre' ? 'Ajouter la couverture' : 'Ajouter une image ou un PDF'}</span>
+            <input type="file" accept={t === 'livre' && !f.images.length ? 'image/*' : 'image/*,application/pdf,.pdf'} multiple onChange={(e) => { ajouterImages(e.target.files); e.target.value = ''; }} />
           </label>
           {!DEMO && (
             <>
