@@ -217,12 +217,9 @@
 
 /* ---------- la collection en volume (CSS 3D) : l'étui et les livres devant (accueil), la rangée (Projets) ---------- */
 @property --lift { syntax: '<number>'; inherits: false; initial-value: 0; }
-.c3 { --u: clamp(.48px, .082vw, 1.05px); --W: calc(200 * var(--u)); --H: calc(250 * var(--u)); --E: calc(16 * var(--u)); --leve: 28; margin-top: clamp(30px, 6vh, 70px); }
-.c3:not([data-boite]) { --u: clamp(.72px, .1vw, 1.4px); --H: calc(260 * var(--u)); --E: calc(18 * var(--u)); --leve: 48; }
-.c3Scene { position: relative; overflow: hidden; height: calc(660 * var(--u)); perspective: calc(2600 * var(--u)); perspective-origin: 50% 20%; }
-.c3:not([data-boite]) .c3Scene { height: calc(420 * var(--u)); perspective-origin: 50% 40%; }
-.c3Monde { position: absolute; left: calc(50% + 20 * var(--u)); top: 58%; transform-style: preserve-3d; transform: rotateX(-30deg) rotateY(-32deg); }
-.c3:not([data-boite]) .c3Monde { left: calc(50% + 150 * var(--u)); top: 89%; transform: rotateX(-11deg) rotateY(42deg); }
+.c3 { --u: clamp(.62px, .085vw, 1.2px); --W: calc(200 * var(--u)); --H: calc(260 * var(--u)); --E: calc(18 * var(--u)); --leve: 48; }
+.c3Scene { position: relative; overflow: hidden; height: calc(430 * var(--u)); perspective: calc(2600 * var(--u)); perspective-origin: 50% 40%; }
+.c3Monde { position: absolute; left: calc(50% + 150 * var(--u)); top: 88%; transform-style: preserve-3d; transform: rotateX(-11deg) rotateY(42deg); }
 .c3Sol { position: absolute; left: calc(-400 * var(--u)); top: calc(-300 * var(--u)); width: calc(800 * var(--u)); height: calc(600 * var(--u)); transform: rotateX(90deg); background: radial-gradient(closest-side, rgba(130, 80, 55, .07), rgba(130, 80, 55, 0) 80%); pointer-events: none; }
 
 /* un livre fin : six faces autour de son pied (au sol, au milieu) */
@@ -246,53 +243,44 @@
 .fH { transform: translateY(calc(var(--H) * -1)) rotateX(90deg); }
 .fP { transform: rotateX(-90deg); }
 
-/* la boîte : un cube toilé, ouvert sur le côté droit ; l'intérieur en terre cuite et ocre */
-.bt { position: absolute; left: 0; top: 0; transform-style: preserve-3d; --S: calc(280 * var(--u)); --ep: calc(4 * var(--u));
-  transform: translate3d(calc(var(--x) * var(--u)), 0, calc(var(--z) * var(--u))); }
-.bt > :where(span) { position: absolute; display: block; left: calc(var(--S) / -2); top: calc(var(--S) * -1); width: var(--S); height: var(--S); backface-visibility: hidden; }
-.btAv, .btHaut, .btG { background-color: #E7E2DA; background-image: repeating-linear-gradient(0deg, rgba(120, 105, 90, .07) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(120, 105, 90, .06) 0 1px, transparent 1px 3px); }
-.btAv { transform: translateZ(calc(var(--S) / 2)); padding: calc(18 * var(--u)) calc(20 * var(--u)); color: #2B211C; }
-.btHaut { top: calc(var(--S) / -2); transform: translateY(calc(var(--S) * -1)) rotateX(90deg); background-color: #EFEBE4; }
-.btG { transform: rotateY(-90deg) translateZ(calc(var(--S) / 2)); }
-.btFondIn { transform: translateZ(calc(var(--S) / -2 + var(--ep))); background: linear-gradient(160deg, #8E3F29, #B9653F 55%, #CF8A4A); }
-.btGIn { transform: rotateY(90deg) translateZ(calc(var(--S) / -2 + var(--ep))); background: linear-gradient(180deg, #7A3524, #A9583C); }
-.btSolIn { top: calc(var(--S) / -2); transform: translateY(calc(var(--ep) * -1)) rotateX(90deg); background: linear-gradient(90deg, #C98A45, #DDB060); }
-.btBord { left: calc(var(--ep) / -2); width: var(--ep); transform: translateZ(calc(var(--S) / 2 - var(--ep) / 2)) rotateY(90deg) translateZ(calc(var(--S) / 2)); background: #D9D2C7; }
-.btMarque { display: flex; align-items: center; gap: calc(7 * var(--u)); }
-.btLogo { width: calc(17 * var(--u)); height: auto; color: #2B211C; }
-.btMarque i { font-style: normal; font-size: calc(6.2 * var(--u)); line-height: 1.3; letter-spacing: .18em; text-transform: uppercase; }
-.btListe { position: absolute; right: calc(20 * var(--u)); bottom: calc(26 * var(--u)); display: grid; justify-items: end; text-align: right; }
-.btListe b { font-size: calc(14.5 * var(--u)); font-weight: 400; line-height: 1.12; letter-spacing: .03em; text-transform: uppercase; }
-.c3[data-boite] .b3 { pointer-events: none; }
+/* l'accueil : « Découvrir la collection » à gauche, la rangée à droite ; tout le bloc mène à la page Projets */
+.cAcc { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(20px, 4vw, 60px); color: inherit; text-decoration: none; }
+.cAccTexte { display: grid; gap: 16px; justify-items: start; }
+.cAccT { font-size: clamp(2.2rem, 4.6vw, 4.2rem); font-weight: 300; line-height: 1.02; letter-spacing: -.02em; }
+.cAccS { font-size: .95rem; color: var(--gris); }
+.cAccLien { margin-top: 8px; padding: 14px 26px; border: 1px solid var(--encre); font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; transition: background .3s, color .3s; }
+.cAcc:hover .cAccLien, .cAcc:focus-visible .cAccLien { background: var(--encre); color: var(--fond); }
+.cAcc .b3 { pointer-events: none; transition-delay: calc(var(--d, 0) * 60ms); }
+.cAcc:hover .b3 { --lift: 22; }
+.cAcc .b3[data-k='1'] { --d: 1; } .cAcc .b3[data-k='2'] { --d: 2; } .cAcc .b3[data-k='3'] { --d: 3; } .cAcc .b3[data-k='4'] { --d: 4; } .cAcc .b3[data-k='5'] { --d: 5; }
 
-/* les titres : une ligne sous l'étui ; sur la page Projets, une petite photo de chaque livre pour le choisir */
-.c3Titres { list-style: none; margin: calc(10 * var(--u)) auto 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; max-width: 900px; }
-.c3Titres a { display: grid; justify-items: center; gap: 10px; color: var(--gris); text-decoration: none; font-size: .6rem; line-height: 1.5; letter-spacing: .14em; text-transform: uppercase; text-align: center; transition: color .3s; }
-.c3Titres i { font-style: normal; color: var(--accent-f); }
-.c3Titres a:hover, .c3Titres a:focus-visible { color: var(--encre); }
-.c3:not([data-boite]) .c3Titres { gap: 24px clamp(14px, 2.2vw, 30px); margin-top: 34px; }
-.c3:not([data-boite]) .c3Titres li { width: clamp(84px, 9vw, 120px); }
-.c3Titres img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: translate .4s var(--ease), box-shadow .4s; }
-.c3Titres a:hover img { translate: 0 -6px; box-shadow: 0 12px 16px -10px rgba(70, 40, 25, .45); }
-.c3:not([data-boite]):has(.c3Titres li[data-k='0'] a:is(:hover, :focus-visible)) .b3[data-k='0'] { --lift: var(--leve); }
-.c3:has(.b3[data-k='0']:hover) .c3Titres li[data-k='0'] a { color: var(--encre); }
-.c3:not([data-boite]):has(.c3Titres li[data-k='1'] a:is(:hover, :focus-visible)) .b3[data-k='1'] { --lift: var(--leve); }
-.c3:has(.b3[data-k='1']:hover) .c3Titres li[data-k='1'] a { color: var(--encre); }
-.c3:not([data-boite]):has(.c3Titres li[data-k='2'] a:is(:hover, :focus-visible)) .b3[data-k='2'] { --lift: var(--leve); }
-.c3:has(.b3[data-k='2']:hover) .c3Titres li[data-k='2'] a { color: var(--encre); }
-.c3:not([data-boite]):has(.c3Titres li[data-k='3'] a:is(:hover, :focus-visible)) .b3[data-k='3'] { --lift: var(--leve); }
-.c3:has(.b3[data-k='3']:hover) .c3Titres li[data-k='3'] a { color: var(--encre); }
-.c3:not([data-boite]):has(.c3Titres li[data-k='4'] a:is(:hover, :focus-visible)) .b3[data-k='4'] { --lift: var(--leve); }
-.c3:has(.b3[data-k='4']:hover) .c3Titres li[data-k='4'] a { color: var(--encre); }
-.c3:not([data-boite]):has(.c3Titres li[data-k='5'] a:is(:hover, :focus-visible)) .b3[data-k='5'] { --lift: var(--leve); }
-.c3:has(.b3[data-k='5']:hover) .c3Titres li[data-k='5'] a { color: var(--encre); }
+/* la page Projets : en haut le titre et la rangée ; dessous, tous les projets en grand */
+.cPHaut { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(20px, 4vw, 60px); padding-top: calc(var(--header-h) + 10px); }
+.cPTexte { display: grid; gap: 18px; }
+.cPTitre { font-size: clamp(2.6rem, 5vw, 4.4rem); font-weight: 300; line-height: 1; letter-spacing: -.02em; }
+.cPChapeau { max-width: 30ch; font-size: 1.02rem; line-height: 1.6; color: var(--gris); }
+.bandes { list-style: none; margin: clamp(50px, 9vh, 110px) 0 0; padding: 0; display: grid; gap: clamp(60px, 11vh, 130px); }
+.bandeLien { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: clamp(24px, 5vw, 80px); color: inherit; text-decoration: none; }
+.bande:nth-child(even) .bandeLien { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.bande:nth-child(even) .bandeImg { order: 2; }
+.bandeImg { position: relative; display: block; overflow: hidden; aspect-ratio: 4 / 3; background: var(--fond-2); }
+.bandeImg img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.bandeLien:hover .bandeImg img { transform: scale(1.035); }
+.bandeTxt { display: grid; gap: 14px; justify-items: start; }
+.bandeN { display: inline-flex; align-items: center; gap: 12px; font-size: .64rem; letter-spacing: .22em; color: var(--accent-f); }
+/* la couleur du livre, comme sa tranche */
+.bandeN::before { content: ''; width: 6px; height: 34px; background: var(--toile); }
+.bandeT { font-size: clamp(1.7rem, 3vw, 2.7rem); font-weight: 300; line-height: 1.08; }
+.bandeM { font-size: .62rem; line-height: 1.7; letter-spacing: .16em; text-transform: uppercase; color: var(--gris); }
+.bandeX { max-width: 40ch; font-size: .95rem; line-height: 1.75; }
+.bandeO { margin-top: 6px; font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; border-bottom: 1px solid currentColor; padding-bottom: 4px; transition: color .3s; }
+.bandeLien:hover .bandeO { color: var(--accent-f); }
 
 @media (max-width: 760px) {
-  .c3 { --u: clamp(.38px, .122vw, .58px); }
-
-  .c3:not([data-boite]) { --u: clamp(.52px, .16vw, .8px); }
-  .c3:not([data-boite]) .c3Titres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .c3:not([data-boite]) .c3Titres li { width: auto; }
+  .c3 { --u: clamp(.5px, .16vw, .8px); }
+  .cAcc, .cPHaut { grid-template-columns: 1fr; }
+  .bandeLien, .bande:nth-child(even) .bandeLien { grid-template-columns: 1fr; gap: 18px; }
+  .bande:nth-child(even) .bandeImg { order: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .b3 { transition: none; }

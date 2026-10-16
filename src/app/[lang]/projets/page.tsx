@@ -10,16 +10,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return meta(lang, '/projets/', `${t.meta.projetsTitle} · Laura Pras`, t.meta.projetsDescription);
 }
 
-/** Projets : les projets en livres, deux rangées de trois ; un clic ouvre la page du projet. */
+/** Projets : la rangée des livres, puis tous les projets en grand ; un clic ouvre le livre du projet. */
 export default async function Projets({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
-  const t = dict(lang);
   const projets = getProjets(lang);
   return (
     <div className={`wrap ${styles.page}`}>
-      <header className={styles.pHead}>
-        <h1 className={styles.h1}>{t.meta.projetsTitle}</h1>
-      </header>
       <Collection projets={projets} lang={lang} />
     </div>
   );

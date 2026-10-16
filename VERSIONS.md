@@ -21,6 +21,11 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V33 (aperçu des essais)
+
+- **Accueil** : la boîte est retirée. À gauche, en grand, « Découvrir la collection » (2023 — 2026, 6 livres, un par projet) et un bouton « Voir les projets » ; à droite, la rangée des livres. Tout le bloc mène à la page Projets ; au survol, les livres se soulèvent l'un après l'autre.
+- **Projets** : en haut, le titre et la rangée des livres (chaque livre s'ouvre). Dessous, tous les projets en grand, l'un après l'autre, en alternance : grande photo d'un côté ; de l'autre le numéro (avec la couleur de la tranche), le titre, le programme, le lieu, l'année, une phrase de présentation et « Ouvrir le livre ».
+
 ## Essais en cours — V32 (aperçu des essais)
 
 - **Accueil** : une image fixe, comme une photo de coffret. Une boîte cube toilée, ouverte sur le côté (intérieur terre cuite et ocre), la liste des titres sur la face et le logo en petit ; deux livres rangés dedans, la tranche vers l'ouverture ; autour, un livre debout, un couché, une petite pile de deux. Dessous, la liste des projets à ouvrir.

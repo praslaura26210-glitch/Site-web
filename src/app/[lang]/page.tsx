@@ -29,13 +29,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <p className={styles.liens}><Portfolio t={t} /></p>
       </section>
 
-      {/* la collection, bien plus bas : un livre par projet ; un clic l'ouvre et on le feuillette */}
-      <section id="collection" className={`wrap ${styles.projets} ${styles.collection}`} aria-labelledby="titre-collection">
-        <div className={styles.projetsHead}>
-          <h2 id="titre-collection" className="eyebrow">{tr(lang, { fr: 'La collection', en: 'The collection', it: 'La collezione' })}</h2>
-          <span className="eyebrow">{String(projets.length).padStart(2, '0')}</span>
-        </div>
-        <Collection projets={projets} lang={lang} boite />
+      {/* la collection, plus bas : la rangée des livres et « Découvrir la collection », qui mène à la page Projets */}
+      <section id="collection" className={`wrap ${styles.projets} ${styles.collection}`} aria-label={tr(lang, { fr: 'La collection', en: 'The collection', it: 'La collezione' })}>
+        <Collection projets={projets} lang={lang} mode="accueil" />
       </section>
     </>
   );
