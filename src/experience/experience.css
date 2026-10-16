@@ -161,8 +161,7 @@ html[data-vt='cover'] [data-xp-cover]:not([data-xp-ancien]) { view-transition-na
 
 /* plus de place pour les images : l'en-tête s'efface en descendant, revient en remontant */
 html body > header[class] { transition: background-color .5s var(--ease), box-shadow .5s var(--ease), opacity .35s var(--ease), translate .3s var(--ease); }
-/* sur téléphone, la barre du haut se cache en descendant ; sur ordinateur, la barre latérale reste toujours là */
-@media (max-width: 900px) { html[data-entete-cache] body > header[class] { translate: 0 -100%; } }
+html[data-entete-cache] body > header[class] { translate: 0 -100%; }
 
 /* projet suivant : on voit où l'on va avant d'y aller */
 [class*='project-module'][class*='__suivant'] { position: relative; }
@@ -292,10 +291,9 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 
 /* ---------- page projet : le livre du projet, qui se feuillette en faisant défiler (experience/livres.ts, components/home/LivrePages.tsx) ---------- */
 .xp-lp { position: relative; }
-.xp-lp:has(.xp-lp-scene) { height: calc(100svh + var(--n, 6) * 70svh); }
-.xp-lp-scene { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center; align-items: center; padding: calc(var(--header-h) + 6px) 16px 4px; perspective: 2600px; overflow: hidden; }
-.xp-lp-livre { position: relative; width: min(1160px, 92vw, (100svh - var(--header-h) - 110px) * 1.5); aspect-ratio: 3 / 2; transform-style: preserve-3d; will-change: transform; cursor: pointer; }
-.xp-lp-livre[data-simple] { width: min(92vw, (100svh - var(--header-h) - 110px) * .75); aspect-ratio: 3 / 4; }
+.xp-lp-scene { position: relative; height: calc(100svh - var(--header-h) - 70px); min-height: 460px; display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center; align-items: center; padding: 10px 16px 4px; perspective: 2600px; overflow: hidden; touch-action: pan-y; }
+.xp-lp-livre { position: relative; width: min(1160px, 92vw, (100svh - var(--header-h) - 190px) * 1.5); aspect-ratio: 3 / 2; transform-style: preserve-3d; will-change: transform; cursor: pointer; }
+.xp-lp-livre[data-simple] { width: min(92vw, (100svh - var(--header-h) - 190px) * .75); aspect-ratio: 3 / 4; }
 .xp-lp-feuille { position: absolute; top: 0; bottom: 0; left: 50%; width: 50%; transform-origin: left center; transform-style: preserve-3d; }
 .xp-lp-livre[data-simple] .xp-lp-feuille { left: 0; width: 100%; }
 .xp-lp-face { position: absolute; inset: 0; overflow: hidden; background: #FCFBF8; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 24px 40px -22px rgba(43, 33, 28, .45), 0 0 0 1px rgba(43, 33, 28, .04); }

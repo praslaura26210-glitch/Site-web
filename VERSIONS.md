@@ -21,6 +21,13 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V28 (aperçu des essais)
+
+- **Menu** : retour à la barre du haut (la barre latérale V27 est retirée).
+- **Projets en livres** : sur l'accueil (« La collection ») et sur la page Projets, chaque livre s'ouvre sur le livre du projet, qu'on feuillette : un clic à droite tourne la page, à gauche revient en arrière, ou les flèches et les boutons sous le livre, ou le doigt sur téléphone. Les avant/après se glissent dans les pages. La fiche du projet reste accessible depuis le livre.
+- **À propos** : un appareil photo instantané d'autrefois, dessiné ; les tirages du portrait en sortent et descendent doucement.
+- **Outils** : rangés par niveau, dit en mots (Je maîtrise, Très à l'aise, À l'aise, Notions), chaque logiciel avec son icône.
+
 ## Essais en cours — V27 (aperçu des essais)
 
 - **Menu** : sur ordinateur, la barre du haut devient une barre latérale fixe à gauche (le logo et le nom en haut, qui ramènent à l'accueil ; Projets, À propos, Références, Contact dessous ; la langue en bas). Tout le contenu se décale à droite. Sur téléphone, rien ne change (barre du haut et menu).

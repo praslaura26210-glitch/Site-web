@@ -1,7 +1,7 @@
 import { dict, type Lang } from '@/i18n';
 import { getProjets } from '@/lib/content';
 import { meta } from '@/lib/seo';
-import Collection from '@/components/home/Collection';
+import LivresGrille from '@/components/home/LivresGrille';
 import { tr } from '@/lib/tr';
 import Couloir from '@/components/home/Couloir';
 import Portfolio from '@/components/home/Portfolio';
@@ -29,13 +29,13 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <p className={styles.liens}><Portfolio t={t} /></p>
       </section>
 
-      {/* la collection, bien plus bas : l'étui et ses livres ; un clic ouvre un livre */}
+      {/* la collection, bien plus bas : un livre par projet ; un clic l'ouvre et on le feuillette */}
       <section id="collection" className={`wrap ${styles.projets} ${styles.collection}`} aria-labelledby="titre-collection">
         <div className={styles.projetsHead}>
           <h2 id="titre-collection" className="eyebrow">{tr(lang, { fr: 'La collection', en: 'The collection', it: 'La collezione' })}</h2>
           <span className="eyebrow">{String(projets.length).padStart(2, '0')}</span>
         </div>
-        <Collection projets={projets} lang={lang} voir={tr(lang, { fr: 'Voir les projets', en: 'See the projects', it: 'Vedi i progetti' })} />
+        <LivresGrille projets={projets} lang={lang} />
       </section>
     </>
   );

@@ -21,18 +21,18 @@ export async function generateMetadata({ params }: Params) {
   return meta(lang, `/livres/${slug}/`, `${p.titre} · Laura Pras`, `${p.programme}. ${p.texte.slice(0, 120).replace(/\s+\S*$/, '')}…`, couverture(p).img.src);
 }
 
-/** Le livre d'un projet, sorti de la collection : on fait défiler et les pages tournent (experience/livres.ts). */
+/** Le livre d'un projet : on le feuillette, les pages tournent au clic (experience/livres.ts). */
 export default async function Livre({ params }: Params) {
   const { lang, slug } = (await params) as { lang: Lang; slug: string };
   if (!(ORDRE as readonly string[]).includes(slug)) notFound();
   const t = dict(lang);
   const p = getProjet(slug, lang);
   const { img, pos } = couverture(p);
-  const L = tr(lang, { fr: { retour: 'La collection', fiche: 'La fiche du projet' }, en: { retour: 'The collection', fiche: 'Project page' }, it: { retour: 'La collezione', fiche: 'La scheda del progetto' } });
+  const L = tr(lang, { fr: { retour: 'Tous les projets', fiche: 'La fiche du projet' }, en: { retour: 'All projects', fiche: 'Project page' }, it: { retour: 'Tutti i progetti', fiche: 'La scheda del progetto' } });
   return (
     <article className={styles.livrePage} data-projet={p.slug}>
       <nav className={`wrap ${styles.livreNav}`} aria-label={p.titre}>
-        <Link href={`/${lang}/`} className="lien">← {L.retour}</Link>
+        <Link href={`/${lang}/projets/`} className="lien">← {L.retour}</Link>
         <h1 className={styles.livreTitre}>{p.titre}</h1>
         <Link href={`/${lang}/projets/${p.slug}/`} className="lien">{L.fiche} →</Link>
       </nav>

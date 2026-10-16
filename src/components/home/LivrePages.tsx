@@ -98,7 +98,7 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
         if (b.r) images(`${cle}-r`, [b.r]);
         break;
       }
-      case 'materiaux':
+      case 'materiaux': case 'palette':
         // les échantillons tombent sur la page, se chevauchent et flottent un peu
         ajoute(cle, (
           <div className="xp-lv-p xp-lv-mat" data-lv-mat="">
@@ -122,7 +122,7 @@ export function pagesDuLivre(p: Projet, lang: Lang, t: Dict): Page[] {
       case 'trace': images(cle, [b.r, ...(b.avec ? [b.avec] : [])]); break;
       case 'superpose': images(cle, [b.a, b.b]); break;
       case 'cotes': images(cle, [b.r]); break;
-      case 'nuancier': case 'palette': break;
+      case 'nuancier': break;
       case 'lignes': images(cle, b.r.flat()); break;
       case 'construction': images(cle, [b.r]); break;
       case 'comparer':

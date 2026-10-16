@@ -5,6 +5,7 @@ import { tr } from '@/lib/tr';
 import styles from '@/components/pages/pages.module.css';
 import { PARCOURS } from '@/lib/parcours';
 import { LOGICIELS } from '@/lib/logiciels';
+import Appareil from '@/components/pages/Appareil';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = (await params) as { lang: Lang };
@@ -14,8 +15,14 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 }
 
 
-/** La bande du photomaton : la même photo, imprimée dix fois (la bande est doublée pour boucler sans fin). */
-const CASES = 10;
+/** Les niveaux, du plus haut au plus bas, dits en mots (le CV note chaque logiciel sur 5). */
+const NIVEAUX: [number, { fr: string; en: string; it: string }][] = [
+  [5, { fr: 'Je maîtrise', en: 'Expert', it: 'Padroneggio' }],
+  [4, { fr: 'Très à l’aise', en: 'Very confident', it: 'Molto a mio agio' }],
+  [3, { fr: 'À l’aise', en: 'Confident', it: 'A mio agio' }],
+  [2, { fr: 'Notions', en: 'Basics', it: 'Nozioni' }],
+  [1, { fr: 'Débutante', en: 'Beginner', it: 'Principiante' }],
+];
 /** La planche « dessins, photos, bricolage » découpée en morceaux, pour qu'ils bougent chacun un peu. */
 const MORCEAUX = [[1, 79.25, 1.55, 19.95], [2, 2.6, 3.39, 43.5], [3, 51.1, 4.03, 28.55], [4, 79.85, 31.66, 13.3], [5, 44.95, 58.23, 16.6], [6, 61.4, 58.94, 19.85], [7, 82.1, 66.86, 15.35]];
 
@@ -60,23 +67,8 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
     <article className={`wrap ${styles.page} ${styles.apropos}`}>
       {/* qui je suis : un photomaton ; la bande de photos sort de la machine, mon texte à côté */}
       <header className={styles.pm}>
-        {/* la machine en bois : la bande de photos sort par la fente et descend, sans fin */}
-        <div className={styles.pmMachine} aria-hidden="true">
-          <span className={styles.pmRouleau} />
-          <span className={styles.pmFente} />
-          <div className={styles.pmSortie}>
-            {/* deux fois les mêmes cases, pour que la boucle ne se voie pas */}
-            <div className={styles.pmBande}>
-              {Array.from({ length: CASES * 2 }, (_, i) => (
-                <span key={i} className={styles.pmVue}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/media/site/portrait-1000.webp" alt="" />
-                </span>
-              ))}
-            </div>
-          </div>
-          <span className={styles.pmBac} />
-        </div>
+        {/* un appareil photo instantané d'autrefois : les tirages de mon portrait en sortent, sans fin */}
+        <Appareil photo="/media/site/portrait-1000.webp" />
         <div className={styles.pmTexte}>
           <h1 className={styles.pmNom}>Laura Pras</h1>
           <p className="eyebrow">{L.statut}</p>
@@ -112,23 +104,33 @@ export default async function APropos({ params }: { params: Promise<{ lang: stri
         </div>
       </section>
 
-      {/* outils : l'icône de chaque logiciel, son nom, le niveau en cinq points */}
+      {/* outils : les logiciels rangés par niveau, dit en mots ; chacun avec son icône */}
       <section className={styles.outils} aria-labelledby="outils">
         <h2 id="outils" className={styles.aH2}>{L.outils}</h2>
-        <ul className={styles.tuiles}>
-          {logiciels.sort((a, b) => b[1] - a[1]).map(([k, n]) => {
-            const lg = LOGICIELS[k];
+        <div className={styles.niveaux}>
+          {NIVEAUX.map(([n, nom]) => {
+            const ls = logiciels.filter(([, v]) => v === n);
+            if (!ls.length) return null;
             return (
-              <li key={k} className={`${styles.tuile} rv`} data-n={n}>
-                <span className={styles.icone} style={{ background: lg?.fond, color: lg?.couleur }} aria-hidden="true">
-                  {lg?.trace ? <svg viewBox="0 0 24 24"><path d={lg.trace} fill="currentColor" /></svg> : <b>{lg?.sigle || k.slice(0, 2)}</b>}
-                </span>
-                <span className={styles.tuileNom}>{k}</span>
-                <span className={styles.tuilePoints} aria-label={`${n} / 5`}>{[1, 2, 3, 4, 5].map((j) => <i key={j} data-plein={j <= n || undefined} />)}</span>
-              </li>
+              <div key={n} className={`${styles.niveau} rv`}>
+                <h3 className={styles.niveauT}><span className={styles.niveauJauge} style={{ ['--n' as string]: n }} aria-hidden="true" />{nom[lang]}</h3>
+                <ul>
+                  {ls.map(([k]) => {
+                    const lg = LOGICIELS[k];
+                    return (
+                      <li key={k}>
+                        <span className={styles.icone} style={{ background: lg?.fond, color: lg?.couleur }} aria-hidden="true">
+                          {lg?.trace ? <svg viewBox="0 0 24 24"><path d={lg.trace} fill="currentColor" /></svg> : <b>{lg?.sigle || k.slice(0, 2)}</b>}
+                        </span>
+                        {k}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             );
           })}
-        </ul>
+        </div>
       </section>
 
 

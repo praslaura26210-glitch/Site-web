@@ -70,7 +70,10 @@ export function xpAnimePage(page: HTMLElement) {
   return () => fins.forEach((f) => f());
 }
 
-/** Le livre du projet, relié au défilement de la page. */
+/**
+ * Le livre du projet : on tourne les pages au clic (à droite : la suivante, à gauche : la précédente),
+ * avec les flèches du clavier, les boutons sous le livre, ou en glissant le doigt.
+ */
 export function xpLivres(ctx: XPContexte, root: HTMLElement) {
   const sec = root.querySelector<HTMLElement>('[data-livre-projet]');
   const source = sec?.querySelector<HTMLElement>('[data-livre-pages]');
@@ -84,7 +87,6 @@ export function xpLivres(ctx: XPContexte, root: HTMLElement) {
     xpEl('img', { src: source.dataset.couv || '', alt: '', draggable: 'false', style: source.dataset.couvPos ? `object-position:${source.dataset.couvPos}` : null }),
     xpEl('span', { class: 'xp-lv-couv-n', text: `N° ${source.dataset.n || ''}${source.dataset.annee ? ` — ${source.dataset.annee}` : ''}` }),
     xpEl('span', { class: 'xp-lv-couv-t', text: titre }),
-    xpEl('span', { class: 'xp-lv-couv-nom', text: 'Laura Pras' }),
   ]);
   const garde = () => xpEl('div', { class: 'xp-lv-page' }, [xpEl('div', { class: 'xp-lv-p xp-lv-garde' }, [
     xpEl('span', { class: 'xp-lv-garde-n', text: `N° ${source.dataset.n || ''}` }),
@@ -133,17 +135,16 @@ export function xpLivres(ctx: XPContexte, root: HTMLElement) {
     livre.replaceChildren(...feuilles.map((f) => f.el));
     // le nombre de pages à tourner : jusqu'à la dernière page du projet
     maxS = simple ? pages.length - 1 : Math.ceil((pages.length - 1) / 2);
-    sec.style.setProperty('--n', String(maxS));
+    cible = Math.min(cible, maxS); p = Math.min(p, maxS);
     maj();
   };
 
-  const course = () => Math.max(1, sec.offsetHeight - innerHeight);
-  const progres = () => Math.min(1, Math.max(0, -sec.getBoundingClientRect().top / course())) * maxS;
+  // p : où en est le livre (en doubles pages, avec les fractions pendant qu'une page tourne) ; cible : où il va
+  let p = 0, cible = 0, dernier = 0;
   const vu = (p: HTMLElement | null) => { if (p && !vues.has(p)) { vues.add(p); arrets.push(xpAnimePage(p)); } };
   let raf = 0;
   const maj = () => {
     raf = 0;
-    const p = progres();
     let e0 = 0, eDer = 0;
     feuilles.forEach((f, j) => {
       const t = Math.min(1, Math.max(0, (p - j - 0.15) / 0.7));
@@ -165,35 +166,45 @@ export function xpLivres(ctx: XPContexte, root: HTMLElement) {
     suiv.toggleAttribute('disabled', s >= maxS);
   };
   const defile = () => { if (!raf) raf = requestAnimationFrame(maj); };
-
-  // aller à une double page : on fait défiler la page jusqu'à elle
-  const va = (s: number) => {
-    s = Math.min(maxS, Math.max(0, s));
-    const haut = sec.getBoundingClientRect().top + scrollY;
-    scrollTo({ top: haut + (s / maxS) * course() + 1, behavior: xpCalme() ? 'auto' : 'smooth' });
+  // la page tourne : p va vers la cible, à vitesse régulière (une double page en 0,9 s)
+  const tourne = (now: number) => {
+    const dt = Math.min(0.05, (now - dernier) / 1000); dernier = now;
+    const d = cible - p;
+    p = Math.abs(d) < 0.004 ? cible : p + Math.sign(d) * Math.min(Math.abs(d), dt / 0.9);
+    maj();
+    if (p !== cible) requestAnimationFrame(tourne); else anime = false;
   };
-  prec.addEventListener('click', () => va(Math.round(progres()) - 1));
-  suiv.addEventListener('click', () => va(Math.round(progres()) + 1));
+  let anime = false;
+  const va = (s: number) => {
+    cible = Math.min(maxS, Math.max(0, s));
+    if (xpCalme()) { p = cible; maj(); return; }
+    if (!anime) { anime = true; dernier = performance.now(); requestAnimationFrame(tourne); }
+  };
+  prec.addEventListener('click', () => va(cible - 1));
+  suiv.addEventListener('click', () => va(cible + 1));
+  // glisser le doigt : vers la gauche, la page suivante
+  let x0: number | null = null;
+  livre.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse' && !(e.target as Element).closest('[data-lv-cmp]')) x0 = e.clientX; });
+  livre.addEventListener('pointerup', (e) => { if (x0 !== null && Math.abs(e.clientX - x0) > 40) { va(cible + (e.clientX < x0 ? 1 : -1)); livre.dataset.glisse = ''; setTimeout(() => delete livre.dataset.glisse, 50); } x0 = null; });
   livre.addEventListener('click', (e) => {
     const t = e.target as Element;
-    if (t.closest('a, button, [data-lv-cmp]')) return;
+    if (t.closest('a, button, [data-lv-cmp]') || livre.hasAttribute('data-glisse')) return;
     const r = livre.getBoundingClientRect();
-    va(Math.round(progres()) + (e.clientX > r.left + r.width / 2 ? 1 : -1));
+    va(cible + (e.clientX > r.left + r.width / 2 ? 1 : -1));
   });
   const touche = (e: KeyboardEvent) => {
     if (xpSaisie(e) || document.querySelector('dialog[open]')) return;
     const r = sec.getBoundingClientRect();
-    if (r.top > 1 || r.bottom < innerHeight) return;
-    if (e.key === 'ArrowRight') va(Math.round(progres()) + 1); else if (e.key === 'ArrowLeft') va(Math.round(progres()) - 1); else return;
+    if (r.bottom < 80 || r.top > innerHeight - 80) return;
+    if (e.key === 'ArrowRight') va(cible + 1); else if (e.key === 'ArrowLeft') va(cible - 1); else return;
     e.preventDefault();
   };
   const redim = () => { if (etroit() !== simple) relie(); else defile(); };
-  addEventListener('scroll', defile, { passive: true });
   addEventListener('resize', redim);
   addEventListener('keydown', touche);
   relie();
   return () => {
     cancelAnimationFrame(raf); arrets.forEach((f) => f());
-    removeEventListener('scroll', defile); removeEventListener('resize', redim); removeEventListener('keydown', touche);
+    anime = false; removeEventListener('resize', redim); removeEventListener('keydown', touche);
   };
 }

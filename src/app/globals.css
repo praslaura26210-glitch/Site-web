@@ -70,9 +70,3 @@ strong, b { font-weight: 500; }
 
 .lienPdf { display: inline-flex; align-items: center; gap: 10px; }
 .lienPdfInfo { color: var(--gris); }
-
-/* sur ordinateur, le menu devient une barre à gauche : le contenu se décale d'autant */
-@media (min-width: 901px) {
-  :root { --side: 210px; --header-h: 28px; }
-  body { padding-left: var(--side); }
-}

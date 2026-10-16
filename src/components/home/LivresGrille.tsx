@@ -7,9 +7,10 @@ import styles from './home.module.css';
 /**
  * Projets : les six projets en livres, trois par rangée, sur le blanc de la page. On voit la couverture
  * (la première image du projet) et le dos toilé ; au survol le livre se tourne vers nous et s'entrouvre
- * sur sa page de titre. Le titre est écrit dessous ; un clic ouvre la page du projet.
+ * sur sa page de titre. Le titre est écrit dessous ; un clic ouvre le livre du projet, qu'on feuillette
+ * (ou sa fiche, si vers = 'projets').
  */
-export default function LivresGrille({ projets, lang }: { projets: Projet[]; lang: Lang }) {
+export default function LivresGrille({ projets, lang, vers = 'livres' }: { projets: Projet[]; lang: Lang; vers?: 'livres' | 'projets' }) {
   return (
     <ul className={styles.bks}>
       {projets.map((p, i) => {
@@ -18,7 +19,7 @@ export default function LivresGrille({ projets, lang }: { projets: Projet[]; lan
         const n = String(i + 1).padStart(2, '0');
         return (
           <li key={p.slug} className={`${styles.bk} rv`} style={{ ['--i' as string]: i }}>
-            <Link href={`/${lang}/projets/${p.slug}/`} className={styles.bkLien}>
+            <Link href={`/${lang}/${vers}/${p.slug}/`} className={styles.bkLien}>
               <span className={styles.bkScene} aria-hidden="true">
                 <span className={styles.bkVol} style={{ ['--toile' as string]: toile.fond, ['--toileEncre' as string]: toile.encre }}>
                   <span className={styles.bkDos}><span>N° {n}</span></span>
