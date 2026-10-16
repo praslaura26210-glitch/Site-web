@@ -6,7 +6,6 @@ import { api, srcImage, srcPdf } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { compresser } from '../lib/images';
-import { telechargerFichier } from '../lib/telecharger';
 import { dessinConnu, detecter } from '../lib/dessins';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
@@ -134,29 +133,26 @@ const poids = (o?: number) => (!o ? '' : o < 1e6 ? `${Math.max(1, Math.round(o /
 
 const avecPdf = (nom: string) => (/\.pdf$/i.test(nom) ? nom : `${nom}.pdf`);
 
-/** Un PDF joint : on l'ouvre d'un clic ; on peut aussi le renommer, le télécharger ou le retirer. */
+/** Un PDF joint : on l'ouvre d'un clic ; le crayon le renomme, la croix le supprime (après confirmation). */
 function LignePdf({ d, renommer, retirer }: { d: Pdf; renommer: (nom: string) => void; retirer: () => void }) {
-  const { notifier } = useBiblio();
   const [nom, setNom] = useState<string | null>(null);
-  const [envoi, setEnvoi] = useState(false);
+  const [confirmer, setConfirmer] = useState(false);
   const affiche = d.nom.replace(/\.pdf$/i, '');
   function valider() {
     const n = (nom ?? '').trim();
     setNom(null);
     if (n && n !== affiche) renommer(avecPdf(n));
   }
-  async function telecharger() {
-    setEnvoi(true);
-    try {
-      const r = await fetch(srcPdf(d.id));
-      if (!r.ok) throw new Error();
-      const res = await telechargerFichier(await r.blob(), avecPdf(affiche));
-      if (res === 'erreur') notifier('Téléchargement impossible ici.');
-    } catch {
-      notifier('PDF introuvable.');
-    } finally {
-      setEnvoi(false);
-    }
+  if (confirmer) {
+    return (
+      <li className="pdf-confirmer">
+        <span>Supprimer « {affiche} » ?</span>
+        <span className="actions-confirmer">
+          <button className="bouton" onClick={() => setConfirmer(false)}>Annuler</button>
+          <button className="bouton danger" onClick={retirer}>Supprimer</button>
+        </span>
+      </li>
+    );
   }
   return (
     <li>
@@ -173,18 +169,15 @@ function LignePdf({ d, renommer, retirer }: { d: Pdf; renommer: (nom: string) =>
       ) : (
         <a href={srcPdf(d.id)} target="_blank" rel="noreferrer">
           <span>{affiche}</span>
-          <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''} <Icone nom="lien" taille={14} /></span>
+          <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''}</span>
         </a>
       )}
       <span className="actions-pdf">
         <button className="bouton-icone" aria-label={`Renommer ${affiche}`} title="Renommer" onClick={() => setNom(affiche)}>
-          <Icone nom="modifier" taille={15} />
+          <Icone nom="modifier" taille={16} />
         </button>
-        <button className="bouton-icone" aria-label={`Télécharger ${affiche}`} title="Télécharger" onClick={telecharger} disabled={envoi}>
-          <Icone nom="telecharger" taille={16} />
-        </button>
-        <button className="bouton-icone" aria-label={`Retirer ${affiche}`} title="Retirer de la fiche" onClick={retirer}>
-          <Icone nom="fermer" taille={14} />
+        <button className="bouton-icone" aria-label={`Supprimer ${affiche}`} title="Supprimer" onClick={() => setConfirmer(true)}>
+          <Icone nom="fermer" taille={16} />
         </button>
       </span>
     </li>
@@ -204,9 +197,7 @@ function Pdfs({ fiche, enregistrer }: { fiche: Fiche; enregistrer: (f: Fiche, m?
             key={d.id}
             d={d}
             renommer={(nom) => enregistrer({ ...fiche, pdfs: pdfs.map((x) => (x.id === d.id ? { ...x, nom } : x)) }, 'PDF renommé.')}
-            retirer={() => {
-              if (window.confirm(`Retirer « ${d.nom} » de la fiche ?`)) enregistrer({ ...fiche, pdfs: pdfs.filter((x) => x.id !== d.id) }, 'PDF retiré.');
-            }}
+            retirer={() => enregistrer({ ...fiche, pdfs: pdfs.filter((x) => x.id !== d.id) }, 'PDF supprimé.')}
           />
         ))}
       </ul>
