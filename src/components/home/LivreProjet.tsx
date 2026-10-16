@@ -17,7 +17,7 @@ export function livreMeta(lang: Lang, slug: string) {
 
 /**
  * Le livre d'un projet : on le feuillette, les pages tournent au clic (experience/livres.ts).
- * À côté, les autres livres de la collection ; à la dernière page, le livre suivant. Il n'y a plus de fiche projet.
+ * À gauche, les autres livres de la collection ; à droite, le livre suivant. Il n'y a plus de fiche projet.
  */
 export default function LivreProjet({ lang, slug }: { lang: Lang; slug: string }) {
   const t = dict(lang);
@@ -26,7 +26,8 @@ export default function LivreProjet({ lang, slug }: { lang: Lang; slug: string }
   const p = liste[k];
   const suivant = liste[(k + 1) % liste.length];
   const { img, pos } = couverture(p);
-  const L = tr(lang, { fr: { retour: 'La collection', autres: 'Les autres livres' }, en: { retour: 'The collection', autres: 'The other books' }, it: { retour: 'La collezione', autres: 'Gli altri libri' } });
+  const L = tr(lang, { fr: { retour: 'La collection', autres: 'Les autres livres', suivant: 'Livre suivant' }, en: { retour: 'The collection', autres: 'The other books', suivant: 'Next book' }, it: { retour: 'La collezione', autres: 'Gli altri libri', suivant: 'Libro successivo' } });
+  const cs = couverture(suivant);
   return (
     <article className={styles.livrePage} data-projet={p.slug}>
       <nav className={`wrap ${styles.livreNav}`} aria-label={p.titre}>
@@ -55,6 +56,13 @@ export default function LivreProjet({ lang, slug }: { lang: Lang; slug: string }
             ))}
           </ol>
         </nav>
+        {/* le livre suivant, à côté du livre ouvert */}
+        <Link href={`/${lang}/livres/${suivant.slug}/`} className={styles.livreSuivant}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cs.img.srcSmall} alt="" loading="lazy" style={cs.pos ? { objectPosition: cs.pos } : undefined} />
+          <span>{L.suivant} →</span>
+          <b>{suivant.titre}</b>
+        </Link>
       </div>
     </article>
   );

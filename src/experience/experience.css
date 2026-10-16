@@ -312,20 +312,18 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-folio { color: var(--accent-f); font-variant-numeric: tabular-nums; }
 .xp-lv-p h3 { font-size: .6rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-f); margin-bottom: 18px; }
 
-/* la couverture : la photo sur toute la couverture, la tranche à la couleur du livre (comme dans la collection) */
-.xp-lv-couv-recto { background: var(--toile); color: #fff; box-shadow: 0 10px 40px -10px rgba(43, 33, 28, .5); }
-.xp-lv-couv-recto img { position: absolute; inset: 0 0 0 7%; width: 93%; height: 100%; object-fit: cover; }
-.xp-lv-couv-dos { position: absolute; left: 0; top: 0; bottom: 0; width: 7%; background: var(--toile); box-shadow: inset -4px 0 8px rgba(0, 0, 0, .18); }
-.xp-lv-couv-recto::after { content: ''; position: absolute; inset: 0 0 0 7%; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .25), rgba(255, 255, 255, .12) 2%, transparent 7%), linear-gradient(transparent 55%, rgba(20, 12, 8, .55)); }
-.xp-lv-couv-n, .xp-lv-couv-t, .xp-lv-couv-a { position: absolute; z-index: 1; left: 15%; right: 8%; }
+/* la couverture : la photo seule, sur toute la couverture (la couleur du livre n'est que sur sa tranche, dans la collection) */
+.xp-lv-couv-recto { background: #1E1814; color: #fff; box-shadow: 0 10px 40px -10px rgba(43, 33, 28, .5); }
+.xp-lv-couv-recto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.xp-lv-couv-recto::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .22), rgba(255, 255, 255, .1) 1.5%, transparent 5%), linear-gradient(rgba(20, 12, 8, .35), transparent 22%, transparent 60%, rgba(20, 12, 8, .55)); }
+.xp-lv-couv-n, .xp-lv-couv-t, .xp-lv-couv-a { position: absolute; z-index: 1; left: 9%; right: 8%; }
 .xp-lv-couv-n { top: 6%; font-size: .6rem; letter-spacing: .24em; text-shadow: 0 1px 6px rgba(0, 0, 0, .4); }
 .xp-lv-couv-t { bottom: calc(7% + 20px); font-size: clamp(1.1rem, 2.1vw, 1.9rem); font-weight: 400; line-height: 1.1; letter-spacing: .06em; text-transform: uppercase; }
 .xp-lv-couv-a { bottom: 7%; font-size: .6rem; letter-spacing: .22em; opacity: .85; }
 
-/* page de garde : la toile du livre, le numéro et le titre */
-.xp-lv-page:has(> .xp-lv-garde) { background: var(--toile); }
-.xp-lv-garde { inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 12%; text-align: center; color: var(--toileEncre); background: linear-gradient(90deg, rgba(0, 0, 0, .06), transparent 12%); }
-.xp-lv-garde-n { font-size: .6rem; letter-spacing: .24em; opacity: .85; }
+/* page de garde : blanche, le numéro et le titre */
+.xp-lv-garde { inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 12%; text-align: center; color: var(--encre); }
+.xp-lv-garde-n { font-size: .6rem; letter-spacing: .24em; color: var(--accent-f); }
 .xp-lv-garde-t { font-size: clamp(1.2rem, 2.2vw, 1.9rem); font-weight: 300; line-height: 1.15; letter-spacing: .04em; }
 
 /* page d'ouverture du projet */

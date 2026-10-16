@@ -21,6 +21,13 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V32 (aperçu des essais)
+
+- **Accueil** : une image fixe, comme une photo de coffret. Une boîte cube toilée, ouverte sur le côté (intérieur terre cuite et ocre), la liste des titres sur la face et le logo en petit ; deux livres rangés dedans, la tranche vers l'ouverture ; autour, un livre debout, un couché, une petite pile de deux. Dessous, la liste des projets à ouvrir.
+- **Couleur seulement sur la tranche** : couvertures en photo seule (livre ouvert, petits livres à côté), page de garde blanche. Nouvelle couleur pour Illusion d'envol (terre cuite).
+- **Livre suivant** : à droite du livre ouvert (la dernière page « livre suivant » est retirée).
+- **Projets** : inchangé (la rangée de livres et les petites photos).
+
 ## Essais en cours — V31 (aperçu des essais)
 
 - **Accueil** : un étui fermé, en volume, avec le dessin du couloir sur la face et les côtés terre cuite (« Laura Pras · Portfolio » sur la tranche). Les six livres, fins, sont posés devant comme sur la photo de référence : un debout contre l'étui, deux couchés, une pile de trois. Un livre se soulève au survol ; les titres sont écrits dessous.

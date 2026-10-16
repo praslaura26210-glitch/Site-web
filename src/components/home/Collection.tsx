@@ -3,6 +3,7 @@ import type { Lang } from '@/i18n';
 import type { Projet } from '@/lib/content';
 import { tr } from '@/lib/tr';
 import { numeroCollection, rangeCollection } from '@/lib/collection';
+import Logo from '@/components/chrome/Logo';
 import { couverture, TOILES } from './ProjetsGrille';
 import styles from './home.module.css';
 
@@ -29,16 +30,17 @@ export function CouvLivre({ p, k, petit = false }: { p: Projet; k: number; petit
  */
 type Pose = { x: number; z: number; ry: number; couche?: boolean; rz?: number; pile?: number };
 
-function Livre3D({ p, k, pose, lang, ouvrir }: { p: Projet; k: number; pose: Pose; lang: Lang; ouvrir: string }) {
+function Livre3D({ p, k, pose, lang, ouvrir, fige = false }: { p: Projet; k: number; pose: Pose; lang: Lang; ouvrir: string; fige?: boolean }) {
   const { img, pos } = couverture(p);
   const t = TOILES[k % TOILES.length];
+  const El = (fige ? 'span' : Link) as typeof Link;
   return (
-    <Link
+    <El
       href={`/${lang}/livres/${p.slug}/`}
       className={styles.b3}
       data-k={k}
       data-couche={pose.couche || undefined}
-      aria-label={`${p.titre} — ${ouvrir}`}
+      aria-label={fige ? undefined : `${p.titre} — ${ouvrir}`}
       style={{ ['--toile' as string]: t.fond, ['--toileEncre' as string]: t.encre, ['--x' as string]: pose.x, ['--z' as string]: pose.z, ['--ry' as string]: `${pose.ry}deg`, ['--rz' as string]: `${pose.rz || 0}deg`, ['--pile' as string]: pose.pile || 0 }}
     >
       <span className={styles.fC}>
@@ -50,22 +52,24 @@ function Livre3D({ p, k, pose, lang, ouvrir }: { p: Projet; k: number; pose: Pos
       <span className={styles.fT} />
       <span className={styles.fH} />
       <span className={styles.fP} />
-    </Link>
+    </El>
   );
 }
 
-// l'accueil : l'étui au fond, les livres posés devant (un debout contre l'étui, deux couchés, une pile de trois)
-const DEVANT: Pose[] = [
-  { x: 150, z: -95, ry: -10, rz: -5 },
-  { x: -190, z: 250, ry: -16, couche: true },
-  { x: 10, z: 300, ry: 12, couche: true },
-  { x: 290, z: 175, ry: 4, couche: true },
-  { x: 285, z: 172, ry: -6, couche: true, pile: 1 },
-  { x: 292, z: 178, ry: 9, couche: true, pile: 2 },
+// l'accueil, comme une photo de coffret : la boîte ouverte sur le côté (deux livres rangés dedans, la tranche vers l'ouverture),
+// un livre debout à côté, un couché, et une petite pile de deux devant
+const AUTOUR: Pose[] = [
+  { x: -128, z: 66, ry: 180 },
+  { x: -128, z: 44, ry: 180 },
+  { x: 130, z: -150, ry: -8 },
+  { x: 250, z: 230, ry: 72, couche: true },
+  { x: -170, z: 400, ry: -12, couche: true },
+  { x: -150, z: 410, ry: -3, couche: true, pile: 1 },
 ];
+const BOITE = { x: -150, z: -40 };
 
 /**
- * La collection. `boite` (accueil) : l'étui, avec le dessin du couloir sur la face, et les six livres posés devant.
+ * La collection. `boite` (accueil) : une image fixe, la boîte ouverte et les six livres autour ; dessous, la liste des projets.
  * Sans `boite` (page Projets) : les livres debout, en rangée décalée, et dessous une petite photo de chacun pour choisir.
  */
 export default function Collection({ projets, lang, boite = false }: { projets: Projet[]; lang: Lang; boite?: boolean }) {
@@ -93,24 +97,27 @@ export default function Collection({ projets, lang, boite = false }: { projets: 
   );
   return (
     <div className={styles.c3} data-boite={boite || undefined}>
-      <div className={styles.c3Scene}>
+      <div className={styles.c3Scene} {...(boite ? { role: 'img', 'aria-label': `${L.serie} — ${liste.map((p) => p.titre).join(', ')}` } : {})}>
         <div className={styles.c3Monde}>
           <span className={styles.c3Sol} aria-hidden="true" />
           {boite && (
-            <span className={styles.etui} role="img" aria-label={L.nom}>
-              <span className={styles.eAv}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/media/site/dessin-couverture-1000.webp" alt="" draggable={false} />
+            // la boîte : un cube toilé, ouvert sur le côté droit ; dedans, la couleur de terre ; la liste des titres sur la face, le logo en petit
+            <span className={styles.bt} style={{ ['--x' as string]: BOITE.x, ['--z' as string]: BOITE.z }}>
+              <span className={styles.btAv}>
+                <span className={styles.btMarque}><Logo className={styles.btLogo} poids={2.4} label="" /><i>Laura Pras<br />Portfolio</i></span>
+                <span className={styles.btListe}>{liste.map((p) => <b key={p.slug}>{p.titre}</b>)}</span>
               </span>
-              <span className={styles.eAr} />
-              <span className={styles.eG}><b>Laura Pras</b><i>Portfolio</i></span>
-              <span className={styles.eD} />
-              <span className={styles.eH} />
+              <span className={styles.btHaut} />
+              <span className={styles.btG} />
+              <span className={styles.btFondIn} />
+              <span className={styles.btGIn} />
+              <span className={styles.btSolIn} />
+              <span className={styles.btBord} />
             </span>
           )}
           {liste.map((p, k) => (
-            <Livre3D key={p.slug} p={p} k={k} lang={lang} ouvrir={L.ouvrir}
-              pose={boite ? DEVANT[k] : { x: 0, z: -(liste.length - 1 - k) * 78, ry: 0 }} />
+            <Livre3D key={p.slug} p={p} k={k} lang={lang} ouvrir={L.ouvrir} fige={boite}
+              pose={boite ? AUTOUR[k] : { x: 0, z: -(liste.length - 1 - k) * 78, ry: 0 }} />
           ))}
         </div>
       </div>

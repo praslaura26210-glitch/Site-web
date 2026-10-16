@@ -159,20 +159,6 @@ export function pagesDuLivre(p: Projet, k: number, suivant: Projet, lang: Lang, 
     }
   });
 
-  // la dernière page : le livre suivant de la collection, qu'on ouvre d'un clic
-  const s = couverture(suivant);
-  const ks = (k + 1) % TOILES.length;
-  ajoute('fin', (
-    <div className="xp-lv-p xp-lv-fin">
-      <p className="xp-lv-fin-mot">{L.fin}</p>
-      <a className="xp-lv-suivant" href={`/${lang}/livres/${suivant.slug}/`} style={{ ['--toile' as string]: TOILES[ks].fond, ['--toileEncre' as string]: TOILES[ks].encre }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={s.img.srcSmall} alt="" loading="lazy" style={s.pos ? { objectPosition: s.pos } : undefined} />
-        <span>{L.suivant} →</span>
-        <b>{suivant.titre}</b>
-      </a>
-    </div>
-  ));
   return pages;
 }
 

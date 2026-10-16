@@ -51,6 +51,6 @@ export default function ProjetsGrille({ projets, lang, headingLevel = 3 }: { pro
  * encre : la couleur des lettres sur la toile.
  */
 export const TOILES = [
-  { fond: '#CF9A4A', encre: '#FFF8EC' }, { fond: '#C9785A', encre: '#FFF6EE' }, { fond: '#E0BC80', encre: '#5A3A22' },
-  { fond: '#BC6A3C', encre: '#FFF5EA' }, { fond: '#D9A288', encre: '#5A3122' }, { fond: '#8F3B28', encre: '#FBEFE6' },
+  { fond: '#A9583C', encre: '#FBF1E8' }, { fond: '#D4A373', encre: '#4E3220' }, { fond: '#C9785A', encre: '#FFF5EE' },
+  { fond: '#B9864E', encre: '#FFF7EC' }, { fond: '#D9A288', encre: '#5A3122' }, { fond: '#8F3B28', encre: '#FBEFE6' },
 ];
