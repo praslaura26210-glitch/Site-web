@@ -1174,5 +1174,7 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 .pdfs-fiche li { display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--filet); }
 .pdfs-fiche li a { border-bottom: 0; }
 .pdfs-fiche li > a { flex: 1; min-width: 0; }
-.pdfs-fiche .retirer-pdf { opacity: .35; width: 30px; height: 30px; }
-.pdfs-fiche .retirer-pdf:hover, .pdfs-fiche .retirer-pdf:focus-visible { opacity: 1; }
+.pdfs-fiche .actions-pdf { display: inline-flex; gap: 2px; flex: none; }
+.pdfs-fiche .actions-pdf .bouton-icone { width: 32px; height: 32px; opacity: .45; }
+.pdfs-fiche .actions-pdf .bouton-icone:hover, .pdfs-fiche .actions-pdf .bouton-icone:focus-visible { opacity: 1; }
+.pdfs-fiche .renommer-pdf { flex: 1; min-width: 0; font: inherit; font-size: 16px; padding: 9px 10px; margin: 4px 0; border: 1px solid var(--filet); border-radius: 6px; background: var(--fond); color: var(--encre); }

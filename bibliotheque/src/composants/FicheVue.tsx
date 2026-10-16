@@ -1,11 +1,12 @@
 import { Fragment, useEffect, useState } from 'react';
-import type { Fiche, Image } from '../types';
+import type { Fiche, Image, Pdf } from '../types';
 import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage, srcPdf } from '../lib/api';
 import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { compresser } from '../lib/images';
+import { telechargerFichier } from '../lib/telecharger';
 import { dessinConnu, detecter } from '../lib/dessins';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
@@ -131,28 +132,82 @@ function Liens({ fiche }: { fiche: Fiche }) {
 
 const poids = (o?: number) => (!o ? '' : o < 1e6 ? `${Math.max(1, Math.round(o / 1e3))} ko` : `${(o / 1e6).toFixed(1).replace('.', ',')} Mo`);
 
-/** PDF joints (plans, dossier, article) : on les ouvre d'un clic ; on les ajoute avec le « + » des images. */
+const avecPdf = (nom: string) => (/\.pdf$/i.test(nom) ? nom : `${nom}.pdf`);
+
+/** Un PDF joint : on l'ouvre d'un clic ; on peut aussi le renommer, le télécharger ou le retirer. */
+function LignePdf({ d, renommer, retirer }: { d: Pdf; renommer: (nom: string) => void; retirer: () => void }) {
+  const { notifier } = useBiblio();
+  const [nom, setNom] = useState<string | null>(null);
+  const [envoi, setEnvoi] = useState(false);
+  const affiche = d.nom.replace(/\.pdf$/i, '');
+  function valider() {
+    const n = (nom ?? '').trim();
+    setNom(null);
+    if (n && n !== affiche) renommer(avecPdf(n));
+  }
+  async function telecharger() {
+    setEnvoi(true);
+    try {
+      const r = await fetch(srcPdf(d.id));
+      if (!r.ok) throw new Error();
+      const res = await telechargerFichier(await r.blob(), avecPdf(affiche));
+      if (res === 'erreur') notifier('Téléchargement impossible ici.');
+    } catch {
+      notifier('PDF introuvable.');
+    } finally {
+      setEnvoi(false);
+    }
+  }
+  return (
+    <li>
+      {nom !== null ? (
+        <input
+          className="renommer-pdf"
+          value={nom}
+          autoFocus
+          aria-label="Nouveau nom du PDF"
+          onChange={(e) => setNom(e.target.value)}
+          onBlur={valider}
+          onKeyDown={(e) => { if (e.key === 'Enter') valider(); if (e.key === 'Escape') setNom(null); }}
+        />
+      ) : (
+        <a href={srcPdf(d.id)} target="_blank" rel="noreferrer">
+          <span>{affiche}</span>
+          <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''} <Icone nom="lien" taille={14} /></span>
+        </a>
+      )}
+      <span className="actions-pdf">
+        <button className="bouton-icone" aria-label={`Renommer ${affiche}`} title="Renommer" onClick={() => setNom(affiche)}>
+          <Icone nom="modifier" taille={15} />
+        </button>
+        <button className="bouton-icone" aria-label={`Télécharger ${affiche}`} title="Télécharger" onClick={telecharger} disabled={envoi}>
+          <Icone nom="telecharger" taille={16} />
+        </button>
+        <button className="bouton-icone" aria-label={`Retirer ${affiche}`} title="Retirer de la fiche" onClick={retirer}>
+          <Icone nom="fermer" taille={14} />
+        </button>
+      </span>
+    </li>
+  );
+}
+
+/** PDF joints (plans, dossier, article) ; on les ajoute avec le « + » des images. */
 function Pdfs({ fiche, enregistrer }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void }) {
   const pdfs = fiche.pdfs ?? [];
   if (!pdfs.length) return null;
-  function retirer(id: string, nom: string) {
-    if (!window.confirm(`Retirer « ${nom} » de la fiche ?`)) return;
-    enregistrer({ ...fiche, pdfs: pdfs.filter((d) => d.id !== id) }, 'PDF retiré.');
-  }
   return (
     <section className="bloc liens-fiche pdfs-fiche">
       <h2>Documents</h2>
       <ul>
         {pdfs.map((d) => (
-          <li key={d.id}>
-            <a href={srcPdf(d.id)} target="_blank" rel="noreferrer">
-              <span>{d.nom.replace(/\.pdf$/i, '')}</span>
-              <span className="discret">PDF{d.taille ? ` · ${poids(d.taille)}` : ''} <Icone nom="lien" taille={14} /></span>
-            </a>
-            <button className="bouton-icone retirer-pdf" aria-label={`Retirer ${d.nom}`} title="Retirer le PDF" onClick={() => retirer(d.id, d.nom)}>
-              <Icone nom="fermer" taille={14} />
-            </button>
-          </li>
+          <LignePdf
+            key={d.id}
+            d={d}
+            renommer={(nom) => enregistrer({ ...fiche, pdfs: pdfs.map((x) => (x.id === d.id ? { ...x, nom } : x)) }, 'PDF renommé.')}
+            retirer={() => {
+              if (window.confirm(`Retirer « ${d.nom} » de la fiche ?`)) enregistrer({ ...fiche, pdfs: pdfs.filter((x) => x.id !== d.id) }, 'PDF retiré.');
+            }}
+          />
         ))}
       </ul>
     </section>

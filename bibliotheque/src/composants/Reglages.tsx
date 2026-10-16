@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Categorie, Famille, Fiche } from '../types';
 import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage, srcPdf } from '../lib/api';
+import { telechargerFichier } from '../lib/telecharger';
 import { lireFavoris, estVideo, type Favori } from '../lib/favoris';
 import { normaliser } from '../lib/recherche';
 import { creerZip, lireZip } from '../lib/zip';
@@ -494,19 +495,9 @@ function Sauvegarde() {
   const [envoi, setEnvoi] = useState<string | null>(null);
 
   const telecharger = async (blob: Blob, nom: string) => {
-    if (DEMO) {
-      // sur claude.ai, le fichier passe par la fenêtre d'enregistrement de Claude
-      const dl = await (window as any).claude?.use?.('downloads');
-      if (dl) {
-        try { await dl.save({ filename: nom, data: blob }); notifier('Sauvegarde enregistrée.'); } catch (e: any) { if (e?.code !== 'declined') notifier('Enregistrement impossible ici.'); }
-        return;
-      }
-    }
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = nom;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    const r = await telechargerFichier(blob, nom);
+    if (r === 'ok' && DEMO) notifier('Sauvegarde enregistrée.');
+    if (r === 'erreur') notifier('Enregistrement impossible ici.');
   };
   const jour = new Date().toISOString().slice(0, 10);
 

@@ -1,5 +1,6 @@
 const TRACES = {
   plus: 'M12 5v14M5 12h14',
+  telecharger: 'M12 4v11M7 10.5l5 5 5-5M5 19.5h14',
   reglages: 'M4 7h10M18 7h2M4 17h4M12 17h8M14 4v6M8 14v6',
   loupe: 'M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13ZM15.5 15.5 20 20',
   fermer: 'M6 6l12 12M18 6 6 18',
