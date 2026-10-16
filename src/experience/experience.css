@@ -312,15 +312,15 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 .xp-lv-folio { color: var(--accent-f); font-variant-numeric: tabular-nums; }
 .xp-lv-p h3 { font-size: .6rem; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-f); margin-bottom: 18px; }
 
-/* la couverture : la même maquette que sur l'étagère de la collection (toile de couleur, numéro, photo en fenêtre, titre) */
-.xp-lv-couv-recto { display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; padding: 9% 10% 8%; background: var(--toile); color: var(--toileEncre); box-shadow: inset 6px 0 10px -4px rgba(0, 0, 0, .35), 0 10px 40px -10px rgba(43, 33, 28, .5); }
-.xp-lv-couv-recto::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .18), rgba(255, 255, 255, .1) 2%, transparent 7%), linear-gradient(125deg, rgba(255, 255, 255, .1), transparent 45%); }
-.xp-lv-couv-n { display: flex; font-size: .62rem; font-weight: 500; letter-spacing: .22em; }
-.xp-lv-couv-n::after { content: ''; flex: 1; margin: 0 0 .45em 14px; align-self: end; border-bottom: 1px solid currentColor; opacity: .5; }
-.xp-lv-couv-fen { display: block; margin-top: 9%; min-height: 0; overflow: hidden; }
-.xp-lv-couv-fen img { width: 100%; height: 100%; object-fit: cover; }
-.xp-lv-couv-t { margin-top: 8%; font-size: clamp(1.1rem, 2.1vw, 1.9rem); font-weight: 400; line-height: 1.1; letter-spacing: .06em; text-transform: uppercase; }
-.xp-lv-couv-a { margin-top: 8px; font-size: .6rem; letter-spacing: .22em; opacity: .75; }
+/* la couverture : la photo sur toute la couverture, la tranche à la couleur du livre (comme dans la collection) */
+.xp-lv-couv-recto { background: var(--toile); color: #fff; box-shadow: 0 10px 40px -10px rgba(43, 33, 28, .5); }
+.xp-lv-couv-recto img { position: absolute; inset: 0 0 0 7%; width: 93%; height: 100%; object-fit: cover; }
+.xp-lv-couv-dos { position: absolute; left: 0; top: 0; bottom: 0; width: 7%; background: var(--toile); box-shadow: inset -4px 0 8px rgba(0, 0, 0, .18); }
+.xp-lv-couv-recto::after { content: ''; position: absolute; inset: 0 0 0 7%; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .25), rgba(255, 255, 255, .12) 2%, transparent 7%), linear-gradient(transparent 55%, rgba(20, 12, 8, .55)); }
+.xp-lv-couv-n, .xp-lv-couv-t, .xp-lv-couv-a { position: absolute; z-index: 1; left: 15%; right: 8%; }
+.xp-lv-couv-n { top: 6%; font-size: .6rem; letter-spacing: .24em; text-shadow: 0 1px 6px rgba(0, 0, 0, .4); }
+.xp-lv-couv-t { bottom: calc(7% + 20px); font-size: clamp(1.1rem, 2.1vw, 1.9rem); font-weight: 400; line-height: 1.1; letter-spacing: .06em; text-transform: uppercase; }
+.xp-lv-couv-a { bottom: 7%; font-size: .6rem; letter-spacing: .22em; opacity: .85; }
 
 /* page de garde : la toile du livre, le numéro et le titre */
 .xp-lv-page:has(> .xp-lv-garde) { background: var(--toile); }
@@ -390,9 +390,10 @@ figure img, [class*='__carteImg'] img, [class*='__tuile'] img { transition-prope
 /* la dernière page : le livre suivant de la collection */
 .xp-lv-fin { display: grid; align-content: center; justify-items: center; gap: 22px; }
 .xp-lv-fin-mot { font-size: .6rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gris); }
-.xp-lv-suivant { display: grid; gap: 10px; width: min(56%, 260px); padding: 9% 9% 8%; background: var(--toile); color: var(--toileEncre); text-decoration: none; box-shadow: 1px 16px 22px -14px rgba(43, 33, 28, .5); transition: transform .5s var(--ease); }
+.xp-lv-suivant { display: grid; gap: 10px; width: min(56%, 260px); padding: 0 0 8% 9%; background: var(--toile); color: var(--toileEncre); text-decoration: none; box-shadow: 1px 16px 22px -14px rgba(43, 33, 28, .5); transition: transform .5s var(--ease); }
 .xp-lv-suivant:hover { transform: translateY(-6px) rotate(-1deg); }
-.xp-lv-suivant img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.xp-lv-suivant img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.xp-lv-suivant :is(span, b) { padding: 0 9%; }
 .xp-lv-suivant span { margin-top: 6px; font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
 .xp-lv-suivant b { font-size: .95rem; font-weight: 400; line-height: 1.2; letter-spacing: .04em; text-transform: uppercase; }
 

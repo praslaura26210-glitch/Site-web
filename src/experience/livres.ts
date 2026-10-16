@@ -86,10 +86,9 @@ export function xpLivres(ctx: XPContexte, root: HTMLElement) {
   // la couverture et la garde ont la toile du livre dans la collection (même maquette que sur l'étagère)
   const toile = `--toile:${source.dataset.toile || '#A46B57'};--toileEncre:${source.dataset.encre || '#FBF4EA'}`;
   const couverture = () => xpEl('div', { class: 'xp-lv-page xp-lv-couv-recto', style: toile }, [
+    xpEl('img', { src: source.dataset.couv || '', alt: '', draggable: 'false', style: source.dataset.couvPos ? `object-position:${source.dataset.couvPos}` : null }),
+    xpEl('span', { class: 'xp-lv-couv-dos' }),
     xpEl('span', { class: 'xp-lv-couv-n', text: `N° ${source.dataset.n || ''}` }),
-    xpEl('span', { class: 'xp-lv-couv-fen' }, [
-      xpEl('img', { src: source.dataset.couv || '', alt: '', draggable: 'false', style: source.dataset.couvPos ? `object-position:${source.dataset.couvPos}` : null }),
-    ]),
     xpEl('span', { class: 'xp-lv-couv-t', text: titre }),
     xpEl('span', { class: 'xp-lv-couv-a', text: source.dataset.annee || '' }),
   ]);

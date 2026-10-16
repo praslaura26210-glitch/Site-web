@@ -209,49 +209,63 @@
 /* la collection n'apparaît qu'en descendant, bien après le premier écran */
 .collection { margin-top: clamp(120px, 26vh, 300px); }
 
-/* ---------- la collection : les livres de face sur une tablette, la frise des années dessous ---------- */
-.coll { --w: clamp(132px, 12vw, 166px); --g: clamp(16px, 2.2vw, 30px); display: grid; grid-template-columns: repeat(var(--n), var(--w)); column-gap: var(--g); justify-content: center; padding: clamp(40px, 7vh, 80px) 0 10px; }
-.collLivres, .collFrise { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; list-style: none; margin: 0; padding: 0; }
-.collLivres { align-items: end; position: relative; z-index: 1; }
-.collLivre { position: relative; animation: collPose .9s var(--ease) both; animation-delay: calc(var(--k) * 90ms); }
-@keyframes collPose { from { opacity: 0; transform: translateY(14px); } }
-.collLien { position: relative; display: block; color: inherit; text-decoration: none; }
-.collLien .cv { transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
-.collLien:is(:hover, :focus-visible) .cv { transform: translateY(-14px) rotate(-1.2deg); box-shadow: 2px 26px 30px -16px rgba(43, 33, 28, .45); }
-.collLien:focus-visible { outline: none; }
-.collLien:focus-visible .cv { outline: 1.5px solid var(--accent-f); outline-offset: 4px; }
-/* le programme, qui apparaît sous la tablette au survol */
-.collProg { position: absolute; left: 50%; top: calc(100% + 84px); width: calc(var(--w) + var(--g)); translate: -50% 0; text-align: center; font-size: .56rem; line-height: 1.6; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); opacity: 0; transition: opacity .4s var(--ease); pointer-events: none; }
-.collLien:is(:hover, :focus-visible) .collProg { opacity: 1; }
-.collTablette { grid-column: 1 / -1; position: relative; height: 12px; margin: 0 calc(var(--g) * -1); background: linear-gradient(#FBF8F3, #EAE3D9); border-top: 1px solid #fff; box-shadow: 0 14px 18px -12px rgba(43, 33, 28, .35); }
-.collTablette::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 5px; background: #DCD3C7; }
-.collFrise { margin-top: 22px; }
-.collFrise li { position: relative; display: flex; justify-content: center; padding-top: 12px; border-top: 1px solid var(--filet); margin: 0 6px; }
-.collFrise li::before { content: ''; position: absolute; left: 50%; top: -3.5px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--accent); }
-.collFrise span { font-size: .62rem; letter-spacing: .22em; color: var(--gris); }
-.collLegende { grid-column: 1 / -1; margin: 84px 0 0; text-align: center; font-size: .6rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gris); }
+/* ---------- la collection : une boîte carrée debout (le logo en blanc), les livres posés en vrac devant ---------- */
+.coll { position: relative; width: min(100%, 1060px); margin: clamp(30px, 6vh, 70px) auto 0; aspect-ratio: 16 / 10; --bw: 15%; }
+.coll:not([data-boite]) { aspect-ratio: 16 / 9.6; --bw: 18.5%; }
+.coll[data-boite] { margin-top: clamp(90px, 14vh, 140px); }
+/* la boîte : fond et intérieur, puis les livres rangés, puis la face avant */
+.bx { position: absolute; left: 30%; top: 4%; width: 28%; aspect-ratio: 1; }
+.bx svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.bxFond { z-index: 0; }
+.bxFace { z-index: 2; pointer-events: none; filter: drop-shadow(10px 18px 18px rgba(90, 50, 30, .22)); }
+.bxDedans { fill: #6F3726; }
+.bxOmbre { fill: rgba(0, 0, 0, .18); }
+.bxAvant { fill: #A85F45; }
+.bxCote { fill: #8B4A34; }
+.bxBord { fill: none; stroke: rgba(255, 255, 255, .28); stroke-width: .6; }
+.bxNom { fill: #fff; font: 500 6px var(--sans); letter-spacing: .32em; }
+.bxSous { fill: #fff; fill-opacity: .8; font: 400 3.6px var(--sans); letter-spacing: .5em; }
+/* les livres rangés dans la boîte : on voit leur tranche dépasser ; au survol, le livre sort un peu */
+.bxLivres { list-style: none; margin: 0; padding: 0; position: absolute; z-index: 1; left: 28%; top: -30%; width: 40%; height: 100%; display: flex; gap: 2%; align-items: flex-start; }
+.bxLivres li { width: 30%; height: 110%; transition: translate .5s var(--ease); }
+.bxLivres li:nth-child(2) { margin-top: 9%; rotate: 5deg; transform-origin: 50% 100%; }
+.bxLivres li:hover, .bxLivres li:focus-within { translate: 0 -16%; }
+.bxLivres a { display: block; height: 100%; color: inherit; text-decoration: none; }
+.dos { display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; padding: 14px 0; background: var(--toile); color: var(--toileEncre); box-shadow: inset -3px 0 6px rgba(0, 0, 0, .14), inset 2px 0 0 rgba(255, 255, 255, .18); }
+.dos i { font-style: normal; font-size: .52rem; letter-spacing: .1em; }
+.dos b { writing-mode: vertical-rl; transform: rotate(180deg); font-size: .62rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
 
-/* la couverture, la même pour toute la série : la toile de couleur, le numéro, une photo en fenêtre, le titre */
-.cv { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; aspect-ratio: 5 / 7; padding: 11% 11% 10%; background: var(--toile); color: var(--toileEncre); box-shadow: 1px 14px 16px -12px rgba(43, 33, 28, .45); overflow: hidden; }
-/* le dos et le pli de la couverture, à gauche */
-.cv::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .22), rgba(255, 255, 255, .12) 2.5%, rgba(0, 0, 0, .06) 5%, transparent 9%), linear-gradient(125deg, rgba(255, 255, 255, .1), transparent 45%); }
-.cvN { display: flex; justify-content: space-between; font-size: .54rem; font-weight: 500; letter-spacing: .2em; opacity: .9; }
-.cvN::after { content: ''; flex: 1; margin: 0 0 .45em 10px; align-self: end; border-bottom: 1px solid currentColor; opacity: .5; }
-.cvFenetre { display: block; margin-top: 12%; min-height: 0; overflow: hidden; background: rgba(255, 255, 255, .15); }
-.cvFenetre img { width: 100%; height: 100%; object-fit: cover; }
-.cvT { min-height: 2.6em; margin-top: 10%; font-size: .74rem; font-weight: 400; line-height: 1.3; letter-spacing: .08em; text-transform: uppercase; }
-.cvA { margin-top: 6px; font-size: .56rem; letter-spacing: .2em; opacity: .75; }
-.cv[data-petit] { padding: 10%; box-shadow: 1px 8px 10px -8px rgba(43, 33, 28, .45); }
-.cv[data-petit] :is(.cvN, .cvA) { font-size: .42rem; }
-.cv[data-petit] .cvT { font-size: .5rem; letter-spacing: .04em; }
+/* les livres en vrac */
+.vrac { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; }
+.vracLivre { position: absolute; z-index: var(--z); left: var(--x); top: var(--y); width: var(--bw); translate: -50% 0; rotate: var(--r); transition: rotate .55s var(--ease), translate .55s var(--ease), scale .55s var(--ease); animation: vracPose .9s var(--ease) both; animation-delay: calc(.1s + var(--k) * 110ms); }
+@keyframes vracPose { from { opacity: 0; translate: -50% -26px; } }
+.vracLivre:is(:hover, :focus-within) { z-index: 90; rotate: 0deg; translate: -50% -12px; scale: 1.05; }
+.vracLien { display: block; color: inherit; text-decoration: none; }
+.vracLien:focus-visible { outline: none; }
+.vracLien:focus-visible .cv { outline: 1.5px solid var(--accent-f); outline-offset: 4px; }
+.vracCap { display: block; margin-top: 12px; font-size: .6rem; line-height: 1.5; letter-spacing: .14em; text-transform: uppercase; color: var(--encre); }
+.vracCap i { font-style: normal; color: var(--accent-f); margin-right: 4px; }
+
+/* la couverture : la photo sur toute la couverture, la tranche à la couleur du livre */
+.cv { position: relative; display: block; aspect-ratio: 4 / 5; background: var(--toile);
+  box-shadow: 1px 1px 0 #F4EFE7, 2px 2px 0 #E4DCD0, 3px 3px 0 #F4EFE7, 4px 4px 0 #D9CFC1, 8px 22px 26px -12px rgba(70, 40, 25, .45); }
+.cv > img { position: absolute; inset: 0 0 0 9%; width: 91%; height: 100%; object-fit: cover; }
+.cv::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent 9%, rgba(0, 0, 0, .28) 9%, rgba(255, 255, 255, .14) 10.5%, transparent 15%), linear-gradient(125deg, rgba(255, 255, 255, .12), transparent 45%); }
+.cvDos { position: absolute; left: 0; top: 0; bottom: 0; width: 9%; display: grid; place-items: center; overflow: hidden; background: var(--toile); color: var(--toileEncre); container-type: inline-size; }
+.cvDos span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-size: max(6px, 46cqw); font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
+.cv[data-petit] { box-shadow: 1px 1px 0 #F4EFE7, 2px 2px 0 #D9CFC1, 3px 8px 10px -6px rgba(70, 40, 25, .45); }
+.cv[data-petit] .cvDos span { display: none; }
+.cv[data-petit] > img { inset: 0 0 0 12%; width: 88%; }
+.cv[data-petit] .cvDos { width: 12%; }
+.cv[data-petit]::after { background: linear-gradient(90deg, transparent 12%, rgba(0, 0, 0, .25) 12%, transparent 18%); }
+
 @media (max-width: 760px) {
-  .coll { --w: 136px; --g: 18px; justify-content: start; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-inline: var(--gut); margin-inline: calc(var(--gut) * -1); scrollbar-width: none; }
-  .collLivre { scroll-snap-align: center; }
-  .collTablette { margin: 0; }
-  .collProg { display: none; }
-  .collLegende { position: sticky; left: 0; text-align: left; }
+  .coll { aspect-ratio: 3 / 6; --bw: 40%; }
+  .coll:not([data-boite]) { aspect-ratio: 3 / 7.1; --bw: 41%; }
+  .bx { left: 20%; top: 4%; width: 56%; }
+  .vracLivre { left: var(--xm); top: var(--ym); rotate: var(--rm); z-index: var(--zm); }
+  .vracCap { font-size: .54rem; letter-spacing: .1em; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .collLivre { animation: none; }
-  .collLien .cv { transition: none; }
+  .vracLivre { animation: none; transition: none; }
 }

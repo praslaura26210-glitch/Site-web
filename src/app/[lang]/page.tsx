@@ -35,7 +35,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <h2 id="titre-collection" className="eyebrow">{tr(lang, { fr: 'La collection', en: 'The collection', it: 'La collezione' })}</h2>
           <span className="eyebrow">{String(projets.length).padStart(2, '0')}</span>
         </div>
-        <Collection projets={projets} lang={lang} />
+        <Collection projets={projets} lang={lang} boite />
       </section>
     </>
   );

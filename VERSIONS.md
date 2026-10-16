@@ -21,6 +21,12 @@ est retrouvé à partir de son identifiant (colonne de droite).
 - **Références** : catalogue d'images de tailles différentes ; un clic donne une ou deux informations.
 - **Contact**, **Mentions légales** : inchangés.
 
+## Essais en cours — V30 (aperçu des essais)
+
+- **Accueil** : une boîte carrée debout, terre cuite, avec le logo et « Laura Pras · Portfolio » en blanc. Deux livres sont rangés dedans (leur tranche dépasse, ils sortent un peu au survol), les quatre autres sont posés en vrac devant.
+- **Projets** : les six livres posés en vrac, avec leur numéro et leur titre dessous.
+- **Livres** : la photo du projet sur toute la couverture, seule la tranche est en couleur. Couleurs uniquement ocre et terre cuite (ocre jaune, terre cuite claire, sable, ocre rouge, rose argile, terre de Sienne). La frise des années est retirée.
+
 ## Essais en cours — V29 (aperçu des essais)
 
 - **Collection** : les six livres de face sur une tablette, dans l'ordre des années (N° 01 à 06), avec la frise des années dessous. Même maquette pour tous (toile de couleur, numéro, photo en fenêtre, titre, année). Couleurs de toile reprises dans des tons terre : terre cuite, sable, olive, brun, rose poudré, taupe.
