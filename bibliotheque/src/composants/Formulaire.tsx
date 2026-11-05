@@ -271,9 +271,9 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </div>
       </fieldset>
 
-      {t === 'livre' && !DEMO && (
+      {t === 'livre' && !DEMO && !existante && (
         <div className="encadre-isbn">
-          <label className="etiquette" htmlFor="isbn">Remplir automatiquement</label>
+          <label className="etiquette" htmlFor="isbn">Remplir avec le numéro ISBN</label>
           <p className="aide">Tape l’ISBN, le numéro à 13 chiffres au dos du livre (sous le code-barres, il commence par 978). Le titre, l’auteur, l’éditeur et la couverture se remplissent seuls.</p>
           <div className="champ-ligne">
             <input
@@ -534,14 +534,14 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </div>
       </details>
 
-      {existante && <SupprimerDepuisFormulaire fiche={existante} />}
-
       <div className="formulaire-pied">
         <button type="button" className="bouton" onClick={annuler}>Annuler</button>
         <button className="bouton principal" disabled={envoi || imagesEnCours > 0}>
           {envoi ? 'Enregistrement…' : imagesEnCours > 0 ? 'Envoi des images…' : 'Enregistrer'}
         </button>
       </div>
+
+      {existante && <SupprimerDepuisFormulaire fiche={existante} />}
     </form>
   );
 }
@@ -563,17 +563,21 @@ function SupprimerDepuisFormulaire({ fiche }: { fiche: Fiche }) {
       setEnvoi(false);
     }
   }
-  if (!confirmer) {
-    return <button type="button" className="lien-texte petit supprimer supprimer-form" onClick={() => setConfirmer(true)}>Supprimer la fiche…</button>;
-  }
   return (
-    <div className="confirmer-suppression-form" role="alert">
-      <span>Supprimer « {fiche.titre} » ? La fiche, ses notes et ses images seront effacées.</span>
-      <span className="actions-confirmer">
-        <button type="button" className="bouton" onClick={() => setConfirmer(false)} disabled={envoi}>Non</button>
-        <button type="button" className="bouton danger" onClick={supprimer} disabled={envoi}>Oui, supprimer</button>
-      </span>
-    </div>
+    <section className="zone-suppression" aria-label="Supprimer la fiche">
+      <div>
+        <p className="etiquette">Supprimer la fiche</p>
+        <p className="aide">{confirmer ? `Supprimer « ${fiche.titre} » ? La fiche, ses notes et ses images seront effacées.` : 'La fiche, ses notes et ses images seront effacées.'}</p>
+      </div>
+      {confirmer ? (
+        <span className="actions-confirmer">
+          <button type="button" className="bouton" onClick={() => setConfirmer(false)} disabled={envoi}>Annuler</button>
+          <button type="button" className="bouton danger" onClick={supprimer} disabled={envoi}>Oui, supprimer</button>
+        </span>
+      ) : (
+        <button type="button" className="bouton bouton-supprimer" onClick={() => setConfirmer(true)}>Supprimer</button>
+      )}
+    </section>
   );
 }
 

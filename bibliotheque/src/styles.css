@@ -1322,3 +1322,14 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .petit-article:hover .pa-carre { background: color-mix(in srgb, var(--aplat) 8%, var(--fond)); }
 .notes .sommaire .sommaire-sous button { color: #A55135; }
 .notes .sommaire .sommaire-sous button:hover { color: var(--encre); }
+
+/* formulaire : la suppression dans un petit cadre, tout en bas */
+.zone-suppression { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 18px; margin-top: 28px; padding: 14px 16px; border: 1px solid var(--filet); border-radius: 10px; }
+.zone-suppression .etiquette { margin: 0 0 2px; }
+.zone-suppression .aide { margin: 0; }
+.zone-suppression .actions-confirmer { display: inline-flex; gap: 8px; }
+.bouton-supprimer { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 40%, var(--filet)); min-height: 36px; padding: 6px 16px; font-size: 14px; }
+.bouton-supprimer:hover { background: color-mix(in srgb, var(--danger) 8%, var(--fond)); }
+
+/* ressources : de l'air entre le titre de la page et le premier groupe */
+.ressources-par-type { margin-top: 36px; }
