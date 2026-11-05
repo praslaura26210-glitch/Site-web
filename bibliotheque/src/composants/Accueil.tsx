@@ -202,8 +202,8 @@ function Rangee({ rayon: r, fiches }: { rayon: Rayon; fiches: Fiche[] }) {
   );
 }
 
-/** Page Ressources : rangées par type (expositions, podcasts, vidéos, articles, sites), chacune dans sa couleur. */
-const ORDRE_RESSOURCES: TypeFiche[] = ['exposition', 'podcast', 'video', 'article', 'site'];
+/** Page Ressources : rangées par type (articles, vidéos, podcasts, expositions, sites), chacune dans sa couleur. */
+const ORDRE_RESSOURCES: TypeFiche[] = ['article', 'video', 'podcast', 'exposition', 'site'];
 function RessourcesParType({ fiches }: { fiches: Fiche[] }) {
   return (
     <div className="ressources-par-type">

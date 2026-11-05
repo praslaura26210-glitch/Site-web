@@ -1230,62 +1230,27 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .confirmer-suppression-form { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; padding: 12px 14px; border: 1px solid var(--filet); border-radius: 10px; font-size: 14px; }
 .confirmer-suppression-form .actions-confirmer { display: inline-flex; gap: 8px; }
 
-/* ===== Articles, podcasts, expositions : des aplats de couleur de la palette, texte blanc ===== */
-.grille.articles { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
-.accueil .grille.articles { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; }
-@media (max-width: 960px) {
-  .grille.articles { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .accueil .grille.articles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-}
-.carte-article-papier {
-  --aplat: #A9705C;
-  position: relative; height: 100%; min-height: 150px; display: grid; grid-template-rows: 1fr auto;
-  background: var(--aplat); color: #FFFFFF; border-radius: 3px; overflow: hidden;
-  transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease;
-}
-.grille li:nth-child(4n+2) .carte-article-papier.type-article { --aplat: #A55135; }
-.grille li:nth-child(4n+3) .carte-article-papier.type-article { --aplat: #A26030; }
-.grille li:nth-child(4n+4) .carte-article-papier.type-article { --aplat: #9F4523; }
-.carte-article-papier.type-exposition { --aplat: #712724; }
-.carte-article-papier.type-podcast { --aplat: #8C522D; }
-.carte-article-papier.type-video { --aplat: #A86643; }
-.carte-article-papier.type-site { --aplat: #AE875E; }
-.carte-article-papier:hover { transform: translateY(-3px); box-shadow: 0 10px 22px -14px rgb(43 32 27 / .55); }
-.cap-lien { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 8px; color: inherit; text-decoration: none; min-width: 0; }
-.cap-type { display: inline-flex; align-items: center; gap: 6px; font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: rgb(255 255 255 / .82); }
-.cap-type .coeur-petit { color: #FFFFFF; }
-.cap-titre { font: 500 18px/1.15 var(--titre); color: #FFFFFF; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.cap-meta { margin-top: auto; padding-top: 6px; font-size: 11.5px; line-height: 1.35; color: rgb(255 255 255 / .85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cap-lu { justify-self: start; display: inline-flex; align-items: center; gap: 6px; margin: 0 0 11px 14px; padding: 2px 9px 2px 6px; border: 1px solid rgb(255 255 255 / .6); border-radius: 999px; background: none; font: inherit; font-size: 11px; color: #FFFFFF; cursor: pointer; }
-.cap-lu:hover { border-color: #FFFFFF; }
-.cap-coche { width: 10px; height: 10px; border-radius: 50%; border: 1.3px solid currentColor; display: inline-block; }
-.cap-lu[aria-pressed="true"] { background: rgb(255 255 255 / .18); }
-.cap-lu[aria-pressed="true"] .cap-coche { background: currentColor; }
 /* accueil : comme les livres, un petit carré de couleur à la place de la couverture, le titre dessous */
 .accueil .grille.articles { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 28px 18px; }
 @media (max-width: 960px) { .accueil .grille.articles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 10px; } }
 .petit-article { gap: 10px; }
-.pa-carre { --aplat: #A9705C; margin: 0 auto; display: flex; align-items: flex-end; aspect-ratio: 1 / 1; width: 78%; background: var(--aplat); border-radius: 2px; padding: 8px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+.pa-carre { --aplat: #C58B59; margin: 0 auto; display: flex; align-items: flex-end; aspect-ratio: 1 / 1; width: 78%; background: var(--aplat); border-radius: 2px; padding: 8px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
 .petit-article:hover .pa-carre { transform: translateY(-4px); }
 .pa-type { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: rgb(255 255 255 / .9); }
-.grille li:nth-child(4n+2) .petit-article.type-article .pa-carre { --aplat: #A55135; }
-.grille li:nth-child(4n+3) .petit-article.type-article .pa-carre { --aplat: #A26030; }
-.grille li:nth-child(4n+4) .petit-article.type-article .pa-carre { --aplat: #9F4523; }
 .petit-article.type-exposition .pa-carre { --aplat: #712724; }
-.petit-article.type-podcast .pa-carre { --aplat: #8C522D; }
-.petit-article.type-video .pa-carre { --aplat: #A86643; }
-.petit-article.type-site .pa-carre { --aplat: #AE875E; }
+.petit-article.type-podcast .pa-carre { --aplat: #DEBC9A; }
+.petit-article.type-podcast .pa-type { color: #6E4A36; }
+.petit-article.type-video .pa-carre { --aplat: #BD8F79; }
+.petit-article.type-site .pa-carre { --aplat: #D0B19C; }
 .petit-article .carte-titre { font-size: 15.5px; -webkit-line-clamp: 3; }
 .petit-article .carte-meta { font-size: 12px; }
 @media (max-width: 960px) { .pa-carre { width: 100%; padding: 6px; } .pa-type { font-size: 7.5px; letter-spacing: .1em; } .petit-article .carte-titre { font-size: 13.5px; } .petit-article .carte-meta { font-size: 11px; } }
 
-/* ===== Couvertures sans image : un aplat de la palette, le titre en blanc (plus de fond beige ni de filet) ===== */
-.couv-dessinee { background: var(--aplat, #A9705C); color: #FFFFFF; border: 0; outline: none; border-radius: 2px; }
-.couv-dessinee .couv-titre { color: #FFFFFF; }
-.couv-dessinee .couv-type, .couv-dessinee .couv-bas { color: rgb(255 255 255 / .82); }
-.carte-projet.sans-image .couv-dessinee { color: #FFFFFF; }
-.couv-dessinee::after { content: ''; position: absolute; inset: auto 12% 9% 12%; height: 1px; background: rgb(255 255 255 / .35); }
-.couv-dessinee { position: relative; }
+/* ===== Couvertures sans image : papier blanc, un seul filet fin, le titre en terracotta ===== */
+.couv-dessinee { background: #FFFFFF; color: var(--encre); border: 1px solid var(--filet); outline: none; border-radius: 1px; box-shadow: 0 1px 2px rgb(43 32 27 / .06); }
+.couv-dessinee .couv-titre { color: var(--terracotta); }
+.couv-dessinee .couv-type, .couv-dessinee .couv-bas { color: var(--encre-3); }
+.carte-projet.sans-image .couv-dessinee { color: var(--encre); }
 
 /* ===== Ressources : même grille que les livres, rangées par type ===== */
 .grille.articles { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 30px 18px; }
@@ -1293,8 +1258,15 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .ressources-par-type { display: grid; gap: 40px; }
 .titre-groupe { display: flex; align-items: center; gap: 10px; font: 500 22px/1.2 var(--titre); margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--filet); }
 .titre-groupe .compte { font: 400 13px/1 var(--texte); color: var(--encre-3); }
-.pastille-type { width: 12px; height: 12px; border-radius: 2px; background: #A9705C; }
+.pastille-type { width: 12px; height: 12px; border-radius: 2px; background: #C58B59; }
 .groupe-ressources.type-exposition .pastille-type { background: #712724; }
-.groupe-ressources.type-podcast .pastille-type { background: #8C522D; }
-.groupe-ressources.type-video .pastille-type { background: #A86643; }
-.groupe-ressources.type-site .pastille-type { background: #AE875E; }
+.groupe-ressources.type-podcast .pastille-type { background: #DEBC9A; }
+.groupe-ressources.type-video .pastille-type { background: #BD8F79; }
+.groupe-ressources.type-site .pastille-type { background: #D0B19C; }
+
+/* grande image du projet : toujours à la même échelle, même quand la photo est petite (largeur pleine, ou hauteur 82 % de l'écran) */
+.image-principale .grande img {
+  width: min(calc(100vw - 2 * var(--marge)), calc(var(--max) - 2 * var(--marge)), calc(82vh * var(--r, 1.5)));
+  max-width: none; height: auto;
+}
+@media (max-width: 760px) { .image-principale .grande img { width: 100%; } }
