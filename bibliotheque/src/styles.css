@@ -1164,7 +1164,7 @@ body:has(.visionneuse) .toast { bottom: auto !important; top: calc(16px + env(sa
 @media (max-width: 700px) { .rangees .section-tete h2 { font-size: 17px; } }
 
 /* nom de l'application sous le dessin d'ouverture */
-.ouverture-nom { margin: 0; text-align: center; font: 300 32px/1 var(--texte); letter-spacing: .03em; color: var(--terracotta); }
+.ouverture-nom { margin: 0; text-align: center; font: 400 32px/1 var(--texte); letter-spacing: .03em; color: var(--terracotta); }
 
 /* livre : juste un petit « + » pour ajouter un projet présenté, sans texte */
 .encarts li:has(> .encart-ajout-petit) { display: flex; align-items: flex-start; }
@@ -1261,9 +1261,20 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .cap-coche { width: 10px; height: 10px; border-radius: 50%; border: 1.3px solid currentColor; display: inline-block; }
 .cap-lu[aria-pressed="true"] { background: rgb(255 255 255 / .18); }
 .cap-lu[aria-pressed="true"] .cap-coche { background: currentColor; }
-/* accueil : une toute petite case carrée, le type et le titre, rien d'autre */
-.accueil .carte-article-papier { aspect-ratio: 1 / 1; min-height: 0; grid-template-rows: 1fr; }
-.accueil .cap-lien { padding: 9px 10px; justify-content: space-between; }
-.accueil .cap-titre { font-size: 14.5px; line-height: 1.12; -webkit-line-clamp: 5; }
-.accueil .cap-meta, .accueil .cap-lu { display: none; }
-@media (max-width: 960px) { .accueil .cap-titre { font-size: 12.5px; } .accueil .cap-type { font-size: 8px; letter-spacing: .12em; } .accueil .cap-lien { padding: 7px; } }
+/* accueil : comme les livres, un petit carré de couleur à la place de la couverture, le titre dessous */
+.accueil .grille.articles { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 28px 18px; }
+@media (max-width: 960px) { .accueil .grille.articles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 10px; } }
+.petit-article { gap: 10px; }
+.pa-carre { --aplat: #A9705C; margin: 0 auto; display: flex; align-items: flex-end; aspect-ratio: 1 / 1; width: 78%; background: var(--aplat); border-radius: 2px; padding: 8px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+.petit-article:hover .pa-carre { transform: translateY(-4px); }
+.pa-type { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: rgb(255 255 255 / .9); }
+.grille li:nth-child(4n+2) .petit-article.type-article .pa-carre { --aplat: #A55135; }
+.grille li:nth-child(4n+3) .petit-article.type-article .pa-carre { --aplat: #A26030; }
+.grille li:nth-child(4n+4) .petit-article.type-article .pa-carre { --aplat: #9F4523; }
+.petit-article.type-exposition .pa-carre { --aplat: #712724; }
+.petit-article.type-podcast .pa-carre { --aplat: #8C522D; }
+.petit-article.type-video .pa-carre { --aplat: #A86643; }
+.petit-article.type-site .pa-carre { --aplat: #AE875E; }
+.petit-article .carte-titre { font-size: 15.5px; -webkit-line-clamp: 3; }
+.petit-article .carte-meta { font-size: 12px; }
+@media (max-width: 960px) { .pa-carre { width: 100%; padding: 6px; } .pa-type { font-size: 7.5px; letter-spacing: .1em; } .petit-article .carte-titre { font-size: 13.5px; } .petit-article .carte-meta { font-size: 11px; } }

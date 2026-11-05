@@ -30,10 +30,10 @@ const lien = (f: Fiche) => `#/fiche/${encodeURIComponent(f.id)}`;
 const estLu = (f: Fiche) => f.statut === 'lu';
 
 /** Une carte : couverture pour un livre, image d'article. Les projets ont leur propre carte (mosaïque). */
-export function Carte({ fiche: f }: { fiche: Fiche }) {
+export function Carte({ fiche: f, compact = false }: { fiche: Fiche; compact?: boolean }) {
   const rayon = rayonDe(f.type);
   if (rayon === 'projets') return <CarteProjet fiche={f} />;
-  if (rayon === 'articles') return <CarteArticle fiche={f} />;
+  if (rayon === 'articles') return compact ? <PetitArticle fiche={f} /> : <CarteArticle fiche={f} />;
   const meta =
     rayon === 'livres' ? f.auteurs.join(', ') :
     [f.auteurs[0] ?? (f.editeur || domaine(f.source)), f.type !== 'article' ? NOM_TYPE[f.type] : ''].filter(Boolean).join(' · ');
@@ -56,6 +56,23 @@ export function Carte({ fiche: f }: { fiche: Fiche }) {
  * Article, podcast, exposition, vidéo, site : jamais d'image, un aplat de couleur (une teinte par type).
  * Sur l'accueil, une petite case : le type et le titre. Sur la page des articles : qui l'a fait, et « Lu » à cocher.
  */
+/** Accueil : comme un livre, un petit carré de couleur à la place de la couverture, puis le titre et qui l'a fait. */
+function PetitArticle({ fiche: f }: { fiche: Fiche }) {
+  const qui = f.auteurs.length ? f.auteurs.join(', ') : f.editeur || domaine(f.source);
+  return (
+    <a className={`carte petit-article type-${f.type}`} href={lien(f)}>
+      <span className="pa-carre"><span className="pa-type">{NOM_TYPE[f.type]}</span></span>
+      <span className="carte-texte">
+        <span className="carte-titre">{f.titre}</span>
+        <span className="carte-meta">
+          {estLu(f) && <span className="point-lu" title="Lu" aria-label="Lu" />}
+          <span>{qui}</span>
+        </span>
+      </span>
+    </a>
+  );
+}
+
 function CarteArticle({ fiche: f }: { fiche: Fiche }) {
   const { majFiche, notifier } = useBiblio();
   const [envoi, setEnvoi] = useState(false);
@@ -177,11 +194,11 @@ function Mosaique({ fiches }: { fiches: Fiche[] }) {
   );
 }
 
-function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
+function Grille({ fiches, rayon, compact = false }: { fiches: Fiche[]; rayon: Rayon; compact?: boolean }) {
   if (rayon === 'projets') return <Mosaique fiches={fiches} />;
   return (
     <ul className={`grille ${rayon}`}>
-      {fiches.map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
+      {fiches.map((f) => <li key={f.id}><Carte fiche={f} compact={compact} /></li>)}
     </ul>
   );
 }
@@ -374,7 +391,7 @@ function VueAccueil() {
                   <ul className="grille projets">
                     {liste.slice(0, LIMITE.projets).map((f) => <li key={f.id}><PetitProjet fiche={f} /></li>)}
                   </ul>
-                ) : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />}
+                ) : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} compact />}
               </>
             ) : (
               <p className="discret rangee-vide">

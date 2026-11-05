@@ -25,7 +25,7 @@ export function Ouverture({ fin }: { fin: () => void }) {
     const chemins = [...(svg.current?.querySelectorAll('path') ?? [])];
     const longueurs = chemins.map((c) => c.getTotalLength());
     const total = longueurs.reduce((a, b) => a + b, 0) || 1;
-    const duree = calme ? 0 : 1900;
+    const duree = calme ? 0 : 1300;
     let debut = 0;
     chemins.forEach((c, i) => {
       const l = Math.ceil(longueurs[i]) + 1;
