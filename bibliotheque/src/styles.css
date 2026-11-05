@@ -1265,18 +1265,20 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .groupe-ressources.type-site .pastille-type { background: #D0B19C; }
 
 
-/* ===== Essai : ressources en carré blanc, contour et type dans la couleur du type ===== */
-.pa-carre { --aplat: #A55135; background: #FFFFFF; border: 1.5px solid var(--aplat); }
-.pa-type, .petit-article.type-podcast .pa-type { color: var(--aplat); font-weight: 500; }
+/* ===== Essai : ressources en ronds de couleur pleine, une teinte bien distincte par type ===== */
+.pa-carre { --aplat: #A55135; --texte-pastille: #FFFFFF; background: var(--aplat); border: 0; border-radius: 50%; width: 74%; align-items: center; justify-content: center; text-align: center; padding: 10%; }
+.pa-type, .petit-article.type-podcast .pa-type { color: var(--texte-pastille); font-weight: 600; font-size: 9.5px; letter-spacing: .14em; }
 .petit-article.type-article .pa-carre { --aplat: #A55135; }
-.petit-article.type-video .pa-carre { --aplat: #BD8F79; }
-.petit-article.type-podcast .pa-carre { --aplat: #C58B59; }
+.petit-article.type-video .pa-carre { --aplat: #C58B59; }
+.petit-article.type-podcast .pa-carre { --aplat: #E3C7A5; --texte-pastille: #6E3A26; }
 .petit-article.type-exposition .pa-carre { --aplat: #712724; }
-.petit-article.type-site .pa-carre { --aplat: #AE875E; }
-.pastille-type { background: #A55135; }
-.groupe-ressources.type-video .pastille-type { background: #BD8F79; }
-.groupe-ressources.type-podcast .pastille-type { background: #C58B59; }
+.petit-article.type-site .pa-carre { --aplat: #8C522D; }
+.pastille-type { background: #A55135; border-radius: 50%; }
+.groupe-ressources.type-video .pastille-type { background: #C58B59; }
+.groupe-ressources.type-podcast .pastille-type { background: #E3C7A5; }
 .groupe-ressources.type-exposition .pastille-type { background: #712724; }
+.groupe-ressources.type-site .pastille-type { background: #8C522D; }
+@media (max-width: 960px) { .pa-carre { width: 82%; } .pa-type, .petit-article.type-podcast .pa-type { font-size: 7.5px; letter-spacing: .08em; } }
 
 /* sommaire des notes : numéroté, une ligne par sous-partie, deux colonnes sur ordinateur */
 .notes .sommaire { background: #FFFFFF; padding: 18px 20px; }
@@ -1289,3 +1291,16 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .notes .sommaire .sommaire-sous button { color: var(--encre-2); padding: 2px 0; }
 .notes h3.titre-notes { font-size: 26px; padding-top: 10px; border-top: 1px solid var(--filet); }
 .notes h4.titre-notes { font-size: 19px; color: var(--terracotta); }
+
+/* notes : sommaire repliable, titres plus présents, gras plus discret */
+.notes details.sommaire > summary { list-style: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.notes details.sommaire > summary::-webkit-details-marker { display: none; }
+.notes details.sommaire > summary .fleche { color: var(--encre-2); transition: transform .2s ease; display: inline-flex; }
+.notes details.sommaire[open] > summary .fleche { transform: rotate(180deg); }
+.notes details.sommaire[open] > summary { margin-bottom: 12px; }
+.notes .sommaire-titre { margin: 0; }
+.notes strong { font-weight: 500; }
+.notes h3.titre-notes { font: 600 27px/1.2 var(--titre); color: var(--encre); margin-top: 26px; }
+.notes h4.titre-notes { font: 600 20px/1.25 var(--titre); color: #A55135; margin: 14px 0 -10px; }
+.ajout-scan { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--encre-3); cursor: pointer; justify-self: start; }
+.ajout-scan:hover { color: var(--terracotta); }

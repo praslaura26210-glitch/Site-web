@@ -23,7 +23,7 @@ export function nomStatut(s: Statut, t?: TypeFiche): string {
 
 /** Libellé du champ « éditeur » selon le type. */
 export const NOM_EDITEUR: Record<TypeFiche, string> = {
-  livre: 'Éditeur', article: 'Revue', projet: 'Lieu', site: 'Site', video: 'Chaîne ou plateforme', podcast: 'Émission', exposition: 'Lieu',
+  livre: 'Éditeur', article: 'Source', projet: 'Lieu', site: 'Site', video: 'Chaîne ou plateforme', podcast: 'Émission', exposition: 'Lieu',
 };
 
 export const NOM_AUTEUR: Record<TypeFiche, string> = {

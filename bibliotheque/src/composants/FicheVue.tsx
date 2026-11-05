@@ -3,7 +3,7 @@ import type { Fiche, Image, Pdf } from '../types';
 import { rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { api, srcImage, srcPdf } from '../lib/api';
-import { NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
+import { NOM_AUTEUR, NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { compresser } from '../lib/images';
 import { dessinConnu, detecter } from '../lib/dessins';
@@ -121,8 +121,8 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
   return (
     <div className="notes">
       {titres.length >= 3 && (
-        <nav className="sommaire" aria-label="Sommaire">
-          <p className="sommaire-titre">Sommaire</p>
+        <details className="sommaire">
+          <summary><span className="sommaire-titre">Sommaire</span><span className="fleche"><Icone nom="bas" taille={18} /></span></summary>
           <ol>
             {titres.reduce<{ titre: string; sous: string[] }[]>((g, t) => {
               if (t.niveau === 3 && g.length) g[g.length - 1].sous.push(t.texte);
@@ -139,7 +139,7 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
               </li>
             ))}
           </ol>
-        </nav>
+        </details>
       )}
       {blocs.map((lignes, i) => {
         const t = titre(lignes);
@@ -238,7 +238,7 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
         )}
         {livre && (
           <section className="scans-notes" aria-label="Scans et schémas">
-            <h3 className="titre-encarts">Scans et schémas</h3>
+            {images.length > 0 && <h3 className="titre-encarts">Scans et schémas</h3>}
             {images.length > 0 && (
               <ul className="scans-liste">
                 {images.map(({ im, i }) => (
@@ -251,13 +251,13 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
                 ))}
               </ul>
             )}
-            <p className="aide">Touche un scan pour l’agrandir et lui donner une légende : avec la légende « charpente », il s’ouvre quand on touche le mot rouge « charpente » dans les notes.</p>
-            <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
-              <Icone nom="plus" taille={18} />
+            {images.length > 0 && <p className="aide">Touche un scan pour l’agrandir et changer sa légende : la légende « charpente » le relie au mot « charpente » des notes.</p>}
+            <AjoutImage fiche={fiche} enregistrer={enregistrer} className="ajout-scan">
+              <Icone nom="plus" taille={14} /> Ajouter un scan ou un schéma
             </AjoutImage>
           </section>
         )}
-        {avecProjets && <ProjetsCites fiche={fiche} projets={projets} />}
+        {avecProjets && projets.length > 0 && <ProjetsCites fiche={fiche} projets={projets} />}
       </div>
     </details>
   );
@@ -497,6 +497,8 @@ export function FicheVue({ id }: { id: string }) {
   const rayon = rayonDe(fiche.type);
   const livre = rayon === 'livres';
   const projet = rayon === 'projets';
+  // ressource (article, podcast, exposition, vidéo) : comme un projet, sans image : infos, petit descriptif, puis mes notes
+  const ressource = rayon === 'articles';
   const projetsCites = biblio.fiches.filter((f) => f.citeDans?.includes(fiche.id));
   const citePar = (fiche.citeDans ?? []).map((i) => biblio.fiches.find((f) => f.id === i)).filter((f): f is Fiche => Boolean(f));
 
@@ -565,11 +567,11 @@ export function FicheVue({ id }: { id: string }) {
   );
 
   // projet : architecte, lieu, année, sur toute la largeur sous la grande image
-  const infosProjet = projet && (
+  const infosProjet = (projet || ressource) && (
     <dl className="infos-projet">
       {fiche.auteurs.length > 0 && (
         <div>
-          <dt>Architectes</dt>
+          <dt>{projet ? 'Architectes' : NOM_AUTEUR[fiche.type]}</dt>
           <dd>{fiche.auteurs.map((a, i) => <Fragment key={a}>{i > 0 && ', '}<button className="lien-texte nu souligne" onClick={() => voirAuteur(a)}>{a}</button></Fragment>)}</dd>
         </div>
       )}
@@ -577,10 +579,10 @@ export function FicheVue({ id }: { id: string }) {
       {fiche.annee && <div><dt>Année</dt><dd>{fiche.annee}</dd></div>}
       {fiche.prix && <div><dt>Prix</dt><dd>{fiche.prix}</dd></div>}
       <div>
-        <dt>Site web</dt>
+        <dt>{projet ? 'Site web' : 'Lien'}</dt>
         <dd>
           {fiche.source ? (
-            <a href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Site du projet'} ↗</a>
+            <a href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || (projet ? 'Site du projet' : 'Ouvrir')} ↗</a>
           ) : (
             <a href={rechercheWeb(fiche)} target="_blank" rel="noreferrer">Chercher en ligne ↗</a>
           )}
@@ -597,10 +599,10 @@ export function FicheVue({ id }: { id: string }) {
 
   // la grande image (projets, articles) : on la touche pour l'agrandir, la changer, la légender
   // le site web d'un projet est avec ses informations ; pour un article, sous l'image
-  const source = !livre && !projet && fiche.source ? (
+  const source = !livre && !projet && !ressource && fiche.source ? (
     <a className="source-image" href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Source'} ↗</a>
   ) : null;
-  const imagePrincipale = !livre && (fiche.images.length > 0 ? (
+  const imagePrincipale = !livre && !(ressource && !fiche.images.length) && (fiche.images.length > 0 ? (
     <figure className="image-principale">
       <button className="grande" onClick={() => setVisionneuse(0)} aria-label="Agrandir ou modifier l’image">
         <img src={srcImage(fiche.images[0].id)} alt="" style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
@@ -626,7 +628,7 @@ export function FicheVue({ id }: { id: string }) {
   );
 
   const texte = fiche.resume && (
-    projet ? <p className="resume texte-projet">{fiche.resume}</p> : (
+    projet || ressource ? <p className="resume texte-projet">{fiche.resume}</p> : (
       <section className="bloc">
         <h2>Résumé</h2>
         <p className="resume">{fiche.resume}</p>
@@ -706,7 +708,7 @@ export function FicheVue({ id }: { id: string }) {
         <div className="fiche-projet">
           <div className="fiche-contenu large">{titres}</div>
           {imagePrincipale}
-          <div className={`projet-corps${projet ? '' : ' sans-infos'}`}>
+          <div className={`projet-corps${projet || ressource ? '' : ' sans-infos'}`}>
             {infosProjet}
             {texte && <div className="projet-texte">{texte}</div>}
           </div>
