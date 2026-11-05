@@ -1320,3 +1320,5 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .petit-article.type-podcast .pa-carre { --aplat: #C9A27A; }
 .groupe-ressources.type-podcast .pastille-type { background: #C9A27A; }
 .petit-article:hover .pa-carre { background: color-mix(in srgb, var(--aplat) 8%, var(--fond)); }
+.notes .sommaire .sommaire-sous button { color: #A55135; }
+.notes .sommaire .sommaire-sous button:hover { color: var(--encre); }

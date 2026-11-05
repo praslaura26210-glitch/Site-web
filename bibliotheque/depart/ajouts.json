@@ -1321,6 +1321,955 @@
     }
    ],
    "modifier": []
+  },
+  {
+   "version": 4,
+   "ajouter": [
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:52:00.000Z",
+     "editeur": "L’Archipelle",
+     "emplacement": "",
+     "id": "archipelle-chez-alexandre",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T21:16:25.382Z",
+     "motsCles": [
+      "ferme",
+      "rénovation",
+      "artisans"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://larchipelle.fr/chez-alexandre-preparer-la-renovation-d-une-ferme-avec-plusieurs-regards-de-metier/",
+     "sousTitre": "",
+     "statut": "lu",
+     "titre": "Chez Alexandre : préparer la rénovation d’une ferme avec plusieurs regards de métier",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2022",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:32:00.000Z",
+     "editeur": "CAUE du Finistère",
+     "emplacement": "",
+     "id": "caue29-bati-rural",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:32:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Guide illustré pour les porteurs de projets de rénovation de maisons rurales anciennes.",
+     "retenu": "",
+     "source": "https://www.caue-finistere.fr/cahier-de-recommandatio/",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Adapter le bâti rural ancien aux modes de vie actuels",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2020",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:35:00.000Z",
+     "editeur": "CAUE du Gers",
+     "emplacement": "",
+     "id": "caue32-rehabiliter-valoriser",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:35:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Fiche pratique : peut-on réhabiliter une construction dégradée en pleine campagne ? Réhabilitation légère, lourde, très lourde, impossible (ruine).",
+     "retenu": "",
+     "source": "https://www.les-caue-occitanie.fr/sites/default/files/fichiers/ressource/field_fichiers/CAUE32_Rehabiliter-valoriser_le_bati_existant_sept2020.pdf",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Réhabiliter, valoriser le bâti existant",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2021",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:40:00.000Z",
+     "editeur": "Cerema, CREBA",
+     "emplacement": "",
+     "id": "cerema-creba-bonnes-pratiques",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:40:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Série de webinaires du CREBA lancée en 2021 pour partager bonnes pratiques et retours d’expérience.",
+     "retenu": "",
+     "source": "https://www.cerema.fr/fr/actualites/bonnes-pratiques-renovation-energetique-du-bati-ancien",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Bonnes pratiques de rénovation énergétique du bâti ancien",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2024",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:42:00.000Z",
+     "editeur": "Cerema",
+     "emplacement": "",
+     "id": "cerema-outils-bati-ancien",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:42:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Présentation des outils du CREBA, dont un outil d’aide à la décision pour comparer des solutions de réhabilitation sur les plans technique, patrimonial et énergétique.",
+     "retenu": "",
+     "source": "https://www.cerema.fr/fr/actualites/outils-rehabilitation-responsable-du-bati-ancien",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Des outils pour une réhabilitation responsable du bâti ancien",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2024",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:41:00.000Z",
+     "editeur": "Cerema",
+     "emplacement": "",
+     "id": "cerema-retours-experiences",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:41:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://www.cerema.fr/fr/actualites/rehabilitation-batiments-anciens-retours-experiences-aspects",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Réhabilitation de bâtiments anciens : des retours d’expériences sur les aspects techniques et énergétiques",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:33:00.000Z",
+     "editeur": "CREBA, Cerema",
+     "emplacement": "",
+     "id": "creba-centre-ressources",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:33:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Centre de ressources en ligne sur la réhabilitation du bâti d’avant 1948 : performance énergétique, prévention des pathologies (humidité), préservation patrimoniale ; études de cas, outil OPERA.",
+     "retenu": "",
+     "source": "https://www.rehabilitation-bati-ancien.fr/",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "CREBA : centre de ressources pour la réhabilitation responsable du bâti ancien",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2025",
+     "auteurs": [
+      "Nelly Monnier",
+      "Éric Tabuchi"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:58:00.000Z",
+     "editeur": "L’îlot-S, CAUE de Haute-Savoie, Annecy",
+     "emplacement": "",
+     "id": "expo-modernite-ordinaire",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:58:00.000Z",
+     "motsCles": [
+      "architecture ordinaire",
+      "vernaculaire",
+      "Trente Glorieuses",
+      "chalet",
+      "pierre",
+      "bois",
+      "Savoie",
+      "Haute-Savoie",
+      "photographie",
+      "Maurice Novarina"
+     ],
+     "resume": "Exposition du CAUE de Haute-Savoie (cycle « L’éloge du quotidien ») : les photographies de l’Atlas des Régions Naturelles en Savoie et Haute-Savoie, en dialogue avec les archives et les plans, sur l’architecture ordinaire des Trente Glorieuses et le bâti vernaculaire alpin. Commissariat : Carine Bonnot (Silo architectes).",
+     "retenu": "## Le propos\n\nNelly Monnier et Éric Tabuchi, sans commande institutionnelle, partagent leur démarche d’arpentage : ils documentent des gestes d’appropriation, des astuces de décor et de mise en œuvre, et montrent les paradoxes des territoires. L’**architecture du quotidien**, dans son sens le plus strict : parfois invisible, elle constitue pourtant la majeure partie de nos territoires.\n\n**Carine Bonnot**, architecte associée de l’agence Silo architectes et docteure en urbanisme, interroge la production architecturale des Trente Glorieuses à la lumière de son contexte social, d’usage, économique et politique, autour du thème de la modernité ordinaire. En collaboration avec le CAUE de Haute-Savoie, elle a présenté une thèse sur ce thème autour de l’architecte **Maurice Novarina**. Elle enseigne aussi à l’ENSAG [?].\n\n## Les observatoires\n\nLes pratiques d’observatoire du paysage et de l’architecture apparaissent d’abord pour sauvegarder le patrimoine. Au XIXᵉ siècle, à partir de 1830, l’administration des monuments historiques lance un parcours dans les départements pour dresser l’inventaire des monuments d’intérêt historique ou artistique, et les protéger. En parallèle, des démarches d’auteurs font émerger leur propre regard sur des ensembles bâtis plus ordinaires, peu valorisés par le discours patrimonial classique.\n\n## L’ordinaire de la modernité\n\nLes photographies de Haute-Savoie et de Savoie révèlent l’intense aménagement de ces régions, transformées par l’industrie et le tourisme dès le XIXᵉ siècle. Cette dynamique a préparé la construction du siècle suivant, déjà prise dans l’élan de la grande modernité urbaine et architecturale. Si certains y voient un style international, on peut aussi contextualiser la modernité dans les Alpes et analyser son adaptation au site et au climat montagnard : ressources locales, savoir-faire artisanaux séculaires, rencontre d’acteurs venus d’horizons divers.\n\n## L’Atlas des Régions Naturelles\n\nAvec l’[[ARN|Atlas des Régions Naturelles : projet photographique de Nelly Monnier et Éric Tabuchi, lancé en 2017, qui arpente les quelque 450 « régions naturelles » de France pour documenter leur bâti ordinaire.]], la lecture respectueuse des sites et de l’architecture devient un outil de recherche sur la qualité constructive. La photographie pointe les particularités à travers les détails de l’ordinaire : assemblages de bois, ferronnerie, serrurerie, appareils de pierre, bricolages d’enclos, portes de garage, toitures en tôle, décors peints, sculptures, objets détournés ou réemployés.\n\nOn retrouve leurs observations sur [archive-arn.fr](https://www.archive-arn.fr) [?] et dans des livres : sept volumes depuis 2023 [?]. Un panorama de sociétés, témoins de cultures constructives jusque dans leurs moindres états : l’Atlas dévoile les identités régionales, notamment à travers les formes architecturales.\n\nL’exposition rassemble ici le cas des Savoie : leurs expressions vernaculaires, leurs chalets pittoresques, leur réalisme et leur modernité adaptés aux pentes et aux altitudes. Elle croise photographie et architecture : le travail de Nelly et Éric, engagés depuis 2017 dans l’arpentage des paysages et de leur fabrication, dialogue avec l’archive, les plans originaux, les modes de vie et les détails constructifs.\n\nL’enquête montre aussi la vulnérabilité des bâtiments : sur **350 clichés réalisés entre 2021 et 2025, 12 bâtiments ont été démolis depuis** ou vont être transformés.\n\n> Le monde à venir, un monde à la fois à construire et à réparer, ne bénéficiera plus des ressources présentes sur ces photographies, ni des conditions économiques qui ont marqué les Trente Glorieuses. Il devient essentiel de porter un regard lucide sur ce qui nous entoure avant de céder à la tentation de tout reconstruire, souvent de manière moins qualitative. La préservation et la valorisation de l’existant doivent être pensées comme des leviers fondamentaux des transitions sociale, écologique et architecturale.\n\n## Mémoire vernaculaire\n\n### Vallée du Borne\n\nLes forêts d’épicéa incitent les constructeurs à concevoir une architecture empilée et ajustable, faite de [[madriers|Grosses pièces de bois équarries, posées à plat et empilées pour former les murs des chalets.]] posés sur la maçonnerie. Les troncs équarris, disposés à l’horizontale et assemblés à [[mi-bois|Assemblage où chaque pièce est entaillée sur la moitié de son épaisseur pour s’emboîter dans l’autre.]] [?], organisent un plan orthogonal type, orienté vers la vallée : les pièces de vie sur le devant, bardées à l’extérieur, et l’écurie à l’arrière, contre la pente. Les fermes des Aravis illustrent la cohabitation de l’homme et de l’animal, de l’habitat et de l’activité : fabrication du fromage, gestion des productions agricoles.\n\n### Vallée du Haut-Giffre\n\nLa vallée a été marquée par une importante école de maçonnerie, institution clé dans la transmission des savoirs autour de la pierre. Les [[frahans|Tailleurs de pierre et maçons de Samoëns, réunis en confrérie (1659) ; ils ont travaillé dans toute la Savoie et en France.]], tailleurs de pierre et maçons, ont formé dès le début du XVIᵉ siècle [?] une communauté active en Savoie et en France, avec notamment des chantiers de fortification de Vauban (Briançon, Brest, Besançon). Ils ont inventé une langue, le [[mourmé|Argot des frahans de Samoëns, inventé pour parler du métier entre eux.]], pour parler de leur métier.\n\nCes techniques ancestrales ont connu des mutations avec l’industrialisation et la modernisation, mais elles restent le fondement de l’architecture alpine et influencent les pratiques contemporaines.\n\n### Le chalet, de la ferme à la station\n\nL’image collective du bâti alpin s’incarne souvent dans le chalet suisse ou savoyard, devenu symbole de confort montagnard et très attendu dans les stations de ski. Largement développé par la villégiature, il se fonde pourtant sur les architectures vernaculaires, façonnées par le monde paysan et guidées par une économie liée aux matériaux disponibles, aux conditions climatiques et au tandem travail-habitation.\n\n### Bois et pierre\n\nSi le bois semble primer dans l’architecture alpine, la pierre joue aussi un rôle important. Bois et pierre servent à édifier des fermes où la question du socle et de l’accroche au terrain génère des logiques d’empilement : socle en pierre et étage en bois, socle enterré dans la pente, implantation sur l’[[adret|Versant d’une montagne exposé au soleil (au sud). L’ubac est le versant à l’ombre.]] ou l’ubac.\n\nLes saisons rythment les chantiers et favorisent les assemblages à sec, plus rapides à monter. Les toitures très pentues, pour évacuer la neige et sécher vite, perdurent aujourd’hui et résistent largement aux toits-terrasses modernes du XXᵉ siècle. Le débord du toit permet d’installer des loggias et des balcons qui prolongent l’intérieur et accueillent des espaces techniques : séchoir, toilettes, stockage.",
+     "source": "https://ilot-s.caue74.fr/wp-content/uploads/2025/09/Dossier-pedagogique-Modernite-ordinaire.pdf",
+     "sousTitre": "Photographies de l’Atlas des Régions Naturelles",
+     "statut": "lu",
+     "titre": "Modernité ordinaire",
+     "type": "exposition",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:39:00.000Z",
+     "editeur": "Ministère de la Culture, Cerema",
+     "emplacement": "",
+     "id": "guide-rehabilitation-patrimonial",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:39:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Principes et outils pour une approche globale de la réhabilitation énergétique du bâti ancien d’intérêt patrimonial, à destination des porteurs de projets et des services instructeurs.",
+     "retenu": "",
+     "source": "https://www.culture.gouv.fr/thematiques/monuments-sites/ressources/les-guides-guides-techniques-fascicules-et-manuels/guide-de-rehabilitation-energetique-du-bati-d-interet-patrimonial",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Guide de réhabilitation énergétique du bâti d’intérêt patrimonial",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "1999",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:38:00.000Z",
+     "editeur": "ICOMOS",
+     "emplacement": "",
+     "id": "icomos-charte-vernaculaire",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:38:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Charte ratifiée en 1999 au Mexique : principes pour l’entretien et la protection du patrimoine bâti vernaculaire, en complément de la Charte de Venise.",
+     "retenu": "",
+     "source": "https://ciav.icomos.org/?p=334",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Charte du patrimoine bâti vernaculaire",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:48:00.000Z",
+     "editeur": "Mémoire de master, Université de Liège",
+     "emplacement": "",
+     "id": "memoire-matheo-23123",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:48:00.000Z",
+     "motsCles": [
+      "mémoire"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://matheo.uliege.be/handle/2268.2/23123?locale=fr",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Mémoire (MatheO, ULiège)",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2022",
+     "auteurs": [
+      "Manon Vandersmissen"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:49:00.000Z",
+     "editeur": "Mémoire de master, Université de Liège",
+     "emplacement": "",
+     "id": "memoire-vandersmissen",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:49:00.000Z",
+     "motsCles": [
+      "vernaculaire",
+      "rural",
+      "rénovation",
+      "mémoire"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://matheo.uliege.be/handle/2268.2/14292",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Comment tirer profit du bon sens présent dans l’architecture vernaculaire rurale lors de ses rénovations, tout en tenant compte du contexte actuel ?",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:37:00.000Z",
+     "editeur": "Maisons Paysannes d’Ardèche",
+     "emplacement": "",
+     "id": "mpf-ardeche-maison-rurale",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:37:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Dépliant de quatre pages : typologies du bâti rural ardéchois et recommandations de restauration.",
+     "retenu": "",
+     "source": "https://rhone-alpes.maisons-paysannes.org/wp-content/uploads/sites/22/2015/06/4pages-ardeche6b-.pdf",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Comment préserver, restaurer et adapter une maison rurale ancienne ?",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:50:00.000Z",
+     "editeur": "Maisons Paysannes de France, Rhône-Alpes",
+     "emplacement": "",
+     "id": "mpf-ma-bastide",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:50:00.000Z",
+     "motsCles": [
+      "bastide",
+      "maison paysanne"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://rhone-alpes.maisons-paysannes.org/wp-content/uploads/sites/22/2015/06/Ma-bastide-1.pdf",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Ma bastide",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2023",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:36:00.000Z",
+     "editeur": "Parc naturel régional du Pilat",
+     "emplacement": "",
+     "id": "pilat-batiment-plusieurs-vies",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:36:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Résultats du concours sur la réutilisation de bâtiments inoccupés par changement d’usage.",
+     "retenu": "",
+     "source": "https://www.parc-naturel-pilat.fr/wp-content/uploads/2024/08/ParcPilat_ConcourArchiResultat-2023.pdf",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Un bâtiment, plusieurs vies : concours d’architecture 2023",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:51:00.000Z",
+     "editeur": "Parc naturel régional des Monts d’Ardèche",
+     "emplacement": "",
+     "id": "pnr-ardeche-petit-patrimoine",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:51:00.000Z",
+     "motsCles": [
+      "petit patrimoine",
+      "Ardèche",
+      "pierre sèche"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://www.parc-monts-ardeche.fr/decouvrir-les-monts-dardeche/patrimoines/petit-patrimoine-rural/",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Le petit patrimoine rural",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "consulte": "2026-11-05",
+     "credit": "",
+     "creeLe": "2026-11-05T19:55:00.000Z",
+     "editeur": "Paroles d’architectes n° 8, CAUE de l’Hérault",
+     "emplacement": "",
+     "id": "podcast-caue34-architecture-rurale",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:55:00.000Z",
+     "motsCles": [
+      "architecture rurale",
+      "Languedoc-Roussillon"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://www.les-caue-occitanie.fr/productions-caue34/paroles-darchitectes-n8-larchitecture-rurale",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "L’architecture rurale en Languedoc-Roussillon",
+     "type": "podcast",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Laura Foulquier"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "consulte": "2026-11-05",
+     "credit": "",
+     "creeLe": "2026-11-05T19:56:00.000Z",
+     "editeur": "Le Chantier (Anne Ponty)",
+     "emplacement": "",
+     "id": "podcast-foulquier-bergerie",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:56:00.000Z",
+     "motsCles": [
+      "bergerie",
+      "ruine",
+      "rénovation",
+      "pierre",
+      "Sardaigne"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://metacast.app/podcast/le-chantier/icjcDTAx/24-laura-foulquier---renover-une-bergerie-en-ruines-en-sardaigne/ecFf3472",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Rénover une bergerie en ruines en Sardaigne",
+     "type": "podcast",
+     "voirAussi": []
+    },
+    {
+     "annee": "1977",
+     "auteurs": [
+      "Henri Raulin"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:46:00.000Z",
+     "editeur": "Berger-Levrault",
+     "emplacement": "",
+     "id": "raulin-dauphine",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:46:00.000Z",
+     "motsCles": [
+      "architecture rurale",
+      "Dauphiné",
+      "pisé",
+      "vernaculaire"
+     ],
+     "resume": "Premier volume de la collection « L’Architecture rurale française » (dir. Jean Cuisenier, musée des Arts et Traditions populaires) : bâtiments agricoles et maisons rurales du Dauphiné.",
+     "retenu": "",
+     "source": "https://openlibrary.org/books/OL4331440M/Dauphin%C3%A9",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "L’architecture rurale française : Dauphiné",
+     "type": "livre",
+     "voirAussi": []
+    },
+    {
+     "annee": "2014",
+     "auteurs": [
+      "Combas"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© Combas Architectes",
+     "creeLe": "2026-11-05T19:57:00.000Z",
+     "editeur": "Prairie de Fontbonne, Vialas, Lozère, France",
+     "emplacement": "",
+     "id": "refuge-fontbonne",
+     "images": [
+      {
+       "h": 624,
+       "id": "274b968028229b4315cd37c58f1931fe",
+       "w": 830
+      },
+      {
+       "h": 830,
+       "id": "1ee3a84a0252716f424d532d1c18a351",
+       "w": 625
+      },
+      {
+       "h": 830,
+       "id": "1ec41726be3ba800147556d54e3fe763",
+       "w": 625
+      },
+      {
+       "h": 624,
+       "id": "2cf76d7022ebda54d762e0a1c5efbbb5",
+       "w": 830
+      },
+      {
+       "h": 553,
+       "id": "d3ddc88a0c9841900e281d844d6a9225",
+       "w": 830
+      },
+      {
+       "credit": "Coupe",
+       "dessin": true,
+       "h": 594,
+       "id": "c90ad3b2091d348eae1bee535fd80400",
+       "w": 900
+      },
+      {
+       "credit": "Plan",
+       "dessin": true,
+       "h": 743,
+       "id": "4ca3911396ef1ae566860bf100a5c55b",
+       "w": 900
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-11-05T22:40:00.000Z",
+     "motsCles": [
+      "jasse",
+      "clède",
+      "ruine",
+      "pierre sèche",
+      "liège",
+      "ossature bois",
+      "surélévation",
+      "autoconstruction",
+      "châtaigne",
+      "refuge",
+      "Cévennes",
+      "Lozère",
+      "Combas"
+     ],
+     "resume": "Une jasse en ruine, ancienne clède où l’on séchait les châtaignes, transformée en refuge sur les contreforts du mont Lozère, près de Vialas. 38 m² pour 7 000 € HT, autoconstruits en famille entre 2006 et 2014 : c’est le premier projet bâti de l’atelier Combas. Les murs de pierre, confortés, servent de socle à une surélévation à ossature bois habillée de liège, « comme une cabane dans les arbres ».\n\nLe site, à vingt minutes de marche du hameau, a guidé toute la conception : chaque matériau devait pouvoir être monté là-haut et mis en œuvre par la famille elle-même. D’où la règle du « rien de trop », puisée dans le bon sens paysan : faire bien avec peu. « Construire moins pour construire mieux. »\n\nDeux pièces non reliées, comme dans les fermes cévenoles : en bas, dans la roche, un rangement sombre au plancher décollé des murs pour laisser passer l’eau ; en haut, le « perchoir » en liège. La baie sud, volontairement surdimensionnée, est le seul apport de lumière et cadre le paysage comme un tableau ; la baie est reprend l’ancienne porte de la jasse. Les matériaux restent bruts : la structure se lit, le liège n’a besoin d’aucune finition.",
+     "retenu": "",
+     "source": "https://combas.archi/project/refuge-de-fontbonne/",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Refuge de Fontbonne",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "2017",
+     "auteurs": [
+      "Xavier Badan"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:43:00.000Z",
+     "editeur": "Thèse de doctorat, Université Clermont Auvergne",
+     "emplacement": "",
+     "id": "these-badan-elevage",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:43:00.000Z",
+     "motsCles": [
+      "élevage",
+      "paysage",
+      "patrimoine",
+      "montagne"
+     ],
+     "resume": "Comment acteurs agricoles et non agricoles se coordonnent pour construire une représentation collective centrée sur le maintien de l’élevage et la gestion du paysage, sur les sites « Causses et Cévennes » et « Chaîne des Puys – faille de Limagne ».",
+     "retenu": "",
+     "source": "https://theses.fr/2017CLFAL008",
+     "sousTitre": "Organisation et réseaux d’acteurs autour de la construction d’une nouvelle représentation collective",
+     "statut": "a-lire",
+     "titre": "L’élevage montagnard face au paysage patrimonial",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2024",
+     "auteurs": [
+      "Simon Campedel"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:44:00.000Z",
+     "editeur": "Thèse de doctorat, Université de Toulouse (INSA)",
+     "emplacement": "",
+     "id": "these-campedel-parois",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:44:00.000Z",
+     "motsCles": [
+      "vernaculaire",
+      "parois",
+      "thermique",
+      "Occitanie"
+     ],
+     "resume": "Étude de vingt maisons en Occitanie, par des essais et des simulations, sur le comportement des parois anciennes ; propose une « théorie de la transformation des parois hybrides » pour guider leur restauration.",
+     "retenu": "",
+     "source": "https://theses.fr/s268523",
+     "sousTitre": "Éléments pour la compréhension et la transformation des parois hybrides anciennes",
+     "statut": "a-lire",
+     "titre": "Physique de l’architecture vernaculaire",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2018",
+     "auteurs": [
+      "Léa Genis"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:45:00.000Z",
+     "editeur": "Thèse de doctorat, Université Grenoble Alpes",
+     "emplacement": "",
+     "id": "these-genis-pise",
+     "images": [],
+     "liens": [
+      {
+       "titre": "Texte intégral (HAL)",
+       "url": "https://theses.hal.science/tel-02052010"
+      }
+     ],
+     "modifieLe": "2026-11-05T19:45:00.000Z",
+     "motsCles": [
+      "pisé",
+      "terre crue",
+      "réhabilitation",
+      "Isère",
+      "cultures constructives"
+     ],
+     "resume": "Enquête ethnographique sur la réhabilitation du bâti ancien en pisé en Isère : les engagements normatifs, environnementaux et patrimoniaux qui poussent à réhabiliter, et les collectifs qui se forment autour des projets.",
+     "retenu": "",
+     "source": "https://theses.fr/2018GREAH018",
+     "sousTitre": "Engagements, épreuves et attachements autour de la réhabilitation du bâti ancien en pisé en Isère",
+     "statut": "a-lire",
+     "titre": "Réhabiliter le bâti ancien et les cultures constructives",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "2024",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-05T19:34:00.000Z",
+     "editeur": "Parc naturel régional du Vercors",
+     "emplacement": "",
+     "id": "vercors-cabanes",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:34:00.000Z",
+     "motsCles": [
+      "bâti ancien",
+      "réhabilitation"
+     ],
+     "resume": "Valorisation des cabanes non gardées : groupe de travail avec les communes et l’ONF, architecte pris en charge par le Parc, chantiers souvent participatifs.",
+     "retenu": "",
+     "source": "https://www.parc-du-vercors.fr/sites/default/files/actualites/ServiceTourisme/2024_Cabanes_abris.pdf",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Cabanes non gardées, en prendre soin dans le Vercors",
+     "type": "article",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "consulte": "2026-11-05",
+     "credit": "",
+     "creeLe": "2026-11-05T19:54:00.000Z",
+     "editeur": "CAUE des Yvelines",
+     "emplacement": "",
+     "id": "video-caue78-saint-illiers",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:54:00.000Z",
+     "motsCles": [
+      "corps de ferme",
+      "reconversion",
+      "Yvelines"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://www.caue78.fr/content/autour-de-l-expo-l-expo-en-video-episode-13-13",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Reconversion d’un corps de ferme à Saint-Illiers-la-Ville (78)",
+     "type": "video",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "consulte": "2026-11-05",
+     "credit": "",
+     "creeLe": "2026-11-05T19:53:00.000Z",
+     "editeur": "Cité de l’architecture et du patrimoine",
+     "emplacement": "",
+     "id": "video-cite-bati-rural",
+     "images": [],
+     "liens": [],
+     "modifieLe": "2026-11-05T19:53:00.000Z",
+     "motsCles": [
+      "bâti rural",
+      "réhabilitation",
+      "habitat"
+     ],
+     "resume": "",
+     "retenu": "",
+     "source": "https://www.citedelarchitecture.fr/fr/video/rehabiliter-le-bati-rural-ancien-pour-lhabitat",
+     "sousTitre": "",
+     "statut": "a-lire",
+     "titre": "Réhabiliter le bâti rural ancien pour l’habitat",
+     "type": "video",
+     "voirAussi": []
+    }
+   ],
+   "modifier": [
+    {
+     "id": "sebilo-vert",
+     "champs": {
+      "retenu": "## Introduction\n\n> Un lieu de rencontre entre ceux que l’on pourrait appeler les anciens et les modernes : entre la nature la plus brute et les technologies les plus perfectionnées, entre des savoir-faire séculaires et modernes, entre des traditions locales et des influences du monde entier, entre l’authenticité et la modernité.\n\nLe livre est à la fois un voyage au cœur du patrimoine historique et architectural, et un voyage dans le temps à la recherche des techniques et des traditions perdues.\n\n## 1 – Habiter sainement\n\nLe temps est venu de reconsidérer nos certitudes : nous avons longtemps vu la terre comme une ressource inépuisable pour satisfaire nos désirs. Consommer toujours plus, avoir chaud l’hiver et frais l’été, se déplacer au bout du monde vite et confortablement, faire de nos maisons des lieux hors de l’espace et du temps. **En avons-nous vraiment besoin ?**\n\n### Maison saine\n\nVouloir une maison saine, c’est d’abord se donner les moyens de comprendre ce que recouvre ce concept. Une maison saine peut être en même temps belle et confortable, dessinée par un architecte talentueux, édifiée par des artisans qualifiés, et modérément coûteuse, à la construction comme à l’usage.\n\n> Une maison n’est saine que si elle ne porte atteinte ni à ceux qui la construisent, ni à ceux qui y vivent, ni à ceux qui l’entourent, et plus largement qu’elle ne porte pas préjudice à l’équilibre de la planète.\n\nBâtir sain, c’est aussi revendiquer la responsabilité de chacun dans le bien-être de la communauté tout entière.\n\n- Empreinte écologique : l’impact des activités d’un individu sur l’environnement.\n- « Le bonheur, c’est la santé. »\n\n### Confort et santé\n\nLe regard porté sur ces trois données dépend de l’histoire personnelle et des goûts de chacun : ce qui paraît insupportable à l’un sera apprécié par l’autre. Mais la plupart du temps, on fait des concessions par manque de moyens, de temps ou de convictions profondes.\n\n- **Le confort thermique** : le plus recherché, perçu comme indispensable. Pour l’atteindre, on utilise parfois des matériaux et des équipements nocifs, à l’origine de bien des troubles.\n- **Le confort hygrométrique** : le taux d’humidité joue un rôle important dans le confort thermique. Un air chaud et humide est plus difficile à supporter qu’un air chaud et sec.\n- **Le confort lumineux.**\n- **Le confort acoustique.**\n- **L’ambiance** : les mots et les idées.\n\n### Chantier et recyclage\n\nLes écologistes dénoncent et essaient de faire comprendre que la maison, d’une valeur considérable, doit être respectée si l’on veut la voir durer pour les générations futures.\n\n**La gestion du chantier.** Un chantier peut être très destructeur : modification de la topographie (décaissement, comblement), végétation mise à mal, engins polluants et bruyants, terrain encombré de déchets d’emballage et de restes de matériaux. Il faut éviter les dégradations irréversibles, se fondre dans le paysage plutôt que le violenter, épargner au maximum la végétation, limiter les engins, récupérer pour recycler, contrôler les emballages.\n\n> Le terrain investi pour bâtir a une histoire, et d’autres y habitent déjà : la faune et la flore. Considérer que le site où l’on s’installe a déjà des copropriétaires donne un autre regard sur le projet et oblige à considérer que nous faisons partie d’un monde où chacun a son mot à dire.\n\n**La recyclabilité.** Un matériau est recyclable quand, après la démolition de la maison, il peut être réemployé tel quel ou après transformation dans une autre construction, ou encore retourner au sol. La terre, le bois, la brique sont presque par définition recyclables. Il en va tout autrement des nombreux matériaux industriels qui finissent en décharge, avec des risques de pollution.\n\n### HQE, bioconstruction\n\n- HQE : la démarche est née dans les années 1990 (le livre dit 1990) et a introduit le développement durable dans l’acte de bâtir, surtout pour les bâtiments publics et tertiaires. Elle sensibilise tous les acteurs à l’impact d’un bâtiment, neuf ou rénové, sur tout son cycle de vie : programmation, conception, construction, gestion, utilisation, jusqu’à la démolition. Quatre thèmes :\n- **éco-construction** : relation du bâtiment avec son environnement immédiat, choix intégré des produits et procédés, chantier à faibles nuisances ;\n- **éco-gestion** : énergie, eau, déchets d’activité, entretien et maintenance ;\n- **confort** : hygrothermique, acoustique, visuel et olfactif ;\n- **santé** : qualité sanitaire des espaces, de l’air et de l’eau.\n\nBioconstruction : c’est la construction vivante, qui n’est pas en rupture avec la vie et participe au cadre naturel où elle s’inscrit. Construire avec la vie, avec des matériaux qui respirent, dont ni la préparation ni l’usage ne causent de dommage à la nature. Une construction généreuse, qui ne met pas en danger ceux qui l’occupent mais favorise au contraire leur bien-être. Construire avec des convictions morales et éthiques.\n\n> Il faut considérer que le monde n’est pas un supermarché.\n\n## 2 – Bâti ancien\n\n### Patrimoine\n\nChacun fait fructifier ses biens privés avant de les transmettre, mais l’homme s’est montré étonnamment insoucieux de l’héritage collectif. Conserver les traces de l’histoire semble aujourd’hui important pour tout le monde. Un château, une vieille maison de village, un pont romain, un quartier urbain, une vallée de montagne : autant d’éléments qui méritent d’être entretenus, préservés et mis en valeur.\n\n**Important :** être propriétaire d’une maison ancienne n’est pas un handicap pour vivre dans une maison verte. La plupart des aménagements et matériaux préconisés pour une construction neuve saine trouvent leur place dans un bâtiment vieux de quelques dizaines ou centaines d’années. Les maisons traditionnelles intègrent déjà une bonne partie des préceptes de l’habitat écologique.\n\nMais une maison ancienne a souvent subi des modifications qui altèrent ses qualités : interventions malheureuses sur les murs, la couverture, la charpente, les ouvertures ; enduits inappropriés ; matériaux artificiels sur des matériaux naturels ; installations électriques mal conçues ; abords mal gérés. Ces erreurs retirent à l’édifice ses avantages et peuvent même le rendre dangereux pour ses occupants.\n\n**Pour rendre saine une maison ancienne, on établit d’abord un bilan technique précis.** On distingue le bon du mauvais, ce qui doit être valorisé et ce qui sera supprimé. C’est ce bilan qui révélera l’histoire de la maison et la logique de son fonctionnement. On peut ensuite envisager, en connaissance de cause, une mise au confort qui assure à la fois la durabilité de l’édifice et le bien-être des habitants.\n\n> Un bâtiment ne se brutalise pas : on doit toujours chercher à s’adapter à l’existant, et ne pas vouloir faire entrer à tout prix un projet de vie dans une maison qui n’est pas faite pour le recevoir.\n\nAvec une technologie souvent rudimentaire et des moyens modestes, les constructeurs d’autrefois ont résolu avec un maximum d’intelligence des problèmes techniques difficiles. **L’état de dégradation des maisons anciennes est rarement dû à des vices cachés ou à des défauts de construction : il découle tout simplement du manque d’entretien et de la méconnaissance des principes de fonctionnement qui les régissent.**\n\n### Diversité régionale\n\nLa France est sans doute le pays où, sur une faible superficie, s’exprime la plus grande diversité d’habitat. On parle de maison normande, alsacienne, auvergnate… mais il n’est pas rare de trouver dans un même village des maisons qui ne sont liées ni par leurs matériaux, ni par leur architecture, ni par leur décor.\n\nPour les plus pauvres, c’est le glanage de matériaux trouvés dans les champs, les landes et les forêts qui fournissait de quoi bâtir : pierres, galets, silex, terre, branchages, roseaux des bords de rivière. Utilisés bruts, ils étaient mis en œuvre par les paysans eux-mêmes.\n\n### Bâtiments agricoles\n\nChaque type d’exploitation demande des bâtiments spécifiques pour abriter les récoltes, le matériel et les animaux. Selon les régions, le climat et la richesse de la propriété, ces constructions sont vastes et robustes ou sommaires et fragiles : pigeonnier, grange, fenil, étable, écurie, bergerie, séchoir, chai…\n\nLe passage de l’élevage à la culture, ou du blé à l’arboriculture, a rendu obsolètes des bâtiments et des aménagements du paysage. Le machinisme a aussi rendu difficile l’usage de bâtiments inadaptés à la taille des nouvelles machines. Ce patrimoine désaffecté a souvent été réutilisé : lingerie, piscine, chambre d’amis… toutes les reconversions se rencontrent, dont celle de la grange en maison individuelle.\n\n### Restaurer\n\n> Cet héritage architectural exceptionnel doit être gardé comme une véritable encyclopédie des savoir-faire, qu’il faut savoir sonder pour trouver des réponses aux enjeux d’aujourd’hui.\n\nVouloir imprimer sa marque à une maison ancienne et en tirer le maximum de satisfaction est légitime. Mais il faut le faire en connaissance de cause : prendre en compte toute son histoire, peser les avantages qu’elle offre, mesurer son originalité culturelle ou scientifique. Une charpente ou une maçonnerie de qualité exceptionnelle, un décor de façade remarquable, un arbre peuvent freiner les ambitions du propriétaire. Même sans règle administrative, il doit porter un jugement impartial sur ses projets : faire disparaître des traces d’histoire uniques ne se fait pas à la légère.\n\n> Vivre dans une maison ancienne saine, mais sans âme, n’aurait pas beaucoup de sens. Les solutions techniques existent toujours pour concilier le respect de l’existant et la mise au confort moderne.\n\n### Lire les traces\n\nPlus la construction est ancienne et plus les occupants qui s’y sont succédé sont nombreux, plus le décryptage est complexe. Une maison ancienne est toujours le reflet des événements qui ont jalonné la vie de ses habitants et, au-delà, de la société tout entière. Les murs et les toits racontent cette histoire ; il faut savoir l’interpréter.\n\nÀ l’intérieur, l’évolution du confort est aussi lisible : **le mode de chauffage reflète à lui seul le niveau de vie des propriétaires et atteste des innovations successives.**\n\nUne maison ne se comprend pas sans ses abords : terrasses, sols extérieurs, clôtures végétales, murets, arbres de la cour et du jardin, bâtiments annexes. Tous ont répondu aux besoins précis des occupants successifs : alimentation, hygiène, protection contre le climat, ou simplement le plaisir.\n\n### Protections, MH\n\nLe propriétaire ne peut pas toujours réaliser les travaux qu’il juge nécessaires si sa maison fait l’objet d’une protection au titre des monuments historiques ou se trouve dans une zone de protection.\n\n## 3 – Analyser le site\n\n### Composantes du site\n\n- **La topographie** : l’un des principaux paramètres de l’implantation, car le relief ordonne une bonne part de la construction, selon que le terrain est uniforme ou accidenté. Avant toute transformation, réfléchir à tout ce que le relief apporte à la stabilité de l’édifice et au confort des habitants.\n- **La nature des sols** : dans la tradition, la géologie locale fournissait les matériaux, et leurs qualités et défauts déterminaient la protection des façades.\n- **La présence de l’eau** : source, rivière, nappe. Elle a ses agréments, mais aussi des conséquences : humidité, moustiques, débordements.\n- **Les microclimats** : vent, ensoleillement, ombre portée.\n- **La végétation** : elle fait partie des données du site ; elle protège du vent, donne de l’ombre, tient le sol par ses racines et pompe l’eau.\n- **Les données invisibles** : sous terre, des éléments peuvent rendre la maison malsaine. Radioactivité naturelle des socles anciens comme le granite et le gneiss, avec le radon, dont il faut vraiment se méfier pour la santé.\n\n### Bilan du cadre\n\nToute décision d’acheter ou de rénover doit passer par l’analyse détaillée du site. Une belle maison exposée aux débordements d’une rivière ou à une pollution électromagnétique aura perdu une partie de son charme. Le voisinage compte aussi : centres de production comme les usines, voies de circulation (autoroutes, aéroports, chemins de fer), dont découlent bruit, odeurs, pollution de l’air.\n\n### Usages successifs\n\nLa maison évolue et sa fonction change. Construite pour une famille d’agriculteurs, d’artisans ou de notables, elle répondait à un contexte social et professionnel, à des activités, des relations avec l’extérieur, un degré de fortune qui impliquaient une organisation des lieux. Questions à se poser :\n\n- Quelles étaient les logiques du constructeur à l’époque ?\n- Quelles modifications ont été apportées au site au cours des ans ?\n- La logique initiale correspond-elle aux besoins actuels ?\n\nLe nouveau propriétaire prend place dans une chaîne d’usagers, avec ses besoins et ses moyens, peut-être contradictoires avec ceux de ses prédécesseurs. Tâche difficile : faire le tri dans ce legs, rétablir des éléments disparus ou dégradés, revenir sur des modifications néfastes, introduire ses propres apports, au service de la durabilité des lieux.\n\n## 4 – Matériaux traditionnels\n\nPour des raisons économiques et de transport, on a longtemps pris dans l’environnement proche du chantier ce qu’il fallait pour construire. La géologie locale et la couverture forestière offraient des matériaux plus ou moins faciles à façonner, plus ou moins fragiles face aux contraintes techniques et climatiques. On a cherché à tirer le meilleur de ce que le site offrait : la terre crue et cuite, le bois, la paille, la pierre sous toutes ses formes, seuls ou en structures composites, mis en œuvre avec ingéniosité pour les murs, les sols et les toitures.\n\n### Terre crue\n\nMise en œuvre selon quatre techniques, elle donne leur originalité aux maisons de nombreuses régions.\n\n- Bauge : Bretagne, Normandie, littoral vendéen, Camargue. Terre grasse et débris de paille ou de roseaux, allongée d’eau et malaxée, mise en œuvre à la fourche ou à la main.\n- Pisé : Lyonnais, Dauphiné, Auvergne, Bresse. La terre, sans végétaux ni gros cailloux, est tassée sans ajout d’eau dans un coffrage ; l’épaisseur d’un lit varie selon les régions. Une fois décoffré, la banche est déplacée pour la levée suivante, jusqu’à la hauteur finale du mur.\n- Adobe : brique de terre crue moulée ou simplement découpée à la bêche. Très utilisée dans le Midi toulousain, mais aussi en Champagne. L’appareillage se fait comme celui de la brique cuite.\n- Torchis : remplissage d’une structure en [[pan de bois]]. Alsace, Pays basque, Bourgogne, Normandie, Lyonnais.\n\nLes murs de terre crue reposent toujours sur un **soubassement de pierre, de moellons ou de silex**, contre les dégradations dues aux remontées capillaires du sol.\n\n### Pierre\n\nDureté, porosité, capacité à être façonnée, résistance à la charge : tout varie selon l’origine. Dans la tradition, les murs de pierre maçonnés sont souvent très épais, **de 60 cm à plus d’un mètre**, ce qui assure leur stabilité et leur résistance thermique.\n\nTrois familles définies par les géologues :\n- **roches sédimentaires** : calcaire, grès ;\n- **roches éruptives** : granite, basalte ;\n- **roches métamorphiques** (schiste, gneiss…).\n\nC’est la nature des minéraux et les conditions de leur formation qui donnent aux pierres leurs performances et leurs couleurs.\n\n- Pierre sèche : utilisée pour les constructions annexes. Les pierres ne sont pas liées ; elles trouvent leur équilibre par un jeu d’empilage et de calage.\n- **Maçonnerie liée au mortier** : les joints sont garnis de mortier de terre, de chaux ou de sable. Pose en boutisse ou en panneresse, en favorisant l’alternance dans une même assise ou d’une assise à l’autre.\n\nCroquis : [[maçonnerie de moellons]] (boutisses et moellons).\n\n### Couvertures\n\nLa pose de la chaume varie peu d’une région à l’autre : paille de blé ou roseaux, attachés aux lattis par des liens eux aussi végétaux. La tête est toujours placée vers l’intérieur du toit et le pied vers l’extérieur, chaque rang recouvrant le précédent jusqu’au faîtage. **Épaisseur : environ 60 cm.** L’ennemi de ces végétaux, c’est l’humidité stagnante : il faut un toit très pentu.\n\nAutres couvertures : tavaillon ou essendole en bois, pierre (lauze, ardoise), terre cuite.\n\n### Charpentes\n\nInvisibles de l’extérieur, les charpentes font pourtant partie des caractéristiques de l’habitat régional. Fruits de l’histoire technique et de l’adaptation aux contraintes locales, c’est de leur solidité que dépend la vie de la construction.\n\n> Lire une charpente, c’est en comprendre la logique, connaître les pièces de bois qui la composent et les arbres dont elles sont issues.\n\nOn peut parler de véritables typologies régionales, même si les modèles ne s’enferment pas dans des frontières. On distingue les charpentes des toits méditerranéens à faible pente de celles qui portent les tuiles plates ou l’ardoise ailleurs. Au-delà de ces schémas : les charpentes à chevalet en Alsace, celles à homme debout des maisons lorraines, ou les charpentes à chandelles en Savoie.\n\nLe chêne et le châtaignier sont les bois les plus employés. On note cependant le peuplier dans certaines régions, l’épicéa et le mélèze dans les Alpes, le pin maritime en Gascogne.\n\n### Enduits anciens\n\nLe rôle d’un enduit de façade est de protéger le mur de la pluie. Pour les plus démunis, l’enduit représentait un surcoût, surtout s’il demandait des matériaux transformés comme la chaux ou le plâtre, encore fallait-il qu’ils existent dans la région. **La terre a souvent remplacé des enduits plus nobles**, car gratuite et facile à mettre en œuvre : brute ou en mortier de terre argileuse et de fibres végétales. Elle se dégrade plus vite et oblige à restaurer périodiquement. Mais c’est l’**enduit de chaux** qu’on rencontre le plus : il s’est répandu dès que les transports ont permis de l’apporter dans les régions pauvres en calcaire.\n\n### Protéger les murs\n\nOn a très souvent protégé les façades exposées à la pluie et au vent par des **débords de toiture**. Par leur répétition, ils constituent un élément important des typologies régionales. L’avancée du toit est plus ou moins prononcée selon la fragilité du matériau du mur et le climat : un mur de terre ou un pan de bois sera plus protégé qu’une façade en granite, et les maisons de montagne ou du bord de l’océan en ont plus que celles de la côte méditerranéenne. Les débords sont soutenus par de simples corbeaux de pierre, par une corniche ou par des potences.\n\n- Génoise : élément de protection et de décor, introduit dans le Sud de la France par des constructeurs italiens. Elle couronne les murs de façade, parfois les pignons. Elle fait appel à la tuile creuse pour faire déborder le toit par rapport au nu du mur. Le nombre de rangs de tuiles, alternant avec des éléments plats (tuileaux ou plaquettes de pierre), détermine son importance et son rôle de protection. La génoise participe au décor de la maison.\n- [[Coyau|Pièce de bois clouée en bas des chevrons, qui adoucit la pente en bas du toit (le « retroussis ») pour rejeter l’eau plus loin de la façade.]] : pièce de bois qui s’appuie en partie basse des chevrons, sur le couronnement du mur. Elle modifie la pente du bas du versant et rejette l’eau plus loin de la façade.\n- **Les bardages** : leur nature varie selon les époques, les régions, le statut social, les techniques. Technique aujourd’hui rare : couvrir le pignon le plus exposé d’écorces brutes. Plus souvent, des bois découpés (Champagne). Le plus spectaculaire : le bardage en tavaillons, identique à celui des toits, dans les montagnes franc-comtoises. En Normandie, en Bretagne ou en Picardie, plutôt l’ardoise, de manière plus récente. Les façades exposées peuvent aussi être protégées par des tuiles de terre cuite, de forme angulaire en Normandie, arrondies en Franche-Comté.\n\n### Sols anciens\n\n- **La terre battue** : longtemps le sol le plus répandu à la campagne, trouvé sur place. Débarrassée des végétaux, mouillée et longuement damée pour faire un sol plan et sain. Remplacée dès que possible par des matériaux plus résistants : dallage de pierre ou carreaux de terre cuite, plus chers mais résistants aux chocs et aux passages répétés. Le plus souvent d’origine locale, ils étaient scellés sur le sol porteur avec un mortier de chaux, qui garnissait aussi les joints.\n- **Le plancher** : plutôt réservé à l’étage, le plus rustique, fixé aux solives avec des joints larges qui laissaient passer poussière et bruit. Parfois recouvert d’une couche de terre et de carreaux de terre cuite. Au rez-de-chaussée, on trouve aussi des planches épaisses portées par des lambourdes posées sur la terre.\n\nCes traitements du rez-de-chaussée **laissaient passer les remontées capillaires du sol naturel** sans bloquer leur progression : l’humidité s’évaporait sans dégrader les murs.\n\n## 5 – Désordres\n\n### Causes naturelles\n\n- **Fondations et soubassements** : les murs anciens reposent souvent seulement sur une semelle de pierre, sur un sol peu creusé ; tout mouvement du sol se répercute sur eux.\n- **Murs maçonnés** : fissures, déversements, éboulements.\n- **Enduits de façade.**\n- **Ouvertures** : elles peuvent déséquilibrer les murs.\n- **Murs en pan de bois** : attention aux insectes et aux champignons.\n- **Couvertures** : si les éléments de couverture sont dégradés, l’eau passe et peut faire pourrir les assemblages de la charpente.\n- **Sols** : usure des revêtements, dégradation d’un plancher par le passage répété. Le manque de planéité vient le plus souvent d’une assise dégradée par une humidité excessive du sous-sol.\n\n### Mauvais usages\n\n- surcharge des planchers d’étage ;\n- mauvaise gestion de l’humidité des salles d’eau et des cuisines ;\n- tranchées profondes creusées autour de la maison pour des canalisations, qui déstabilisent sa base ;\n- aménagement des combles où l’on coupe les entraits des fermes pour faciliter le passage, ce qui déséquilibre l’ensemble de la charpente ;\n- d’une manière générale : manque d’entretien du toit, façades non surveillées, combles mal ventilés, revêtements étanches sur les murs intérieurs, sols intérieurs étanches.\n\nCroquis : intervention sur une [[charpente triangulée]].\n\n## 6 – Remise en état\n\nUne fois le bilan des désordres dressé, on fait la liste des travaux : murs, enduits, sols, charpente, couverture.\n\n### Sols\n\nRemplacer les éléments usés ou brisés à l’identique si possible, mais l’introduction d’éléments disparates ne nuit pas forcément à l’esthétique d’un sol ancien. Pour sceller ou rejointoyer carreaux et dalles : **mortier de chaux et de sable**, pour que le sol continue à respirer. Si les carreaux ont été vernis, on supprime cette couche étanche, qui confine l’humidité dans le revêtement.\n\nSi l’on doit refaire le revêtement, vérifier l’état du sol porteur, en général de la terre. Le plus sage : couler une chape de béton de chaux naturelle et de sable, qui laisse passer l’humidité du sol et lui permet de s’évaporer. **Si le support est en ciment, on le remplace** : son étanchéité pousse l’humidité à trouver son chemin dans les murs.\n\nCroquis : [[traitement de l’humidité]].\n\n### Planchers\n\nLes éléments porteurs peuvent fléchir. Il faut déshabiller le sol pour découvrir les solives et les poutres maîtresses et vérifier leur état. Un fléchissement important révèle une surcharge, qu’on réduit en allégeant le poids propre des sols et des revêtements.\n\n### Linteaux, arcs\n\nLe poids porté par un mur est considérable, et s’ajoute au poids propre de la maçonnerie, d’autant plus lourd que le mur est épais. La descente de charges s’exerce directement sur le linteau des ouvertures. Pour le soulager, on le surmonte souvent d’un arc de décharge qui reporte les charges sur les jambages de la baie.\n\n### Ouvertures\n\nLe plus souvent, c’est l’encadrement de la baie qui pose problème : pourrissement du bois du dormant pris dans la maçonnerie, désordres dans les jambages ou les poteaux. **Les réparations se mènent toujours en étayant la baie** : sinon on risque l’affaissement du mur au-dessus de l’ouverture ou le déversement de la maçonnerie sur les côtés. On évite le ciment pour conforter la baie, car il crée une zone de résistance différente du reste du mur ; on privilégie le mortier de chaux hydraulique naturelle, dont la prise est rapide.\n\n## 7 – Mise au confort\n\n### Électricité\n\nÀ prendre au sérieux : il y a des normes contraignantes que les autorités et les assurances obligent à respecter, et le bâti traditionnel n’est pas prévu pour recevoir une installation (fils, prises, compteur).\n\n### Isoler ou pas\n\nLa maison ancienne n’est pas isolée au sens où on l’entend aujourd’hui : sol naturel couvert d’un revêtement perméable, murs protégés seulement par un enduit ou quelques bardages… **tout est fait pour que l’air circule et que les échanges entre intérieur et extérieur soient facilités.**\n\nEn simple : on peut tout isoler ou non, selon le coût, les performances thermiques et la durabilité. Et il y a une réflexion préalable : faut-il tout isoler, au risque de masquer un beau mur ou de modifier des baies d’origine ? Isoler améliore le confort, mais tout dépend des problèmes à résoudre, de la manière dont on vit dans la maison et de son contexte. On choisira d’intervenir sur l’ensemble (sol, murs, ouvertures, toiture) ou sur certains éléments seulement.\n\nCroquis : [[isolation intérieure et extérieure]] du toit et des murs.\n\n### Isoler le toit\n\nC’est l’intervention la plus courante et la plus nécessaire. Tant que les combles ne sont pas habités, ils restent à une température presque identique à celle de l’extérieur, constamment ventilés : ils assainissent la maison et protègent la charpente de l’humidité stagnante. **Quand on rend les combles habitables, isoler la toiture s’impose.** Deux solutions ; leur coût est le principal critère.\n\n- **Par l’intérieur** : pour ceux qui ne veulent pas déposer la couverture, ce qui allonge et renchérit le chantier. Convient si les combles ont un volume suffisant pour que les panneaux isolants ne compromettent pas leur habitabilité, et si la charpente n’a pas de caractère particulier à montrer.\n- **Par l’extérieur** : de loin la plus efficace et la plus logique, mais plus chère, et à faire à une période où le toit peut rester ouvert sans risque. La surépaisseur pose le problème du raccord entre l’égout du toit et les murs gouttereaux, qui demande une corniche pour rattraper les niveaux.\n\n### Isoler les murs\n\nDans la tradition, c’est l’épaisseur du mur et sa structure qui assurent le confort thermique. **Dans les murs très épais, nul besoin d’isolation complémentaire** : c’est l’inertie, cette capacité à restituer la chaleur ou le froid, qui protégeait les maisons anciennes des températures excessives. Les maisons à pans de bois ou de torchis et les chalets de rondins ou de madriers ont les mêmes avantages. Il serait donc inefficace d’isoler de tels murs, sauf maçonneries minces ou matériaux peu résistants thermiquement.\n\nAutre paramètre : le liant. **Un mur de pierre lié à la terre isole mieux que le même lié à la chaux**, car la résistance thermique de la chaux est moindre que celle de la terre. On peut donc isoler certaines façades et pas les autres.\n\n- **Par l’extérieur** : la plus efficace, mais peu utilisée en restauration, car elle fait disparaître la façade d’origine sous un bardage qui protège l’isolant, et prive le mur de la chaleur du soleil sur la façade.\n- **Par l’intérieur** : plus facile et moins chère, mais elle empêche le mur de stocker la chaleur du chauffage, et l’épaisseur de l’isolant empiète sur la surface habitable.\n\nCroquis : [[isolation et surface habitable]] (dispositif d’isolation thermique et emprise sur la surface habitable).\n\n### Isoler les sols\n\nLe sujet fait débat chez les professionnels du bâti ancien. Pour certains, le sol s’isole comme les murs, les ouvertures et la toiture. Pour d’autres, isoler un sol de rez-de-chaussée, c’est perdre le bénéfice de la température quasi constante de la terre, qui sert de base thermique pour chauffer l’hiver et rafraîchir l’été. **Seule la présence d’une cave oblige à isoler le sol**, qui n’est alors plus en contact avec la terre.\n\n### Fenêtres\n\nAgrandir ou multiplier les ouvertures est l’une des interventions les plus fréquentes. Les contraintes d’autrefois restent valables : sécurité des biens, stabilité de la construction, confort thermique. Les anciennes fenêtres sont une source importante de déperdition. Deux interventions possibles :\n\n- Survitrage : on double les vantaux pour réduire les pertes sans vraiment isoler la baie. Résultats modestes : à réserver au provisoire ou aux climats sans températures excessives. Vérifier que la menuiserie d’origine est assez épaisse pour le recevoir.\n- **Double ou triple vitrage** : il faut changer les fenêtres. La performance dépend de l’épaisseur des vitres et de la lame d’air. En réhabilitation, on choisit souvent un double vitrage peu émissif.\n\n**À noter : garder les vieux volets**, qui contribuent à la sécurité et à l’isolation de la maison.\n\nCroquis : [[doublage des vitres]].\n\n### Lumière, baies\n\nDans les civilisations paysannes, l’essentiel des activités se faisait dehors le jour : les petites ouvertures ne posaient pas problème. Aujourd’hui, on attend des baies qu’elles laissent passer un maximum de lumière et ouvrent sur le paysage. On peut aussi créer des baies supplémentaires, en tenant compte de la taille des ouvertures existantes.\n\n**Comment agrandir une baie d’origine ?** Par sa hauteur plutôt que par sa largeur : c’est la hauteur qui permet à la lumière de pénétrer le plus loin. **Abaisser l’appui de fenêtre** pour lui donner une plus grande surface est donc la solution la plus adaptée.\n\n## 8 – Construire neuf\n\n### Choisir le terrain\n\nLe lieu d’implantation est presque aussi important que la maison elle-même. Tourner le dos à un paysage grandiose, orienter la façade principale vers le vent dominant, choisir le point bas du terrain qui sera inondé à chaque orage : autant d’erreurs. Chaque parcelle a sa valeur propre, ses avantages et ses défauts, à analyser au filtre du programme et des besoins des futurs habitants. **Un terrain n’est jamais neutre, le voisinage non plus.**\n\n- **Règle 1** : évaluer précisément les qualités et les défauts du terrain en fonction du projet et de l’évolution possible des besoins.\n- **Règle 2** : ne pas s’enfermer dans son projet ; tenir compte du voisinage et de ses évolutions possibles.\n- **Règle 3** : respecter le paysage où l’on bâtit.\n- **Règle 4** : ne jamais oublier la notion de plaisir. La maison doit aider à l’épanouissement de ceux qui l’habitent.\n\n### Bioclimatique\n\nSavoir tirer avantage du climat dans toutes ses acceptions (vent, pluie, ensoleillement, chaleur, fraîcheur) et les mettre au service du confort ; y ajouter le relief et la végétation : voilà les principes de l’habitat bioclimatique.\n\nLa maison bioclimatique ne s’inscrit pas en faux dans son environnement : elle en découle. Enterrer une partie de la maison ou l’adosser au relief, la recouvrir d’un jardin, utiliser la végétation comme écran, orienter les façades selon les activités, donner à la construction une forme adaptée au site, mettre en œuvre des matériaux qui participent à cet effort.\n\n> Le bioclimatique consiste à trouver des solutions de bon sens aux problèmes posés par le cadre naturel de la maison. Un igloo posé sur la banquise, tout comme une maison troglodyte au bord de la Loire, sont à leur manière bioclimatiques.\n\nLe mot s’est vulgarisé depuis quelques années, mais le concept existe depuis la nuit des temps. La différence : on peut aujourd’hui quantifier précisément les performances des matériaux et des équipements.\n\n**Fonctionnement d’une maison bioclimatique** :\n- **En été**, le jour : le soleil n’entre pas directement dans les pièces grâce au débord de toiture qui fait casquette et à la galerie d’étage. La nuit : fenêtres ouvertes derrière les volets fermés, l’intérieur se rafraîchit.\n- **En hiver**, le jour : le soleil entre directement et la maison profite de ses calories (solaire passif) ; un appoint, type poêle à bois, fonctionne en parallèle. La nuit : les volets fermés limitent les déperditions, tandis que la chaleur accumulée dans le sol et les murs est restituée.\n\nCroquis : récupération et transmission de la chaleur dans la [[masse thermique du sol]].\n\n### Paysage\n\nLa notion d’intégration est floue et diversement interprétée. Intégrer une maison neuve dans un alignement de bâtiments anciens ne suppose pas de reproduire l’existant à l’identique, mais que la construction ne choque ni par ses proportions, ni par son écriture, ni par ses couleurs et ses façades. Dans un paysage naturel, c’est encore plus difficile à cerner : un château médiéval perché sur son promontoire, une église de campagne au milieu des champs sont-ils intégrés ?\n\n> S’intégrer au paysage, ce n’est pas disparaître, c’est se faire oublier.\n\n### Autoconstruction\n\nDans la construction écologique, l’autoconstruction est courante, héritée du caractère pionnier de ces habitats. En refusant les standards de la construction conventionnelle, ses matériaux industriels et ses normes imposées par les producteurs eux-mêmes, les tenants d’un habitat sain ont d’abord dû expérimenter seuls des matériaux et des mises en œuvre en dehors des règles admises. La paille, par exemple, bien que d’usage millénaire, n’avait pas de DTU. Aujourd’hui encore, par conviction ou par nécessité, beaucoup conduisent leur chantier eux-mêmes, seuls ou organisés, et testent des procédés qui seront un jour validés. On peut construire en autoconstruction ou avec des professionnels.\n\n## 9 – Matériaux actuels\n\nCertains matériaux sont connus et utilisés depuis toujours, à peu près comme autrefois. Pour d’autres, la mise en œuvre ou le conditionnement ont été réinventés pour faciliter leur usage. Enfin, une dernière catégorie relève de concepts récents, parfois encore en expérimentation. Bois, pierre, terre, paille : l’offre est large, du matériau brut de la tradition au matériau revu au goût du jour. **Beaucoup n’ont pas de DTU : il faut trouver un architecte et des entreprises compétents dans ce domaine.**\n\n### Bois massif\n\nOn construit encore des maisons en fustes, mais aussi en ossature bois et en pan de bois.\n\n### Pierre massive\n\nToujours utilisée, mais elle a perdu la cote : elle coûte cher et les carrières se font rares. Elle intervient surtout en placage décoratif, intérieur et extérieur. L’exploitation des carrières dégrade les paysages naturels : pour toutes ces raisons, ce matériau n’est pas vraiment défendu par les tenants de l’habitat écologique.\n\n### Béton cellulaire\n\nLe thermopierre, aussi appelé béton cellulaire, est fabriqué à partir d’eau, de sable, de chaux et de ciment Portland, puis expansé pour lui donner sa structure alvéolaire et moulé en blocs faciles à découper. Excellentes performances en inertie et en isolation thermique.\n\n### Terre cuite\n\nBriques pleines, briques creuses : les variétés et les mises en œuvre sont nombreuses. Comme la terre crue, la brique cuite est ininflammable et incombustible ; son inconvénient est une fabrication gourmande en énergie.\n\n- **La brique alvéolée** : murs aux performances thermiques modestes, qui demandent une isolation complémentaire, intérieure ou extérieure.\n- La brique monomur : bonne résistance mécanique et qualités hygrothermiques. Elle assure à la fois la fonction porteuse, l’isolation et la régulation naturelle de l’humidité intérieure. Briques creuses, alvéolées, légères, de grande épaisseur, faciles à poser en murs d’une quarantaine de centimètres qui ne recevront qu’un enduit. **C’est l’air des alvéoles verticales qui isole le mur.**\n\n### Terre crue\n\nTrouvée dans l’environnement même du chantier, facile à mettre en œuvre, sans transformation ni traitement, évidemment recyclable. Selon les normes actuelles, elle est peu utilisée en mur porteur ; on a le pisé et les briques de terre.\n\n- Le BTC : brique de terre comprimée, qui a pris dans les chantiers contemporains la place de l’adobe de la tradition. Mélange de terre et de liant hydraulique naturel, compacté mécaniquement en blocs de dimensions variées. Les murs peuvent être porteurs selon les calculs de charge.\n\n### Bois cordé, parpaing\n\n- Le [[bois cordé|Maçonnerie de bûches : des rondins courts posés en travers du mur, comme des boutisses, et liés par un mortier sur chaque face, avec de l’isolant au cœur.]] : la maçonnerie de bûches. Elle valorise les sous-produits de l’industrie du bois. Avantages réels : faible coût, bonnes performances thermiques, mise en œuvre facile. Les bûches entières ou fendues sont empilées à sec puis maçonnées sur les deux parements, au fur et à mesure qu’on monte, avec un mortier qui varie selon les chantiers. Les vides entre les bûches sont comblés de matériaux végétaux en vrac pour l’isolation. **C’est la longueur des bûches qui détermine l’épaisseur des murs.** Pour des murs de façade porteurs comme pour des cloisons.\n- Le [[parpaing de bois|Bloc de bois massif d’environ 50 × 20 × 8 cm, à rainure et languette, qu’on empile pour monter un mur porteur, comme des briques. Intéressant en autoconstruction.]] : bloc de bois profilé, généralement de 50 cm de long, 20 cm de large et 8 cm d’épaisseur, avec rainure et languette pour s’emboîter dans les autres et former un mur porteur solide. Mise en œuvre très simple : particulièrement intéressant en autoconstruction.\n\n### Paille\n\nLa paille est le matériau le plus simple qui soit, et le moins coûteux : c’est le résidu des moissons. Plusieurs solutions (croquis : [[bottes de paille]] et ossature bois) :\n\n- **en remplissage d’une ossature bois** qui porte plancher et toit : les bottes sont posées à sec les unes sur les autres, entre les éléments de l’ossature ;\n- **en mur-rideau** devant une structure porteuse ;\n- **en appareillage porteur** : bottes posées à joints croisés qui portent le toit. Pour la résistance mécanique, elles sont traversées par des tiges métalliques verticales et tassées entre deux lisses de bois.\n\nLes croquis montrent, dans l’ordre : un remplissage simple d’ossature bois en bottes de paille, avec toujours un soubassement en pierre ; un remplissage d’ossature bois doublé de bottes de paille ; un parement extérieur d’ossature bois en bottes de paille, maintenu par des tiges filetées.\n\n**L’ennemi de la paille, c’est l’humidité.** Les soubassements sont toujours en maçonnerie étanche, surmontés d’une sablière en bois qui sert d’assise à la paille, avec un enduit respirant. La paille a de fortes performances thermiques.\n\n### Terre-paille, chanvre\n\nOutre leur usage dans les enduits, isolants ou décoratifs, ces matériaux servent en remplissage de murs à ossature. Ce sont les fibres végétales qui forment l’essentiel du mélange et assurent la performance thermique. Le terre-paille : tout mélange de résidus végétaux et de terre argileuse très allongée d’eau ; presque toutes les espèces végétales peuvent servir.\n\nDeux mises en œuvre :\n- **banches mobiles** : plutôt pour la paille et le chanvre ; les banches enserrent les pièces de l’ossature et sont remplies de mortier au fur et à mesure, puis déplacées après décoffrage. Le mortier met plusieurs mois à sécher ;\n- **coffrage perdu** : pour la terre-copeaux ; un treillage de roseaux ou un lattis de bois est cloué des deux côtés de l’ossature et forme un coffrage, rempli puis recouvert après séchage d’un enduit respirant.\n\nPour pallier le temps de séchage très long, il existe des **blocs préfabriqués** en terre-paille ou en chaux-chanvre, maçonnés au mortier d’argile ou de chaux et de sable. Vu leur résistance mécanique, les blocs de chanvre et de chaux sont aujourd’hui envisagés comme matériaux de structure porteuse.\n\nCroquis : principe de l’[[enduit banché]] en doublage de maçonnerie. Devant un mur en brique de terre cuite, des chevrons forment une ossature ; on remplit de chaux-chanvre entre les montants, niveau par niveau ; une fois sec, on fait un enduit de finition.\n\n### Toit\n\n**La charpente.** Se poser la question des sections : petites sections en bois massif, ou grandes portées en bois lamellé. On peut aussi faire des fermettes. Les charpentes en lamellé ont des caractéristiques nocives à cause des colles utilisées ; il est possible d’utiliser du [[lamellé-cloué|Poutre ou panneau fait de planches assemblées par clous (ou chevilles en bois) au lieu de colle.]] à la place du [[lamellé-collé|Bois fait de lamelles collées entre elles sous pression : permet de grandes portées et des formes courbes, mais utilise des colles.]].\n\n**La couverture.** Se demander s’il est opportun d’utiliser des matériaux locaux ou adaptés au climat : tuiles, bois, pierre et ardoise, terre cuite, métal…\n\n### Enduits\n\n- **Chaux et chanvre** : ajouter des fibres végétales à un enduit à la chaux lui donne une meilleure résistance mécanique et un réel pouvoir isolant. Chanvre et lin, en paillettes ou en paille hachée, sont courants, à l’intérieur comme à l’extérieur. Dehors, cet enduit se protège sous une couche de chaux et de sable, ou sous un bardage ; dedans, il reste apparent. On le charge plus ou moins de matière végétale selon qu’on veut valoriser ses qualités techniques ou son esthétique. Inconvénient : le temps de séchage, **au minimum un mois**, qui allonge considérablement le chantier. Mais il faut le respecter si on ne veut pas voir apparaître des moisissures.\n- **Chaux et sable** : les enduits à la chaux de la tradition gardent tout leur intérêt. Ils s’appliquent sur la pierre, la terre cuite, la terre crue, et aussi sur les bottes de paille. Dehors, leur vertu est de protéger le mur de la pluie tout en le laissant respirer, ce qui rend la maison plus saine. **En aucun cas ils n’isolent.** Le dosage en sable croît du gobetis à la couche de finition ; le sable représente de 50 à 70 % du volume. La finition (coupé, lissé, gratté, taloché, etc.) et la couleur des sables donnent l’aspect décoratif. Dedans, l’enduit chaux-sable régule l’hygrométrie et décore les murs.\n- **Terre** : malgré son apparence archaïque, l’enduit de terre convient parfaitement à une maison contemporaine. Terre argileuse et sable, sur tous les supports : bottes de paille, pierre, brique, terre crue, bois. Dehors, on lui associe de la chaux, au moins dans le corps d’enduit et la finition. Régulateur thermique et hygrométrique, il donne une atmosphère saine et chaleureuse. Mise en œuvre à la main, à la truelle ou à la taloche, ou projetée mécaniquement. C’est la couleur naturelle des argiles qui donne la teinte ; les fournisseurs proposent des enduits prêts à l’emploi aux couleurs maîtrisées.\n- **Terre et fibres végétales** : les fibres accroissent la performance mécanique et thermique. Dehors, l’enduit de terre doit être protégé des intempéries : débord de toiture, bardage ou chaux.\n- **Plâtre** : comme la chaux, ce matériau millénaire a gardé sa place. Il séduit pour l’isolation thermique, la résistance au feu et sa non-nocivité dans sa version naturelle. Sa température de cuisson est bien moins élevée que celle de la chaux : sa fabrication est moins énergivore. Sa prise est beaucoup plus rapide. Il est recyclable. **Son principal défaut : sa fragilité face à l’eau**. Il se pose sur tous les supports. Les plaques de plâtre qui ont remplacé l’enduit à l’intérieur posent souvent un problème de nocivité à cause des adjuvants. Il existe une version saine : les panneaux de type Fermacell, mélange de plâtre et de cellulose, utilisables sur toutes les surfaces intérieures sans pollution.\n\n## 10 – Eau\n\nRechercher un confort vert, c’est vouloir une qualité de vie qui respecte l’environnement proche et les grands équilibres de la planète : une eau utilisée sans gaspillage, même discernement pour l’électricité, un confort thermique qui ne dépend pas d’une consommation excessive, et enfin envisager l’autonomie de la maison, y compris énergétique.\n\n### Consommation\n\n- 40 % : hygiène corporelle\n- 21 % : sanitaires (WC)\n- 13 % : lavage du linge\n- 11 % : vaisselle\n- 8 % : usages domestiques divers\n- 6 % : préparation des repas\n- 1 % : boisson\n\n### Eau de pluie\n\nLe volume récupérable dépend de la surface de toiture et de la pluviométrie de la région. **En moyenne, 60 m³ par an pour une maison de 100 m² au sol**.\n\n- **Usage limité à l’extérieur** : l’eau des gouttières et des descentes alimente une cuve aérienne de faible volume, de 200 l (de quoi laver une voiture) à 500 l, la version contemporaine des barriques d’autrefois. Un filtre en amont retient les impuretés ramassées sur le toit.\n- **Usage étendu à l’intérieur** : une cuve enterrée, dimensionnée selon les usages ; en général **5 000 l pour un foyer de quatre personnes**. En plus de la filtration des matières organiques, l’eau destinée à l’intérieur doit subir un traitement antibactérien. **La loi exige des réseaux séparés pour l’eau potable et l’eau de pluie.**\n\n### Assainissement\n\nLa règle habituelle distingue le réseau pluvial communal, qui recueille l’eau des toits, et le réseau d’égouts, qui collecte les eaux usées et les eaux vannes pour les traiter en station d’épuration. En l’absence de réseau dans la commune, le propriétaire gère lui-même l’évacuation, sous le contrôle du service d’assainissement. Le cas habituel : une fosse septique toutes eaux, prolongée par un épandage où les eaux filtrées s’infiltrent dans le sol.\n\nBeaucoup de constructeurs de maisons saines ne s’en satisfont pas, car le filtrage reste aléatoire. Le traitement écologique, pourtant bien maîtrisé aujourd’hui : la [[phytoépuration|Épuration des eaux usées par des bassins plantés (roseaux, iris…) : les plantes et les bactéries de leurs racines dégradent la pollution.]]. À la sortie de la fosse, l’épuration naturelle se fait en surface dans une série de bassins plantés, où la flore aquatique et les bactéries traitent les eaux, qui peuvent ensuite retourner au milieu naturel sans pollution.\n\n### Eaux grises\n\nOn conseille de limiter ce traitement aux eaux usées domestiques, en adoptant par ailleurs les toilettes sèches. On peut aussi recycler ses eaux grises pour l’arrosage, le lavage des voitures, la chasse d’eau ou les machines.\n\n## 11 – Air et chaleur\n\n### Vitrages\n\nUn double vitrage peu émissif (à isolation renforcée) est plus performant qu’un double vitrage classique. La lame entre les vitres peut être de l’air ou un gaz rare, l’argon. Son efficacité vient d’un film transparent d’oxydes métalliques déposé sur la face intérieure : il laisse entrer la lumière et les calories du soleil mais retient les infrarouges, ce qui empêche la chaleur de s’échapper. En construction, on choisit couramment un double vitrage peu émissif au sud et à l’ouest, et, dans les régions aux hivers rigoureux, du triple vitrage au nord et à l’est.\n\n### Ventilation\n\nLe renouvellement de l’air se fait d’abord naturellement : des courants d’air maîtrisés sont le meilleur moyen de renouveler l’air, de le rafraîchir et de lutter contre l’humidité. Dans une vision bioclimatique, on ouvre les fenêtres quelques minutes plusieurs fois par jour, et éventuellement on installe l’été un puits provençal.\n\nMais la plupart du temps, c’est la ventilation mécanique qui a la préférence. La ventilation continue a longtemps été assurée par des grilles en partie basse et haute des façades opposées. La VMC simple flux pose le problème d’une importante perte de chaleur l’hiver et d’une entrée d’air chaud l’été. La VMC double flux règle ce dilemme : elle récupère l’essentiel des calories de l’air vicié avant de l’expulser. Grilles, conduits et filtres doivent être entretenus régulièrement pour éviter de polluer l’air intérieur.\n\n### Toiture végétale\n\nElle existe depuis longtemps dans le bâti traditionnel : maisons troglodytes de plateau dont le toit est jardiné, en choisissant des espèces qui retiennent le sol sans que leurs racines percent le plafond ; toits plats couverts de mottes de gazon dans de nombreux pays. Aujourd’hui, d’autres techniques : l’objectif est de protéger la maison du climat et de maîtriser le ruissellement de l’eau de pluie, tout en améliorant l’isolation thermique et phonique.\n\n**Contrairement à un préjugé très répandu, la végétalisation ne concerne pas que les toits plats** : une toiture en pente peut aussi l’accueillir, avec des aménagements simples. Choisir des végétaux du climat local qui demandent peu ou pas d’arrosage.\n\n- **Système extensif** (simple pelouse) : moins de 10 cm d’épaisseur, étanchéité, substrat drainant et couche végétale compris, ce qui limite le poids.\n- **Système intensif** (jardin planté) : environ trois fois plus épais, avec un poids bien plus important à porter.\n\nCroquis : [[toiture végétalisée]] selon le procédé Écovégétal.\n\n### Sol, murs chauffants\n\n> Rappelons que dans une maison bien orientée et parfaitement isolée, le chauffage ne devrait pas exister ; au mieux, il ne serait qu’anecdotique. Notre seule respiration et nos activités devraient suffire à chauffer les pièces, pour autant que les calories produites ne puissent s’échapper.\n\n- **Par le sol** : le principe semble avoir été inventé par les Romains avec l’hypocauste, qui faisait circuler de l’air chaud sous la dalle à partir d’un foyer extérieur. Aujourd’hui, c’est de l’eau chauffée à environ 40 °C par une chaudière ou des panneaux solaires qui circule dans des tuyaux sous le sol. Le sol est en général entre 20 et 23 °C. L’été, des systèmes réversibles rafraîchissent la maison de près de 5 °C.\n- **Par les murs** : bien moins utilisé que le plancher chauffant, alors que le rendement de la chaleur émise par les parois verticales est de l’ordre de 90 %, contre seulement 70 % pour les planchers. Le principe reste le même : les canalisations sont posées verticalement, et la chaleur est accumulée dans la structure et l’enduit. Il existe des briques de terre crue ou cuite spécialement conçues pour recevoir des tubes chauffants, en doublage des murs ou en cloisons : dans ce cas, les deux faces chauffent les pièces voisines.\n\n### Poêle, chaudière\n\nLe type d’appareil dépend du combustible, de la superficie des pièces à chauffer et de l’existence ou non d’un chauffage complémentaire. Ensuite, on choisit un appareil plus ou moins coûteux, facile à placer, performant et autonome. L’investissement est souvent conséquent : prendre en compte l’évolution prévisible des besoins de la famille.\n\n- Le poêle de masse : ce qui le différencie, c’est sa capacité à stocker la chaleur et à la restituer par rayonnement longtemps après qu’il a cessé d’être alimenté ; on parle de poêle à accumulation. Le plus souvent construit sur place, en maçonnerie épaisse de matériaux réfractaires.\n- **Le poêle à bois** : le plus simple à installer, à bûches ou à granulés. Une fois la puissance arrêtée, s’interroger sur le rendement et donc la fréquence de rechargement : l’autonomie va de quelques heures à plusieurs jours, plus grande pour les granulés. Avantage de leur alimentation automatique… qui disparaît en cas de coupure de courant.\n- **La chaudière** : à l’inverse d’un poêle, qui chauffe l’air des pièces, elle chauffe de l’eau qui circule dans les radiateurs, les planchers ou les murs chauffants. Elle occupe un local à part. Selon les modèles : bûches, bois déchiqueté, granulés ; les chaudières polycombustibles brûlent tous les combustibles végétaux.\n\n### Pompes à chaleur\n\nUtiliser la chaleur de la terre n’est pas nouveau : les animaux dans leur terrier, les hommes dans les maisons troglodytes ont toujours profité de sa température à peu près constante. La géothermie consiste à pomper la chaleur du sol pour l’amener dans la maison. C’est la profondeur du captage qui détermine la technique : plus c’est profond, plus c’est chaud, mais plus c’est cher.\n\n- **Captage horizontal** : capteurs enterrés entre 0,60 et 1,20 m. Une fois en place, pas question de planter un arbre au-dessus.\n- **Captage vertical** : gros travaux de forage par des entreprises spécialisées, coût considérable, autorisations nécessaires. Obligatoire quand la nature ou la petite surface du terrain interdit le captage horizontal.\n- **Pompe à chaleur aérothermique** : elle récupère les calories de l’air extérieur et chauffe par ventilo-convecteurs, plancher ou murs chauffants. Elle peut aussi récupérer la chaleur de l’air intérieur avant de l’expulser : on parle de VMC double flux thermodynamique. Inconvénient non négligeable : **le bruit**, à bien mesurer avant de la placer. Certains systèmes sont réversibles.\n\nLes pompes à chaleur géothermiques et aérothermiques ne peuvent pas assurer tout le chauffage : elles doivent être associées à un système complémentaire.\n\n### Solaire\n\nLe solaire thermique capte la chaleur du soleil pour l’eau chaude sanitaire ou pour alimenter radiateurs et planchers chauffants. Un fluide circule dans un tube métallique, emmagasine les calories et les transmet à l’eau d’un ballon de stockage, placé sous le caisson ou à l’extérieur. C’est la couleur noire des plaques et des tubes, sous le caisson vitré, qui absorbe le maximum de rayonnement. Le plus souvent sur le toit, mais aussi au sol à proximité, sur des murets : éviter les ombres des constructions voisines ou des arbres.\n\n- **Inclinaison** : 45 à 50° en moyenne ; **orientation plein sud indispensable**.\n- **Surface** : 4 à 6 m² pour l’eau chaude d’une famille de trois ou quatre personnes ; au moins le double si l’on chauffe aussi la maison.\n\n### Éoliennes\n\nUne petite éolienne produit de l’électricité à partir du vent, sur place. Elle ne vaut le coup que sur un site vraiment venté et dégagé, loin des obstacles (arbres, bâtiments), et demande souvent une autorisation d’urbanisme selon sa hauteur.",
+      "statut": "lu",
+      "images": [
+       {
+        "h": 475,
+        "id": "550550432cafda85363c5d81a91cae31",
+        "w": 475
+       },
+       {
+        "id": "7bb9143d0a2824eb12bb7a69323237be",
+        "w": 752,
+        "h": 753,
+        "credit": "Pan de bois",
+        "dessin": true
+       },
+       {
+        "id": "4e4c3e1ebded8a4c48532a5fb50d388e",
+        "w": 543,
+        "h": 548,
+        "credit": "Maçonnerie de moellons",
+        "dessin": true
+       },
+       {
+        "id": "be64a3dbff7c9e1843d0e9d6395e2107",
+        "w": 736,
+        "h": 740,
+        "credit": "Coyau",
+        "dessin": true
+       },
+       {
+        "id": "b776f303e7cafe32c864153b50dcfdf0",
+        "w": 315,
+        "h": 485,
+        "credit": "Traitement de l’humidité",
+        "dessin": true
+       },
+       {
+        "id": "34cd4686dc55d49c1b6971298766e800",
+        "w": 711,
+        "h": 721,
+        "credit": "Isolation intérieure et extérieure, isolation et surface habitable",
+        "dessin": true
+       },
+       {
+        "id": "a1e1256c0d992be42ea34f9e3c081bc1",
+        "w": 236,
+        "h": 600,
+        "credit": "Doublage des vitres",
+        "dessin": true
+       },
+       {
+        "id": "0dbd5c6916f6f2d4aa56eb325afe4d64",
+        "w": 517,
+        "h": 385,
+        "credit": "Bois cordé",
+        "dessin": true
+       },
+       {
+        "id": "d8786de8b68e42fdf3407eeec2bea8f4",
+        "w": 520,
+        "h": 592,
+        "credit": "Enduit banché",
+        "dessin": true
+       },
+       {
+        "id": "208b74774c1b738029caeb44baac66ae",
+        "w": 555,
+        "h": 430,
+        "credit": "Phytoépuration",
+        "dessin": true
+       },
+       {
+        "id": "0482b260a72a530e75aaca343c33c13c",
+        "w": 476,
+        "h": 426,
+        "credit": "Toiture végétalisée",
+        "dessin": true
+       },
+       {
+        "id": "b3015971c220e74d17e037e056b82313",
+        "w": 712,
+        "h": 708,
+        "credit": "Masse thermique du sol",
+        "dessin": true
+       },
+       {
+        "id": "d41932951632dc2d718a8a669bb47ade",
+        "w": 760,
+        "h": 804,
+        "credit": "Toiture végétalisée, procédé Écovégétal",
+        "dessin": true
+       },
+       {
+        "id": "fe92d98df2402b56056def2849b7ca71",
+        "w": 800,
+        "h": 560,
+        "credit": "Charpente triangulée",
+        "dessin": true
+       },
+       {
+        "id": "4095ce2b3c2ae2e15c48236f1c2f86c5",
+        "w": 800,
+        "h": 560,
+        "credit": "Bottes de paille",
+        "dessin": true
+       }
+      ]
+     }
+    }
+   ]
   }
  ]
 }

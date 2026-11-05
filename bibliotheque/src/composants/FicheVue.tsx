@@ -554,7 +554,7 @@ export function FicheVue({ id }: { id: string }) {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
       try {
-        const c = await caches.open('arki-v2');
+        const c = await caches.open('arki-v4');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
       } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');
@@ -593,7 +593,7 @@ export function FicheVue({ id }: { id: string }) {
           >
             <span className="point-lu" /> {lu ? 'Lu' : 'Pas encore lu'}
           </button>
-          {!livre && fiche.source && (
+          {!livre && !ressource && fiche.source && (
             <a className="lien-site" href={fiche.source} target="_blank" rel="noreferrer">Lire l’article <Icone nom="lien" taille={15} /></a>
           )}
         </div>
@@ -637,7 +637,7 @@ export function FicheVue({ id }: { id: string }) {
   const source = !livre && !projet && !ressource && fiche.source ? (
     <a className="source-image" href={fiche.source} target="_blank" rel="noreferrer">{domaine(fiche.source) || 'Source'} ↗</a>
   ) : null;
-  const imagePrincipale = !livre && !(ressource && !fiche.images.length) && (fiche.images.length > 0 ? (
+  const imagePrincipale = !livre && !ressource && (fiche.images.length > 0 ? (
     <figure className="image-principale">
       <button className="grande" onClick={() => setVisionneuse(0)} aria-label="Agrandir ou modifier l’image">
         <img src={srcImage(fiche.images[0].id)} alt="" style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
@@ -658,8 +658,8 @@ export function FicheVue({ id }: { id: string }) {
   ));
 
   // plans, coupes, façades… : les images suivantes, sous le texte, qui défilent avec des flèches
-  const blocDocuments = !livre && fiche.images.length > 0 && (
-    <Carrousel fiche={fiche} enregistrer={enregistrer} ouvrir={(i) => setVisionneuse(i)} />
+  const blocDocuments = !livre && (fiche.images.length > 0 || ressource) && (
+    <Carrousel fiche={fiche} enregistrer={enregistrer} ouvrir={(i) => setVisionneuse(i)} depuis={ressource ? 0 : 1} />
   );
 
   const texte = fiche.resume && (
@@ -773,15 +773,15 @@ export function FicheVue({ id }: { id: string }) {
 }
 
 /** Photos puis plans, coupes, façades : en quinconce, comme dans un magazine ; chaque image entière, avec sa légende. */
-function Carrousel({ fiche, enregistrer, ouvrir }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void }) {
+function Carrousel({ fiche, enregistrer, ouvrir, depuis = 1 }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; ouvrir: (i: number) => void; depuis?: number }) {
   // les photos d'abord, puis les plans, coupes et façades (reconnus tout seuls, ou indiqués)
   const [, setVu] = useState(0);
   useEffect(() => {
     let actif = true;
-    detecter(fiche.images.slice(1), srcImage).then((c) => { if (c && actif) setVu((x) => x + 1); });
+    detecter(fiche.images.slice(depuis), srcImage).then((c) => { if (c && actif) setVu((x) => x + 1); });
     return () => { actif = false; };
   }, [fiche.images]);
-  const tous = fiche.images.slice(1).map((im, k) => ({ im, i: k + 1 }));
+  const tous = fiche.images.slice(depuis).map((im, k) => ({ im, i: k + depuis }));
   const plan = (im: Image) => dessinConnu(im) ?? false;
   const documents = [...tous.filter((d) => !plan(d.im)), ...tous.filter((d) => plan(d.im))];
   const ajout = (
