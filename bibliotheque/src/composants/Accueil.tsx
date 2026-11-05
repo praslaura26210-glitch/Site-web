@@ -210,7 +210,7 @@ function RessourcesParType({ fiches }: { fiches: Fiche[] }) {
         if (!liste.length) return null;
         return (
           <section key={t} className={`groupe-ressources type-${t}`}>
-            <h2 className="titre-groupe"><span className="pastille-type" aria-hidden="true" />{NOM_TYPE_PLURIEL[t]} <span className="compte">{liste.length}</span></h2>
+            <h2 className="titre-groupe"><span className="pastille-type" aria-hidden="true" />{NOM_TYPE_PLURIEL[t]}<sup className="compte">{liste.length}</sup></h2>
             <Grille fiches={liste} rayon="articles" />
           </section>
         );

@@ -1400,3 +1400,12 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .titre-groupe { font: 500 12.5px/1.2 var(--texte); letter-spacing: .14em; text-transform: uppercase; color: var(--encre-2); padding-bottom: 8px; margin-bottom: 14px; }
 .titre-groupe .compte { font-size: 11px; letter-spacing: .04em; }
 .pastille-type { width: 9px; height: 9px; }
+
+/* ressources : trait fin, type un peu plus gros, articles en terracotta vif, nombre en exposant */
+.petit-article { --c: #B85A35; --c-texte: #B85A35; }
+.pa-couv { border-width: 1.5px; }
+.pa-bande { font-size: max(9.5px, 10.5cqi); }
+.pastille-type { background: #B85A35; }
+.titre-groupe .compte { vertical-align: super; font-size: 9.5px; margin-left: 2px; letter-spacing: 0; line-height: 0; }
+.pa-titre { flex: 0 1 auto; margin: auto 0; }
+.titre-groupe .compte { margin-left: -7px; }
