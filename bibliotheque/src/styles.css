@@ -1264,9 +1264,28 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .groupe-ressources.type-video .pastille-type { background: #BD8F79; }
 .groupe-ressources.type-site .pastille-type { background: #D0B19C; }
 
-/* grande image du projet : toujours à la même échelle, même quand la photo est petite (largeur pleine, ou hauteur 82 % de l'écran) */
-.image-principale .grande img {
-  width: min(calc(100vw - 2 * var(--marge)), calc(var(--max) - 2 * var(--marge)), calc(82vh * var(--r, 1.5)));
-  max-width: none; height: auto;
-}
-@media (max-width: 760px) { .image-principale .grande img { width: 100%; } }
+
+/* ===== Essai : ressources en carré blanc, contour et type dans la couleur du type ===== */
+.pa-carre { --aplat: #A55135; background: #FFFFFF; border: 1.5px solid var(--aplat); }
+.pa-type, .petit-article.type-podcast .pa-type { color: var(--aplat); font-weight: 500; }
+.petit-article.type-article .pa-carre { --aplat: #A55135; }
+.petit-article.type-video .pa-carre { --aplat: #BD8F79; }
+.petit-article.type-podcast .pa-carre { --aplat: #C58B59; }
+.petit-article.type-exposition .pa-carre { --aplat: #712724; }
+.petit-article.type-site .pa-carre { --aplat: #AE875E; }
+.pastille-type { background: #A55135; }
+.groupe-ressources.type-video .pastille-type { background: #BD8F79; }
+.groupe-ressources.type-podcast .pastille-type { background: #C58B59; }
+.groupe-ressources.type-exposition .pastille-type { background: #712724; }
+
+/* sommaire des notes : numéroté, une ligne par sous-partie, deux colonnes sur ordinateur */
+.notes .sommaire { background: #FFFFFF; padding: 18px 20px; }
+.notes .sommaire-titre { font-size: 12px; color: var(--terracotta); }
+.notes .sommaire ol { display: block; column-count: 2; column-gap: 36px; }
+@media (max-width: 760px) { .notes .sommaire ol { column-count: 1; } }
+.notes .sommaire li { break-inside: avoid; padding: 0 0 10px; }
+.notes .sommaire .sommaire-partie { font: 500 15.5px/1.35 var(--texte); color: var(--encre); }
+.notes .sommaire .sommaire-sous { display: grid; gap: 0; padding-left: 14px; font-size: 14px; }
+.notes .sommaire .sommaire-sous button { color: var(--encre-2); padding: 2px 0; }
+.notes h3.titre-notes { font-size: 26px; padding-top: 10px; border-top: 1px solid var(--filet); }
+.notes h4.titre-notes { font-size: 19px; color: var(--terracotta); }

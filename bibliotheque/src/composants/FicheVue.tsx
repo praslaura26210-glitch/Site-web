@@ -603,7 +603,7 @@ export function FicheVue({ id }: { id: string }) {
   const imagePrincipale = !livre && (fiche.images.length > 0 ? (
     <figure className="image-principale">
       <button className="grande" onClick={() => setVisionneuse(0)} aria-label="Agrandir ou modifier l’image">
-        <img src={srcImage(fiche.images[0].id)} alt="" style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}`, ['--r' as string]: fiche.images[0].w / fiche.images[0].h }} />
+        <img src={srcImage(fiche.images[0].id)} alt="" style={{ aspectRatio: `${fiche.images[0].w} / ${fiche.images[0].h}` }} />
       </button>
       <figcaption>
         <span className="credit-image">{credit(0)}</span>
