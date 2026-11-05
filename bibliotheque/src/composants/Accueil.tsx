@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Fiche, Rayon } from '../types';
+import type { Fiche, Rayon, TypeFiche } from '../types';
 import { RAYONS, rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { chercher, concepts, FILTRES_VIDES, type Resultat } from '../lib/recherche';
-import { NOM_TYPE, domaine, nomStatut } from '../lib/libelles';
-import { api } from '../lib/api';
+import { NOM_TYPE, NOM_TYPE_PLURIEL, domaine } from '../lib/libelles';
 import { Couverture } from './Couverture';
 import { Surligne } from './Surligne';
 import { Icone } from './Icone';
@@ -30,10 +29,10 @@ const lien = (f: Fiche) => `#/fiche/${encodeURIComponent(f.id)}`;
 const estLu = (f: Fiche) => f.statut === 'lu';
 
 /** Une carte : couverture pour un livre, image d'article. Les projets ont leur propre carte (mosaïque). */
-export function Carte({ fiche: f, compact = false }: { fiche: Fiche; compact?: boolean }) {
+export function Carte({ fiche: f }: { fiche: Fiche }) {
   const rayon = rayonDe(f.type);
   if (rayon === 'projets') return <CarteProjet fiche={f} />;
-  if (rayon === 'articles') return compact ? <PetitArticle fiche={f} /> : <CarteArticle fiche={f} />;
+  if (rayon === 'articles') return <PetitArticle fiche={f} />;
   const meta =
     rayon === 'livres' ? f.auteurs.join(', ') :
     [f.auteurs[0] ?? (f.editeur || domaine(f.source)), f.type !== 'article' ? NOM_TYPE[f.type] : ''].filter(Boolean).join(' · ');
@@ -52,11 +51,7 @@ export function Carte({ fiche: f, compact = false }: { fiche: Fiche; compact?: b
   );
 }
 
-/**
- * Article, podcast, exposition, vidéo, site : jamais d'image, un aplat de couleur (une teinte par type).
- * Sur l'accueil, une petite case : le type et le titre. Sur la page des articles : qui l'a fait, et « Lu » à cocher.
- */
-/** Accueil : comme un livre, un petit carré de couleur à la place de la couverture, puis le titre et qui l'a fait. */
+/** Ressource (article, podcast, exposition, vidéo) : comme un livre, un petit carré de couleur à la place de la couverture, puis le titre et qui l'a fait. */
 function PetitArticle({ fiche: f }: { fiche: Fiche }) {
   const qui = f.auteurs.length ? f.auteurs.join(', ') : f.editeur || domaine(f.source);
   return (
@@ -67,40 +62,10 @@ function PetitArticle({ fiche: f }: { fiche: Fiche }) {
         <span className="carte-meta">
           {estLu(f) && <span className="point-lu" title="Lu" aria-label="Lu" />}
           <span>{qui}</span>
+          {f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={13} /></span>}
         </span>
       </span>
     </a>
-  );
-}
-
-function CarteArticle({ fiche: f }: { fiche: Fiche }) {
-  const { majFiche, notifier } = useBiblio();
-  const [envoi, setEnvoi] = useState(false);
-  const lu = estLu(f);
-  // qui l'a fait : les auteurs, sinon l'organisme (CAUE, Cerema…), sinon le site
-  const qui = f.auteurs.length ? f.auteurs.join(', ') : f.editeur || domaine(f.source);
-  async function basculer() {
-    setEnvoi(true);
-    try {
-      const r = await api.enregistrer({ ...f, statut: lu ? 'a-lire' : 'lu' });
-      majFiche(r.fiche, r.rev);
-    } catch (e) {
-      notifier(e instanceof Error ? e.message : 'Enregistrement impossible.');
-    } finally {
-      setEnvoi(false);
-    }
-  }
-  return (
-    <div className={`carte-article-papier type-${f.type}${lu ? ' lu' : ''}`}>
-      <a className="cap-lien" href={lien(f)}>
-        <span className="cap-type">{NOM_TYPE[f.type]}{f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={11} /></span>}</span>
-        <span className="cap-titre">{f.titre}</span>
-        {qui && <span className="cap-meta">{qui}</span>}
-      </a>
-      <button type="button" className="cap-lu" aria-pressed={lu} disabled={envoi} onClick={basculer} title={lu ? 'Marquer comme pas encore lu' : 'Marquer comme lu'}>
-        <span className="cap-coche" aria-hidden="true" />{nomStatut(lu ? 'lu' : 'a-lire', f.type)}
-      </button>
-    </div>
   );
 }
 
@@ -194,11 +159,11 @@ function Mosaique({ fiches }: { fiches: Fiche[] }) {
   );
 }
 
-function Grille({ fiches, rayon, compact = false }: { fiches: Fiche[]; rayon: Rayon; compact?: boolean }) {
+function Grille({ fiches, rayon }: { fiches: Fiche[]; rayon: Rayon }) {
   if (rayon === 'projets') return <Mosaique fiches={fiches} />;
   return (
     <ul className={`grille ${rayon}`}>
-      {fiches.map((f) => <li key={f.id}><Carte fiche={f} compact={compact} /></li>)}
+      {fiches.map((f) => <li key={f.id}><Carte fiche={f} /></li>)}
     </ul>
   );
 }
@@ -234,6 +199,25 @@ function Rangee({ rayon: r, fiches }: { rayon: Rayon; fiches: Fiche[] }) {
         </ul>
       ) : <Grille fiches={affiches} rayon={r} />}
     </section>
+  );
+}
+
+/** Page Ressources : rangées par type (expositions, podcasts, vidéos, articles, sites), chacune dans sa couleur. */
+const ORDRE_RESSOURCES: TypeFiche[] = ['exposition', 'podcast', 'video', 'article', 'site'];
+function RessourcesParType({ fiches }: { fiches: Fiche[] }) {
+  return (
+    <div className="ressources-par-type">
+      {ORDRE_RESSOURCES.map((t) => {
+        const liste = fiches.filter((f) => f.type === t);
+        if (!liste.length) return null;
+        return (
+          <section key={t} className={`groupe-ressources type-${t}`}>
+            <h2 className="titre-groupe"><span className="pastille-type" aria-hidden="true" />{NOM_TYPE_PLURIEL[t]} <span className="compte">{liste.length}</span></h2>
+            <Grille fiches={liste} rayon="articles" />
+          </section>
+        );
+      })}
+    </div>
   );
 }
 
@@ -312,8 +296,8 @@ export function Accueil() {
         <h1>
           {titre}
         </h1>
-        {travail && <p className="sous-titre">Les livres, articles et projets qui nourrissent ce travail.</p>}
-        {page === 'auteur' && <p className="sous-titre">Toutes les fiches de {param} : projets, livres, articles.</p>}
+        {travail && <p className="sous-titre">Les projets, livres et ressources qui nourrissent ce travail.</p>}
+        {page === 'auteur' && <p className="sous-titre">Toutes les fiches de {param} : projets, livres, ressources.</p>}
         <div className="barre-filtres">
           {rayon === 'projets' || (page === 'auteur' && base.some((f) => f.type === 'projet')) ? <ChoixArchitecte actuel={page === 'auteur' ? param : ''} /> : <span />}
           <span className="champ-ligne">
@@ -341,6 +325,8 @@ export function Accueil() {
             <p>Aucune fiche avec ces filtres.</p>
           )}
         </div>
+      ) : rayon === 'articles' ? (
+        <RessourcesParType fiches={fiches} />
       ) : rayon ? (
         <Grille fiches={fiches} rayon={rayon} />
       ) : (
@@ -391,11 +377,11 @@ function VueAccueil() {
                   <ul className="grille projets">
                     {liste.slice(0, LIMITE.projets).map((f) => <li key={f.id}><PetitProjet fiche={f} /></li>)}
                   </ul>
-                ) : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} compact />}
+                ) : <Grille fiches={liste.slice(0, LIMITE[r])} rayon={r} />}
               </>
             ) : (
               <p className="discret rangee-vide">
-                Aucun {r === 'articles' ? 'article' : r === 'livres' ? 'livre' : 'projet'} pour l’instant. <a className="lien-texte" href="#/ajouter">Ajouter</a>
+                {r === 'articles' ? 'Aucune ressource' : r === 'livres' ? 'Aucun livre' : 'Aucun projet'} pour l’instant. <a className="lien-texte" href="#/ajouter">Ajouter</a>
               </p>
             )}
           </section>

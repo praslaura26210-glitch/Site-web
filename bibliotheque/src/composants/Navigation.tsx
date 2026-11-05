@@ -5,7 +5,7 @@ import { useBiblio } from '../contexte';
 import { FILTRES_VIDES } from '../lib/recherche';
 import { Icone, type NomIcone } from './Icone';
 
-export const NOM_RAYON: Record<Rayon, string> = { livres: 'Livres', articles: 'Articles', projets: 'Projets' };
+export const NOM_RAYON: Record<Rayon, string> = { livres: 'Livres', articles: 'Ressources', projets: 'Projets' };
 const ICONE_RAYON: Record<Rayon, NomIcone> = { livres: 'livre', articles: 'article', projets: 'projet' };
 
 /**

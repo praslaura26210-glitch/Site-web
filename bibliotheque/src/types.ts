@@ -133,5 +133,5 @@ export const STATUTS: Statut[] = ['a-lire', 'en-cours', 'lu'];
 
 /** Trois rayons : les livres, les articles (avec sites et vidéos), les projets. */
 export type Rayon = 'livres' | 'articles' | 'projets';
-export const RAYONS: Rayon[] = ['livres', 'articles', 'projets'];
+export const RAYONS: Rayon[] = ['projets', 'livres', 'articles'];
 export const rayonDe = (t: TypeFiche): Rayon => (t === 'livre' ? 'livres' : t === 'projet' ? 'projets' : 'articles');
