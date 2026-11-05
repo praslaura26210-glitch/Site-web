@@ -49,7 +49,7 @@ const MORCEAUX = /(\[\[[^\]]+\]\]|\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\*\*[^*]+\*\*
  * « [?] » signale un mot à vérifier ; [[mot]] ou [[mot|définition]] fait un mot rouge qu'on touche
  * pour voir sa définition et ses images ; [texte](https://…) fait un lien ; **gras**.
  */
-function EnLigne({ texte, ctx, toucher }: { texte: string; ctx?: CtxNotes; toucher?: (mot: string) => void }) {
+function EnLigne({ texte, ctx, toucher, survoler }: { texte: string; ctx?: CtxNotes; toucher?: (mot: string) => void; survoler?: (mot: string | null, el?: HTMLElement) => void }) {
   const morceaux = texte.split(MORCEAUX);
   return (
     <>
@@ -59,7 +59,16 @@ function EnLigne({ texte, ctx, toucher }: { texte: string; ctx?: CtxNotes; touch
         if (terme) {
           const mot = terme[1].trim();
           return toucher ? (
-            <button key={i} type="button" className={`mot-cle-notes${ctx && imagesDuMot(ctx, mot).length ? ' avec-image' : ''}`} onClick={() => toucher(mot)}>{mot}</button>
+            <button
+              key={i}
+              type="button"
+              className={`mot-cle-notes${ctx && imagesDuMot(ctx, mot).length ? ' avec-image' : ''}`}
+              onClick={() => toucher(mot)}
+              onMouseEnter={(e) => survoler?.(mot, e.currentTarget)}
+              onMouseLeave={() => survoler?.(null)}
+              onFocus={(e) => survoler?.(mot, e.currentTarget)}
+              onBlur={() => survoler?.(null)}
+            >{mot}</button>
           ) : <strong key={i} className="mot-cle-notes">{mot}</strong>;
         }
         const lien = m.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
@@ -109,6 +118,12 @@ const ancre = (t: string) => `n-${cleMot(t).replace(/ /g, '-')}`;
  */
 export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: { im: Image; i: number }[]; ouvrir?: (i: number) => void }) {
   const [ouvert, setOuvert] = useState<{ bloc: number; mot: string } | null>(null);
+  const [apercu, setApercu] = useState<{ mot: string; x: number; y: number } | null>(null);
+  const survoler = (mot: string | null, el?: HTMLElement) => {
+    if (!mot || !el || !matchMedia('(hover: hover)').matches) { setApercu(null); return; }
+    const r = el.getBoundingClientRect();
+    setApercu({ mot, x: Math.min(r.left, innerWidth - 300), y: r.bottom + 8 });
+  };
   const ctx: CtxNotes = { images, ouvrir, definitions: lireDefinitions(texte) };
   const blocs = texte.trim().split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((l) => l.length);
   const titre = (l: string[]) => (l.length === 1 && /^#{1,3}\s/.test(l[0]) ? { niveau: l[0].startsWith('###') ? 3 : 2, texte: l[0].replace(/^#+\s*/, '') } : null);
@@ -116,10 +131,30 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
   const sansBalises = (t: string) => t.replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1').replace(/\*\*/g, '');
   const aller = (t: string) => document.getElementById(ancre(sansBalises(t)))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const bulle = (i: number) => ouvert?.bloc === i && <BulleMot mot={ouvert.mot} ctx={ctx} fermer={() => setOuvert(null)} />;
-  const toucher = (i: number) => (mot: string) => setOuvert((o) => (o?.bloc === i && o.mot === mot ? null : { bloc: i, mot }));
+  // un mot qui a son image : on descend jusqu'à l'image, en bas des notes ; sinon sa définition s'ouvre sous le paragraphe
+  const toucher = (i: number) => (mot: string) => {
+    setApercu(null);
+    const im = imagesDuMot(ctx, mot)[0];
+    const cible = im && document.getElementById(`scan-${im.im.id}`);
+    if (cible) {
+      cible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      cible.classList.remove('repere'); void cible.offsetWidth; cible.classList.add('repere');
+      return;
+    }
+    if (im) { ctx.ouvrir?.(im.i); return; }
+    setOuvert((o) => (o?.bloc === i && o.mot === mot ? null : { bloc: i, mot }));
+  };
+  const imApercu = apercu ? imagesDuMot(ctx, apercu.mot)[0] : undefined;
+  const defApercu = apercu ? ctx.definitions.get(cleMot(apercu.mot)) : undefined;
 
   return (
     <div className="notes">
+      {apercu && (imApercu || defApercu) && (
+        <div className="apercu-mot" style={{ left: Math.max(8, apercu.x), top: apercu.y }} aria-hidden="true">
+          {imApercu && <img src={srcImage(imApercu.im.id)} alt="" style={{ aspectRatio: `${imApercu.im.w} / ${imApercu.im.h}` }} />}
+          {defApercu && <span>{defApercu}</span>}
+        </div>
+      )}
       {titres.length >= 3 && (
         <details className="sommaire">
           <summary><span className="sommaire-titre">Sommaire</span><span className="fleche"><Icone nom="bas" taille={18} /></span></summary>
@@ -150,7 +185,7 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
           return (
             <Fragment key={i}>
               <Balise id={ancre(propre)} className="titre-notes">
-                <EnLigne texte={t.texte} ctx={ctx} toucher={toucher(i)} />
+                <EnLigne texte={t.texte} ctx={ctx} toucher={toucher(i)} survoler={survoler} />
                 {avecImages && (
                   <button type="button" className="bouton-icone photo-titre" aria-label={`Images : ${propre}`} title="Voir les images" onClick={() => toucher(i)(propre)}>
                     <Icone nom="photo" taille={16} />
@@ -164,13 +199,13 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
         if (lignes.every((l) => /^[-•]\s/.test(l))) {
           return (
             <Fragment key={i}>
-              <ul>{lignes.map((l, k) => <li key={k}><EnLigne texte={l.replace(/^[-•]\s*/, '')} ctx={ctx} toucher={toucher(i)} /></li>)}</ul>
+              <ul>{lignes.map((l, k) => <li key={k}><EnLigne texte={l.replace(/^[-•]\s*/, '')} ctx={ctx} toucher={toucher(i)} survoler={survoler} /></li>)}</ul>
               {bulle(i)}
             </Fragment>
           );
         }
         const citation = lignes.every((l) => l.startsWith('>'));
-        const contenu = lignes.map((l, k) => <Fragment key={k}>{k > 0 && <br />}<EnLigne texte={citation ? l.replace(/^>\s*/, '') : l} ctx={ctx} toucher={toucher(i)} /></Fragment>);
+        const contenu = lignes.map((l, k) => <Fragment key={k}>{k > 0 && <br />}<EnLigne texte={citation ? l.replace(/^>\s*/, '') : l} ctx={ctx} toucher={toucher(i)} survoler={survoler} /></Fragment>);
         return (
           <Fragment key={i}>
             {citation ? <blockquote className="citation-notes">{contenu}</blockquote> : <p>{contenu}</p>}
@@ -242,7 +277,7 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
             {images.length > 0 && (
               <ul className="scans-liste">
                 {images.map(({ im, i }) => (
-                  <li key={im.id}>
+                  <li key={im.id} id={`scan-${im.id}`}>
                     <button type="button" onClick={() => ouvrir(i)} aria-label={`Agrandir : ${im.credit ?? 'scan'}`}>
                       <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
                     </button>

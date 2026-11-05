@@ -1304,3 +1304,19 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .notes h4.titre-notes { font: 600 20px/1.25 var(--titre); color: #A55135; margin: 14px 0 -10px; }
 .ajout-scan { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--encre-3); cursor: pointer; justify-self: start; }
 .ajout-scan:hover { color: var(--terracotta); }
+
+/* mot des notes : l'image apparaît au survol (ordinateur) ; un clic descend jusqu'à elle, en bas */
+.apercu-mot { position: fixed; z-index: 50; width: 280px; display: grid; gap: 6px; padding: 8px; background: var(--fond); border: 1px solid var(--filet); border-radius: 8px; box-shadow: 0 14px 30px -14px rgb(43 32 27 / .45); pointer-events: none; font-size: 13.5px; line-height: 1.45; color: var(--encre-2); }
+.apercu-mot img { width: 100%; height: auto; display: block; border-radius: 4px; }
+.scans-liste li.repere { animation: repere 1.6s ease; border-radius: 6px; }
+@keyframes repere { 0%, 40% { box-shadow: 0 0 0 4px var(--terracotta); } 100% { box-shadow: 0 0 0 4px transparent; } }
+.scans-liste li { scroll-margin: 120px; }
+.notes h4.titre-notes { font: 600 22px/1.25 var(--titre); color: #A55135; margin: 16px 0 -10px; }
+.texte-projet { white-space: pre-line; }
+
+/* ressources : un rond au trait de couleur, le type écrit dedans dans la même couleur */
+.pa-carre { background: var(--fond); border: 2px solid var(--aplat); }
+.pa-type, .petit-article.type-podcast .pa-type { color: var(--aplat); font-weight: 600; }
+.petit-article.type-podcast .pa-carre { --aplat: #C9A27A; }
+.groupe-ressources.type-podcast .pastille-type { background: #C9A27A; }
+.petit-article:hover .pa-carre { background: color-mix(in srgb, var(--aplat) 8%, var(--fond)); }
