@@ -1417,3 +1417,5 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .pa-bande { font-size: max(11px, 12.5cqi); letter-spacing: .1em; }
 .pa-titre { color: var(--c-texte); font-weight: 600; }
 .titre-groupe .compte { font-size: 8px; position: relative; top: -.55em; vertical-align: baseline; margin-left: -8px; color: var(--encre-3); }
+/* cadre dans la couleur du type (validé) */
+.pa-couv { border-color: var(--c); }
