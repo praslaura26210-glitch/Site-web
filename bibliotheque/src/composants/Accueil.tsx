@@ -60,14 +60,8 @@ function PetitArticle({ fiche: f }: { fiche: Fiche }) {
         <span className="pa-bande">{NOM_TYPE[f.type]}</span>
         <span className="pa-titre">{f.titre}</span>
         <span className="pa-qui">{qui}</span>
-      </span>
-      <span className="carte-texte">
-        <span className="carte-titre">{f.titre}</span>
-        <span className="carte-meta">
-          {estLu(f) && <span className="point-lu" title="Lu" aria-label="Lu" />}
-          <span>{qui}</span>
-          {f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={13} /></span>}
-        </span>
+        {estLu(f) && <span className="point-lu pa-lu" title="Lu" aria-label="Lu" />}
+        {f.favori && <span className="coeur-petit pa-coeur" aria-label="Favori"><Icone nom="coeur" taille={11} /></span>}
       </span>
     </a>
   );

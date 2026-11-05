@@ -1361,3 +1361,17 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .groupe-ressources.type-video .pastille-type { background: #C58B59; }
 .groupe-ressources.type-podcast .pastille-type { background: #B88C5E; }
 .groupe-ressources.type-exposition .pastille-type { background: #712724; }
+
+/* ===== Essai : ressources en petits carrés, tout dedans (type en capitales de couleur, titre, auteur), rien dessous ===== */
+.titre-groupe { font-size: 19px; }
+.grille.articles { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 14px; }
+.accueil .grille.articles { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 960px) { .accueil .grille.articles, .grille.articles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } }
+.petit-article { gap: 0; }
+.petit-article .carte-texte { display: none; }
+.pa-couv { position: relative; aspect-ratio: 1 / 1; justify-content: flex-start; gap: 5%; padding: 9% 8% 8%; }
+.pa-bande { width: auto; padding: 0; background: none; color: var(--c); font-weight: 600; font-size: max(7px, 7cqi); letter-spacing: .14em; }
+.pa-titre { flex: 1; display: -webkit-box; -webkit-line-clamp: 4; align-content: center; padding: 0; font-size: max(11px, 11.5cqi); line-height: 1.12; }
+.pa-qui { padding: 0; font-size: max(6.5px, 6cqi); }
+.pa-lu { position: absolute; top: 7px; right: 7px; }
+.pa-coeur { position: absolute; top: 5px; left: 6px; color: var(--terracotta); }
