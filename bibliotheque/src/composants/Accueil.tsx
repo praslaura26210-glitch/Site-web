@@ -3,7 +3,8 @@ import type { Fiche, Rayon } from '../types';
 import { RAYONS, rayonDe } from '../types';
 import { nomTravail, useBiblio } from '../contexte';
 import { chercher, concepts, FILTRES_VIDES, type Resultat } from '../lib/recherche';
-import { NOM_TYPE, domaine } from '../lib/libelles';
+import { NOM_TYPE, domaine, nomStatut } from '../lib/libelles';
+import { api } from '../lib/api';
 import { Couverture } from './Couverture';
 import { Surligne } from './Surligne';
 import { Icone } from './Icone';
@@ -32,6 +33,7 @@ const estLu = (f: Fiche) => f.statut === 'lu';
 export function Carte({ fiche: f }: { fiche: Fiche }) {
   const rayon = rayonDe(f.type);
   if (rayon === 'projets') return <CarteProjet fiche={f} />;
+  if (rayon === 'articles') return <CarteArticle fiche={f} />;
   const meta =
     rayon === 'livres' ? f.auteurs.join(', ') :
     [f.auteurs[0] ?? (f.editeur || domaine(f.source)), f.type !== 'article' ? NOM_TYPE[f.type] : ''].filter(Boolean).join(' · ');
@@ -47,6 +49,42 @@ export function Carte({ fiche: f }: { fiche: Fiche }) {
         </span>
       </span>
     </a>
+  );
+}
+
+/**
+ * Article, podcast, exposition, vidéo, site : jamais d'image, une fiche de papier blanc.
+ * Une fine bande de couleur dit le type ; on coche « Lu » sans ouvrir la fiche.
+ */
+function CarteArticle({ fiche: f }: { fiche: Fiche }) {
+  const { majFiche, notifier } = useBiblio();
+  const [envoi, setEnvoi] = useState(false);
+  const lu = estLu(f);
+  const source = f.editeur || domaine(f.source);
+  const meta = [f.auteurs.join(', '), f.annee].filter(Boolean).join(' · ');
+  async function basculer() {
+    setEnvoi(true);
+    try {
+      const r = await api.enregistrer({ ...f, statut: lu ? 'a-lire' : 'lu' });
+      majFiche(r.fiche, r.rev);
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Enregistrement impossible.');
+    } finally {
+      setEnvoi(false);
+    }
+  }
+  return (
+    <div className={`carte-article-papier type-${f.type}${lu ? ' lu' : ''}`}>
+      <a className="cap-lien" href={lien(f)}>
+        <span className="cap-type">{NOM_TYPE[f.type]}{f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={11} /></span>}</span>
+        <span className="cap-titre">{f.titre}</span>
+        {f.sousTitre && <span className="cap-sous">{f.sousTitre}</span>}
+        {(meta || source) && <span className="cap-meta">{[meta, source].filter(Boolean).join(' — ')}</span>}
+      </a>
+      <button type="button" className="cap-lu" aria-pressed={lu} disabled={envoi} onClick={basculer} title={lu ? 'Marquer comme pas encore lu' : 'Marquer comme lu'}>
+        <span className="cap-coche" aria-hidden="true" />{nomStatut(lu ? 'lu' : 'a-lire', f.type)}
+      </button>
+    </div>
   );
 }
 
@@ -306,7 +344,7 @@ function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
   // quelques fiches seulement ; le reste avec « Voir plus »
-  const LIMITE: Record<Rayon, number> = { livres: 8, articles: 4, projets: 8 };
+  const LIMITE: Record<Rayon, number> = { livres: 8, articles: 8, projets: 8 };
 
   if (!biblio.fiches.length) {
     return (

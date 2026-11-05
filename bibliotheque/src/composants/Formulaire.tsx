@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Citation, Famille, Fiche, LienWeb, TypeFiche } from '../types';
-import { TYPES, estDessin } from '../types';
+import { TYPES, estDessin, rayonDe } from '../types';
 import { classeTravail, useBiblio } from '../contexte';
 import { api, srcImage } from '../lib/api';
 import { compresser } from '../lib/images';
@@ -534,6 +534,8 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </div>
       </details>
 
+      {existante && <SupprimerDepuisFormulaire fiche={existante} />}
+
       <div className="formulaire-pied">
         <button type="button" className="bouton" onClick={annuler}>Annuler</button>
         <button className="bouton principal" disabled={envoi || imagesEnCours > 0}>
@@ -541,6 +543,37 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </button>
       </div>
     </form>
+  );
+}
+
+/** En bas du formulaire, sous « Plus d’informations » : supprimer la fiche, après confirmation. */
+function SupprimerDepuisFormulaire({ fiche }: { fiche: Fiche }) {
+  const { retirerFiche, naviguer, notifier } = useBiblio();
+  const [confirmer, setConfirmer] = useState(false);
+  const [envoi, setEnvoi] = useState(false);
+  async function supprimer() {
+    setEnvoi(true);
+    try {
+      const r = await api.supprimer(fiche.id);
+      retirerFiche(fiche.id, r.rev);
+      notifier('Fiche supprimée.');
+      naviguer(rayonDe(fiche.type));
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Suppression impossible.');
+      setEnvoi(false);
+    }
+  }
+  if (!confirmer) {
+    return <button type="button" className="lien-texte petit supprimer supprimer-form" onClick={() => setConfirmer(true)}>Supprimer la fiche…</button>;
+  }
+  return (
+    <div className="confirmer-suppression-form" role="alert">
+      <span>Supprimer « {fiche.titre} » ? La fiche, ses notes et ses images seront effacées.</span>
+      <span className="actions-confirmer">
+        <button type="button" className="bouton" onClick={() => setConfirmer(false)} disabled={envoi}>Non</button>
+        <button type="button" className="bouton danger" onClick={supprimer} disabled={envoi}>Oui, supprimer</button>
+      </span>
+    </div>
   );
 }
 
