@@ -1425,3 +1425,6 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .pa-bande { font-size: max(12px, 14cqi); letter-spacing: .08em; }
 .pa-titre { font-size: max(13px, 14.5cqi); line-height: 1.1; -webkit-line-clamp: 5; }
 .pa-qui { font-size: max(7.5px, 7cqi); }
+/* ressources : la même ombre que les livres, un peu plus allongées, type un peu plus petit */
+.pa-couv { box-shadow: var(--ombre-livre); aspect-ratio: 5 / 7; }
+.pa-bande { font-size: max(11px, 13cqi); }
