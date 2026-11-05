@@ -1,6 +1,6 @@
 /** Structure des données, partagée entre le site et la fonction Netlify. */
 
-export type TypeFiche = 'livre' | 'article' | 'projet' | 'site' | 'video';
+export type TypeFiche = 'livre' | 'article' | 'projet' | 'site' | 'video' | 'podcast' | 'exposition';
 export type Statut = 'a-lire' | 'en-cours' | 'lu';
 
 /** Une image enregistrée : servie à l'adresse /api/images/<id>. */
@@ -128,7 +128,7 @@ export interface Bibliotheque {
   ajoutsVersion?: number;
 }
 
-export const TYPES: TypeFiche[] = ['livre', 'article', 'projet', 'site', 'video'];
+export const TYPES: TypeFiche[] = ['livre', 'article', 'projet', 'site', 'video', 'podcast', 'exposition'];
 export const STATUTS: Statut[] = ['a-lire', 'en-cours', 'lu'];
 
 /** Trois rayons : les livres, les articles (avec sites et vidéos), les projets. */

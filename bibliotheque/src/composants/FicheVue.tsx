@@ -16,35 +16,166 @@ const date = (iso?: string) => (iso ? new Date(iso).toLocaleDateString('fr-FR', 
 export const rechercheWeb = (f: Pick<Fiche, 'titre' | 'auteurs' | 'type' | 'editeur'>) =>
   `https://www.google.com/search?q=${encodeURIComponent([f.titre, f.auteurs[0], f.type === 'projet' ? 'architecture' : f.editeur].filter(Boolean).join(' '))}`;
 
-/** « [?] » dans mes notes : un mot à vérifier, signalé discrètement. */
-function EnLigne({ texte }: { texte: string }) {
-  const morceaux = texte.split(/(\[\?\]|\[[^\]]*à vérifier\])/);
+/** Ce que les notes savent de leur fiche : les images (pour les mots qui en ont) et de quoi les ouvrir. */
+interface CtxNotes {
+  images: { im: Image; i: number }[];
+  ouvrir?: (i: number) => void;
+  definitions: Map<string, string>;
+}
+
+const cleMot = (m: string) => normaliser(m);
+
+/** Les images dont la légende parle de ce mot (« charpente » → légende « Charpente à chandelle »). */
+function imagesDuMot(ctx: CtxNotes, mot: string) {
+  const m = cleMot(mot);
+  if (m.length < 3) return [];
+  return ctx.images.filter(({ im }) => {
+    const l = cleMot(im.credit ?? '');
+    return l.length >= 3 && (` ${l} `.includes(` ${m} `) || ` ${m} `.includes(` ${l} `));
+  });
+}
+
+/** Toutes les définitions écrites dans les notes : [[mot|définition]]. */
+function lireDefinitions(texte: string) {
+  const defs = new Map<string, string>();
+  for (const [, mot, def] of texte.matchAll(/\[\[([^\]|]+)\|([^\]]+)\]\]/g)) defs.set(cleMot(mot), def.trim());
+  return defs;
+}
+
+const MORCEAUX = /(\[\[[^\]]+\]\]|\[[^\]]+\]\(https?:\/\/[^)\s]+\)|\*\*[^*]+\*\*|\[\?\]|\[[^\]]*à vérifier\])/;
+
+/**
+ * Une ligne de notes :
+ * « [?] » signale un mot à vérifier ; [[mot]] ou [[mot|définition]] fait un mot rouge qu'on touche
+ * pour voir sa définition et ses images ; [texte](https://…) fait un lien ; **gras**.
+ */
+function EnLigne({ texte, ctx, toucher }: { texte: string; ctx?: CtxNotes; toucher?: (mot: string) => void }) {
+  const morceaux = texte.split(MORCEAUX);
   return (
     <>
-      {morceaux.map((m, i) =>
-        /^\[(\?|[^\]]*à vérifier)\]$/.test(m)
-          ? <span key={i} className="doute" title={m === '[?]' ? 'Mot incertain, à vérifier' : m.slice(1, -1)}>?</span>
-          : <Fragment key={i}>{m}</Fragment>,
-      )}
+      {morceaux.map((m, i) => {
+        if (/^\[(\?|[^\]]*à vérifier)\]$/.test(m)) return <span key={i} className="doute" title={m === '[?]' ? 'Mot incertain, à vérifier' : m.slice(1, -1)}>?</span>;
+        const terme = m.match(/^\[\[([^\]|]+)(?:\|[^\]]+)?\]\]$/);
+        if (terme) {
+          const mot = terme[1].trim();
+          return toucher ? (
+            <button key={i} type="button" className={`mot-cle-notes${ctx && imagesDuMot(ctx, mot).length ? ' avec-image' : ''}`} onClick={() => toucher(mot)}>{mot}</button>
+          ) : <strong key={i} className="mot-cle-notes">{mot}</strong>;
+        }
+        const lien = m.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
+        if (lien) return <a key={i} className="lien-texte" href={lien[2]} target="_blank" rel="noreferrer">{lien[1]}</a>;
+        if (/^\*\*[^*]+\*\*$/.test(m)) return <strong key={i}>{m.slice(2, -2)}</strong>;
+        return <Fragment key={i}>{m}</Fragment>;
+      })}
     </>
   );
 }
 
-/** Mes notes : « ## » donne un intertitre, « - » une liste, une ligne vide sépare les paragraphes. */
-export function Notes({ texte }: { texte: string }) {
-  const blocs = texte.trim().split(/\n\s*\n/);
+/** Ce qui s'ouvre sous le paragraphe quand on touche un mot rouge (ou l'appareil photo d'un intertitre). */
+function BulleMot({ mot, ctx, fermer }: { mot: string; ctx: CtxNotes; fermer: () => void }) {
+  const def = ctx.definitions.get(cleMot(mot));
+  const imgs = imagesDuMot(ctx, mot);
+  return (
+    <aside className="bulle-mot" aria-label={mot}>
+      <div className="bulle-tete">
+        <strong>{mot}</strong>
+        <button type="button" className="bouton-icone" aria-label="Fermer" onClick={fermer}><Icone nom="fermer" taille={16} /></button>
+      </div>
+      {def && <p><EnLigne texte={def} /></p>}
+      {imgs.length > 0 && (
+        <ul className="bulle-images">
+          {imgs.map(({ im, i }) => (
+            <li key={im.id}>
+              <button type="button" onClick={() => ctx.ouvrir?.(i)} aria-label={`Agrandir : ${im.credit ?? mot}`}>
+                <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
+              </button>
+              {im.credit && <span>{im.credit}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {!def && !imgs.length && (
+        <p className="discret">Pas encore d’image pour ce mot. Ajoute un scan avec le « + » sous tes notes, puis donne-lui la légende « {mot} ».</p>
+      )}
+    </aside>
+  );
+}
+
+const ancre = (t: string) => `n-${cleMot(t).replace(/ /g, '-')}`;
+
+/**
+ * Mes notes : « ## » donne un titre, « ### » un sous-titre (un sommaire se fait tout seul),
+ * « - » une liste, une ligne vide sépare les paragraphes ; voir EnLigne pour les mots rouges et les liens.
+ */
+export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: { im: Image; i: number }[]; ouvrir?: (i: number) => void }) {
+  const [ouvert, setOuvert] = useState<{ bloc: number; mot: string } | null>(null);
+  const ctx: CtxNotes = { images, ouvrir, definitions: lireDefinitions(texte) };
+  const blocs = texte.trim().split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((l) => l.length);
+  const titre = (l: string[]) => (l.length === 1 && /^#{1,3}\s/.test(l[0]) ? { niveau: l[0].startsWith('###') ? 3 : 2, texte: l[0].replace(/^#+\s*/, '') } : null);
+  const titres = blocs.map(titre).filter((t): t is { niveau: number; texte: string } => t !== null);
+  const sansBalises = (t: string) => t.replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1').replace(/\*\*/g, '');
+  const aller = (t: string) => document.getElementById(ancre(sansBalises(t)))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const bulle = (i: number) => ouvert?.bloc === i && <BulleMot mot={ouvert.mot} ctx={ctx} fermer={() => setOuvert(null)} />;
+  const toucher = (i: number) => (mot: string) => setOuvert((o) => (o?.bloc === i && o.mot === mot ? null : { bloc: i, mot }));
+
   return (
     <div className="notes">
-      {blocs.map((b, i) => {
-        const lignes = b.split('\n').map((l) => l.trim()).filter(Boolean);
-        if (lignes.length === 1 && /^#{1,3}\s/.test(lignes[0])) return <h3 key={i}><EnLigne texte={lignes[0].replace(/^#+\s*/, '')} /></h3>;
-        if (lignes.every((l) => /^[-•]\s/.test(l))) {
-          return <ul key={i}>{lignes.map((l, k) => <li key={k}><EnLigne texte={l.replace(/^[-•]\s*/, '')} /></li>)}</ul>;
+      {titres.length >= 3 && (
+        <nav className="sommaire" aria-label="Sommaire">
+          <p className="sommaire-titre">Sommaire</p>
+          <ol>
+            {titres.reduce<{ titre: string; sous: string[] }[]>((g, t) => {
+              if (t.niveau === 3 && g.length) g[g.length - 1].sous.push(t.texte);
+              else g.push({ titre: t.texte, sous: [] });
+              return g;
+            }, []).map((g, k) => (
+              <li key={k}>
+                <button type="button" className="sommaire-partie" onClick={() => aller(g.titre)}>{sansBalises(g.titre)}</button>
+                {g.sous.length > 0 && (
+                  <span className="sommaire-sous">
+                    {g.sous.map((x, j) => <button key={j} type="button" onClick={() => aller(x)}>{sansBalises(x)}</button>)}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+      {blocs.map((lignes, i) => {
+        const t = titre(lignes);
+        if (t) {
+          const propre = sansBalises(t.texte);
+          const Balise = t.niveau === 3 ? 'h4' : 'h3';
+          const avecImages = imagesDuMot(ctx, propre).length > 0;
+          return (
+            <Fragment key={i}>
+              <Balise id={ancre(propre)} className="titre-notes">
+                <EnLigne texte={t.texte} ctx={ctx} toucher={toucher(i)} />
+                {avecImages && (
+                  <button type="button" className="bouton-icone photo-titre" aria-label={`Images : ${propre}`} title="Voir les images" onClick={() => toucher(i)(propre)}>
+                    <Icone nom="photo" taille={16} />
+                  </button>
+                )}
+              </Balise>
+              {bulle(i)}
+            </Fragment>
+          );
         }
+        if (lignes.every((l) => /^[-•]\s/.test(l))) {
+          return (
+            <Fragment key={i}>
+              <ul>{lignes.map((l, k) => <li key={k}><EnLigne texte={l.replace(/^[-•]\s*/, '')} ctx={ctx} toucher={toucher(i)} /></li>)}</ul>
+              {bulle(i)}
+            </Fragment>
+          );
+        }
+        const citation = lignes.every((l) => l.startsWith('>'));
+        const contenu = lignes.map((l, k) => <Fragment key={k}>{k > 0 && <br />}<EnLigne texte={citation ? l.replace(/^>\s*/, '') : l} ctx={ctx} toucher={toucher(i)} /></Fragment>);
         return (
-          <p key={i}>
-            {lignes.map((l, k) => <Fragment key={k}>{k > 0 && <br />}<EnLigne texte={l} /></Fragment>)}
-          </p>
+          <Fragment key={i}>
+            {citation ? <blockquote className="citation-notes">{contenu}</blockquote> : <p>{contenu}</p>}
+            {bulle(i)}
+          </Fragment>
         );
       })}
     </div>
@@ -85,9 +216,12 @@ function ProjetsCites({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
 }
 
 /** Mes notes repliées : on les déroule quand on veut les relire. Les projets du livre y sont rangés. */
-function MesNotes({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
+function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; projets: Fiche[]; ouvrir: (i: number) => void; enregistrer: (f: Fiche, m?: string) => void }) {
   const texte = fiche.retenu ?? '';
   const avecProjets = fiche.type !== 'projet';
+  const livre = fiche.type === 'livre';
+  // pour un livre, la première image est la couverture : les suivantes sont les scans et schémas
+  const images = fiche.images.map((im, i) => ({ im, i })).filter(({ i }) => !livre || i > 0);
   return (
     <details className="deroulant">
       <summary>
@@ -99,8 +233,29 @@ function MesNotes({ fiche, projets }: { fiche: Fiche; projets: Fiche[] }) {
         <span className="fleche"><Icone nom="droite" taille={20} /></span>
       </summary>
       <div className="deroulant-contenu">
-        {texte ? <Notes texte={texte} /> : (
+        {texte ? <Notes texte={texte} images={images} ouvrir={ouvrir} /> : (
           <p className="discret">Pour écrire tes notes : <a className="lien-texte" href={`#/modifier/${encodeURIComponent(fiche.id)}`}>Modifier</a>.</p>
+        )}
+        {livre && (
+          <section className="scans-notes" aria-label="Scans et schémas">
+            <h3 className="titre-encarts">Scans et schémas</h3>
+            {images.length > 0 && (
+              <ul className="scans-liste">
+                {images.map(({ im, i }) => (
+                  <li key={im.id}>
+                    <button type="button" onClick={() => ouvrir(i)} aria-label={`Agrandir : ${im.credit ?? 'scan'}`}>
+                      <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
+                    </button>
+                    <span>{im.credit || 'Sans légende'}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="aide">Touche un scan pour l’agrandir et lui donner une légende : avec la légende « charpente », il s’ouvre quand on touche le mot rouge « charpente » dans les notes.</p>
+            <AjoutImage fiche={fiche} enregistrer={enregistrer} className="bouton-icone ajout-rond">
+              <Icone nom="plus" taille={18} />
+            </AjoutImage>
+          </section>
         )}
         {avecProjets && <ProjetsCites fiche={fiche} projets={projets} />}
       </div>
@@ -484,7 +639,7 @@ export function FicheVue({ id }: { id: string }) {
       <Liens fiche={fiche} />
       <Pdfs fiche={fiche} enregistrer={enregistrer} />
 
-      {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} />}
+      {(fiche.retenu || !projet) && <MesNotes fiche={fiche} projets={projetsCites} ouvrir={(i) => setVisionneuse(i)} enregistrer={enregistrer} />}
 
       {fiche.citations.length > 0 && (
         <section className="bloc">

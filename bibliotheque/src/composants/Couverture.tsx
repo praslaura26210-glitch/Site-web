@@ -9,7 +9,7 @@ export function Couverture({ fiche, classe = '' }: { fiche: Fiche; classe?: stri
     return <img className={`couv ${classe}`} src={srcImage(i.id)} alt="" loading="lazy" decoding="async" draggable={false} style={{ aspectRatio: `${i.w} / ${i.h}` }} />;
   }
   const haut = fiche.auteurs[0] ?? NOM_TYPE[fiche.type];
-  const bas = fiche.type === 'site' || fiche.type === 'video' ? domaine(fiche.source) : fiche.editeur;
+  const bas = fiche.type === 'site' || fiche.type === 'video' || fiche.type === 'podcast' ? domaine(fiche.source) : fiche.editeur;
   return (
     <div className={`couv couv-dessinee type-${fiche.type} ${classe}`} aria-hidden="true">
       <span className="couv-type">{haut}</span>

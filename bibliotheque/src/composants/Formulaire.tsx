@@ -52,6 +52,14 @@ const LIBELLES: Record<TypeFiche, { titre: string; auteurs: string; editeur: str
     titre: 'Titre de la vidéo', auteurs: 'Réalisation ou intervenant', editeur: 'Chaîne ou plateforme', exempleEditeur: 'Ex. : YouTube, Arte', lien: 'Lien vers la vidéo',
     images: 'Image', aideImages: 'Facultatif : une capture de la vidéo.', aideResume: 'De quoi parle la vidéo ?',
   },
+  podcast: {
+    titre: 'Titre de l’épisode', auteurs: 'Invité(s) ou intervenant(s)', editeur: 'Émission', exempleEditeur: 'Ex. : Le Chantier', lien: 'Lien vers l’épisode',
+    images: 'Image', aideImages: 'Facultatif : la vignette de l’épisode.', aideResume: 'De quoi parle l’épisode ?',
+  },
+  exposition: {
+    titre: 'Titre de l’exposition', auteurs: 'Artistes, commissaires', editeur: 'Lieu', exempleEditeur: 'Ex. : CAUE de Haute-Savoie, Annecy', lien: 'Page de l’exposition',
+    images: 'Images', aideImages: 'Photos de l’exposition, cartels, panneaux.', aideResume: 'Le propos de l’exposition.',
+  },
 };
 
 const aujourdhui = () => new Date().toISOString().slice(0, 10);
@@ -256,7 +264,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         <legend className="etiquette">C’est…</legend>
         <div className="segments">
           {TYPES.map((x) => (
-            <button type="button" key={x} className="pastille" aria-pressed={t === x} onClick={() => maj({ type: x, consulte: (x === 'site' || x === 'video') && !f.consulte ? aujourdhui() : f.consulte })}>
+            <button type="button" key={x} className="pastille" aria-pressed={t === x} onClick={() => maj({ type: x, consulte: (x === 'site' || x === 'video' || x === 'podcast') && !f.consulte ? aujourdhui() : f.consulte })}>
               {NOM_TYPE[x]}
             </button>
           ))}
@@ -345,7 +353,7 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
           </div>
         )}
 
-        {(t === 'site' || t === 'video') && (
+        {(t === 'site' || t === 'video' || t === 'podcast') && (
           <div className="champ etroit">
             <label className="etiquette" htmlFor="consulte">Consulté le</label>
             <input id="consulte" type="date" value={f.consulte ?? ''} onChange={(e) => maj({ consulte: e.target.value })} />

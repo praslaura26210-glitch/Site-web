@@ -8,12 +8,14 @@ import { normaliser } from '../lib/recherche';
 import { creerZip, lireZip } from '../lib/zip';
 import { DEMO, enregistreEnLigne, envoyerImagesLocales, imagesLocales, reinitialiserDemo } from '../lib/demo';
 import { Icone } from './Icone';
+import { NOM_TYPE } from '../lib/libelles';
 
 export function Reglages() {
   return (
     <div className="reglages">
       <h1 className="titre-page">Réglages</h1>
       <Travaux />
+      <SupprimerFiches />
       <details className="avance">
         <summary>Plus de réglages</summary>
         <div>
@@ -31,6 +33,60 @@ export function Reglages() {
         </div>
       </details>
     </div>
+  );
+}
+
+/** Supprimer une fiche (livre, projet, article…) : on la cherche, on confirme, elle disparaît avec ses images. */
+function SupprimerFiches() {
+  const { biblio, retirerFiche, notifier } = useBiblio();
+  const [q, setQ] = useState('');
+  const [aConfirmer, setAConfirmer] = useState<string | null>(null);
+  const [envoi, setEnvoi] = useState(false);
+  const n = normaliser(q);
+  const trouvees = n.length < 2 ? [] : biblio.fiches
+    .filter((f) => normaliser(`${f.titre} ${f.sousTitre ?? ''} ${f.auteurs.join(' ')}`).includes(n))
+    .sort((a, b) => a.titre.localeCompare(b.titre, 'fr'))
+    .slice(0, 30);
+  async function supprimer(f: Fiche) {
+    setEnvoi(true);
+    try {
+      const r = await api.supprimer(f.id);
+      retirerFiche(f.id, r.rev);
+      notifier(`« ${f.titre} » supprimée.`);
+      setAConfirmer(null);
+    } catch (e) {
+      notifier(e instanceof Error ? e.message : 'Suppression impossible.');
+    } finally {
+      setEnvoi(false);
+    }
+  }
+  return (
+    <section className="reglage">
+      <h2>Supprimer une fiche</h2>
+      <p className="aide">Tape quelques lettres du titre ou de l’auteur, puis « Supprimer ». La fiche, ses notes et ses images sont effacées.</p>
+      <input className="champ-texte" type="search" value={q} onChange={(e) => { setQ(e.target.value); setAConfirmer(null); }} placeholder="Titre ou auteur…" aria-label="Chercher la fiche à supprimer" />
+      {n.length >= 2 && !trouvees.length && <p className="discret">Aucune fiche ne correspond.</p>}
+      {trouvees.length > 0 && (
+        <ul className="liste-suppression">
+          {trouvees.map((f) => (
+            <li key={f.id}>
+              <span className="titre-suppr">
+                <strong>{f.titre}</strong>
+                <span className="discret">{[NOM_TYPE[f.type], f.auteurs.join(', '), f.annee].filter(Boolean).join(' · ')}</span>
+              </span>
+              {aConfirmer === f.id ? (
+                <span className="actions-confirmer">
+                  <button className="bouton" onClick={() => setAConfirmer(null)} disabled={envoi}>Annuler</button>
+                  <button className="bouton danger" onClick={() => supprimer(f)} disabled={envoi}>Oui, supprimer</button>
+                </span>
+              ) : (
+                <button className="bouton" onClick={() => setAConfirmer(f.id)}>Supprimer</button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
