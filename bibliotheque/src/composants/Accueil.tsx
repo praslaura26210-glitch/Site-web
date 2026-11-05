@@ -53,15 +53,15 @@ export function Carte({ fiche: f }: { fiche: Fiche }) {
 }
 
 /**
- * Article, podcast, exposition, vidéo, site : jamais d'image, une fiche de papier blanc.
- * Une fine bande de couleur dit le type ; on coche « Lu » sans ouvrir la fiche.
+ * Article, podcast, exposition, vidéo, site : jamais d'image, un aplat de couleur (une teinte par type).
+ * Sur l'accueil, une petite case : le type et le titre. Sur la page des articles : qui l'a fait, et « Lu » à cocher.
  */
 function CarteArticle({ fiche: f }: { fiche: Fiche }) {
   const { majFiche, notifier } = useBiblio();
   const [envoi, setEnvoi] = useState(false);
   const lu = estLu(f);
-  const source = f.editeur || domaine(f.source);
-  const meta = [f.auteurs.join(', '), f.annee].filter(Boolean).join(' · ');
+  // qui l'a fait : les auteurs, sinon l'organisme (CAUE, Cerema…), sinon le site
+  const qui = f.auteurs.length ? f.auteurs.join(', ') : f.editeur || domaine(f.source);
   async function basculer() {
     setEnvoi(true);
     try {
@@ -78,8 +78,7 @@ function CarteArticle({ fiche: f }: { fiche: Fiche }) {
       <a className="cap-lien" href={lien(f)}>
         <span className="cap-type">{NOM_TYPE[f.type]}{f.favori && <span className="coeur-petit" aria-label="Favori"><Icone nom="coeur" taille={11} /></span>}</span>
         <span className="cap-titre">{f.titre}</span>
-        {f.sousTitre && <span className="cap-sous">{f.sousTitre}</span>}
-        {(meta || source) && <span className="cap-meta">{[meta, source].filter(Boolean).join(' — ')}</span>}
+        {qui && <span className="cap-meta">{qui}</span>}
       </a>
       <button type="button" className="cap-lu" aria-pressed={lu} disabled={envoi} onClick={basculer} title={lu ? 'Marquer comme pas encore lu' : 'Marquer comme lu'}>
         <span className="cap-coche" aria-hidden="true" />{nomStatut(lu ? 'lu' : 'a-lire', f.type)}
