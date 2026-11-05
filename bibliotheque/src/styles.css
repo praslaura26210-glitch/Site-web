@@ -1333,3 +1333,31 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 
 /* ressources : de l'air entre le titre de la page et le premier groupe */
 .ressources-par-type { margin-top: 36px; }
+
+/* formulaire : « Supprimer » comme une partie, juste avant Enregistrer / Annuler */
+.partie-suppression .actions-confirmer { display: inline-flex; flex-wrap: wrap; gap: 8px; }
+.partie-suppression .bouton-supprimer { justify-self: start; }
+
+/* ===== Ressources, piste A : comme les livres, une couverture de revue (papier blanc, bandeau de couleur) ===== */
+.petit-article { --c: #A55135; }
+.petit-article.type-video { --c: #C58B59; }
+.petit-article.type-podcast { --c: #B88C5E; }
+.petit-article.type-exposition { --c: #712724; }
+.petit-article.type-site { --c: #8C522D; }
+.pa-couv {
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 6px;
+  aspect-ratio: 2 / 3; width: 100%; padding: 0 0 9%; overflow: hidden; text-align: center;
+  background: #FFFFFF; border: 1px solid var(--filet); box-shadow: 0 1px 2px rgb(43 32 27 / .06);
+  container-type: inline-size; transition: transform .3s cubic-bezier(.2,.7,.2,1);
+}
+.petit-article:hover .pa-couv { transform: translateY(-4px); }
+.pa-bande { width: 100%; padding: 5px 4px; background: var(--c); color: #FFFFFF; font: 500 max(7px, 6.5cqi)/1.2 var(--texte); letter-spacing: .16em; text-transform: uppercase; }
+.pa-titre { padding: 0 9%; font: 600 max(11px, 11cqi)/1.1 var(--titre); color: var(--c); display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.pa-qui { max-width: 100%; padding: 0 8%; font: 400 max(6.5px, 5.6cqi)/1.2 var(--texte); letter-spacing: .1em; text-transform: uppercase; color: var(--encre-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.accueil .grille.articles, .grille.articles { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 28px 18px; }
+.accueil .grille.articles { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+@media (max-width: 960px) { .accueil .grille.articles, .grille.articles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 12px; } }
+.pastille-type { background: #A55135; border-radius: 2px; }
+.groupe-ressources.type-video .pastille-type { background: #C58B59; }
+.groupe-ressources.type-podcast .pastille-type { background: #B88C5E; }
+.groupe-ressources.type-exposition .pastille-type { background: #712724; }

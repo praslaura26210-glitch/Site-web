@@ -51,12 +51,16 @@ export function Carte({ fiche: f }: { fiche: Fiche }) {
   );
 }
 
-/** Ressource (article, podcast, exposition, vidéo) : comme un livre, un petit carré de couleur à la place de la couverture, puis le titre et qui l'a fait. */
+/** Ressource (article, podcast, exposition, vidéo) : comme un livre, une petite couverture de revue (bandeau de couleur, titre), puis le titre et qui l'a fait. */
 function PetitArticle({ fiche: f }: { fiche: Fiche }) {
   const qui = f.auteurs.length ? f.auteurs.join(', ') : f.editeur || domaine(f.source);
   return (
     <a className={`carte petit-article type-${f.type}`} href={lien(f)}>
-      <span className="pa-carre"><span className="pa-type">{NOM_TYPE[f.type]}</span></span>
+      <span className="pa-couv">
+        <span className="pa-bande">{NOM_TYPE[f.type]}</span>
+        <span className="pa-titre">{f.titre}</span>
+        <span className="pa-qui">{qui}</span>
+      </span>
       <span className="carte-texte">
         <span className="carte-titre">{f.titre}</span>
         <span className="carte-meta">

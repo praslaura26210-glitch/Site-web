@@ -534,14 +534,14 @@ export function Formulaire({ id, preremplissage }: { id?: string; preremplissage
         </div>
       </details>
 
+      {existante && <SupprimerDepuisFormulaire fiche={existante} />}
+
       <div className="formulaire-pied">
         <button type="button" className="bouton" onClick={annuler}>Annuler</button>
         <button className="bouton principal" disabled={envoi || imagesEnCours > 0}>
           {envoi ? 'Enregistrement…' : imagesEnCours > 0 ? 'Envoi des images…' : 'Enregistrer'}
         </button>
       </div>
-
-      {existante && <SupprimerDepuisFormulaire fiche={existante} />}
     </form>
   );
 }
@@ -564,15 +564,12 @@ function SupprimerDepuisFormulaire({ fiche }: { fiche: Fiche }) {
     }
   }
   return (
-    <section className="zone-suppression" aria-label="Supprimer la fiche">
-      <div>
-        <p className="etiquette">Supprimer la fiche</p>
-        <p className="aide">{confirmer ? `Supprimer « ${fiche.titre} » ? La fiche, ses notes et ses images seront effacées.` : 'La fiche, ses notes et ses images seront effacées.'}</p>
-      </div>
+    <section className="partie partie-suppression">
+      <h2>Supprimer</h2>
       {confirmer ? (
         <span className="actions-confirmer">
           <button type="button" className="bouton" onClick={() => setConfirmer(false)} disabled={envoi}>Annuler</button>
-          <button type="button" className="bouton danger" onClick={supprimer} disabled={envoi}>Oui, supprimer</button>
+          <button type="button" className="bouton danger" onClick={supprimer} disabled={envoi}>Oui, supprimer la fiche</button>
         </span>
       ) : (
         <button type="button" className="bouton bouton-supprimer" onClick={() => setConfirmer(true)}>Supprimer</button>
