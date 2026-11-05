@@ -344,7 +344,7 @@ function VueAccueil() {
   const { biblio } = useBiblio();
   const recents = [...biblio.fiches].sort(TRIS.recents);
   // quelques fiches seulement ; le reste avec « Voir plus »
-  const LIMITE: Record<Rayon, number> = { livres: 8, articles: 8, projets: 8 };
+  const LIMITE: Record<Rayon, number> = { livres: 8, articles: 9, projets: 8 };
 
   if (!biblio.fiches.length) {
     return (
