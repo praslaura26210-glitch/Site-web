@@ -262,8 +262,7 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
       <summary>
         <h2>Mes notes</h2>
         <span className="discret">
-          {texte ? '' : 'pas encore de notes'}
-          {projets.length > 0 && `${texte ? '' : ' · '}${projets.length} projet${projets.length > 1 ? 's' : ''}`}
+          {projets.length > 0 && `${projets.length} projet${projets.length > 1 ? 's' : ''}`}
         </span>
         <span className="fleche"><Icone nom="droite" taille={20} /></span>
       </summary>

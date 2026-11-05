@@ -1383,3 +1383,20 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .grille.articles { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 18px 14px; }
 .accueil .grille.articles { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 960px) { .accueil .grille.articles, .grille.articles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; } }
+
+/* ressources : contour épais dans la couleur du type, type en couleur, titre en noir ; couleurs : ocre, mi-claire, claire, bordeaux foncé */
+.petit-article { --c: #C58B59; --c-texte: #B5773F; }
+.petit-article.type-video { --c: #BD8F79; --c-texte: #A06F58; }
+.petit-article.type-podcast { --c: #DEBC9A; --c-texte: #B08A62; }
+.petit-article.type-exposition { --c: #712724; --c-texte: #712724; }
+.pa-couv { aspect-ratio: 3 / 4; border: 2.5px solid var(--c); box-shadow: none; }
+.pa-bande { color: var(--c-texte); }
+.pa-titre { color: var(--encre); font-weight: 500; }
+.pastille-type { background: #C58B59; }
+.groupe-ressources.type-video .pastille-type { background: #BD8F79; }
+.groupe-ressources.type-podcast .pastille-type { background: #DEBC9A; }
+.groupe-ressources.type-exposition .pastille-type { background: #712724; }
+/* titres des groupes : petits, en capitales, comme un sur-titre */
+.titre-groupe { font: 500 12.5px/1.2 var(--texte); letter-spacing: .14em; text-transform: uppercase; color: var(--encre-2); padding-bottom: 8px; margin-bottom: 14px; }
+.titre-groupe .compte { font-size: 11px; letter-spacing: .04em; }
+.pastille-type { width: 9px; height: 9px; }
