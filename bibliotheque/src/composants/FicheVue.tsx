@@ -7,6 +7,7 @@ import { NOM_AUTEUR, NOM_EDITEUR, NOM_TYPE, domaine } from '../lib/libelles';
 import { FILTRES_VIDES, normaliser, suggerer } from '../lib/recherche';
 import { compresser } from '../lib/images';
 import { dessinConnu, detecter } from '../lib/dessins';
+import { RE_GLOSSAIRE, definitionGlossaire } from '../lib/glossaire';
 import { Couverture } from './Couverture';
 import { Icone } from './Icone';
 
@@ -21,6 +22,26 @@ interface CtxNotes {
   images: { im: Image; i: number }[];
   ouvrir?: (i: number) => void;
   definitions: Map<string, string>;
+  /** Mots du glossaire déjà signalés : seule leur première apparition l'est. */
+  vus: Set<string>;
+}
+
+/** Texte simple des notes : la première apparition d'un mot du glossaire montre sa définition au survol. */
+function AvecGlossaire({ texte, ctx, survoler }: { texte: string; ctx: CtxNotes; survoler?: (mot: string | null, el?: HTMLElement) => void }) {
+  const morceaux = texte.split(RE_GLOSSAIRE);
+  return (
+    <>
+      {morceaux.map((m, i) => {
+        if (i % 2 === 0) return <Fragment key={i}>{m}</Fragment>;
+        const cle = m.toLowerCase();
+        if (ctx.vus.has(cle) || !definitionGlossaire(m)) return <Fragment key={i}>{m}</Fragment>;
+        ctx.vus.add(cle);
+        return (
+          <span key={i} className="mot-defini" tabIndex={0} onMouseEnter={(e) => survoler?.(m, e.currentTarget)} onMouseLeave={() => survoler?.(null)} onFocus={(e) => survoler?.(m, e.currentTarget)} onBlur={() => survoler?.(null)}>{m}</span>
+        );
+      })}
+    </>
+  );
 }
 
 const cleMot = (m: string) => normaliser(m);
@@ -60,6 +81,7 @@ function EnLigne({ texte, ctx, toucher, survoler }: { texte: string; ctx?: CtxNo
           // [[texte affiché>Légende de l'image]] : le texte reste tel quel, il ouvre l'image qui porte cette légende
           const [affiche, cle] = terme[1].split('>').map((x) => x.trim());
           const mot = cle || affiche;
+          if (ctx && !imagesDuMot(ctx, mot).length && !ctx.definitions.get(cleMot(mot)) && !definitionGlossaire(mot)) return <Fragment key={i}>{affiche}</Fragment>;
           return toucher ? (
             <button
               key={i}
@@ -76,7 +98,7 @@ function EnLigne({ texte, ctx, toucher, survoler }: { texte: string; ctx?: CtxNo
         const lien = m.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
         if (lien) return <a key={i} className="lien-texte" href={lien[2]} target="_blank" rel="noreferrer">{lien[1]}</a>;
         if (/^\*\*[^*]+\*\*$/.test(m)) return <strong key={i}>{m.slice(2, -2)}</strong>;
-        return <Fragment key={i}>{m}</Fragment>;
+        return ctx ? <AvecGlossaire key={i} texte={m} ctx={ctx} survoler={survoler} /> : <Fragment key={i}>{m}</Fragment>;
       })}
     </>
   );
@@ -95,7 +117,7 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
     const r = el.getBoundingClientRect();
     setApercu({ mot, x: Math.min(r.left, innerWidth - 300), y: r.bottom + 8 });
   };
-  const ctx: CtxNotes = { images, ouvrir, definitions: lireDefinitions(texte) };
+  const ctx: CtxNotes = { images, ouvrir, definitions: lireDefinitions(texte), vus: new Set() };
   const blocs = texte.trim().split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((l) => l.length);
   const titre = (l: string[]) => (l.length === 1 && /^#{1,3}\s/.test(l[0]) ? { niveau: l[0].startsWith('###') ? 3 : 2, texte: l[0].replace(/^#+\s*/, '') } : null);
   const titres = blocs.map(titre).filter((t): t is { niveau: number; texte: string } => t !== null);
@@ -109,7 +131,7 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
     if (im) ctx.ouvrir?.(im.i);
   };
   const imApercu = apercu ? imagesDuMot(ctx, apercu.mot)[0] : undefined;
-  const defApercu = apercu ? ctx.definitions.get(cleMot(apercu.mot)) : undefined;
+  const defApercu = apercu ? ctx.definitions.get(cleMot(apercu.mot)) ?? definitionGlossaire(apercu.mot) : undefined;
 
   return (
     <div className="notes">
@@ -120,7 +142,7 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
         </div>
       )}
       {titres.length >= 3 && (
-        <details className="sommaire">
+        <details className={`sommaire${titres.length > 14 ? ' long' : ''}`}>
           <summary><span className="sommaire-titre">Sommaire</span><span className="fleche"><Icone nom="bas" taille={18} /></span></summary>
           <ol>
             {titres.reduce<{ titre: string; sous: string[] }[]>((g, t) => {
@@ -263,7 +285,7 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
 
 /** Liens utiles (vidéo, plans…) ; on les ajoute avec le crayon (Modifier la fiche). */
 function Liens({ fiche }: { fiche: Fiche }) {
-  const liens = fiche.liens ?? [];
+  const liens = (fiche.liens ?? []).filter((l) => l.url.trim() !== (fiche.source ?? '').trim());
   if (!liens.length) return null;
   return (
     <section className="bloc liens-fiche">
@@ -517,7 +539,7 @@ export function FicheVue({ id }: { id: string }) {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
       try {
-        const c = await caches.open('arki-v8');
+        const c = await caches.open('arki-v9');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
       } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');

@@ -1467,3 +1467,10 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .groupe-ressources.type-video .pastille-type { background: #C48E7C; }
 .groupe-ressources.type-podcast .pastille-type { background: #A8946F; }
 .groupe-ressources.type-exposition .pastille-type { background: #C08A26; }
+
+/* mots du glossaire : soulignés en pointillés, définition au survol, aucun effet au clic */
+.mot-defini { text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, var(--encre) 45%, transparent); text-underline-offset: 3px; cursor: help; }
+/* sommaire court : une seule colonne ; deux colonnes seulement pour les longs */
+.notes details.sommaire ol { column-count: 1; }
+.notes details.sommaire.long ol { column-count: 2; }
+@media (max-width: 760px) { .notes details.sommaire.long ol { column-count: 1; } }
