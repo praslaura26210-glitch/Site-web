@@ -517,7 +517,7 @@ export function FicheVue({ id }: { id: string }) {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
       try {
-        const c = await caches.open('arki-v7');
+        const c = await caches.open('arki-v8');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
       } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');
