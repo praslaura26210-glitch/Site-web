@@ -1476,7 +1476,7 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 @media (max-width: 760px) { .notes details.sommaire.long ol { column-count: 1; } }
 
 /* téléphone : deux lignes de ressources sur l'accueil (4 + 4), comme les livres et les projets */
-@media (max-width: 960px) { .accueil .grille.articles li:nth-child(n+9) { display: none; } }
+@media (max-width: 960px) { .accueil .grille.articles li:nth-child(n+5) { display: none; } }
 /* téléphone : les images d'une ressource en une seule colonne, en grand et centrées */
 @media (max-width: 760px) {
   .fiche-ressource .quinconce { grid-template-columns: 1fr; justify-items: center; }
