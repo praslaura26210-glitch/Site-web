@@ -1455,3 +1455,15 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .groupe-ressources.type-podcast .pastille-type { background: #C48E7C; }
 .groupe-ressources.type-exposition .pastille-type { background: #A8946F; }
 .groupe-ressources.type-memoire .pastille-type { background: #712724; }
+
+/* nuancier final : article #6E230C, mémoire terracotta, vidéo argile rose, podcast beige, exposition ocre doré */
+.petit-article.type-article { --c: #6E230C; --c-texte: #6E230C; }
+.petit-article.type-memoire { --c: #B85A35; --c-texte: #B85A35; }
+.petit-article.type-video { --c: #C48E7C; --c-texte: #B47A68; }
+.petit-article.type-podcast { --c: #A8946F; --c-texte: #94805A; }
+.petit-article.type-exposition { --c: #C08A26; --c-texte: #B07A18; }
+.groupe-ressources.type-article .pastille-type { background: #6E230C; }
+.groupe-ressources.type-memoire .pastille-type { background: #B85A35; }
+.groupe-ressources.type-video .pastille-type { background: #C48E7C; }
+.groupe-ressources.type-podcast .pastille-type { background: #A8946F; }
+.groupe-ressources.type-exposition .pastille-type { background: #C08A26; }
