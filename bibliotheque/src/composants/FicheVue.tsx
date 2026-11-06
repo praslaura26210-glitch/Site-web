@@ -57,7 +57,9 @@ function EnLigne({ texte, ctx, toucher, survoler }: { texte: string; ctx?: CtxNo
         if (/^\[(\?|[^\]]*à vérifier)\]$/.test(m)) return <span key={i} className="doute" title={m === '[?]' ? 'Mot incertain, à vérifier' : m.slice(1, -1)}>?</span>;
         const terme = m.match(/^\[\[([^\]|]+)(?:\|[^\]]+)?\]\]$/);
         if (terme) {
-          const mot = terme[1].trim();
+          // [[texte affiché>Légende de l'image]] : le texte reste tel quel, il ouvre l'image qui porte cette légende
+          const [affiche, cle] = terme[1].split('>').map((x) => x.trim());
+          const mot = cle || affiche;
           return toucher ? (
             <button
               key={i}
@@ -68,8 +70,8 @@ function EnLigne({ texte, ctx, toucher, survoler }: { texte: string; ctx?: CtxNo
               onMouseLeave={() => survoler?.(null)}
               onFocus={(e) => survoler?.(mot, e.currentTarget)}
               onBlur={() => survoler?.(null)}
-            >{mot}</button>
-          ) : <strong key={i} className="mot-cle-notes">{mot}</strong>;
+            >{affiche}</button>
+          ) : <strong key={i} className="mot-cle-notes">{affiche}</strong>;
         }
         const lien = m.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
         if (lien) return <a key={i} className="lien-texte" href={lien[2]} target="_blank" rel="noreferrer">{lien[1]}</a>;
@@ -97,7 +99,7 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
   const blocs = texte.trim().split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((l) => l.length);
   const titre = (l: string[]) => (l.length === 1 && /^#{1,3}\s/.test(l[0]) ? { niveau: l[0].startsWith('###') ? 3 : 2, texte: l[0].replace(/^#+\s*/, '') } : null);
   const titres = blocs.map(titre).filter((t): t is { niveau: number; texte: string } => t !== null);
-  const sansBalises = (t: string) => t.replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1').replace(/\*\*/g, '');
+  const sansBalises = (t: string) => t.replace(/\[\[([^\]|>]+)(?:>[^\]|]+)?(?:\|[^\]]+)?\]\]/g, '$1').replace(/\*\*/g, '');
   const aller = (t: string) => document.getElementById(ancre(sansBalises(t)))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const bulle = (_i: number) => null;
   // un mot qui a son image : le clic ouvre l'image en grand ; un mot qui n'a qu'une définition : elle se lit au survol, le clic ne fait rien
@@ -233,8 +235,8 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
           <p className="discret">Pour écrire tes notes : <a className="lien-texte" href={`#/modifier/${encodeURIComponent(fiche.id)}`}>Modifier</a>.</p>
         )}
         {livre && (
-          <section className="scans-notes" aria-label="Scans et schémas">
-            {images.length > 0 && <h3 className="titre-encarts">Scans et schémas</h3>}
+          <section className="scans-notes" aria-label="Croquis">
+            {images.length > 0 && <h3 className="titre-encarts">Croquis</h3>}
             {images.length > 0 && (
               <ul className="scans-liste">
                 {images.map(({ im, i }) => (
@@ -247,9 +249,9 @@ function MesNotes({ fiche, projets, ouvrir, enregistrer }: { fiche: Fiche; proje
                 ))}
               </ul>
             )}
-            {images.length > 0 && <p className="aide">Touche un scan pour l’agrandir et changer sa légende : la légende « charpente » le relie au mot « charpente » des notes.</p>}
+            {images.length > 0 && <p className="aide">Touche un croquis pour l’agrandir et changer sa légende : la légende « coyau » le relie au mot « coyau » des notes.</p>}
             <AjoutImage fiche={fiche} enregistrer={enregistrer} className="ajout-scan">
-              <Icone nom="plus" taille={14} /> Ajouter un scan ou un schéma
+              <Icone nom="plus" taille={14} /> Ajouter un croquis
             </AjoutImage>
           </section>
         )}
