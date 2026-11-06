@@ -1474,3 +1474,14 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 .notes details.sommaire ol { column-count: 1; }
 .notes details.sommaire.long ol { column-count: 2; }
 @media (max-width: 760px) { .notes details.sommaire.long ol { column-count: 1; } }
+
+/* téléphone : deux lignes de ressources sur l'accueil (4 + 4), comme les livres et les projets */
+@media (max-width: 960px) { .accueil .grille.articles li:nth-child(n+9) { display: none; } }
+/* téléphone : les images d'une ressource en une seule colonne, en grand et centrées */
+@media (max-width: 760px) {
+  .fiche-ressource .quinconce { grid-template-columns: 1fr; justify-items: center; }
+  .fiche-ressource .quinconce ul:nth-child(2) { padding-top: 0; }
+  .fiche-ressource .quinconce ul, .fiche-ressource .quinconce li, .fiche-ressource .quinconce figure { width: 100%; }
+  .fiche-ressource .quinconce ul + ul { margin-top: clamp(20px, 3vw, 40px); }
+  .fiche-ressource .quinconce figcaption { text-align: center; }
+}

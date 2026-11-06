@@ -539,7 +539,7 @@ export function FicheVue({ id }: { id: string }) {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
       try {
-        const c = await caches.open('arki-v10');
+        const c = await caches.open('arki-v11');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
       } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');
@@ -725,7 +725,7 @@ export function FicheVue({ id }: { id: string }) {
           </div>
         </div>
       ) : (
-        <div className="fiche-projet">
+        <div className={`fiche-projet${ressource ? ' fiche-ressource' : ''}`}>
           <div className="fiche-contenu large">{titres}</div>
           {imagePrincipale}
           <div className={`projet-corps${projet || ressource ? '' : ' sans-infos'}`}>
