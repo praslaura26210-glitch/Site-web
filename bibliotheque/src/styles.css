@@ -1431,3 +1431,15 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 /* ressources : mémoires et thèses, en brun de la palette */
 .petit-article.type-memoire { --c: #8C522D; --c-texte: #8C522D; }
 .groupe-ressources.type-memoire .pastille-type { background: #8C522D; }
+
+/* ressources : nuancier ocre / terracotta, une famille bien distincte par type */
+.petit-article.type-article { --c: #B85A35; --c-texte: #B85A35; }      /* terracotta */
+.petit-article.type-memoire { --c: #DEBC9A; --c-texte: #A9845E; }      /* sable (l'ancienne couleur des podcasts) */
+.petit-article.type-podcast { --c: #8C522D; --c-texte: #8C522D; }      /* brun */
+.petit-article.type-video { --c: #A9705C; --c-texte: #A06450; }        /* vieux rose */
+.petit-article.type-exposition { --c: #D07A2E; --c-texte: #C96E20; }   /* ocre vif */
+.groupe-ressources.type-article .pastille-type { background: #B85A35; }
+.groupe-ressources.type-memoire .pastille-type { background: #DEBC9A; }
+.groupe-ressources.type-podcast .pastille-type { background: #8C522D; }
+.groupe-ressources.type-video .pastille-type { background: #A9705C; }
+.groupe-ressources.type-exposition .pastille-type { background: #D07A2E; }
