@@ -1428,3 +1428,6 @@ button.mot-cle-notes:hover { color: var(--terracotta); }
 /* ressources : la même ombre que les livres, un peu plus allongées, type un peu plus petit */
 .pa-couv { box-shadow: var(--ombre-livre); aspect-ratio: 5 / 7; }
 .pa-bande { font-size: max(11px, 13cqi); }
+/* ressources : mémoires et thèses, en brun de la palette */
+.petit-article.type-memoire { --c: #8C522D; --c-texte: #8C522D; }
+.groupe-ressources.type-memoire .pastille-type { background: #8C522D; }

@@ -56,6 +56,10 @@ const LIBELLES: Record<TypeFiche, { titre: string; auteurs: string; editeur: str
     titre: 'Titre de l’épisode', auteurs: 'Invité(s) ou intervenant(s)', editeur: 'Émission', exempleEditeur: 'Ex. : Le Chantier', lien: 'Lien vers l’épisode',
     images: 'Image', aideImages: 'Facultatif : la vignette de l’épisode.', aideResume: 'De quoi parle l’épisode ?',
   },
+  memoire: {
+    titre: 'Titre du mémoire ou de la thèse', auteurs: 'Auteur(s)', editeur: 'Université, école', exempleEditeur: 'Ex. : Thèse de doctorat, Université Grenoble Alpes', lien: 'Lien (HAL, theses.fr, dépôt…)',
+    images: 'Images', aideImages: 'Facultatif : des figures, des plans.', aideResume: 'Le sujet en quelques lignes.',
+  },
   exposition: {
     titre: 'Titre de l’exposition', auteurs: 'Artistes, commissaires', editeur: 'Lieu', exempleEditeur: 'Ex. : CAUE de Haute-Savoie, Annecy', lien: 'Page de l’exposition',
     images: 'Images', aideImages: 'Photos de l’exposition, cartels, panneaux.', aideResume: 'Le propos de l’exposition.',

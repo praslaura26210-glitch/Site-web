@@ -80,36 +80,6 @@ function EnLigne({ texte, ctx, toucher, survoler }: { texte: string; ctx?: CtxNo
   );
 }
 
-/** Ce qui s'ouvre sous le paragraphe quand on touche un mot rouge (ou l'appareil photo d'un intertitre). */
-function BulleMot({ mot, ctx, fermer }: { mot: string; ctx: CtxNotes; fermer: () => void }) {
-  const def = ctx.definitions.get(cleMot(mot));
-  const imgs = imagesDuMot(ctx, mot);
-  return (
-    <aside className="bulle-mot" aria-label={mot}>
-      <div className="bulle-tete">
-        <strong>{mot}</strong>
-        <button type="button" className="bouton-icone" aria-label="Fermer" onClick={fermer}><Icone nom="fermer" taille={16} /></button>
-      </div>
-      {def && <p><EnLigne texte={def} /></p>}
-      {imgs.length > 0 && (
-        <ul className="bulle-images">
-          {imgs.map(({ im, i }) => (
-            <li key={im.id}>
-              <button type="button" onClick={() => ctx.ouvrir?.(i)} aria-label={`Agrandir : ${im.credit ?? mot}`}>
-                <img src={srcImage(im.id)} alt="" loading="lazy" style={{ aspectRatio: `${im.w} / ${im.h}` }} />
-              </button>
-              {im.credit && <span>{im.credit}</span>}
-            </li>
-          ))}
-        </ul>
-      )}
-      {!def && !imgs.length && (
-        <p className="discret">Pas encore d’image pour ce mot. Ajoute un scan avec le « + » sous tes notes, puis donne-lui la légende « {mot} ».</p>
-      )}
-    </aside>
-  );
-}
-
 const ancre = (t: string) => `n-${cleMot(t).replace(/ /g, '-')}`;
 
 /**
@@ -117,7 +87,6 @@ const ancre = (t: string) => `n-${cleMot(t).replace(/ /g, '-')}`;
  * « - » une liste, une ligne vide sépare les paragraphes ; voir EnLigne pour les mots rouges et les liens.
  */
 export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: { im: Image; i: number }[]; ouvrir?: (i: number) => void }) {
-  const [ouvert, setOuvert] = useState<{ bloc: number; mot: string } | null>(null);
   const [apercu, setApercu] = useState<{ mot: string; x: number; y: number } | null>(null);
   const survoler = (mot: string | null, el?: HTMLElement) => {
     if (!mot || !el || !matchMedia('(hover: hover)').matches) { setApercu(null); return; }
@@ -130,19 +99,12 @@ export function Notes({ texte, images = [], ouvrir }: { texte: string; images?: 
   const titres = blocs.map(titre).filter((t): t is { niveau: number; texte: string } => t !== null);
   const sansBalises = (t: string) => t.replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1').replace(/\*\*/g, '');
   const aller = (t: string) => document.getElementById(ancre(sansBalises(t)))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  const bulle = (i: number) => ouvert?.bloc === i && <BulleMot mot={ouvert.mot} ctx={ctx} fermer={() => setOuvert(null)} />;
-  // un mot qui a son image : on descend jusqu'à l'image, en bas des notes ; sinon sa définition s'ouvre sous le paragraphe
-  const toucher = (i: number) => (mot: string) => {
+  const bulle = (_i: number) => null;
+  // un mot qui a son image : le clic ouvre l'image en grand ; un mot qui n'a qu'une définition : elle se lit au survol, le clic ne fait rien
+  const toucher = (_i: number) => (mot: string) => {
     setApercu(null);
     const im = imagesDuMot(ctx, mot)[0];
-    const cible = im && document.getElementById(`scan-${im.im.id}`);
-    if (cible) {
-      cible.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      cible.classList.remove('repere'); void cible.offsetWidth; cible.classList.add('repere');
-      return;
-    }
-    if (im) { ctx.ouvrir?.(im.i); return; }
-    setOuvert((o) => (o?.bloc === i && o.mot === mot ? null : { bloc: i, mot }));
+    if (im) ctx.ouvrir?.(im.i);
   };
   const imApercu = apercu ? imagesDuMot(ctx, apercu.mot)[0] : undefined;
   const defApercu = apercu ? ctx.definitions.get(cleMot(apercu.mot)) : undefined;
@@ -553,7 +515,7 @@ export function FicheVue({ id }: { id: string }) {
       const r = await api.supprimer(id);
       retirerFiche(id, r.rev);
       try {
-        const c = await caches.open('arki-v6');
+        const c = await caches.open('arki-v7');
         await Promise.all(fiche!.images.map((i) => c.delete(srcImage(i.id))));
       } catch { /* pas de cache sur cet appareil */ }
       notifier('Fiche supprimée.');
