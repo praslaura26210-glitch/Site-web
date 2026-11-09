@@ -412,13 +412,32 @@ function AjoutImage({ fiche, enregistrer, className, children, pdf = true }: { f
   );
 }
 
+const NOUVELLE = '__nouvelle__';
+
 /** Le bas de la fiche, replié : catégories, mots-clés, références, suppression. */
 function Details({ fiche, enregistrer, demanderSuppression }: { fiche: Fiche; enregistrer: (f: Fiche, m?: string) => void; demanderSuppression: () => void }) {
-  const { biblio, motsCles, setFiltres, naviguer } = useBiblio();
+  const { biblio, motsCles, setFiltres, naviguer, remplacer, notifier } = useBiblio();
   const [mot, setMot] = useState('');
+  const [nouvelle, setNouvelle] = useState<string | null>(null);
   const cats = fiche.categories ?? [];
   const libres = biblio.categories.filter((c) => !cats.includes(c.id));
   const props = suggerer(mot, motsCles, fiche.motsCles).slice(0, 5);
+
+  // crée la catégorie si elle n'existe pas encore, puis la donne à la fiche
+  async function creerCategorie() {
+    const nom = nouvelle?.trim();
+    setNouvelle(null);
+    if (!nom) return;
+    const id = normaliser(nom).replace(/\s+/g, '-') || crypto.randomUUID();
+    if (!biblio.categories.some((c) => c.id === id)) {
+      try {
+        remplacer(await api.vocabulaire({ categories: [...biblio.categories, { id, nom }] }));
+      } catch (e) {
+        return notifier(e instanceof Error ? e.message : 'Erreur.');
+      }
+    }
+    if (!cats.includes(id)) enregistrer({ ...fiche, categories: [...cats, id] }, `Catégorie « ${nom} » ajoutée.`);
+  }
 
   const ajouterMot = (m: string) => {
     const x = m.trim();
@@ -444,17 +463,36 @@ function Details({ fiche, enregistrer, demanderSuppression }: { fiche: Fiche; en
                 </button>
               </span>
             ))}
-            {libres.length > 0 && (
+            {nouvelle === null ? (
               <select
                 id="ajout-categorie"
                 className="ajout-petit"
                 value=""
                 aria-label="Ajouter une catégorie"
-                onChange={(e) => e.target.value && enregistrer({ ...fiche, categories: [...cats, e.target.value] }, 'Catégorie ajoutée.')}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === NOUVELLE) setNouvelle('');
+                  else if (v) enregistrer({ ...fiche, categories: [...cats, v] }, 'Catégorie ajoutée.');
+                }}
               >
                 <option value="">+ catégorie</option>
                 {libres.map((c) => <option key={c.id} value={c.id}>{c.nom}</option>)}
+                <option value={NOUVELLE}>Nouvelle catégorie…</option>
               </select>
+            ) : (
+              <form className="ajout-mot-fiche" onSubmit={(e) => { e.preventDefault(); creerCategorie(); }}>
+                <input
+                  id="nouvelle-categorie-fiche"
+                  className="ajout-petit"
+                  autoFocus
+                  placeholder="Ex. : Stage"
+                  value={nouvelle}
+                  onChange={(e) => setNouvelle(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Escape') setNouvelle(null); }}
+                />
+                <button type="submit" className="bouton petit principal" disabled={!nouvelle.trim()}>Créer</button>
+                <button type="button" className="bouton petit" onClick={() => setNouvelle(null)}>Annuler</button>
+              </form>
             )}
           </dd>
         </div>
