@@ -1,5 +1,5 @@
 // Bibliothèque : appli installable, lisible hors ligne (dernière version consultée).
-const CACHE = 'arki-v12';
+const CACHE = 'arki-v13';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();

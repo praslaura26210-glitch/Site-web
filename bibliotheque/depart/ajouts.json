@@ -2386,6 +2386,331 @@
      }
     }
    ]
+  },
+  {
+   "version": 9,
+   "ajouter": [
+    {
+     "annee": "",
+     "auteurs": [
+      "Rive Architectes"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© Ludovic Maillard",
+     "creeLe": "2026-11-09T10:00:00.000Z",
+     "editeur": "Meyrannes, Gard, France",
+     "emplacement": "",
+     "id": "meyrannes-rive",
+     "images": [
+      {
+       "id": "6273a18c7eecd4f67b89e7fb00935f05",
+       "w": 900,
+       "h": 645
+      },
+      {
+       "id": "75f19da07122b27040e5cd2414c2a7e7",
+       "w": 900,
+       "h": 645
+      },
+      {
+       "id": "b180a1eef75894296dc53bb75cd907b2",
+       "w": 653,
+       "h": 900
+      },
+      {
+       "id": "afb877cb448f67e3a729b606ef7c4032",
+       "w": 652,
+       "h": 900
+      },
+      {
+       "id": "00bc876d40442da894fd7c0f193751b9",
+       "w": 612,
+       "h": 900
+      },
+      {
+       "id": "23353316cede0c1bb9419c234f071917",
+       "w": 900,
+       "h": 570
+      },
+      {
+       "id": "bfb4659d4533908ea20b6838d908345c",
+       "w": 710,
+       "h": 900,
+       "dessin": true
+      },
+      {
+       "id": "403b944c53106aedffd04eefbfafe28f",
+       "w": 900,
+       "h": 638,
+       "dessin": true
+      },
+      {
+       "id": "3fe2e8fce25a1eab11df0bf3e5a917e3",
+       "w": 900,
+       "h": 673,
+       "dessin": true
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-11-09T10:00:00.000Z",
+     "motsCles": [
+      "mazet",
+      "pierre",
+      "réhabilitation",
+      "Cévennes",
+      "Gard",
+      "Rive Architectes"
+     ],
+     "resume": "Restructuration d’un mazet cévenol, petite construction rurale en pierre, à Meyrannes dans le Gard.",
+     "retenu": "",
+     "source": "https://www.rivearchitectes.com/rive-architectes-meyrannes",
+     "statut": "a-lire",
+     "titre": "Mazet à Meyrannes",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "",
+     "auteurs": [
+      "Atelier Canabae",
+      "Wild architecture"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© J.-B. Rebeyrotte",
+     "creeLe": "2026-11-09T10:00:00.000Z",
+     "editeur": "Montverdun, Loire, France",
+     "emplacement": "",
+     "id": "ferme-des-pins-canabae",
+     "images": [
+      {
+       "id": "361ca9e6e1c5bfaee2ba073d158bf554",
+       "w": 751,
+       "h": 900
+      },
+      {
+       "id": "854be66285696b7cc734ac4ad0951aa4",
+       "w": 900,
+       "h": 511
+      },
+      {
+       "id": "e11fe6ddaccdbddf6147936068291f3b",
+       "w": 900,
+       "h": 479
+      },
+      {
+       "id": "38c347512554a91a586a465a5b1da121",
+       "w": 597,
+       "h": 900
+      },
+      {
+       "id": "ad53cbdbda19043c8052ff234bb41673",
+       "w": 597,
+       "h": 900
+      },
+      {
+       "id": "1381cbdeee6bbe345f8f811147c9e097",
+       "w": 736,
+       "h": 900
+      },
+      {
+       "id": "5aa82977306edbe907a7284099887e0b",
+       "w": 788,
+       "h": 900
+      },
+      {
+       "id": "68f58fcab87bfcea254f8dc58515306f",
+       "w": 900,
+       "h": 599
+      },
+      {
+       "id": "45ba27d9a3a6a1c90357599e4f5bbd78",
+       "w": 900,
+       "h": 526
+      },
+      {
+       "id": "25c728302ed878d6cf28c7f6e9093772",
+       "w": 576,
+       "h": 900
+      },
+      {
+       "id": "ad72ea2af4e906dd06e0cb7e4ce1c99e",
+       "w": 645,
+       "h": 900
+      },
+      {
+       "id": "3d2a4a5cddddf3ada95dc51852832818",
+       "w": 900,
+       "h": 598
+      },
+      {
+       "id": "1eabe5db4b782b5b77973584d3ea63da",
+       "w": 900,
+       "h": 660,
+       "dessin": true
+      },
+      {
+       "id": "2335f42fd5b99a0ee85e2498bb96ca8b",
+       "w": 900,
+       "h": 534,
+       "dessin": true
+      },
+      {
+       "id": "e09d10f38b176c1f6984f6d54ed3482f",
+       "w": 900,
+       "h": 527,
+       "dessin": true
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-11-09T10:00:00.000Z",
+     "motsCles": [
+      "pisé",
+      "terre crue",
+      "ferme",
+      "réhabilitation",
+      "chaux",
+      "vernaculaire",
+      "Loire",
+      "Atelier Canabae"
+     ],
+     "resume": "Réhabilitation complète d’une ancienne ferme en pisé en maison familiale de 300 m², pour une famille nombreuse. Le caractère vernaculaire et les qualités de la terre crue sont conservés : les murs sont isolés tout en restant respirants, avec des enduits à la chaux ; les menuiseries et la cour centrale organisent le lien entre intérieur et extérieur.",
+     "retenu": "",
+     "source": "https://www.ateliercanabae.com/properties/la-ferme-des-pins",
+     "statut": "a-lire",
+     "titre": "La ferme des pins",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "2020",
+     "auteurs": [
+      "AAFR, Atelier d’Architecture Florent Rougemont"
+     ],
+     "categories": [
+      "memoire"
+     ],
+     "citations": [],
+     "credit": "© Jérôme Ricolleau, Juan Robert",
+     "creeLe": "2026-11-09T10:00:00.000Z",
+     "editeur": "Drôme, France",
+     "emplacement": "",
+     "id": "maison-mg-aafr",
+     "images": [
+      {
+       "id": "f88d9ce2504ef7f7b8d544bb48cb928f",
+       "w": 900,
+       "h": 602
+      },
+      {
+       "id": "cad2c5956805c8745e452d539acf10ff",
+       "w": 900,
+       "h": 569
+      },
+      {
+       "id": "c78d622e9a30bb4e1b9fdae38c734107",
+       "w": 900,
+       "h": 561
+      },
+      {
+       "id": "d05fb42c4f2866173326324eb44aec67",
+       "w": 900,
+       "h": 600
+      },
+      {
+       "id": "dc25401614fb71c9b6a44c2698fadfc0",
+       "w": 900,
+       "h": 464
+      },
+      {
+       "id": "c95bb8e02d7449b6216109d39a0a4930",
+       "w": 900,
+       "h": 600
+      },
+      {
+       "id": "e3d83a4b342787762aaa534bd2776def",
+       "w": 900,
+       "h": 600
+      },
+      {
+       "id": "4f60c5aa51fea2428fe19ed2703f3b15",
+       "w": 900,
+       "h": 600
+      },
+      {
+       "id": "4a7d116959ecf92976931db17d8a0bb0",
+       "w": 900,
+       "h": 600
+      },
+      {
+       "id": "d44db605c6caa637ef5a88d763708694",
+       "w": 600,
+       "h": 900
+      }
+     ],
+     "liens": [],
+     "modifieLe": "2026-11-09T10:00:00.000Z",
+     "motsCles": [
+      "corps de ferme",
+      "pierre",
+      "réhabilitation",
+      "Drôme",
+      "AAFR"
+     ],
+     "resume": "Rénovation complète d’un ancien corps de ferme en maison familiale de 273 m², livrée en 2020.",
+     "retenu": "",
+     "source": "https://www.aafr.fr/projets/maison-mg",
+     "statut": "a-lire",
+     "titre": "Maison MG",
+     "type": "projet",
+     "voirAussi": []
+    },
+    {
+     "annee": "2026",
+     "auteurs": [
+      "Anne-Marie Bellenger",
+      "Amélie Blandin"
+     ],
+     "categories": [],
+     "citations": [],
+     "credit": "",
+     "creeLe": "2026-11-09T10:00:00.000Z",
+     "editeur": "Éditions Le Moniteur",
+     "emplacement": "",
+     "id": "bellenger-architecte-moe",
+     "images": [
+      {
+       "id": "ceb78be020a8838af3a2349f22658e97",
+       "w": 600,
+       "h": 847
+      }
+     ],
+     "isbn": "9782281137545",
+     "liens": [],
+     "modifieLe": "2026-11-09T10:00:00.000Z",
+     "motsCles": [
+      "maîtrise d’œuvre",
+      "droit",
+      "contrats",
+      "responsabilités",
+      "profession"
+     ],
+     "resume": "Guide pratique du cadre juridique de la maîtrise d’œuvre architecturale (collection « Pratique du droit », 2ᵉ édition) : spécificités de la profession, passation et négociation des contrats, missions et rémunération, place de l’architecte dans l’équipe de maîtrise d’œuvre, exécution et fin des contrats, responsabilités, droit d’auteur et règlement des litiges.",
+     "retenu": "",
+     "source": "https://boutique.lemoniteur.fr",
+     "sousTitre": "Réglementation, responsabilités, gestion des contrats",
+     "statut": "a-lire",
+     "titre": "Architecte maître d’œuvre",
+     "type": "livre",
+     "voirAussi": []
+    }
+   ],
+   "modifier": []
   }
  ]
 }
